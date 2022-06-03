@@ -8,34 +8,27 @@ void main() {
     final intValidator = Field([isTypeInt()]);
     final doubleValidator = Field([isTypeDouble()]);
 
-    expect(stringValidator.validate('test'), null);
-    expect(stringValidator.validate(123), 'expected String');
-    expect(intValidator.validate(123), null);
-    expect(intValidator.validate(123.2), 'expected int');
-    expect(doubleValidator.validate(123.2), null);
+    expect(stringValidator.validate('test').isValid, true);
+    expect(stringValidator.validate(123).isValid, false);
+    expect(stringValidator.validate(123).expected, 'String');
+    expect(intValidator.validate(123).isValid, true);
+    expect(intValidator.validate(123.2).expected, 'int');
+    expect(doubleValidator.validate(123.2).isValid, true);
+    expect(doubleValidator.validate(123).expected, 'double');
   });
 
   test('nullable and non-nullable fields', () {
     final nonNullableField = Field([isTypeString()]);
     final nullableField = Field.nullable([isTypeString()]);
 
-    expect(
-      nullableField.validate(null),
-      null,
-    );
-    expect(
-      nonNullableField.validate(null),
-      "value can't be null",
-    );
+    expect(nullableField.validate(null).isValid, true);
 
-    expect(
-      nullableField.validate('test'),
-      null,
-    );
-    expect(
-      nonNullableField.validate('test'),
-      null,
-    );
+    final res = nonNullableField.validate(null);
+    expect(res.isValid, false);
+    expect(res.expected, 'String');
+
+    expect(nullableField.validate('test').isValid, true);
+    expect(nonNullableField.validate('test').isValid, true);
   });
 
   test('fields validates int correctly', () {
@@ -44,28 +37,34 @@ void main() {
       isMin(2),
       isMax(4),
     ]);
-    expect(intValidator.validate(1), 'value is under the min value of "2"');
-    expect(intValidator.validate(2), null);
-    expect(intValidator.validate(3), null);
-    expect(intValidator.validate(4), null);
-    expect(intValidator.validate(5), 'value is over the max value of "4"');
-  });
+    expect(intValidator.validate('not a valid number').isValid, false);
+    expect(intValidator.validate(1).isValid, false);
+    expect(intValidator.validate(5).isValid, false);
+    expect(intValidator.validate(1).expected, 'higher or equal 2');
+    expect(intValidator.validate(5).expected, 'lower or equal 4');
 
-  test('isMin of non number value ', () {
-    expect(isMin(1)(''), null);
+    expect(intValidator.validate(2).isValid, true);
+    expect(intValidator.validate(3).isValid, true);
+    expect(intValidator.validate(4).isValid, true);
   });
 
   test('custom validator ', () {
     final customValidator = Field([
       isTypeInt(),
       (value) {
-        if (value is num && value == 42) return 'that is the number';
+        if (value is num && value == 42) {
+          return Result.invalid(
+            value: value,
+            expected: 'that is the number',
+            actual: value.runtimeType.toString(),
+          );
+        }
 
-        return null;
+        return Result.valid(value: value);
       },
     ]);
-    expect(customValidator.validate(42), 'that is the number');
-    expect(customValidator.validate(12), null);
+    expect(customValidator.validate(42).expected, 'that is the number');
+    expect(customValidator.validate(12).isValid, true);
   });
 
   test('isDate', () {
@@ -74,28 +73,28 @@ void main() {
       isDate(),
     ]);
 
-    expect(dateValidator.validate('1969-07-20 20:18:04Z'), null);
-    expect(dateValidator.validate('sadasd'), 'value is not a valid date');
-    expect(dateValidator.validate(123), 'expected String');
-    expect(dateValidator.validate(true), 'expected String');
+    expect(dateValidator.validate('1969-07-20 20:18:04Z').isValid, true);
+    expect(dateValidator.validate('sadasd').expected, 'a valid date');
+    expect(dateValidator.validate(123).expected, 'String');
+    expect(dateValidator.validate(true).expected, 'String');
   });
 
   test('validate map', () {
-    final dateValidator = Field([
+    final field = Field([
       isTypeMap(),
     ]);
-    expect(dateValidator.validate({}), null);
-    expect(dateValidator.validate('sadasd'), 'expected Map');
-    expect(dateValidator.validate(123), 'expected Map');
-    expect(dateValidator.validate(true), 'expected Map');
+    expect(field.validate({}).isValid, true);
+    expect(field.validate('sadasd').expected, 'Map<dynamic, dynamic>');
+    expect(field.validate(123).expected, 'Map<dynamic, dynamic>');
+    expect(field.validate(true).expected, 'Map<dynamic, dynamic>');
   });
 
   test('either', () {
     final field = Field([
       either(isTypeMap(), isTypeList()),
     ]);
-    expect(field.validate({}), null);
-    expect(field.validate([]), null);
-    expect(field.validate(''), 'expected Map or expected List');
+    expect(field.validate({}).isValid, true);
+    expect(field.validate([]).isValid, true);
+    expect(field.validate('').expected, 'Map<dynamic, dynamic> or List<dynamic>');
   });
 }
