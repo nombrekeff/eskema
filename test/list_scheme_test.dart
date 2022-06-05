@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:json_scheme/json_scheme.dart';
-import 'package:json_scheme/validators.dart';
 
 void main() {
   test('Basic ListScheme validates itself', () {
@@ -17,7 +16,6 @@ void main() {
     final invalidRes3 = field.validate(123);
     expect(invalidRes3.isValid, false);
     expect(invalidRes3.expected, 'List<dynamic>');
-    expect(invalidRes3.actual, 'int');
 
     final validRes1 = field.validate([1, "2"]);
     expect(validRes1.isValid, true);
@@ -40,7 +38,7 @@ void main() {
 
     final invalidRes1 = field.validate(['string']);
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.expected, '[0] to be int');
+    expect(invalidRes1.expected, '[0] -> int');
   });
 
   test('Nested ListScheme validates items', () {
@@ -65,13 +63,13 @@ void main() {
       [1]
     ]);
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.expected, '[0] to be List of size 2');
+    expect(invalidRes1.expected, '[0] -> List of size 2');
 
     final invalidRes2 = field.validate([
       [1, "aaaa"]
     ]);
     expect(invalidRes2.isValid, false);
-    expect(invalidRes2.expected, '[0] to be List of size 2');
+    expect(invalidRes2.expected, '[0] -> [1] -> int');
   });
 
   test('Map ListScheme', () {
@@ -88,6 +86,33 @@ void main() {
 
     final invalidRes1 = field.validate([{}]);
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.expected, '[0].city to be String');
+    expect(invalidRes1.expected, '[0] -> city -> String');
+  });
+
+  test('Map with ListScheme', () {
+    final field = MapScheme({
+      'books': ListScheme(
+        fieldValidator: MapScheme({
+          'name': Field([isTypeString()]),
+        }),
+      ),
+    });
+    final validRes1 = field.validate({
+      'books': [],
+    });
+    expect(validRes1.isValid, true);
+
+    final validRes2 = field.validate({
+      'books': [
+        {'name': 'bookname'}
+      ],
+    });
+    expect(validRes2.isValid, true);
+
+    final invalidRes1 = field.validate({
+      'books': [{}],
+    });
+    expect(invalidRes1.isValid, false);
+    expect(invalidRes1.expected, 'books -> [0] -> name -> String');
   });
 }

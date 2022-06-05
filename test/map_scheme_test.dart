@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:json_scheme/json_scheme.dart';
-import 'package:json_scheme/validators.dart';
 
 void main() {
   test('Basic MapScheme validates correctly', () {
@@ -15,15 +14,15 @@ void main() {
 
     final invalidRes1 = field.validate({});
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.expected, 'name to be String');
+    expect(invalidRes1.expected, 'name -> String');
 
     final invalidRes2 = field.validate({'name': 'test'});
     expect(invalidRes2.isValid, false);
-    expect(invalidRes2.expected, 'age to be int');
+    expect(invalidRes2.expected, 'age -> int');
 
     final invalidRes3 = field.validate({'name': 'test', 'age': -12});
     expect(invalidRes3.isValid, false);
-    expect(invalidRes3.expected, 'age to be higher or equal 0');
+    expect(invalidRes3.expected, 'age -> higher or equal 0');
 
     final validRes1 = field.validate({'name': 'test', 'age': 12});
     expect(validRes1.isValid, true);
@@ -52,7 +51,7 @@ void main() {
       },
     });
     expect(invalidRes4.isValid, false);
-    expect(invalidRes4.expected, 'address.street to be String');
+    expect(invalidRes4.expected, 'address -> street -> String');
 
     final invalidRes5 = field.validate({
       'address': {
@@ -63,6 +62,6 @@ void main() {
       },
     });
     expect(invalidRes5.isValid, false);
-    expect(invalidRes5.expected, 'address.additional.doorbel_number to be int');
+    expect(invalidRes5.expected, 'address -> additional -> doorbel_number -> int');
   });
 }

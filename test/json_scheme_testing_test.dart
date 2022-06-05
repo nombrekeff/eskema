@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:json_scheme/json_scheme.dart';
-import 'package:json_scheme/validators.dart';
 
 void main() {
   test('fields validates correctly', () {
@@ -53,14 +52,10 @@ void main() {
       isTypeInt(),
       (value) {
         if (value is num && value == 42) {
-          return Result.invalid(
-            value: value,
-            expected: 'that is the number',
-            actual: value.runtimeType.toString(),
-          );
+          return Result.invalid('that is the number');
         }
 
-        return Result.valid(value: value);
+        return Result.valid;
       },
     ]);
     expect(customValidator.validate(42).expected, 'that is the number');
