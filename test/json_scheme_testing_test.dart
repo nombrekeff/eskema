@@ -6,14 +6,25 @@ void main() {
     final stringValidator = Field([isTypeString()]);
     final intValidator = Field([isTypeInt()]);
     final doubleValidator = Field([isTypeDouble()]);
+    final numValidator = Field([isTypeNum()]);
+    final boolValidator = Field([isTypeBool()]);
 
-    expect(stringValidator.validate('test').isValid, true);
+    expect(boolValidator.validate('not-valid').isValid, false);
+    expect(boolValidator.validate(true).isValid, true);
+
+    expect(stringValidator.validate('not-valid').isValid, true);
     expect(stringValidator.validate(123).isValid, false);
     expect(stringValidator.validate(123).expected, 'String');
+    
     expect(intValidator.validate(123).isValid, true);
     expect(intValidator.validate(123.2).expected, 'int');
+    
     expect(doubleValidator.validate(123.2).isValid, true);
     expect(doubleValidator.validate(123).expected, 'double');
+
+    expect(numValidator.validate(123.2).isValid, true);
+    expect(numValidator.validate(123).isValid, true);
+    expect(numValidator.validate('not-valid').isValid, false);
   });
 
   test('nullable and non-nullable fields', () {

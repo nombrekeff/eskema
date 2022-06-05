@@ -24,6 +24,16 @@ void main() {
     expect(validRes2.isValid, true);
   });
 
+  test('Nullable ListScheme ', () {
+    final field = ListScheme.nullable(validators: [listIsOfSize(2)]);
+
+    final validRes1 = field.validate(null);
+    expect(validRes1.isValid, true);
+
+    final validRes2 = field.validate(['1', '2']);
+    expect(validRes2.isValid, true);
+  });
+
   test('Basic ListScheme validates items', () {
     final field = ListScheme(
       fieldValidator: Field([
@@ -32,6 +42,7 @@ void main() {
     );
     final validRes1 = field.validate([1]);
     expect(validRes1.isValid, true);
+    expect(field.validate([1, 2, 3]).isValid, true);
 
     final validRes2 = field.validate([]);
     expect(validRes2.isValid, true);

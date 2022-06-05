@@ -10,6 +10,7 @@
 .svn/
 migrate_working_dir/
 TODO.md
+coverage/
 
 # IntelliJ related
 *.iml

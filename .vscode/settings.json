@@ -1,0 +1,4 @@
+{
+  "lcov.path": ["coverage/lcov.info"],
+  "coverage-status.searchPatterns": ["coverage/.resultset.json", "coverage/lcov*.info"]
+}

@@ -7,7 +7,6 @@ Validator isType<T>() {
       );
 }
 
-Validator isTypeObject() => isType<Object>();
 Validator isTypeString() => isType<String>();
 Validator isTypeDouble() => isType<double>();
 Validator isTypeInt() => isType<int>();
@@ -15,9 +14,6 @@ Validator isTypeNum() => isType<num>();
 Validator isTypeBool() => isType<bool>();
 Validator isTypeMap<K, V>() => isType<Map<K, V>>();
 Validator isTypeList<T>() => isType<List<T>>();
-Validator isTypeSet() => isType<Set>();
-Validator isTypeFuture() => isType<Future>();
-Validator isTypeStream() => isType<Stream>();
 
 /// Checks whether the given value is greater or equal than [min]
 Validator isMin(num min) {
