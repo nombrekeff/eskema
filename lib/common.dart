@@ -22,4 +22,9 @@ class Result with IResult {
   Result({required this.isValid, this.expected});
 
   Result.invalid(this.expected) : isValid = false;
+
+  @override
+  String toString() {
+    return isValid ? 'Valid' : 'Expected $expected';
+  }
 }
