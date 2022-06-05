@@ -6,7 +6,7 @@ mixin IResult {
   /// Optional message for the expected result
   String? get expected;
 
-  // Handy getter to check if this result is not valid
+  /// Handy getter to check if this result is not valid
   bool get isNotValid => !isValid;
 }
 

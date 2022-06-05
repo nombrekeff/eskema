@@ -38,16 +38,34 @@ class Field implements IValidatable {
   }
 }
 
-class ListScheme extends Field {
+/// Implementation of [IValidatable] for a List of values
+///
+/// Like [Field] it also can be nullable,
+/// it also receives a list of [Validator]s that check agains the List itself
+/// You can pass [fieldValidator] in to validate each item in the List
+///
+/// Example:
+/// ```dart
+///  final listField = ListField(
+///   fieldValidator: Field([isTypeInt()]),
+///   validators: [listIsOfSize(2)],
+///   nullable: true,
+/// );
+/// listField.validate(null).isValid;     // true
+/// listField.validate([]).isValid;       // true
+/// listField.validate([1, 2]).isValid;   // true
+/// listField.validate([1, "2"]).isValid; // false
+/// ```
+class ListField extends Field {
   final IValidatable? fieldValidator;
 
-  ListScheme({
+  ListField({
     this.fieldValidator,
     bool nullable = false,
     List<Validator> validators = const [],
   }) : super([...validators, isTypeList()], nullable: nullable);
 
-  ListScheme.nullable({
+  ListField.nullable({
     this.fieldValidator,
     List<Validator> validators = const [],
   }) : super([...validators, isTypeList()], nullable: true);
@@ -72,16 +90,39 @@ class ListScheme extends Field {
   }
 }
 
-class MapScheme extends Field {
+/// Implementation of [IValidatable] for a Map object
+///
+/// Like [Field] it also can be nullable,
+/// it also receives a list of [Validator]s that check agains the List itself
+/// You can pass [fieldValidator] in to validate each item in the List
+///
+/// Example:
+/// ```dart
+/// final field = MapField({
+///   'address': MapField.nullable({
+///     'city': Field([isTypeString()]),
+///     'street': Field([isTypeString()]),
+///     'number': Field([
+///       isTypeInt(),
+///       isMin(0),
+///     ]),
+///     'additional': MapField.nullable({
+///       'doorbel_number': Field([isTypeInt()])
+///     }),
+///   })
+/// });
+/// ```
+class MapField extends Field {
+  /// Map holding the scheme for this MapField
   final Map<String, IValidatable> scheme;
 
-  MapScheme(
+  MapField(
     this.scheme, {
     bool nullable = false,
     List<Validator> validators = const [],
   }) : super([...validators, isTypeMap()], nullable: nullable);
 
-  MapScheme.nullable(
+  MapField.nullable(
     this.scheme, {
     List<Validator> validators = const [],
   }) : super([...validators, isTypeMap()], nullable: true);

@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:json_scheme/json_scheme.dart';
 
 void main() {
-  test('Basic MapScheme validates correctly', () {
-    final field = MapScheme({
+  test('Basic MapField validates correctly', () {
+    final field = MapField({
       'name': Field([isTypeString()]),
       'vat': Field.nullable([isTypeDouble()]),
       'age': Field([
@@ -29,16 +29,16 @@ void main() {
     expect(validRes1.isValid, true);
   });
 
-  test('Nested MapSchemes validates correctly', () {
-    final field = MapScheme({
-      'address': MapScheme.nullable({
+  test('Nested MapFields validates correctly', () {
+    final field = MapField({
+      'address': MapField.nullable({
         'city': Field([isTypeString()]),
         'street': Field([isTypeString()]),
         'number': Field([
           isTypeInt(),
           isMin(0),
         ]),
-        'additional': MapScheme.nullable({
+        'additional': MapField.nullable({
           'doorbel_number': Field([isTypeInt()])
         }),
       })
@@ -65,11 +65,11 @@ void main() {
     expect(invalidRes5.isValid, false);
     expect(invalidRes5.expected, 'address -> additional -> doorbel_number -> int');
   });
-  
-  test('Map with ListScheme', () {
-    final field = MapScheme({
-      'books': ListScheme(
-        fieldValidator: MapScheme({
+
+  test('Map with ListField', () {
+    final field = MapField({
+      'books': ListField(
+        fieldValidator: MapField({
           'name': Field([isTypeString()]),
         }),
       ),

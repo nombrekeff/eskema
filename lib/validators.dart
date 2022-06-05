@@ -1,5 +1,6 @@
 import 'common.dart';
 
+/// Returns a [Validator] that checks if the given value is the correct type
 Validator isType<T>() {
   return (value) => Result(
         isValid: value is T,
@@ -7,12 +8,25 @@ Validator isType<T>() {
       );
 }
 
+/// Returns a [Validator] that checks if the given value is a String
 Validator isTypeString() => isType<String>();
+
+/// Returns a [Validator] that checks if the given value is a double
 Validator isTypeDouble() => isType<double>();
+
+/// Returns a [Validator] that checks if the given value is an int
 Validator isTypeInt() => isType<int>();
+
+/// Returns a [Validator] that checks if the given value is a num
 Validator isTypeNum() => isType<num>();
+
+/// Returns a [Validator] that checks if the given value is a bool
 Validator isTypeBool() => isType<bool>();
+
+/// Returns a [Validator] that checks if the given value is a Map<K, V>
 Validator isTypeMap<K, V>() => isType<Map<K, V>>();
+
+/// Returns a [Validator] that checks if the given value is a List<T>
 Validator isTypeList<T>() => isType<List<T>>();
 
 /// Checks whether the given value is greater or equal than [min]
@@ -30,7 +44,6 @@ Validator isMax(num max) {
         expected: 'lower or equal $max',
       );
 }
-
 
 /// Checks whether the given value is a valid DateTime formattedString
 Validator isDate() {

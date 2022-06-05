@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:json_scheme/json_scheme.dart';
 
 void main() {
-  test('Basic ListScheme validates itself', () {
-    final field = ListScheme(validators: [listIsOfSize(2)]);
+  test('Basic ListField validates itself', () {
+    final field = ListField(validators: [listIsOfSize(2)]);
 
     final invalidRes1 = field.validate([]);
     expect(invalidRes1.isValid, false);
@@ -24,8 +24,8 @@ void main() {
     expect(validRes2.isValid, true);
   });
 
-  test('Nullable ListScheme ', () {
-    final field = ListScheme.nullable(validators: [listIsOfSize(2)]);
+  test('Nullable ListField ', () {
+    final field = ListField.nullable(validators: [listIsOfSize(2)]);
 
     final validRes1 = field.validate(null);
     expect(validRes1.isValid, true);
@@ -34,8 +34,8 @@ void main() {
     expect(validRes2.isValid, true);
   });
 
-  test('Basic ListScheme validates items', () {
-    final field = ListScheme(
+  test('Basic ListField validates items', () {
+    final field = ListField(
       fieldValidator: Field([
         isTypeInt(),
       ]),
@@ -52,9 +52,9 @@ void main() {
     expect(invalidRes1.expected, '[0] -> int');
   });
 
-  test('Nested ListScheme validates items', () {
-    final field = ListScheme(
-      fieldValidator: ListScheme(
+  test('Nested ListField validates items', () {
+    final field = ListField(
+      fieldValidator: ListField(
         validators: [listIsOfSize(2)],
         fieldValidator: Field([
           isTypeInt(),
@@ -83,9 +83,9 @@ void main() {
     expect(invalidRes2.expected, '[0] -> [1] -> int');
   });
 
-  test('Map ListScheme', () {
-    final field = ListScheme(
-      fieldValidator: MapScheme({
+  test('Map ListField', () {
+    final field = ListField(
+      fieldValidator: MapField({
         'city': Field([isTypeString()]),
         'street': Field([isTypeString()]),
       }),
@@ -100,30 +100,5 @@ void main() {
     expect(invalidRes1.expected, '[0] -> city -> String');
   });
 
-  test('Map with ListScheme', () {
-    final field = MapScheme({
-      'books': ListScheme(
-        fieldValidator: MapScheme({
-          'name': Field([isTypeString()]),
-        }),
-      ),
-    });
-    final validRes1 = field.validate({
-      'books': [],
-    });
-    expect(validRes1.isValid, true);
 
-    final validRes2 = field.validate({
-      'books': [
-        {'name': 'bookname'}
-      ],
-    });
-    expect(validRes2.isValid, true);
-
-    final invalidRes1 = field.validate({
-      'books': [{}],
-    });
-    expect(invalidRes1.isValid, false);
-    expect(invalidRes1.expected, 'books -> [0] -> name -> String');
-  });
 }
