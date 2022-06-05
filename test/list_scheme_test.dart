@@ -65,7 +65,13 @@ void main() {
       [1]
     ]);
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.expected, 'item with index [0] to be List of size 2');
+    expect(invalidRes1.expected, '[0] to be List of size 2');
+
+    final invalidRes2 = field.validate([
+      [1, "aaaa"]
+    ]);
+    expect(invalidRes2.isValid, false);
+    expect(invalidRes2.expected, '[0] to be List of size 2');
   });
 
   test('Map ListScheme', () {

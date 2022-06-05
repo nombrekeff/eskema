@@ -145,13 +145,14 @@ class ListScheme extends Field {
         final result = fieldValidator!.validate(item);
 
         if (result.isNotValid) {
+          // TODO: Think of a better way to handle the expected message
           String expected = '[$index] to be ${result.expected}';
           if (fieldValidator is MapScheme) {
             expected = '[$index].${result.expected}';
           }
-          if (fieldValidator is ListScheme) {
-            expected = '[$index]${result.expected}';
-          }
+          // if (fieldValidator is ListScheme) {
+          //   expected = '[$index]${result.expected}';
+          // }
 
           return Result.invalid(
             value: value,
