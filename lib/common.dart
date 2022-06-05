@@ -1,17 +1,27 @@
+/// Represents the result of a validation
 mixin IResult {
+  /// Tells us if  this result is valid
   bool get isValid;
+  
+  /// Optional message for the expected result
   String? get expected;
+
+  // Handy getter to check if this result is not valid
   bool get isNotValid => !isValid;
 }
 
 typedef Validator = IResult Function(dynamic value);
 
+/// Interface representing a validatable object
 mixin IValidatable {
+  /// Validates [value] and returns an [IResult] based on the result
   IResult validate(value);
 }
 
+/// Basic implementation of [IResult]
 class Result with IResult {
-  static Result valid = Result(isValid: true);
+  /// Valid result, use this instead if creating a new instance
+  static final Result valid = Result(isValid: true);
 
   @override
   final bool isValid;

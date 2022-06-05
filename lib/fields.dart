@@ -1,6 +1,19 @@
 import 'common.dart';
 import 'validators.dart';
 
+/// Implementation of [IValidatable] for a single value
+///
+/// The field can be [nullable], and accepts a list of [Validator]s
+///
+/// This field is considered valid if:
+/// * the value is null and the field is nullable
+/// * all validators are valid or there are no validators
+///
+/// Example:
+/// ```dart
+/// final stringValidator = Field([isTypeString()]);
+/// final result = stringValidator.validate('123');
+/// ```
 class Field implements IValidatable {
   final bool nullable;
 
