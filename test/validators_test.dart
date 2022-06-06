@@ -197,7 +197,7 @@ void main() {
 
       final res2 = validator.call('aaaaa');
       expect(res2.isValid, false);
-      expect(res2.expected, 'String to not match "RegExp: pattern=[\\d] flags="');
+      expect(res2.expected, 'String to match "RegExp: pattern=[\\d] flags="');
     });
 
     test('stringMatchesPattern works with custom message', () {

@@ -151,7 +151,7 @@ Validator stringMatchesPattern(Pattern pattern, {String? expectedMessage}) {
 
     return Result(
       isValid: pattern.allMatches(value).isNotEmpty,
-      expected: expectedMessage ?? 'String to not match "$pattern"',
+      expected: expectedMessage ?? 'String to match "$pattern"',
     );
   };
 }
