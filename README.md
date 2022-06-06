@@ -27,7 +27,7 @@ Before starting I want to explain a couple of concepts and terms used in the pac
 
 **Interfaces**
 * `IResult` -> Interface representing the result of a validation, tells us if the validation was valid and contains an optional `expected` message
-* `IValidatable` -> Interface that represents a object that can be used to validate a `Field`
+* `IValidatable` -> Interface that represents an object that can be used to validate a `Field`
 
 **Classes**
 * `Result` -> Implementation of `IResult`, package uses this class for the pre-made validators (_but you can implement you own if needed_)
@@ -40,9 +40,9 @@ An example explains more than words, here are a couple of simple examples.
 For more detailed examples check the [`/examples`]() folder. <!--TODO: ADD examples LINK-->
 
 ### Single Value Field
-If you only want to validate a single value for some reason, you can use the `Field` class. 
+If you only want to validate a single value for some reason, you can use the `Field` class. Fields accept a list of Validators, these validators will be run agains the value and they must all be valid for the Field to be considered valid.
 
-This field validates that the value is a String and that it is a valid DateTime formatted string
+This field validates that the value is a String and that it is a valid DateTime formatted string. 
 ```dart
 final field = Field([ isTypeString(), isDate() ]);
 
@@ -104,6 +104,27 @@ listField.validate([1, 2]).isValid;    // true
 listField.validate([1, "2"]).isValid;  // false
 listField.validate([1, "2"]).expected; // [1] -> int
 ```
+
+### Validators
+Fields accept a list of [Validators], these validators are in charged of validating a value against a condition. 
+For example checking if a value is of a certain type, if they are formatted in some way or any other condition you might think of.
+
+json_scheme offers a set of common Validators located in `lib/src/validators.dart`. You are not limited to only using these validators, custom ones can be created in a straightforward way. 
+
+Let's see how to create a validator to check if a string matches a pattern:
+
+```dart
+Validator validateRegexp(RegExp regexp) {
+  return (value) {
+    return Result(
+      isValid: regexp.hasMatch(value),  
+      expected: 'match pattern $regexp', // the message explaining what this validator expected
+    );
+  };
+}
+```
+
+> If you want a validator you built to be part of the package, please send in a PR and I will consider adding it!!
 
 ### More examples
 For more examples check out the [`/examples`]() folder. Or check out the [docs]()
