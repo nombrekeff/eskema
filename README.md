@@ -40,7 +40,7 @@ For more detailed examples check the [`/examples`]() folder. <!--TODO: ADD examp
 ### Single Value Field
 > If you only want to validate a single value, you probably don't need **Eskema**.
 
-To validate a single value, you can use the `Field` class. Fields accept a list of Validators, these validators will be run agains the value and they must all be valid for the Field to be considered valid.
+To validate a single value, you can use the `Field` class. Fields accept a list of Validators, these validators will be run against the value and they must all be valid for the Field to be considered valid.
 
 This field validates that the value is a String and that it is a valid DateTime formatted string. 
 ```dart
@@ -51,7 +51,7 @@ expect(field.validate('sadasd').expected, 'a valid date');
 ```
 
 ### MapField
-The most common usecase will probably be validating json or dynamic maps. For this you can use the `MapField` class.
+The most common use case will probably be validating JSON or dynamic maps. For this, you can use the `MapField` class.
 
 In this example we validate a Map with optional fields and with nested fields.
 ```dart
@@ -83,7 +83,7 @@ validResult.expected;   // Valid
 ```
 
 ### ListField
-The other common usecase wis validating dynamic Lists. For this you can use the `FieldField` class.
+The other common use case is validating dynamic Lists. For this, you can use the `FieldField` class.
 
 This example validates that the provided value is a List of size 2, and each item must be of type int:
 ```dart
@@ -106,10 +106,10 @@ listField.validate([1, "2"]).expected; // [1] -> int
 ```
 
 ### Validators
-Fields accept a list of [Validators], these validators are in charged of validating a value against a condition. 
-For example checking if a value is of a certain type, if they are formatted in some way or any other condition you might think of.
+Fields accept a list of [Validators], these validators are in charge of validating a value against a condition. 
+For example, checking if a value is of a certain type if they are formatted in some way or any other condition you might think of.
 
-Eskema offers a set of common Validators located in `lib/src/validators.dart`. You are not limited to only using these validators, custom ones can be created in a straightforward way. 
+**Eskema** offers a set of common Validators located in `lib/src/validators.dart`. You are not limited to only using these validators, custom ones can be created in a straightforward way. 
 
 Let's see how to create a validator to check if a string matches a pattern:
 
