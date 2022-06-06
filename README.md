@@ -14,6 +14,7 @@ It's initially intended to validate dynamic json maps returned from an API, pass
 * Safe
 * Handle nullable fields 
 * Fully tested
+* No dependencies
 
 ## Getting started
 To use the package there's not much to do apart from installing the package or adding it to pubspec.yml. For a guide on how to do it, check [the install instructions](https://pub.dev/packages/json_scheme/install)
