@@ -3,33 +3,38 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('fields validates correctly', () {
-    final stringValidator = Field([isTypeString()]);
-    final intValidator = Field([isTypeInt()]);
-    final doubleValidator = Field([isTypeDouble()]);
-    final numValidator = Field([isTypeNum()]);
-    final boolValidator = Field([isTypeBool()]);
+    final stringField = Field([isTypeString()]);
+    final intField = Field([isTypeInt()]);
+    final doubleField = Field([isTypeDouble()]);
+    final numField = Field([isTypeNum()]);
+    final boolField = Field([isTypeBool()]);
 
-    expect(boolValidator.validate('not-valid').isValid, false);
-    expect(boolValidator.validate(true).isValid, true);
+    expect(boolField.validate('not-valid').isValid, false);
+    expect(boolField.validate(true).isValid, true);
 
-    expect(stringValidator.validate('not-valid').isValid, true);
-    expect(stringValidator.validate(123).isValid, false);
-    expect(stringValidator.validate(123).expected, 'String');
-    
-    expect(intValidator.validate(123).isValid, true);
-    expect(intValidator.validate(123.2).expected, 'int');
-    
-    expect(doubleValidator.validate(123.2).isValid, true);
-    expect(doubleValidator.validate(123).expected, 'double');
+    expect(stringField.validate('not-valid').isValid, true);
+    expect(stringField.validate(123).isValid, false);
+    expect(stringField.validate(123).expected, 'String');
 
-    expect(numValidator.validate(123.2).isValid, true);
-    expect(numValidator.validate(123).isValid, true);
-    expect(numValidator.validate('not-valid').isValid, false);
+    expect(intField.validate(123).isValid, true);
+    expect(intField.validate(123.2).expected, 'int');
+
+    expect(doubleField.validate(123.2).isValid, true);
+    expect(doubleField.validate(123).expected, 'double');
+
+    expect(numField.validate(123.2).isValid, true);
+    expect(numField.validate(123).isValid, true);
+    expect(numField.validate('not-valid').isValid, false);
   });
 
   test('nullable and non-nullable fields', () {
     final nonNullableField = Field([isTypeString()]);
-    final nullableField = Field.nullable([isTypeString()]);
+    final nullableField = Field([
+      either(
+        isTypeString(),
+        isTypeNull(),
+      ),
+    ]);
 
     expect(nullableField.validate(null).isValid, true);
 

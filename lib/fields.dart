@@ -75,6 +75,12 @@ class ListField extends Field {
     final superResult = super.validate(value);
     if (superResult.isNotValid) return superResult;
 
+    // nullable check must also be done here in addition to Field
+    // as field returns a valid result, so we continue to validate
+    // NOTE: this is probably not the best solution as the check is performed 2 times
+    //       migth be worth thinking of a better solution
+    if (value == null && nullable) return Result.valid;
+
     if (fieldValidator != null) {
       for (int index = 0; index < value.length; index++) {
         final item = value[index];
@@ -131,6 +137,12 @@ class MapField extends Field {
   IResult validate(value) {
     final superResult = super.validate(value);
     if (superResult.isNotValid) return superResult;
+
+    // nullable check must also be done here in addition to Field
+    // as field returns a valid result, so we continue to validate
+    // NOTE: this is probably not the best solution as the check is performed 2 times
+    //       migth be worth thinking of a better solution
+    if (value == null && nullable) return Result.valid;
 
     for (final key in scheme.keys) {
       final field = scheme[key] as Field;

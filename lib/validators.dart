@@ -1,5 +1,13 @@
 import 'common.dart';
 
+/// Returns a [Validator] that checks if the given value null
+Validator isTypeNull() {
+  return (value) => Result(
+        isValid: value == null,
+        expected: 'to be null',
+      );
+}
+
 /// Returns a [Validator] that checks if the given value is the correct type
 Validator isType<T>() {
   return (value) => Result(
@@ -118,6 +126,9 @@ Validator stringIsOfLength(int size) {
 }
 
 /// Validates that the String contains [substring]
+///
+/// This validator also validates that the value is a String first
+/// So there's no need to add the [isTypeString] validator when using this validator
 Validator stringContains(String substring) {
   return (value) {
     final isListResult = isTypeString().call(value);
@@ -131,6 +142,9 @@ Validator stringContains(String substring) {
 }
 
 /// Validates that the String does not contain [substring]
+///
+/// This validator also validates that the value is a String first
+/// So there's no need to add the [isTypeString] validator when using this validator
 Validator stringNotContains(String substring) {
   return (value) {
     final isListResult = isTypeString().call(value);
@@ -144,6 +158,9 @@ Validator stringNotContains(String substring) {
 }
 
 /// Validates that the String matches the provided pattern
+///
+/// This validator also validates that the value is a String first
+/// So there's no need to add the [isTypeString] validator when using this validator
 Validator stringMatchesPattern(Pattern pattern, {String? expectedMessage}) {
   return (value) {
     final isListResult = isTypeString().call(value);
