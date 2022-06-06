@@ -1,26 +1,112 @@
 [![codecov](https://codecov.io/gh/nombrekeff/json_scheme/branch/main/graph/badge.svg?token=SR5LZTDTW3)](https://codecov.io/gh/nombrekeff/json_scheme)
 [![build](https://github.com/nombrekeff/json_scheme/actions/workflows/test_main.yml/badge.svg?branch=main)](https://github.com/nombrekeff/json_scheme/actions/workflows/test_main.yml)
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+
+**json_scheme** allows us to validate dynamic data with a simple yet powerful API. 
+
+It's initially intended to validate dynamic json maps returned from an API, passed in by a user or any other scenario where you might need to validate dynamic maps. But it's not limited to json data, you can validate anyting you want to.
+
 
 ## Features
+* Simple API
+* Composable
+* Extensible
+* Safe
+* Handle nullable fields 
+* Fully tested
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
 
 ## Getting started
+To use the package there's not much to do apart from installing the package or adding it to pubspec.yml. For a guide on how to do it, check [the install instructions](https://pub.dev/packages/json_scheme/install)
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+### Concepts
+Before starting I want to explain a couple of concepts and terms used in the package.
+
+**Typedefs**
+* `Validator` -> A function that takes in a dynamic value and returns an `IResult`
+
+**Interfaces**
+* `IResult` -> Interface representing the result of a validation, tells us if the validation was valid and contains an optional `expected` message
+* `IValidatable` -> Interface that represents a object that can be used to validate a `Field`
+
+**Classes**
+* `Result` -> Implementation of `IResult`, package uses this class for the pre-made validators (_but you can implement you own if needed_)
+* `Field` -> Implementation of `IValidatable` for a single value
+* `MapField` -> Implementation of `IValidatable` for a Map value
+* `ListField` -> Implementation of `IValidatable` for a List value
 
 ## Usage
+An example explains more than words, here are a couple of simple examples.
+For more detailed examples check the [`/examples`]() folder. <!--TODO: ADD examples LINK-->
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+### Single Value Field
+If you only want to validate a single value for some reason, you can use the `Field` class. 
 
+This field validates that the value is a String and that it is a valid DateTime formatted string
 ```dart
-const like = 'sample';
+final field = Field([ isTypeString(), isDate() ]);
+
+expect(field.validate('1969-07-20 20:18:04Z').isValid, true);
+expect(field.validate('sadasd').expected, 'a valid date');
 ```
+
+### MapField
+The most common usecase will probably be validating json or dynamic maps. For this you can use the `MapField` class.
+
+In this example we validate a Map with optional fields and with nested fields.
+```dart
+final field = MapField({
+  'name': Field([isTypeString()]),
+  'address': MapField.nullable({
+    'city': Field([isTypeString()]),
+    'street': Field([isTypeString()]),
+    'number': Field([
+      isTypeInt(),
+      isMin(0),
+    ]),
+    'additional': MapField.nullable({
+      'doorbel_number': Field([isTypeInt()])
+    }),
+  })
+});
+
+final invalidResult = field.validate({});
+invalidResult.isValid;    // false
+invalidResult.isNotValid; // true
+invalidResult.expected;   // name -> String
+invalidResult.message;    // Expected name -> String
+
+final validResult = field.validate({ 'name': 'bobby' });
+validResult.isValid;    // true
+validResult.isNotValid; // false
+validResult.expected;   // Valid
+```
+
+### ListField
+The other common usecase wis validating dynamic Lists. For this you can use the `FieldField` class.
+
+This example validates that the provided value is a List of size 2, and each item must be of type int:
+```dart
+ final listField = ListField(
+  // Validation run for each field in the list
+  fieldValidator: Field([isTypeInt()]),
+  
+  // Validation run for the list itself
+  validators: [listIsOfSize(2)],
+
+  // Mark the field as nullable, you can also use the named constructor `ListField.nullable()`
+  nullable: true,
+);
+
+listField.validate(null).isValid;      // true
+listField.validate([]).isValid;        // true
+listField.validate([1, 2]).isValid;    // true
+listField.validate([1, "2"]).isValid;  // false
+listField.validate([1, "2"]).expected; // [1] -> int
+```
+
+### More examples
+For more examples check out the [`/examples`]() folder. Or check out the [docs]()
 
 ## Additional information
 
