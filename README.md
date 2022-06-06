@@ -2,7 +2,7 @@
 
 **Eskema** is a tool to help you validate dynamic data with a simple yet powerful API. 
 
-It's initially intended to validate dynamic json returned from an API, passed in by a user or any other scenario where you might need to validate dynamic data. But it's not limited to json data, you can validate anyting you want to.
+It's initially intended to validate dynamic JSON returned from an API, passed in by a user or any other scenario where you might need to validate dynamic data. But it's not limited to JSON data, you can validate anything you want to.
 
 ## Features
 * Simple API
@@ -108,7 +108,7 @@ listField.validate([1, "2"]).expected; // [1] -> int
 Fields accept a list of [Validators], these validators are in charge of validating a value against a condition. 
 For example, checking if a value is of a certain type if they are formatted in some way or any other condition you might think of.
 
-**Eskema** offers a set of common Validators located in `lib/src/validators.dart`. You are not limited to only using these validators, custom ones can be created in a straightforward way. 
+**Eskema** offers a set of common Validators located in `lib/src/validators.dart`. You are not limited to only using these validators, custom ones can be created very easily. 
 
 Let's see how to create a validator to check if a string matches a pattern:
 
@@ -129,7 +129,7 @@ Validator validateRegexp(RegExp regexp) {
 For more examples check out the [`/examples`]() folder. Or check out the [docs]()
 
 ## Package Name
-**Eskema** is the vasque word for "Schema". I did not know what to call the package, and after looking for a bit I found the vasque word for schema and decided to use it!
+**Eskema** is the Vasque word for "Schema". I did not know what to call the package, and after looking for a bit I found the Vasque word for schema and decided to use it!
 
 ## Additional information
 
