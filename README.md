@@ -15,7 +15,6 @@ It's initially intended to validate dynamic json maps returned from an API, pass
 * Handle nullable fields 
 * Fully tested
 
-
 ## Getting started
 To use the package there's not much to do apart from installing the package or adding it to pubspec.yml. For a guide on how to do it, check [the install instructions](https://pub.dev/packages/json_scheme/install)
 
@@ -40,7 +39,9 @@ An example explains more than words, here are a couple of simple examples.
 For more detailed examples check the [`/examples`]() folder. <!--TODO: ADD examples LINK-->
 
 ### Single Value Field
-If you only want to validate a single value for some reason, you can use the `Field` class. Fields accept a list of Validators, these validators will be run agains the value and they must all be valid for the Field to be considered valid.
+> If you only want to validate a single value, you probably don't need **json_scheme**.
+
+To validate a single value, you can use the `Field` class. Fields accept a list of Validators, these validators will be run agains the value and they must all be valid for the Field to be considered valid.
 
 This field validates that the value is a String and that it is a valid DateTime formatted string. 
 ```dart
@@ -131,6 +132,7 @@ For more examples check out the [`/examples`]() folder. Or check out the [docs](
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+* For more information check the [docs]() out. 
+* If you find a bug please file an [issue]() or send a PR my way.
+* Contributions are welcomed, feel free to send in fixes, new features, custom validators, etc...
+
