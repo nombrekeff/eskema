@@ -129,6 +129,9 @@ Validator validateRegexp(RegExp regexp) {
 ### More examples
 For more examples check out the [`/examples`]() folder. Or check out the [docs]()
 
+## Package Name
+**Eskema** is the vasque word for "Schema". I did not know what to call the package, and after looking for a bit I found the vasque word for schema and decided to use it!
+
 ## Additional information
 
 * For more information check the [docs]() out. 
