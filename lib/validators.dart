@@ -45,6 +45,38 @@ Validator isMax(num max) {
       );
 }
 
+/// Checks whether the given value is less than [max]
+Validator isLt(num max) {
+  return (value) => Result(
+        isValid: value is num && value < max,
+        expected: 'lower than $max',
+      );
+}
+
+/// Checks whether the given value is greater than [max]
+Validator isGt(num min) {
+  return (value) => Result(
+        isValid: value is num && value > min,
+        expected: 'greater than $min',
+      );
+}
+
+/// Checks whether the given value is equal to the [expected] number
+Validator isEq(num expected) {
+  return (value) => Result(
+        isValid: value is num && value == expected,
+        expected: 'equal to $expected',
+      );
+}
+
+/// Checks whether the given value is equal to the [expected] String
+Validator isStringEq(String expected) {
+  return (value) => Result(
+        isValid: value is String && value == expected,
+        expected: 'equal to "$expected"',
+      );
+}
+
 /// Checks whether the given value is a valid DateTime formattedString
 Validator isDate() {
   return (value) => Result(
@@ -56,14 +88,70 @@ Validator isDate() {
 /// Validates that the list's length is the same as the provided [size]
 ///
 /// This validator also validates that the value is a list first
-Validator listIsOfSize(int size) {
+/// So there's no need to add the [isTypeList] validator when using this validator
+Validator listIsOfLength(int size) {
   return (value) {
     final isListResult = isTypeList().call(value);
     if (isListResult.isNotValid) return isListResult;
 
     return Result(
-      isValid: value.length == size,
+      isValid: (value as List).length == size,
       expected: 'List of size $size',
+    );
+  };
+}
+
+/// Validates that the String's length is the same as the provided [size]
+///
+/// This validator also validates that the value is a String first
+/// So there's no need to add the [isTypeString] validator when using this validator
+Validator stringIsOfLength(int size) {
+  return (value) {
+    final isStringResult = isTypeString().call(value);
+    if (isStringResult.isNotValid) return isStringResult;
+
+    return Result(
+      isValid: (value as String).length == size,
+      expected: 'String of length $size',
+    );
+  };
+}
+
+/// Validates that the String contains [substring]
+Validator stringContains(String substring) {
+  return (value) {
+    final isListResult = isTypeString().call(value);
+    if (isListResult.isNotValid) return isListResult;
+
+    return Result(
+      isValid: (value as String).contains(substring),
+      expected: 'String to contain "$substring"',
+    );
+  };
+}
+
+/// Validates that the String does not contain [substring]
+Validator stringNotContains(String substring) {
+  return (value) {
+    final isListResult = isTypeString().call(value);
+    if (isListResult.isNotValid) return isListResult;
+
+    return Result(
+      isValid: !(value as String).contains(substring),
+      expected: 'String to not contain "$substring"',
+    );
+  };
+}
+
+/// Validates that the String matches the provided pattern
+Validator stringMatchesPattern(Pattern pattern, {String? expectedMessage}) {
+  return (value) {
+    final isListResult = isTypeString().call(value);
+    if (isListResult.isNotValid) return isListResult;
+
+    return Result(
+      isValid: pattern.allMatches(value).isNotEmpty,
+      expected: expectedMessage ?? 'String to not match "$pattern"',
     );
   };
 }
@@ -80,4 +168,3 @@ Validator either(Validator validator1, Validator validator2) {
     );
   };
 }
-

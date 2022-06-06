@@ -3,7 +3,7 @@ import 'package:eskema/eskema.dart';
 
 void main() {
   test('Basic ListField validates itself', () {
-    final field = ListField(validators: [listIsOfSize(2)]);
+    final field = ListField(validators: [listIsOfLength(2)]);
 
     final invalidRes1 = field.validate([]);
     expect(invalidRes1.isValid, false);
@@ -25,7 +25,7 @@ void main() {
   });
 
   test('Nullable ListField ', () {
-    final field = ListField.nullable(validators: [listIsOfSize(2)]);
+    final field = ListField.nullable(validators: [listIsOfLength(2)]);
 
     final validRes1 = field.validate(null);
     expect(validRes1.isValid, true);
@@ -55,7 +55,7 @@ void main() {
   test('Nested ListField validates items', () {
     final field = ListField(
       fieldValidator: ListField(
-        validators: [listIsOfSize(2)],
+        validators: [listIsOfLength(2)],
         fieldValidator: Field([
           isTypeInt(),
         ]),
