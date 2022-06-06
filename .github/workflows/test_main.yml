@@ -1,4 +1,4 @@
-name: Test & Build APK (main)
+name: build
 
 on:
   push:
