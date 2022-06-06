@@ -1,4 +1,5 @@
 [![codecov](https://codecov.io/gh/nombrekeff/json_scheme/branch/main/graph/badge.svg?token=SR5LZTDTW3)](https://codecov.io/gh/nombrekeff/json_scheme)
+[![build](https://github.com/nombrekeff/json_scheme/actions/workflows/test_main.yml/badge.svg?branch=main)](https://github.com/nombrekeff/json_scheme/actions/workflows/test_main.yml)
 
 TODO: Put a short description of the package here that helps potential users
 know whether this package might be useful for them.
