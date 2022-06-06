@@ -1,11 +1,9 @@
-[![codecov](https://codecov.io/gh/nombrekeff/json_scheme/branch/main/graph/badge.svg?token=SR5LZTDTW3)](https://codecov.io/gh/nombrekeff/json_scheme)
-[![build](https://github.com/nombrekeff/json_scheme/actions/workflows/test_main.yml/badge.svg?branch=main)](https://github.com/nombrekeff/json_scheme/actions/workflows/test_main.yml)
+[![codecov](https://codecov.io/gh/nombrekeff/eskema/branch/main/graph/badge.svg?token=SR5LZTDTW3)](https://codecov.io/gh/nombrekeff/eskema)
+[![build](https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml/badge.svg?branch=main)](https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml)
 
+**Eskema** is a tool to help you validate dynamic data with a simple yet powerful API. 
 
-**json_scheme** allows us to validate dynamic data with a simple yet powerful API. 
-
-It's initially intended to validate dynamic json maps returned from an API, passed in by a user or any other scenario where you might need to validate dynamic maps. But it's not limited to json data, you can validate anyting you want to.
-
+It's initially intended to validate dynamic json returned from an API, passed in by a user or any other scenario where you might need to validate dynamic data. But it's not limited to json data, you can validate anyting you want to.
 
 ## Features
 * Simple API
@@ -17,7 +15,7 @@ It's initially intended to validate dynamic json maps returned from an API, pass
 * No dependencies
 
 ## Getting started
-To use the package there's not much to do apart from installing the package or adding it to pubspec.yml. For a guide on how to do it, check [the install instructions](https://pub.dev/packages/json_scheme/install)
+To use the package there's not much to do apart from installing the package or adding it to pubspec.yml. For a guide on how to do it, check [the install instructions](https://pub.dev/packages/eskema/install)
 
 ### Concepts
 Before starting I want to explain a couple of concepts and terms used in the package.
@@ -40,7 +38,7 @@ An example explains more than words, here are a couple of simple examples.
 For more detailed examples check the [`/examples`]() folder. <!--TODO: ADD examples LINK-->
 
 ### Single Value Field
-> If you only want to validate a single value, you probably don't need **json_scheme**.
+> If you only want to validate a single value, you probably don't need **Eskema**.
 
 To validate a single value, you can use the `Field` class. Fields accept a list of Validators, these validators will be run agains the value and they must all be valid for the Field to be considered valid.
 
@@ -111,7 +109,7 @@ listField.validate([1, "2"]).expected; // [1] -> int
 Fields accept a list of [Validators], these validators are in charged of validating a value against a condition. 
 For example checking if a value is of a certain type, if they are formatted in some way or any other condition you might think of.
 
-json_scheme offers a set of common Validators located in `lib/src/validators.dart`. You are not limited to only using these validators, custom ones can be created in a straightforward way. 
+Eskema offers a set of common Validators located in `lib/src/validators.dart`. You are not limited to only using these validators, custom ones can be created in a straightforward way. 
 
 Let's see how to create a validator to check if a string matches a pattern:
 

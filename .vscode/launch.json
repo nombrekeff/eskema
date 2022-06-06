@@ -11,18 +11,18 @@
             "program": "./test/"
         },
         {
-            "name": "json_scheme",
+            "name": "eskema",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "json_scheme (profile mode)",
+            "name": "eskema (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "json_scheme (release mode)",
+            "name": "eskema (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
