@@ -1,4 +1,4 @@
-[![codecov coverage report](https://codecov.io/gh/nombrekeff/json_scheme/branch/master/graph/badge.svg)](https://codecov.io/gh/nombrekeff/json_scheme)
+[![codecov](https://codecov.io/gh/nombrekeff/json_scheme/branch/main/graph/badge.svg?token=SR5LZTDTW3)](https://codecov.io/gh/nombrekeff/json_scheme)
 
 TODO: Put a short description of the package here that helps potential users
 know whether this package might be useful for them.
