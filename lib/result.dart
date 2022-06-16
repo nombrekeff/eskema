@@ -10,14 +10,6 @@ mixin IResult {
   bool get isNotValid => !isValid;
 }
 
-typedef Validator = IResult Function(dynamic value);
-
-/// Interface representing a validatable object
-mixin IValidatable {
-  /// Validates [value] and returns an [IResult] based on the result
-  IResult validate(value);
-}
-
 /// Basic implementation of [IResult]
 class Result with IResult {
   /// Valid result, use this instead if creating a new instance
