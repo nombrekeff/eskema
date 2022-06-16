@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:eskema/eskema.dart';
 
-
-
 void main() {
   test('Basic MapField validates correctly', () {
     final mapField = all([
@@ -30,7 +28,7 @@ void main() {
     final invalidRes3 = mapField.call({'name': 'test', 'age': -12});
     expect(invalidRes3.isValid, false);
     expect(invalidRes3.expected, 'age -> greater than or equal to 0');
-    expect(invalidRes3.toString(), 'Expected age -> greater than or equal to 0');
+    expect(invalidRes3.toString(), 'Expected age -> greater than or equal to 0, got -12');
 
     final invalidRes4 = mapField.call(null);
     expect(invalidRes4.isValid, false);
@@ -41,21 +39,25 @@ void main() {
   });
 
   test('Nested MapFields validates correctly', () {
-    final nestedField = nullable(eskema({
-      'address': eskema({
-        'city': all([isType<String>()]),
-        'street': all([isType<String>()]),
-        'number': all([
-          isType<int>(),
-          isGte(0),
-        ]),
-        'additional': eskema({
-          'doorbel_number': all([isType<int>()])
+    final isValidMap = nullable(
+      eskema({
+        'address': eskema({
+          'city': all([isType<String>()]),
+          'street': all([isType<String>()]),
+          'number': all([
+            isType<int>(),
+            isGte(0),
+          ]),
+          'additional': nullable(
+            eskema({
+              'doorbel_number': all([isType<int>()])
+            }),
+          ),
         }),
       }),
-    }));
+    );
 
-    final invalidRes4 = nestedField.call({
+    final invalidRes4 = isValidMap({
       'address': {
         'city': 'NY',
         'street': 132,
@@ -64,8 +66,9 @@ void main() {
     });
     expect(invalidRes4.isValid, false);
     expect(invalidRes4.expected, 'address -> street -> String');
+    expect(invalidRes4.toString(), 'Expected address -> street -> String, got 132');
 
-    final invalidRes5 = nestedField.call({
+    final invalidRes5 = isValidMap({
       'address': {
         'city': 'NY',
         'street': '8th ave',
@@ -75,8 +78,12 @@ void main() {
     });
     expect(invalidRes5.isValid, false);
     expect(invalidRes5.expected, 'address -> additional -> doorbel_number -> int');
+    expect(
+      invalidRes5.toString(),
+      'Expected address -> additional -> doorbel_number -> int, got null',
+    );
 
-    final validRes1 = nestedField.call({
+    final validRes1 = isValidMap({
       'address': {
         'city': 'NY',
         'street': '8th ave',
@@ -113,5 +120,9 @@ void main() {
     });
     expect(invalidRes1.isValid, false);
     expect(invalidRes1.expected, 'books -> [0] -> name -> String');
+    expect(
+      invalidRes1.toString(),
+      'Expected books -> [0] -> name -> String, got {}',
+    );
   });
 }

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
 import 'package:eskema/util.dart';
 
@@ -14,6 +12,7 @@ Validator isTypeNull() {
   return (value) => Result(
         isValid: value == null,
         expected: 'null',
+        value: value,
       );
 }
 
@@ -22,6 +21,7 @@ Validator isType<T>() {
   return (value) => Result(
         isValid: value is T,
         expected: T.toString(),
+        value: value,
       );
 }
 
@@ -30,6 +30,7 @@ Validator isTypeOrNull<T>() {
   return (value) => Result(
         isValid: value is T || value == null,
         expected: '${T.toString()} or null',
+        value: value,
       );
 }
 
@@ -40,6 +41,7 @@ Validator isLt(num max) {
     (value) => Result(
       isValid: value < max,
       expected: 'less than $max',
+      value: value,
     ),
   );
 }
@@ -51,6 +53,7 @@ Validator isLte(num max) {
     (value) => Result(
       isValid: value <= max,
       expected: 'less than or equal to $max',
+      value: value,
     ),
   );
 }
@@ -62,6 +65,7 @@ Validator isGt(num min) {
     (value) => Result(
       isValid: value > min,
       expected: 'greater than $min',
+      value: value,
     ),
   );
 }
@@ -73,6 +77,7 @@ Validator isGte(num min) {
     (value) => Result(
       isValid: value is num && value >= min,
       expected: 'greater than or equal to $min',
+      value: value,
     ),
   );
 }
@@ -87,6 +92,7 @@ Validator isEq<T>(T expected) {
       isValid: value == expected,
       // json.encode is here to format the value correctly, so we know if for example 10 is a number (10) or a string ("10").
       expected: 'equal to ${pretifyValue(expected)}',
+      value: value,
     ),
   );
 }
@@ -98,6 +104,7 @@ Validator isDeepEq<T>(T expected) {
     (value) => Result(
       isValid: (_collectionEquals(value, expected)),
       expected: 'equal to ${pretifyValue(expected)}',
+      value: value,
     ),
   );
 }
@@ -107,6 +114,7 @@ Validator isDate() {
   return (value) => Result(
         isValid: DateTime.tryParse(value) != null,
         expected: 'a valid date',
+        value: value,
       );
 }
 
@@ -122,6 +130,7 @@ Validator listIsOfLength(int size) {
     return Result(
       isValid: (value as List).length == size,
       expected: 'List of size $size',
+      value: value,
     );
   };
 }
@@ -138,6 +147,7 @@ Validator stringIsOfLength(int size) {
     return Result(
       isValid: (value as String).length == size,
       expected: 'String of length $size',
+      value: value,
     );
   };
 }
@@ -154,6 +164,7 @@ Validator stringContains(String substring) {
     return Result(
       isValid: (value as String).contains(substring),
       expected: 'String to contain "$substring"',
+      value: value,
     );
   };
 }
@@ -170,6 +181,7 @@ Validator listContains<T>(T item) {
     return Result(
       isValid: (value as List).contains(item),
       expected: 'List to contain ${pretifyValue(item)}',
+      value: value,
     );
   };
 }
@@ -186,6 +198,7 @@ Validator stringNotContains(String substring) {
     return Result(
       isValid: !(value as String).contains(substring),
       expected: 'String to not contain "$substring"',
+      value: value,
     );
   };
 }
@@ -202,6 +215,7 @@ Validator stringMatchesPattern(Pattern pattern, {String? expectedMessage}) {
     return Result(
       isValid: pattern.allMatches(value).isNotEmpty,
       expected: expectedMessage ?? 'String to match "$pattern"',
+      value: value,
     );
   };
 }
@@ -215,6 +229,7 @@ Validator or(Validator validator1, Validator validator2) {
     return Result(
       isValid: res1.isValid || res2.isValid,
       expected: '${res1.expected} or ${res2.expected}',
+      value: value,
     );
   };
 }
@@ -242,6 +257,7 @@ Validator not(Validator validator) {
     return Result(
       isValid: !result.isValid,
       expected: 'not ${result.expected}',
+      value: value,
     );
   };
 }
@@ -268,6 +284,16 @@ Validator all(List<Validator> validators) {
   };
 }
 
+/// Returns a [Validator] that throws a [ValidatorFailedException] instead of returning a result
+Validator throwInstead(Validator validator) {
+  return (value) {
+    final result = validator(value);
+    if (result.isNotValid) throw ValidatorFailedException(result);
+
+    return Result.valid;
+  };
+}
+
 /// Returns a Validator that checks a value against a Map eskema that declares a validator for each key.
 ///
 /// Example:
@@ -288,14 +314,14 @@ Validator all(List<Validator> validators) {
 /// ```
 Validator eskema(Map<String, Validator> eskema) {
   return (value) {
-    if (value is! Map) return Result.invalid('Map');
+    if (value is! Map) return Result.invalid('Map', value);
 
     for (final key in eskema.keys) {
       final field = eskema[key] as Validator;
       final result = field.call(value[key]);
 
       if (result.isNotValid) {
-        return Result.invalid('$key -> ${result.expected}');
+        return Result.invalid('$key -> ${result.expected}', result.value);
       }
     }
 
@@ -332,7 +358,7 @@ Validator eskemaList(List<Validator> eskema) {
       final result = effectiveValidator.call(item);
 
       if (result.isNotValid) {
-        return Result.invalid('[$index] -> ${result.expected}');
+        return Result.invalid('[$index] -> ${result.expected}', value);
       }
     }
 
@@ -345,14 +371,14 @@ Validator eskemaList(List<Validator> eskema) {
 /// This validator also checks that the value is a list
 Validator listEach(Validator itemValidator) {
   return (value) {
-    if (value is! List) return Result.invalid('List');
+    if (value is! List) return Result.invalid('List', value);
 
     for (int index = 0; index < value.length; index++) {
       final item = value[index];
       final result = itemValidator.call(item);
 
       if (result.isNotValid) {
-        return Result.invalid('[$index] -> ${result.expected}');
+        return Result.invalid('[$index] -> ${result.expected}', item);
       }
     }
 

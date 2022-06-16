@@ -63,7 +63,7 @@ void main() {
       isType<int>(),
       (value) {
         if (value is num && value == 42) {
-          return Result.invalid('that is the number');
+          return Result.invalid('that is the number', value);
         }
 
         return Result.valid;

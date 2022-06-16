@@ -1,3 +1,4 @@
+import 'package:eskema/util.dart';
 import 'package:eskema/validators.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -137,6 +138,10 @@ void main() {
       final res2 = validator.call(11);
       expect(res2.isValid, false);
       expect(res2.expected, 'less than or equal to 10');
+      expect(
+        res2.toString(),
+        'Expected less than or equal to 10, got 11',
+      );
     });
 
     test('isGt works', () {
@@ -417,6 +422,12 @@ void main() {
         isEquals({1, 2}).isValid,
         true,
       );
+    });
+
+    test('throwInstead', () {
+      final isEquals = throwInstead(isDeepEq<Set>({1, 2}));
+      expect(() => isEquals({1}), throwsA(isA<ValidatorFailedException>()));
+      expect(() => isEquals({1, 2}), isNot(throwsA(isA<ValidatorFailedException>())));
     });
   });
 }
