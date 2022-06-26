@@ -56,13 +56,22 @@ and(isType<String>(), isType<int>());  // both validator must be valid
 
 
 // This validator checks that, the value is a list of strings, with length 2, and contains item "test"
-listEach(
-  all([
-    isType<String>(),
-    isOfLength(2),
-    listContains('test'),
-  ]),
-);
+all([
+  isOfLength(2),                    // checks that the list is of length 2
+  listEach(isTypeOrNull<String>()), // checks that each item is either string or null
+  listContains('test'),             // list must contain value "test"
+]);
+
+// This validator checks a map against a eskema. Map must contain property 'books', 
+// which is a list of maps that matches a sub-eskema. Subeskema validates that the map has a name which is a string
+final matchesEskema = eskema({
+  'books': listEach(
+    eskema({
+      'name': isType<String>(),
+    }),
+  ),
+});
+matchesEskema({'books': [{'name': 'book name'}]});
 ```
 
 ## Validators
