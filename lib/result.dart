@@ -1,21 +1,17 @@
+import 'package:eskema/util.dart';
+
 /// Represents the result of a validation
 mixin IResult {
-  /// Tells us if  this result is valid
+  /// Tells us if this result is valid
   bool get isValid;
-  
+
   /// Optional message for the expected result
   String? get expected;
 
+  dynamic value;
+
   /// Handy getter to check if this result is not valid
   bool get isNotValid => !isValid;
-}
-
-typedef Validator = IResult Function(dynamic value);
-
-/// Interface representing a validatable object
-mixin IValidatable {
-  /// Validates [value] and returns an [IResult] based on the result
-  IResult validate(value);
 }
 
 /// Basic implementation of [IResult]
@@ -29,12 +25,15 @@ class Result with IResult {
   @override
   final String? expected;
 
-  Result({required this.isValid, this.expected});
+  @override
+  dynamic value;
 
-  Result.invalid(this.expected) : isValid = false;
+  Result({required this.isValid, this.expected, this.value});
+
+  Result.invalid(this.expected, this.value) : isValid = false;
 
   @override
   String toString() {
-    return isValid ? 'Valid' : 'Expected $expected';
+    return isValid ? 'Valid' : 'Expected $expected, got ${pretifyValue(value)}';
   }
 }

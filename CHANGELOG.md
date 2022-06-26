@@ -1,3 +1,2 @@
 ## 0.0.1
-
-* TODO: Describe initial release.
+* MVP, basic validators and mostly complete API
