@@ -5,6 +5,7 @@ import 'package:eskema/util.dart';
 
 void main() {
   final isEquals = throwInstead(isDeepEq<Set>({1, 2}));
+  
   try {
     isEquals({1});
   } on ValidatorFailedException catch (e) {
