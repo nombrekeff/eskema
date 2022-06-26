@@ -1,4 +1,4 @@
-[![codecov](https://codecov.io/gh/nombrekeff/eskema/branch/main/graph/badge.svg?token=ZF22N0G09J)](https://codecov.io/gh/nombrekeff/eskema)[![build](https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml/badge.svg?branch=main)](https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml)
+[![codecov](https://codecov.io/gh/nombrekeff/eskema/branch/main/graph/badge.svg?token=ZF22N0G09J)](https://codecov.io/gh/nombrekeff/eskema) [![build](https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml/badge.svg?branch=main)](https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml)
 
 **Eskema** is a tool to help you validate dynamic data with a simple yet powerful API. 
 
@@ -33,7 +33,7 @@ This is a class that represents the result of a validation
 An example explains more than 100 words, so here are a couple of simple examples.
 For more detailed examples check the [`/examples`](./example) folder.
 
-### Single Value Field
+### Simple example
 > NOTE: that if you only want to validate a single value, you probably don't need **Eskema**.
 
 Otherwise let's check how to validate a single value. You can use validators individually:
@@ -41,11 +41,14 @@ Otherwise let's check how to validate a single value. You can use validators ind
 final isString = isType<String>();
 const result1 = isString('valid string');
 const result2 = isString(123);
+
+result1.isValid;  // true
+result2.isValid;  // false
+result2.expected; // String
 ```
 
 
 Or you can combine validators: 
-
 ```dart
 all([isType<String>(), isDate()]);     // all validators must be valid
 or(isType<String>(), isType<int>());   // either validator must be valid
