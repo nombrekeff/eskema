@@ -13,8 +13,8 @@ It as initially intended to validate dynamic JSON returned from an API, passed i
 ## Getting started
 To use the package there's not much to do apart from installing the package or adding it to pubspec.yml. For a guide on how to do it, check [the install instructions](https://pub.dev/packages/eskema/install)
 
-## Concepts
-### Validator
+## Concepts
+### Validator
 Mostly everything in Eskema are [Validators], which are functions that take in a value and return a [IResult].
 
 The following are all validators:
@@ -62,7 +62,7 @@ listEach(
 );
 ```
 
-## Validators
+## Validators
 
 ### isType<T>
 This validator checks that a value is of a certain type
@@ -167,7 +167,7 @@ Validator validateRegexp(RegExp regexp) {
 ### More examples
 For more examples check out the [`/examples`]() folder. Or check out the [docs]()
 
-## Package Name
+## Package Name
 **Eskema** is the Vasque word for "Schema". I did not know what to call the package, and after looking for a bit I found the Vasque word for schema and decided to use it!
 
 ## Additional information
