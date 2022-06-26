@@ -31,7 +31,7 @@ This is a class that represents the result of a validation
 
 ## Usage
 An example explains more than 100 words, so here are a couple of simple examples.
-For more detailed examples check the [`/examples`](./example) folder.
+For more detailed examples check the [`/examples`](https://github.com/nombrekeff/eskema/tree/experiment/remove-nullable-add-omittable/example) folder.
 
 ### Simple example
 > NOTE: that if you only want to validate a single value, you probably don't need **Eskema**.
@@ -156,7 +156,7 @@ isValidList.validate([1, "2"]).expected; // [1] -> int
 
 
 ### Additional Validators
-For a complete list of validators, check the docs
+For a complete list of validators, check the [docs](https://pub.dev/documentation/eskema/latest/)
 
 ### Custom Validators
 **Eskema** offers a set of common Validators located in `lib/src/validators.dart`. You are not limited to only using these validators, custom ones can be created very easily. 
@@ -177,14 +177,15 @@ Validator validateRegexp(RegExp regexp) {
 > If you want a validator you built to be part of the package, please send in a PR and I will consider adding it!!
 
 ### More examples
-For more examples check out the [`/examples`]() folder. Or check out the [docs]()
+For more examples check out the [`/examples`](https://github.com/nombrekeff/eskema/tree/experiment/remove-nullable-add-omittable/example) folder. Or check out the [docs](https://pub.dev/documentation/eskema/latest/)
 
 ## Package Name
 **Eskema** is the Vasque word for "Schema". I did not know what to call the package, and after looking for a bit I found the Vasque word for schema and decided to use it!
 
 ## Additional information
 
-* For more information check the [docs]() out. 
-* If you find a bug please file an [issue]() or send a PR my way.
+* For more information check the [docs](https://pub.dev/documentation/eskema/latest/)
+ out. 
+* If you find a bug please file an [issue](https://github.com/nombrekeff/eskema/issues/new) or send a PR my way.
 * Contributions are welcomed, feel free to send in fixes, new features, custom validators, etc...
 
