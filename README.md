@@ -6,7 +6,7 @@
 
 **Eskema** is a tool to help you validate dynamic data with a simple yet powerful API. 
 
-It as initially intended to validate dynamic JSON returned from an API, passed in by a user or any other scenario where you might need to validate dynamic data. But it's not limited to JSON data, you can validate any type of dinamic data.
+It was initially intended to validate dynamic JSON returned from an API, passed in by a user or any other scenario where you might need to validate dynamic data. But it's not limited to JSON data, you can validate any type of dinamic data.
 
 ## Features
 * Simple API
