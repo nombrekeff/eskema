@@ -29,8 +29,9 @@ Most things in Eskema are validators, but they are now represented by objects im
 The following are still valid ways to obtain validators:
 ```dart
 isType<String>();
+$isInteger;
 listIsOfLength(2);
-listEach(isType<String>());
+listEach(isString());
 all([isType<List>(), listIsOfLength(2)]);
 ```
 
@@ -99,11 +100,21 @@ This is a class that represents the result of a validation.
 This validator checks that a value is of a certain type
 ```dart
 isType<String>();
+isString();
+$isString;
+
 isType<int>();
+isInteger();
+$isInteger:
+
 isType<double>();
+...
 isType<List>();
+...
 isType<Map>();
+...
 ```
+> Take a look at the [docs][docs] for an exhaustive list of all validators.
 
 ### isTypeOrNull<T>
 This validator checks that a value is of a certain type or is null
@@ -165,14 +176,13 @@ final isValidList = all([
     listEach(isTypeInt()),
 ]);
 
-isValidList.validate(null).isValid;      // true
-isValidList.validate([]).isValid;        // true
-isValidList.validate([1, 2]).isValid;    // true
-isValidList.validate([1, "2"]).isValid;  // false
+isValidList.isValid(null);               // false
+isValidList.isValid([]);                 // false
+isValidList.isValid([1, 2]);             // true
+isValidList.isValid([1, "2"]);           // false
+
 isValidList.validate([1, "2"]).expected; // [1] -> int
 ```
-
-
 
 ### Additional Validators
 For a complete list of validators, check the [docs](https://pub.dev/documentation/eskema/latest/)
