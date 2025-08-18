@@ -1,6 +1,6 @@
 import 'package:eskema/validators.dart';
 import 'package:eskema/extensions.dart' show EskemaListExtension;
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 
 void main() {
   test('List extension "eachItemMatches" validates correctly', () {
@@ -24,13 +24,13 @@ void main() {
 
     final result = [
       {'city': 'NY', 'street': '8th ave'}
-    ].matchesEskema([testEskema]);
+    ].validate([testEskema]);
 
     expect(result.isValid, true);
 
     final result2 = [
       {'city': 'NY', 'street': '8th ave'}
-    ].matchesEskema([testEskema, testEskema]);
+    ].validate([testEskema, testEskema]);
 
     expect(result2.isValid, false);
     expect(result2.expected, 'List of size 2');

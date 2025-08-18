@@ -1,17 +1,27 @@
+import 'package:eskema/result.dart';
+
 import 'validators.dart';
 
 extension EskemaMapExtension on Map {
-  matchesEskema(Map<String, Validator> eskemaMap) {
-    return eskema(eskemaMap).call(this);
+  IResult validate(EskValidator validator) {
+    return validator.validate(this);
+  }
+
+  isValid(EskValidator eskema) {
+    return eskema.validate(this).isValid;
+  }
+
+  isNotValid(EskValidator eskema) {
+    return !eskema.validate(this).isValid;
   }
 }
 
 extension EskemaListExtension on List {
-  matchesEskema(List<Validator> eskema) {
-    return eskemaList(eskema).call(this);
+  IResult validate(List<EskValidator> eskema) {
+    return eskemaList(eskema).validate(this);
   }
 
-  eachItemMatches(Validator itemValidator) {
-    return listEach(itemValidator).call(this);
+  eachItemMatches(EskValidator itemValidator) {
+    return listEach(itemValidator).validate(this);
   }
 }

@@ -34,6 +34,6 @@ class Result with IResult {
 
   @override
   String toString() {
-    return isValid ? 'Valid' : 'Expected $expected, got ${pretifyValue(value)}';
+    return isValid ? 'Valid: ${pretifyValue(value)}' : 'Expected $expected, got ${pretifyValue(value)}';
   }
 }

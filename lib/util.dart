@@ -3,9 +3,13 @@ import 'dart:convert';
 import 'result.dart';
 
 String pretifyValue(value) {
-  if (value is Map) return json.encode(value);
-  if (value is List) return json.encode(value);
-  if (value is String) return '"$value"';
+  try {
+    if (value is Map) return json.encode(value);
+    if (value is List) return json.encode(value);
+    if (value is String) return '"$value"';
+  } catch (_) {
+    return value.toString();
+  }
 
   return value.toString();
 }
