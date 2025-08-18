@@ -13,5 +13,5 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           flutter-version: '3.0.1'
-      - run: flutter pub get
-      - run: flutter test --coverage
+      - run: pub get
+      - run: test --coverage

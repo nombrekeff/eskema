@@ -13,6 +13,6 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           flutter-version: '3.0.1'
-      - run: flutter pub get
-      - run: flutter analyze
-      - run: flutter pub run dart_code_metrics:metrics analyze lib
+      - run: pub get
+      - run: analyze
+      - run: pub run dart_code_metrics:metrics analyze lib
