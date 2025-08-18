@@ -4,25 +4,25 @@ import 'package:eskema/validators.dart';
 import 'validator.dart';
 
 extension EskemaMapExtension on Map {
-  IResult validate(EskValidator validator) {
+  EskResult validate(IEskValidator validator) {
     return validator.validate(this);
   }
 
-  isValid(EskValidator eskema) {
+  isValid(IEskValidator eskema) {
     return eskema.validate(this).isValid;
   }
 
-  isNotValid(EskValidator eskema) {
+  isNotValid(IEskValidator eskema) {
     return !eskema.validate(this).isValid;
   }
 }
 
 extension EskemaListExtension on List {
-  IResult validate(List<EskValidator> eskema) {
+  EskResult validate(List<IEskValidator> eskema) {
     return eskemaList(eskema).validate(this);
   }
 
-  eachItemMatches(EskValidator itemValidator) {
+  eachItemMatches(IEskValidator itemValidator) {
     return listEach(itemValidator).validate(this);
   }
 }

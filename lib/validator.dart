@@ -1,10 +1,29 @@
+import 'package:eskema/util.dart';
+import 'package:eskema/validators.dart';
+
 import 'result.dart';
 
-typedef EskValidatorFn = IResult Function(dynamic value);
+typedef EskValidatorFn = EskResult Function(dynamic value);
 
 abstract class IEskValidator {
-  IResult validate(dynamic value);
+  EskResult validator(dynamic value);
+
+  EskResult validate(dynamic value) {
+    if (value == null && isNullable) {
+      return EskResult.valid(value);
+    }
+
+    return validator(value);
+  }
+
+  EskResult validateOrThrow(dynamic value) {
+    final result = validate(value);
+    if (result.isNotValid) throw ValidatorFailedException(result);
+    return result;
+  }
+
   bool isValid(dynamic value) => validate(value).isValid;
+
   bool isNotValid(dynamic value) => !validate(value).isValid;
 
   bool _nullable;
@@ -20,21 +39,13 @@ abstract class IEskValidator {
   }
 }
 
-abstract class EskIdValidator extends IEskValidator {
-  final String id;
-
-  EskIdValidator({required this.id, super.nullable});
-}
-
 class EskValidator extends IEskValidator {
   final EskValidatorFn _validator;
   EskValidator(this._validator, {super.nullable});
 
   @override
-  IResult validate(dynamic value) {
-    final result = _validator.call(value);
-    if (value == null && isNullable) return Result.valid;
-    return result;
+  EskResult validator(dynamic value) {
+    return _validator.call(value);
   }
 
   @override
@@ -46,20 +57,26 @@ class EskValidator extends IEskValidator {
   String toString() => 'Validator';
 }
 
-class EskField extends EskIdValidator {
-  final List<EskValidator> validators;
+abstract class EskIdValidator extends EskValidator {
+  final String id;
 
-  EskField({required this.validators, required super.id, super.nullable});
+  EskIdValidator({
+    required EskValidatorFn validator,
+    required this.id,
+    super.nullable,
+  }) : super(validator);
+}
+
+class EskField extends EskIdValidator {
+  final List<IEskValidator> validators;
+
+  EskField({required this.validators, required super.id, super.nullable})
+      : super(validator: EskResult.valid);
 
   @override
-  IResult validate(dynamic value) {
-    if ((value == null && isNullable)) {
-      return Result.valid;
-    }
-
-    if ((value == null && !isNullable)) {
-      return Result.invalid('not null', value);
-    }
+  EskResult validator(dynamic value) {
+    final superRes = super.validator(value);
+    if (superRes.isNotValid) return superRes;
 
     for (var validator in validators) {
       final result = validator.validate(value);
@@ -67,14 +84,16 @@ class EskField extends EskIdValidator {
         return result;
       }
     }
-    return Result.valid;
+
+    return EskResult.valid(value);
   }
 
   @override
   IEskValidator copyWith({bool? nullable}) {
     return EskField(
-      validators: List<EskValidator>.from(
-          validators.map((v) => v.copyWith(nullable: nullable))),
+      validators: List<IEskValidator>.from(
+        validators.map((v) => v.copyWith(nullable: nullable)),
+      ),
       id: id,
       nullable: nullable ?? isNullable,
     );
@@ -83,25 +102,17 @@ class EskField extends EskIdValidator {
 
 abstract class EskMap<T extends Map> extends EskIdValidator {
   List<IEskValidator> get fields;
-  EskMap({super.id = 'class_validator', super.nullable});
+  EskMap({super.id = 'class_validator', super.nullable})
+      : super(validator: isMap().validate);
 
   @override
-  IResult validate(dynamic map) {
-    if (map == null && isNullable) {
-      return Result.valid..value = map;
-    }
-
-    if ((map == null && !isNullable) || map is! Map) {
-      return Result.invalid('Expected a ${T.runtimeType}', map);
-    }
-
-    if (map.isEmpty && !isNullable) {
-      return Result.invalid('No data provided for validation', map);
-    }
+  EskResult validator(dynamic value) {
+    final superRes = super.validator(value);
+    if (superRes.isNotValid) return superRes;
 
     for (final field in fields) {
       if (field is EskIdValidator) {
-        final mapValue = map[field.id];
+        final mapValue = value[field.id];
         // If the field is nullable, we can skip validation if the value is null
         if (mapValue == null && field.isNullable) continue;
 
@@ -120,7 +131,7 @@ abstract class EskMap<T extends Map> extends EskIdValidator {
           expected += '${field.id} to be ${result.expected}';
         }
 
-        return Result(
+        return EskResult(
           isValid: result.isValid,
           expected: expected,
           value: mapValue,
@@ -128,7 +139,7 @@ abstract class EskMap<T extends Map> extends EskIdValidator {
       }
     }
 
-    return Result.valid..value = map;
+    return EskResult.valid(value);
   }
 
   @override

@@ -64,8 +64,8 @@ void main() {
     });
 
     test('non-nullable works', () {
-      final field = EskMapTest();
-      final res1 = field.validate(null);
+      final map = EskMapTest();
+      final res1 = map.validate(null);
       expect(res1.isValid, false);
     });
   });

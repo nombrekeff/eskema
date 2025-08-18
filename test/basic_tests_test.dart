@@ -31,7 +31,8 @@ void main() {
     final nonNullableField = isType<String>();
     final nullableField = isTypeOrNull<String>();
 
-    expect(nullableField.validate(null).isValid, true);
+    final resNullable = nullableField.validate(null);
+    expect(resNullable.isValid, true);
 
     final res = nonNullableField.validate(null);
     expect(res.isValid, false);
@@ -42,18 +43,27 @@ void main() {
   });
 
   test('nullable fields', () {
-    final nonNullableField1 = isType<String>().copyWith(nullable: true);
-    final nonNullableField2 = isType<String>().orNullable();
-    final nonNullableField3 = nullable(isType<String>());
+    final nullable1 = isType<String>().copyWith(nullable: true);
+    final nullable2 = isType<String>().orNullable();
+    final nullable3 = nullable(isType<String>());
 
-    expect(nonNullableField1.validate(null).isValid, true);
-    expect(nonNullableField1.validate('test').isValid, true);
+    final nullableField = EskField(
+      validators: [isType<String>()],
+      id: '<id>',
+      nullable: true,
+    ).copyWith(nullable: true);
 
-    expect(nonNullableField2.validate(null).isValid, true);
-    expect(nonNullableField2.validate('test').isValid, true);
+    expect(nullableField.validate('test').isValid, true);
+    expect(nullableField.validate(null).isValid, true);
 
-    expect(nonNullableField3.validate(null).isValid, true);
-    expect(nonNullableField3.validate('test').isValid, true);
+    expect(nullable1.validate('test').isValid, true);
+    expect(nullable1.validate(null).isValid, true);
+
+    expect(nullable2.validate('test').isValid, true);
+    expect(nullable2.validate(null).isValid, true);
+
+    expect(nullable3.validate('test').isValid, true);
+    expect(nullable3.validate(null).isValid, true);
   });
 
   test('fields validates int correctly', () {
@@ -78,10 +88,10 @@ void main() {
       isType<int>(),
       EskValidator((value) {
         if (value is num && value == 42) {
-          return Result.invalid('that is the number', value);
+          return EskResult.invalid('that is the number', value);
         }
 
-        return Result.valid;
+        return EskResult.valid(value);
       }),
     ]);
     expect(customValidator.validate(42).expected, 'that is the number');

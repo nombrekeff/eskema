@@ -1,6 +1,6 @@
 import 'package:eskema/util.dart';
 import 'package:eskema/validators.dart';
-import 'package:test/test.dart';
+import 'package:test/test.dart' hide isList;
 
 void main() {
   group('isType', () {
@@ -347,7 +347,8 @@ void main() {
 
       expect(field.validate({}).isValid, true);
       expect(field.validate([]).isValid, true);
-      expect(field.validate('').expected, 'Map<dynamic, dynamic> or List<dynamic>');
+      expect(field.validate('').expected,
+          'Map<dynamic, dynamic> or List<dynamic>');
     });
 
     test('and', () {
@@ -377,7 +378,8 @@ void main() {
       });
 
       expect(isEquals.validate({}).isValid, false);
-      expect(isEquals.validate({}).expected, 'equal to {"a":"b","c":{"c1":"aaaa"}}');
+      expect(isEquals.validate({}).expected,
+          'equal to {"a":"b","c":{"c1":"aaaa"}}');
       expect(isEquals.validate([]).isValid, false);
       expect(
         isEquals.validate(1).expected,
@@ -433,10 +435,165 @@ void main() {
       );
     });
 
+    test('validateOrThrow', () {
+      final isEquals = isDeepEq<Set>({1, 2});
+      
+      expect(() => isEquals.validateOrThrow({1}),
+          throwsA(isA<ValidatorFailedException>()));
+
+      expect(() => isEquals.validateOrThrow({1, 2}),
+          isNot(throwsA(isA<ValidatorFailedException>())));
+    });
+
     test('throwInstead', () {
       final isEquals = throwInstead(isDeepEq<Set>({1, 2}));
-      expect(() => isEquals.validate({1}), throwsA(isA<ValidatorFailedException>()));
-      expect(() => isEquals.validate({1, 2}), isNot(throwsA(isA<ValidatorFailedException>())));
+      expect(() => isEquals.validate({1}),
+          throwsA(isA<ValidatorFailedException>()));
+      expect(() => isEquals.validate({1, 2}),
+          isNot(throwsA(isA<ValidatorFailedException>())));
+    });
+  });
+
+  group('isType shorthands', () {
+    test('isString works', () {
+      final res1 = isString().validate("");
+      expect(res1.isValid, true);
+
+      final res2 = isString().validate(123);
+      expect(res2.isValid, false);
+      expect(res2.expected, 'String');
+
+      final res3 = isString().validate(true);
+      expect(res3.isValid, false);
+      expect(res3.expected, 'String');
+
+      final res4 = isString().validate(null);
+      expect(res4.isValid, false);
+    });
+
+    test('isInteger works', () {
+      final res1 = isInteger().validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'int');
+
+      final res2 = isInteger().validate(123);
+      expect(res2.isValid, true);
+
+      final res3 = isInteger().validate(true);
+      expect(res3.isValid, false);
+      expect(res3.expected, 'int');
+    });
+
+    test('isBoolean works', () {
+      final res1 = isBoolean().validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'bool');
+
+      final res2 = isBoolean().validate(true);
+      expect(res2.isValid, true);
+
+      final res3 = isBoolean().validate(123);
+      expect(res3.isValid, false);
+      expect(res3.expected, 'bool');
+    });
+
+    test('isDouble works', () {
+      final res1 = isDouble().validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'double');
+
+      final res2 = isDouble().validate(1.23);
+      expect(res2.isValid, true);
+
+      final res3 = isDouble().validate(123);
+      expect(res3.isValid, false);
+      expect(res3.expected, 'double');
+    });
+
+    test('isNum works', () {
+      final res1 = isNumber().validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'num');
+
+      final res2 = isNumber().validate(1.23);
+      expect(res2.isValid, true);
+
+      final res3 = isNumber().validate(123);
+      expect(res3.isValid, true);
+    });
+
+    test('isFuture works', () {
+      final res1 = isFuture().validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'Future<dynamic>');
+
+      final res2 = isFuture().validate(Future.value(1.23));
+      expect(res2.isValid, true);
+    });
+
+    test('isEnum works', () {
+      final res1 = isEnum().validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'Enum');
+
+      final res2 = isEnum().validate(EnumA.value1);
+      expect(res2.isValid, true);
+    });
+
+    test('isList works', () {
+      final res1 = isList<int>().validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'List<int>');
+
+      final res2 = isList<int>().validate([1, 2, 3]);
+      expect(res2.isValid, true);
+    });
+
+    test('isSet works', () {
+      final res1 = isSet<int>().validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'Set<int>');
+
+      final res2 = isSet<int>().validate({1, 2, 3});
+      expect(res2.isValid, true);
+    });
+
+    test('isRecord works', () {
+      final res1 = isRecord().validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'Record');
+
+      final res2 = isRecord().validate(('first', a: 2, b: true, 'last'));
+      expect(res2.isValid, true);
+    });
+
+    test('isIterable works', () {
+      final res1 = isIterable<int>().validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'Iterable<int>');
+
+      final res2 = isIterable<int>().validate([1, 2, 3]);
+      expect(res2.isValid, true);
+    });
+
+    test('isSymbol works', () {
+      final res1 = isSymbol().validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'Symbol');
+
+      final res2 = isSymbol().validate(#mySymbol);
+      expect(res2.isValid, true);
+    });
+
+    test('isFunction works', () {
+      final res1 = isFunction().validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'Function');
+
+      final res2 = isFunction().validate(() {});
+      expect(res2.isValid, true);
     });
   });
 }
+
+enum EnumA { value1, value2 }

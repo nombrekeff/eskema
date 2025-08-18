@@ -7,15 +7,13 @@ String pretifyValue(value) {
     if (value is Map) return json.encode(value);
     if (value is List) return json.encode(value);
     if (value is String) return '"$value"';
-  } catch (_) {
-    return value.toString();
-  }
+  } catch (_) {}
 
   return value.toString();
 }
 
 class ValidatorFailedException implements Exception {
   String get message => result.toString();
-  IResult result;
+  EskResult result;
   ValidatorFailedException(this.result);
 }

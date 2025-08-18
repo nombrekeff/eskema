@@ -6,8 +6,8 @@ import 'package:eskema/validator.dart';
 Function _collectionEquals = const DeepCollectionEquality().equals;
 
 /// Returns a [EskValidator] that checks if the given value null
-EskValidator isTypeNull() {
-  return EskValidator((value) => Result(
+IEskValidator isTypeNull() {
+  return EskValidator((value) => EskResult(
         isValid: value == null,
         expected: 'null',
         value: value,
@@ -15,8 +15,8 @@ EskValidator isTypeNull() {
 }
 
 /// Returns a [EskValidator] that checks if the given value is the correct type
-EskValidator isType<T>() {
-  return EskValidator((value) => Result(
+IEskValidator isType<T>() {
+  return EskValidator((value) => EskResult(
         isValid: value is T,
         expected: T.toString(),
         value: value,
@@ -24,19 +24,15 @@ EskValidator isType<T>() {
 }
 
 /// Returns a [EskValidator] that checks if the given value is the correct type
-EskValidator isTypeOrNull<T>() {
-  return EskValidator((value) => Result(
-        isValid: value is T || value == null,
-        expected: '${T.toString()} or null',
-        value: value,
-      ));
+IEskValidator isTypeOrNull<T>() {
+  return isType<T>().orNullable();
 }
 
 /// Checks whether the given value is less than [max]
-EskValidator isLt(num max) {
+IEskValidator isLt(num max) {
   return all([
     isType<num>(),
-    EskValidator((value) => Result(
+    EskValidator((value) => EskResult(
           isValid: value < max,
           expected: 'less than $max',
           value: value,
@@ -45,10 +41,10 @@ EskValidator isLt(num max) {
 }
 
 /// Checks whether the given value is less than or equal [max]
-EskValidator isLte(num max) {
+IEskValidator isLte(num max) {
   return all([
     isType<num>(),
-    EskValidator((value) => Result(
+    EskValidator((value) => EskResult(
           isValid: value <= max,
           expected: 'less than or equal to $max',
           value: value,
@@ -57,10 +53,10 @@ EskValidator isLte(num max) {
 }
 
 /// Checks whether the given value is greater than [max]
-EskValidator isGt(num min) {
+IEskValidator isGt(num min) {
   return all([
     isType<num>(),
-    EskValidator((value) => Result(
+    EskValidator((value) => EskResult(
           isValid: value > min,
           expected: 'greater than $min',
           value: value,
@@ -69,10 +65,10 @@ EskValidator isGt(num min) {
 }
 
 /// Checks whether the given value is greater or equal to [max]
-EskValidator isGte(num min) {
+IEskValidator isGte(num min) {
   return all([
     isType<num>(),
-    EskValidator((value) => Result(
+    EskValidator((value) => EskResult(
           isValid: value is num && value >= min,
           expected: 'greater than or equal to $min',
           value: value,
@@ -83,10 +79,10 @@ EskValidator isGte(num min) {
 /// Checks whether the given value is equal to the [expected] value of type [T]
 ///
 /// Even though this function accepts any Type, note that it will not work with Collections. For that usecase prefer using [isDeepEqual] instead.
-EskValidator isEq<T>(T expected) {
+IEskValidator isEq<T>(T expected) {
   return all([
     isType<T>(),
-    EskValidator((value) => Result(
+    EskValidator((value) => EskResult(
           isValid: value == expected,
           // json.encode is here to format the value correctly, so we know if for example 10 is a number (10) or a string ("10").
           expected: 'equal to ${pretifyValue(expected)}',
@@ -96,10 +92,10 @@ EskValidator isEq<T>(T expected) {
 }
 
 /// Checks whether the given value is equal to the [expected] value of type [T]
-EskValidator isDeepEq<T>(T expected) {
+IEskValidator isDeepEq<T>(T expected) {
   return all([
     isType<T>(),
-    EskValidator((value) => Result(
+    EskValidator((value) => EskResult(
           isValid: (_collectionEquals(value, expected)),
           expected: 'equal to ${pretifyValue(expected)}',
           value: value,
@@ -108,8 +104,8 @@ EskValidator isDeepEq<T>(T expected) {
 }
 
 /// Checks whether the given value is a valid DateTime formattedString
-EskValidator isDate() {
-  return EskValidator((value) => Result(
+IEskValidator isDate() {
+  return EskValidator((value) => EskResult(
         isValid: DateTime.tryParse(value) != null,
         expected: 'a valid date',
         value: value,
@@ -120,12 +116,12 @@ EskValidator isDate() {
 ///
 /// This validator also validates that the value is a list first
 /// So there's no need to add the [isTypeList] validator when using this validator
-EskValidator listIsOfLength(int size) {
+IEskValidator listIsOfLength(int size) {
   return EskValidator((value) {
     final isListResult = isType<List>().validate(value);
     if (isListResult.isNotValid) return isListResult;
 
-    return Result(
+    return EskResult(
       isValid: (value as List).length == size,
       expected: 'List of size $size',
       value: value,
@@ -137,12 +133,12 @@ EskValidator listIsOfLength(int size) {
 ///
 /// This validator also validates that the value is a String first
 /// So there's no need to add the [isTypeString] validator when using this validator
-EskValidator stringIsOfLength(int size) {
+IEskValidator stringIsOfLength(int size) {
   return EskValidator((value) {
     final isStringResult = isType<String>().validate(value);
     if (isStringResult.isNotValid) return isStringResult;
 
-    return Result(
+    return EskResult(
       isValid: (value as String).length == size,
       expected: 'String of length $size',
       value: value,
@@ -154,12 +150,12 @@ EskValidator stringIsOfLength(int size) {
 ///
 /// This validator also validates that the value is a String first
 /// So there's no need to add the [isTypeString] validator when using this validator
-EskValidator stringContains(String substring) {
+IEskValidator stringContains(String substring) {
   return EskValidator((value) {
     final isString = isType<String>().validate(value);
     if (isString.isNotValid) return isString;
 
-    return Result(
+    return EskResult(
       isValid: (value as String).contains(substring),
       expected: 'String to contain "$substring"',
       value: value,
@@ -171,12 +167,12 @@ EskValidator stringContains(String substring) {
 ///
 /// This validator also validates that the value is a List first
 /// So there's no need to add the [isType<List>] validator when using this validator
-EskValidator listContains<T>(T item) {
+IEskValidator listContains<T>(T item) {
   return EskValidator((value) {
     final isListResult = isType<List>().validate(value);
     if (isListResult.isNotValid) return isListResult;
 
-    return Result(
+    return EskResult(
       isValid: (value as List).contains(item),
       expected: 'List to contain ${pretifyValue(item)}',
       value: value,
@@ -188,12 +184,12 @@ EskValidator listContains<T>(T item) {
 ///
 /// This validator also validates that the value is a String first
 /// So there's no need to add the [isTypeString] validator when using this validator
-EskValidator stringNotContains(String substring) {
+IEskValidator stringNotContains(String substring) {
   return EskValidator((value) {
     final isListResult = isType<String>().validate(value);
     if (isListResult.isNotValid) return isListResult;
 
-    return Result(
+    return EskResult(
       isValid: !(value as String).contains(substring),
       expected: 'String to not contain "$substring"',
       value: value,
@@ -205,12 +201,12 @@ EskValidator stringNotContains(String substring) {
 ///
 /// This validator also validates that the value is a String first
 /// So there's no need to add the [isTypeString] validator when using this validator
-EskValidator stringMatchesPattern(Pattern pattern, {String? expectedMessage}) {
+IEskValidator stringMatchesPattern(Pattern pattern, {String? expectedMessage}) {
   return EskValidator((value) {
     final isListResult = isType<String>().validate(value);
     if (isListResult.isNotValid) return isListResult;
 
-    return Result(
+    return EskResult(
       isValid: pattern.allMatches(value).isNotEmpty,
       expected: expectedMessage ?? 'String to match "$pattern"',
       value: value,
@@ -219,11 +215,11 @@ EskValidator stringMatchesPattern(Pattern pattern, {String? expectedMessage}) {
 }
 
 /// Passes the test if any of the [EskValidator]s are valid, and fails if any are invalid
-EskValidator any(List<IEskValidator> validators) {
+IEskValidator any(List<IEskValidator> validators) {
   return EskValidator((value) {
     final results = validators.map((v) => v.validate(value)).toList();
 
-    return Result(
+    return EskResult(
       isValid: results.any((r) => r.isValid),
       expected: results.map((r) => r.expected).join(' or '),
       value: value,
@@ -233,24 +229,24 @@ EskValidator any(List<IEskValidator> validators) {
 
 /// Passes the test if all of the [EskValidator]s are valid, and fails if any of them are invalid
 ///
-/// In the case that a [EskValidator] fails, it's [Result] will be returned
-EskValidator all(List<IEskValidator> validators) {
+/// In the case that a [EskValidator] fails, it's [EskResult] will be returned
+IEskValidator all(List<IEskValidator> validators) {
   return EskValidator((value) {
     for (final validator in validators) {
       final result = validator.validate(value);
       if (result.isNotValid) return result;
     }
 
-    return Result.valid..value = value;
+    return EskResult.valid(value);
   });
 }
 
 /// Passes the test if the contition is !valid
-EskValidator not(EskValidator validator) {
+IEskValidator not(IEskValidator validator) {
   return EskValidator((value) {
     final result = validator.validate(value);
 
-    return Result(
+    return EskResult(
       isValid: !result.isValid,
       expected: 'not ${result.expected}',
       value: value,
@@ -259,19 +255,15 @@ EskValidator not(EskValidator validator) {
 }
 
 /// Allows the passed in validator to be nullable
-EskValidator nullable(EskValidator validator) {
-  return EskValidator((value) {
-    if (value == null) return Result.valid;
-    return validator.validate(value);
-  });
+IEskValidator nullable(IEskValidator validator) {
+  return validator.orNullable();
 }
 
 /// Checks whether the given value is one of the [options] values of type [T]
-///
-EskValidator isOneOf<T>(List<T> options) {
+IEskValidator isOneOf<T>(List<T> options) {
   return all([
     isType<T>(),
-    EskValidator((value) => Result(
+    EskValidator((value) => EskResult(
           isValid: options.contains(value),
           expected: 'one of: ${pretifyValue(options)}',
           value: value,
@@ -280,12 +272,12 @@ EskValidator isOneOf<T>(List<T> options) {
 }
 
 /// Returns a [EskValidator] that throws a [ValidatorFailedException] instead of returning a result
-EskValidator throwInstead(EskValidator validator) {
+IEskValidator throwInstead(IEskValidator validator) {
   return EskValidator((value) {
     final result = validator.validate(value);
     if (result.isNotValid) throw ValidatorFailedException(result);
 
-    return Result.valid;
+    return EskResult.valid(value);
   });
 }
 
@@ -307,20 +299,20 @@ EskValidator throwInstead(EskValidator validator) {
 ///   }),
 /// ]);
 /// ```
-EskValidator eskema(Map<String, IEskValidator> eskema) {
+IEskValidator eskema(Map<String, IEskValidator> eskema) {
   return EskValidator((value) {
-    if (value is! Map) return Result.invalid('Map', value);
+    if (value is! Map) return EskResult.invalid('Map', value);
 
     for (final key in eskema.keys) {
-      final field = eskema[key] as IEskValidator;
-      final result = field.validate(value[key]);
+      final field = eskema[key];
+      final result = field!.validate(value[key]);
 
       if (result.isNotValid) {
-        return Result.invalid('$key -> ${result.expected}', result.value);
+        return EskResult.invalid('$key -> ${result.expected}', result.value);
       }
     }
 
-    return Result.valid;
+    return EskResult.valid(value);
   });
 }
 
@@ -341,11 +333,14 @@ EskValidator eskema(Map<String, IEskValidator> eskema) {
 /// * and the second item is an int
 ///
 /// This validator also checks that the value is a list
-EskValidator eskemaList(List<EskValidator> eskema) {
+IEskValidator eskemaList(List<IEskValidator> eskema) {
   return EskValidator((value) {
     // Before checking the eskema, we validate that it's a list and matches the eskema length
-    final result =
-        all([isType<List>(), listIsOfLength(eskema.length)]).validate(value);
+    final result = all([
+      isType<List>(),
+      listIsOfLength(eskema.length),
+    ]).validate(value);
+
     if (result.isNotValid) return result;
 
     for (int index = 0; index < value.length; index++) {
@@ -354,99 +349,72 @@ EskValidator eskemaList(List<EskValidator> eskema) {
       final result = effectiveValidator.validate(item);
 
       if (result.isNotValid) {
-        return Result.invalid('[$index] -> ${result.expected}', value);
+        return EskResult.invalid('[$index] -> ${result.expected}', value);
       }
     }
 
-    return Result.valid;
+    return EskResult.valid(value);
   });
 }
 
 /// Returns a Validator that runs [itemValidator] for each item in the list
 ///
 /// This validator also checks that the value is a list
-EskValidator listEach(EskValidator itemValidator) {
+IEskValidator listEach(IEskValidator itemValidator) {
   return EskValidator((value) {
-    if (value is! List) return Result.invalid('List', value);
+    if (value is! List) return EskResult.invalid('List', value);
 
     for (int index = 0; index < value.length; index++) {
       final item = value[index];
       final result = itemValidator.validate(item);
 
       if (result.isNotValid) {
-        return Result.invalid('[$index] -> ${result.expected}', item);
+        return EskResult.invalid('[$index] -> ${result.expected}', item);
       }
     }
 
-    return Result.valid;
+    return EskResult.valid(value);
   });
 }
 
-/// Returns a [EskValidator] that checks if the given value is a String
-EskValidator isString() {
-  return isType<String>();
-}
+/// Returns a [IEskValidator] that checks if the given value is a `String`
+IEskValidator isString() => isType<String>();
 
-EskValidator isNumber() {
-  return isType<num>();
-}
+/// Returns a [IEskValidator] that checks if the given value is a `num`
+IEskValidator isNumber() => isType<num>();
 
-EskValidator isInteger() {
-  return isType<int>();
-}
+/// Returns a [IEskValidator] that checks if the given value is a `int`
+IEskValidator isInteger() => isType<int>();
 
-EskValidator isDouble() {
-  return isType<double>();
-}
+/// Returns a [IEskValidator] that checks if the given value is a `double`
+IEskValidator isDouble() => isType<double>();
 
-EskValidator isBoolean() {
-  return isType<bool>();
-}
+/// Returns a [IEskValidator] that checks if the given value is a `bool`
+IEskValidator isBoolean() => isType<bool>();
 
-EskValidator isFunction() {
-  return isType<Function>();
-}
+/// Returns a [IEskValidator] that checks if the given value is a `Function`
+IEskValidator isFunction() => isType<Function>();
 
-EskValidator isList() {
-  return isType<List>();
-}
+/// Returns a [IEskValidator] that checks if the given value is a `List`
+IEskValidator isList<T>() => isType<List<T>>();
 
-EskValidator isMap() {
-  return isType<Map>();
-}
+/// Returns a [IEskValidator] that checks if the given value is a `Map`
+IEskValidator isMap<K, V>() => isType<Map<K, V>>();
 
-EskValidator isSet() {
-  return isType<Set>();
-}
+/// Returns a [IEskValidator] that checks if the given value is a `Set`
+IEskValidator isSet<T>() => isType<Set<T>>();
 
-EskValidator isRecord() {
-  return isType<Record>();
-}
+/// Returns a [IEskValidator] that checks if the given value is a `Record`
+IEskValidator isRecord() => isType<Record>();
 
-EskValidator isSymbol() {
-  return isType<Symbol>();
-}
+/// Returns a [IEskValidator] that checks if the given value is a `Symbol`
+IEskValidator isSymbol() => isType<Symbol>();
 
-EskValidator isObject() {
-  return isType<Object>();
-}
+/// Returns a [IEskValidator] that checks if the given value is a `Enum`
+IEskValidator isEnum() => isType<Enum>();
 
-EskValidator isEnum() {
-  return isType<Enum>();
-}
+/// Returns a [IEskValidator] that checks if the given value is a `Future`
+IEskValidator isFuture<T>() => isType<Future<T>>();
 
-EskValidator isFuture() {
-  return isType<Future>();
-}
-
-EskValidator isIterable() {
-  return isType<Iterable>();
-}
-
-EskValidator isDynamic() {
-  return isType<dynamic>();
-}
-
-EskValidator isVoid() {
-  return isType<void>();
-}
+/// Returns a [IEskValidator] that checks if the given value is a `Iterable`
+IEskValidator isIterable<T>() => isType<Iterable<T>>();

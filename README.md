@@ -19,7 +19,7 @@ To use the package there's not much to do apart from installing the package or a
 
 ## Concepts
 ### Validator
-Mostly everything in Eskema are [Validators], which are functions that take in a value and return a [IResult].
+Mostly everything in Eskema are [Validators], which are functions that take in a value and return a [EskResult].
 
 The following are all validators:
 ```dart
@@ -29,7 +29,7 @@ listEach(isType<String>());
 all([isType<List>(), isListOfLength(2)]);
 ```
 
-### IResult
+### EskResult
 This is a class that represents the result of a validation
 
 
