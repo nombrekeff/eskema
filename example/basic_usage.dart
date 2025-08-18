@@ -28,7 +28,7 @@ void main() {
     // Nullable fields can be defined using the copyWith method
     'accounts': listEach(accountEskema).copyWith(nullable: true),
     // by using the orNullable method
-    'email': isEmail.orNullable(),
+    'email': isEmail.nullable(),
     // or by using the nullable validator
     'purchases': nullable(listEach(purchaseEskema)),
   });

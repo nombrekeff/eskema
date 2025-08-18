@@ -44,7 +44,7 @@ void main() {
 
   test('nullable fields', () {
     final nullable1 = isType<String>().copyWith(nullable: true);
-    final nullable2 = isType<String>().orNullable();
+    final nullable2 = isType<String>().nullable();
     final nullable3 = nullable(isType<String>());
 
     final nullableField = EskField(

@@ -25,7 +25,7 @@ IEskValidator isType<T>() {
 
 /// Returns a [EskValidator] that checks if the given value is the correct type
 IEskValidator isTypeOrNull<T>() {
-  return isType<T>().orNullable();
+  return isType<T>().nullable();
 }
 
 /// Checks whether the given value is less than [max]
@@ -256,7 +256,7 @@ IEskValidator not(IEskValidator validator) {
 
 /// Allows the passed in validator to be nullable
 IEskValidator nullable(IEskValidator validator) {
-  return validator.orNullable();
+  return validator.nullable();
 }
 
 /// Checks whether the given value is one of the [options] values of type [T]

@@ -34,7 +34,7 @@ abstract class IEskValidator {
 
   IEskValidator copyWith({bool? nullable});
 
-  IEskValidator orNullable<T>() {
+  IEskValidator nullable<T>() {
     return copyWith(nullable: true);
   }
 }
