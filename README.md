@@ -19,19 +19,20 @@ To use the package there's not much to do apart from installing the package or a
 
 ## Concepts
 ### Validator
-Mostly everything in Eskema are [Validators], which are functions that take in a value and return a [EskResult].
+Most things in Eskema are validators, but they are now represented by objects implementing `IEskValidator` rather than raw function types. You can still create simple validators using factory functions (for example `isType<String>()`), which return an `EskValidator` under the hood. In addition, Eskema exposes a small class-based API for building map-like validators using:
 
-The following are all validators:
+- `EskValidator` - a lightweight validator wrapper returned by factory functions
+- `EskIdValidator` - an identifiable validator with an `id` used for map lookups
+- `EskField` - a field validator that runs a list of child validators
+- `EskMap` - a class-like validator that contains multiple identifiable fields
+
+The following are still valid ways to obtain validators:
 ```dart
 isType<String>();
-listOfLength(2);
+listIsOfLength(2);
 listEach(isType<String>());
-all([isType<List>(), isListOfLength(2)]);
+all([isType<List>(), listIsOfLength(2)]);
 ```
-
-### EskResult
-This is a class that represents the result of a validation
-
 
 ## Usage
 An example explains more than 100 words, so here are a couple of simple examples.
@@ -42,21 +43,30 @@ For more detailed examples check the [`/examples`](https://github.com/nombrekeff
 
 Otherwise let's check how to validate a single value. You can use validators individually:
 ```dart
-final isString = isType<String>();
-const result1 = isString('valid string');
-const result2 = isString(123);
+// Get a full EskResult from a validation
+final result1 = isString.validate('valid string');
+final result2 = isString.validate(123);
 
-result1.isValid;  // true
-result2.isValid;  // false
-result2.expected; // String
+print(result1.isValid);  // true
+print(result2.isValid);  // false
+print(result2.expected); // String
+
+// If you only want a boolean, use the helper methods on the validator
+print(isString.isValid('valid string')); // true
+print(isString.isNotValid(123));         // true
+
+// Validate and throw on failure
+try {
+  isString.validateOrThrow(123); // will throw ValidatorFailedException
+} catch (e) {
+  print('Validation failed: $e');
+}
 ```
-
 
 Or you can combine validators: 
 ```dart
-all([isType<String>(), isDate()]);     // all validators must be valid
-or(isType<String>(), isType<int>());   // either validator must be valid
-and(isType<String>(), isType<int>());  // both validator must be valid
+all([isType<String>(), isDate()]);      // all validators must be valid
+any([isType<String>(), isType<int>()]); // any validator must be valid
 
 
 // This validator checks that, the value is a list of strings, with length 2, and contains item "test"
@@ -77,6 +87,11 @@ final matchesEskema = eskema({
 });
 matchesEskema({'books': [{'name': 'book name'}]});
 ```
+
+
+### EskResult
+This is a class that represents the result of a validation.
+
 
 ## Validators
 

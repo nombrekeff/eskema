@@ -4,7 +4,7 @@ class TestClassValidator extends EskMap {
   final name = EskField(
     id: 'name',
     validators: [
-      isType<String>(),
+      $isString,
     ],
   );
 
@@ -30,9 +30,7 @@ class SettingsValidator extends EskMap {
   final notificationsEnabled = EskField(
     id: 'notificationsEnabled',
     nullable: true,
-    validators: [
-      isType<bool>(),
-    ],
+    validators: [$isBoolean],
   );
 
   SettingsValidator({required super.id, super.nullable});

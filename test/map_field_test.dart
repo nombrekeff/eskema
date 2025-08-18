@@ -1,4 +1,4 @@
-import 'package:test/test.dart';
+import 'package:test/test.dart' hide isNull;
 import 'package:eskema/eskema.dart';
 
 void main() {
@@ -7,7 +7,7 @@ void main() {
       eskema({
         'name': all([isType<String>()]),
         'vat': any([
-          isTypeNull(),
+          $isNull,
           isGte(0),
         ]),
         'age': all([
@@ -44,15 +44,15 @@ void main() {
     final isValidMap = nullable(
       eskema({
         'address': eskema({
-          'city': all([isType<String>()]),
-          'street': all([isType<String>()]),
+          'city': all([$isString]),
+          'street': all([isString()]),
           'number': all([
             isType<int>(),
             isGte(0),
           ]),
           'additional': nullable(
             eskema({
-              'doorbel_number': all([isType<int>()])
+              'doorbel_number': all([isInteger()])
             }),
           ),
         }),

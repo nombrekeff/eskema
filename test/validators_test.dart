@@ -1,22 +1,22 @@
 import 'package:eskema/util.dart';
 import 'package:eskema/validators.dart';
-import 'package:test/test.dart' hide isList;
+import 'package:test/test.dart' hide isList, isNull;
 
 void main() {
   group('isType', () {
-    test('isTypeNull works', () {
-      final res1 = isTypeNull().validate("");
+    test('isNull works', () {
+      final res1 = isNull().validate("");
       expect(res1.isValid, false);
 
-      final res2 = isTypeNull().validate(123);
+      final res2 = isNull().validate(123);
       expect(res2.isValid, false);
-      expect(res2.expected, 'null');
+      expect(res2.expected, 'Null');
 
-      final res3 = isTypeNull().validate(true);
+      final res3 = isNull().validate(true);
       expect(res3.isValid, false);
-      expect(res3.expected, 'null');
+      expect(res3.expected, 'Null');
 
-      final res4 = isTypeNull().validate(null);
+      final res4 = isNull().validate(null);
       expect(res4.isValid, true);
     });
 
@@ -437,7 +437,7 @@ void main() {
 
     test('validateOrThrow', () {
       final isEquals = isDeepEq<Set>({1, 2});
-      
+
       expect(() => isEquals.validateOrThrow({1}),
           throwsA(isA<ValidatorFailedException>()));
 
@@ -462,13 +462,15 @@ void main() {
       final res2 = isString().validate(123);
       expect(res2.isValid, false);
       expect(res2.expected, 'String');
+    });
 
-      final res3 = isString().validate(true);
-      expect(res3.isValid, false);
-      expect(res3.expected, 'String');
+    test('\$isString works', () {
+      final res1 = $isString.validate("");
+      expect(res1.isValid, true);
 
-      final res4 = isString().validate(null);
-      expect(res4.isValid, false);
+      final res2 = $isString.validate(123);
+      expect(res2.isValid, false);
+      expect(res2.expected, 'String');
     });
 
     test('isInteger works', () {
@@ -478,10 +480,15 @@ void main() {
 
       final res2 = isInteger().validate(123);
       expect(res2.isValid, true);
+    });
 
-      final res3 = isInteger().validate(true);
-      expect(res3.isValid, false);
-      expect(res3.expected, 'int');
+    test('\$isInteger works', () {
+      final res1 = $isInteger.validate(123);
+      expect(res1.isValid, true);
+
+      final res2 = $isInteger.validate("123");
+      expect(res2.isValid, false);
+      expect(res2.expected, 'int');
     });
 
     test('isBoolean works', () {
@@ -491,10 +498,15 @@ void main() {
 
       final res2 = isBoolean().validate(true);
       expect(res2.isValid, true);
+    });
 
-      final res3 = isBoolean().validate(123);
-      expect(res3.isValid, false);
-      expect(res3.expected, 'bool');
+    test('\$isBoolean works', () {
+      final res1 = $isBoolean.validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'bool');
+
+      final res2 = $isBoolean.validate(true);
+      expect(res2.isValid, true);
     });
 
     test('isDouble works', () {
@@ -504,10 +516,15 @@ void main() {
 
       final res2 = isDouble().validate(1.23);
       expect(res2.isValid, true);
+    });
 
-      final res3 = isDouble().validate(123);
-      expect(res3.isValid, false);
-      expect(res3.expected, 'double');
+    test('\$isDouble works', () {
+      final res1 = $isDouble.validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'double');
+
+      final res2 = $isDouble.validate(1.23);
+      expect(res2.isValid, true);
     });
 
     test('isNum works', () {
@@ -522,12 +539,33 @@ void main() {
       expect(res3.isValid, true);
     });
 
+    test('\$isNumber works', () {
+      final res1 = $isNumber.validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'num');
+
+      final res2 = $isNumber.validate(1.23);
+      expect(res2.isValid, true);
+
+      final res3 = $isNumber.validate(123);
+      expect(res3.isValid, true);
+    });
+
     test('isFuture works', () {
       final res1 = isFuture().validate("");
       expect(res1.isValid, false);
       expect(res1.expected, 'Future<dynamic>');
 
       final res2 = isFuture().validate(Future.value(1.23));
+      expect(res2.isValid, true);
+    });
+
+    test('\$isFuture works', () {
+      final res1 = $isFuture.validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'Future<dynamic>');
+
+      final res2 = $isFuture.validate(Future.value(1.23));
       expect(res2.isValid, true);
     });
 
@@ -540,12 +578,30 @@ void main() {
       expect(res2.isValid, true);
     });
 
+    test('\$isEnum works', () {
+      final res1 = $isEnum.validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'Enum');
+
+      final res2 = $isEnum.validate(EnumA.value1);
+      expect(res2.isValid, true);
+    });
+
     test('isList works', () {
       final res1 = isList<int>().validate("");
       expect(res1.isValid, false);
       expect(res1.expected, 'List<int>');
 
       final res2 = isList<int>().validate([1, 2, 3]);
+      expect(res2.isValid, true);
+    });
+
+    test('\$isList works', () {
+      final res1 = $isList.validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'List<dynamic>');
+
+      final res2 = $isList.validate([1, 2, 3]);
       expect(res2.isValid, true);
     });
 
@@ -558,12 +614,30 @@ void main() {
       expect(res2.isValid, true);
     });
 
+    test('\$isSet works', () {
+      final res1 = $isSet.validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'Set<dynamic>');
+
+      final res2 = $isSet.validate({1, 2, 3});
+      expect(res2.isValid, true);
+    });
+
     test('isRecord works', () {
       final res1 = isRecord().validate("");
       expect(res1.isValid, false);
       expect(res1.expected, 'Record');
 
       final res2 = isRecord().validate(('first', a: 2, b: true, 'last'));
+      expect(res2.isValid, true);
+    });
+
+    test('\$isRecord works', () {
+      final res1 = $isRecord.validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'Record');
+
+      final res2 = $isRecord.validate(('first', a: 2, b: true, 'last'));
       expect(res2.isValid, true);
     });
 
@@ -576,6 +650,15 @@ void main() {
       expect(res2.isValid, true);
     });
 
+    test('\$isIterable works', () {
+      final res1 = $isIterable.validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'Iterable<dynamic>');
+
+      final res2 = $isIterable.validate([1, 2, 3]);
+      expect(res2.isValid, true);
+    });
+
     test('isSymbol works', () {
       final res1 = isSymbol().validate("");
       expect(res1.isValid, false);
@@ -585,12 +668,39 @@ void main() {
       expect(res2.isValid, true);
     });
 
+    test('\$isSymbol works', () {
+      final res1 = $isSymbol.validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'Symbol');
+
+      final res2 = $isSymbol.validate(#mySymbol);
+      expect(res2.isValid, true);
+    });
+
     test('isFunction works', () {
       final res1 = isFunction().validate("");
       expect(res1.isValid, false);
       expect(res1.expected, 'Function');
 
       final res2 = isFunction().validate(() {});
+      expect(res2.isValid, true);
+    });
+
+    test('\$isFunction works', () {
+      final res1 = $isFunction.validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'Function');
+
+      final res2 = $isFunction.validate(() {});
+      expect(res2.isValid, true);
+    });
+
+    test('\$isMap works', () {
+      final res1 = $isMap.validate("");
+      expect(res1.isValid, false);
+      expect(res1.expected, 'Map<dynamic, dynamic>');
+
+      final res2 = $isMap.validate({'key': 'value'});
       expect(res2.isValid, true);
     });
   });

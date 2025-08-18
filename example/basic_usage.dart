@@ -13,18 +13,21 @@ void main() {
   );
 
   final accountEskema = eskema({
-    'id': isType<int>(),
-    'name': isType<String>(),
+    // You can access some validators directly using the $ prefix
+    'id': $isInteger,
+
+    // or you can build the validator using the function
+    'name': isString(),
   });
 
   final purchaseEskema = eskema({
-    'product_name': isType<String>(),
-    'price': isType<double>(),
+    'product_name': $isString,
+    'price': $isDouble,
   });
 
   final userEskema = eskema({
-    'username': isType<String>(),
-    'age': isType<int>(),
+    'username': $isString,
+    'age': $isInteger,
     // Nullable fields can be defined using the copyWith method
     'accounts': listEach(accountEskema).copyWith(nullable: true),
     // by using the orNullable method
