@@ -8,6 +8,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
-      - run: pub get
-      - run: analyze
-      - run: pub run dart_code_metrics:metrics analyze lib
+      - run: dart pub get
+      - run: dart analyze
+      - run: dart pub run dart_code_metrics:metrics analyze lib
