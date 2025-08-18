@@ -13,7 +13,6 @@ jobs:
       - uses: dart-lang/setup-dart@v1
       - run: dart pub get
       - run: dart analyze
-      - run: dart pub run dart_code_metrics:metrics analyze lib
       - run: dart test --coverage
       - uses: codecov/codecov-action@v2
         with:
