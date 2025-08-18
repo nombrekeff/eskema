@@ -1,5 +1,5 @@
+import 'package:eskema/extensions.dart';
 import 'package:eskema/validators.dart';
-import 'package:eskema/extensions.dart' show EskemaMapExtension;
 import 'package:test/test.dart';
 
 void main() {

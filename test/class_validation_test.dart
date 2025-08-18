@@ -1,3 +1,4 @@
+import 'package:eskema/validator.dart';
 import 'package:eskema/validators.dart';
 import 'package:test/test.dart';
 

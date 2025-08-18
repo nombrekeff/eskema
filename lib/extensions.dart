@@ -1,6 +1,7 @@
 import 'package:eskema/result.dart';
+import 'package:eskema/validators.dart';
 
-import 'validators.dart';
+import 'validator.dart';
 
 extension EskemaMapExtension on Map {
   IResult validate(EskValidator validator) {
