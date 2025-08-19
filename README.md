@@ -4,7 +4,7 @@
 
 [![codecov](https://codecov.io/gh/nombrekeff/eskema/branch/main/graph/badge.svg?token=ZF22N0G09J)](https://codecov.io/gh/nombrekeff/eskema) [![build](https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml/badge.svg?branch=main)](https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml) ![Pub Version](https://img.shields.io/pub/v/eskema?style=flat-square)
 
-# Eskema
+# Eskema 
 
 Eskema is a small, composable runtime validation library for Dart. It helps you validate dynamic values (JSON, Maps, Lists, primitives) with readable validators and clear error messages.
 
@@ -29,6 +29,7 @@ dart pub add eskema
 
 Validate a map using a schema-like validator and read a detailed result or a boolean.
 
+### 1. Create a simple eskema <!-- omit in toc -->
 ```dart
 import 'package:eskema/eskema.dart';
 
@@ -40,22 +41,41 @@ final userValidator = eskema({
 		expectedMessage: 'a valid email address',
 	)),
 });
+```
 
-// Get a validation result (EskResult) with a string indicating what was expected.
+### 2. Validate the eskema <!-- omit in toc -->
+
+Get a validation result (**EskResult**) with a string indicating what was expected.
+```dart
 final res = userValidator.validate({ 'username': 'alice', 'age': 30, 'email': null });
 print(res.isValid);   // true
 print(res.expected);  // null when valid
+```
 
+Directly check if the object is valid
+```dart
 // Boolean helpers
 final ok = userValidator.isValid({ 'username': 'bob', 'age': -1 }); // false
+```
 
-// Throw on failure
+You can also make the validation throw
+```dart
 try {
 	userValidator.validateOrThrow({'username': 'bob'});
 } catch (e) {
 	print(e); // ValidatorFailedException with a helpful message
 }
 ```
+
+## Table of contents
+- [Eskema](#eskema)
+  - [Use cases](#use-cases)
+  - [Install](#install)
+  - [Quick start](#quick-start)
+  - [Table of contents](#table-of-contents)
+  - [API overview](#api-overview)
+  - [Examples](#examples)
+
 
 ## API overview
 
@@ -89,9 +109,9 @@ Tip: Some zero-arg validators also have canonical aliases (e.g. `$isString`, `$i
 
 ## Examples
 
-### Custom validators
+### Custom validators <!-- omit in toc -->
 
-#### Zero-arg validator
+#### Zero-arg validator <!-- omit in toc -->
 ```dart
 final isHelloWorld = all([
   $isString,
@@ -106,7 +126,7 @@ print(isHelloWorld.isValid('Hello world'));  // true
 print(isHelloWorld.validate('hey'));         // false - 'Expected Hello world, got "hey"'
 ```
 
-#### Validator with args
+#### Validator with args <!-- omit in toc -->
 ```dart
 IEskValidator isInRange(num min, num max) {
   return all([
@@ -123,7 +143,7 @@ print(isInRange(0, 5).isValid(2)); // true
 print(isInRange(0, 5).validate(6)); // false - "Expected number to be between 0 and 5, got 6"
 ```
 
-### Class-based validators
+### Class-based validators <!-- omit in toc -->
 
 Prefer a class for complex/structured validation? Use `EskMap` with `EskField`.
 
@@ -165,7 +185,7 @@ print(result.isValid); // true
 
 
 
-### Validate untyped API JSON
+### Validate untyped API JSON <!-- omit in toc -->
 
 ```dart
 import 'package:eskema/eskema.dart';
@@ -184,7 +204,7 @@ final result = apiUser.validate(apiJson);
 if (result.isNotValid) log('invalid user: $result');
 ```
 
-### Guard inbound request payloads
+### Guard inbound request payloads <!-- omit in toc -->
 
 ```dart
 final createUser = eskema({
@@ -196,7 +216,7 @@ final res = createUser.validate(request.body);
 if (res.isNotValid) return Response(400, body: request.body);
 ```
 
-### Validate runtime config and feature flags
+### Validate runtime config and feature flags <!-- omit in toc -->
 
 ```dart
 final config = eskema({
@@ -210,7 +230,7 @@ final isConfigValid = config.isValid(configMap);
 assert(isConfigValid, 'Invalid config: $cfgRes');
 ```
 
-## More
+## More <!-- omit in toc -->
 
 - See [`example/`](./example/) for runnable demos
 - Check [`test/`](./test/) for behavior coverage
