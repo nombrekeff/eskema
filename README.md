@@ -154,9 +154,9 @@ enum Theme { light, dark }
 
 class SettingsValidator extends EskMap {
 	final theme = EskField(
-    id: 'theme', 
-    validators: [isOneOf(Theme.values)],
-  );
+	    id: 'theme', 
+	    validators: [isOneOf(Theme.values)],
+    );
 
 	final notificationsEnabled = EskField(
 		id: 'notificationsEnabled',
