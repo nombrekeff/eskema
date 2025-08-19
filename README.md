@@ -57,7 +57,73 @@ try {
 }
 ```
 
-## Class-based validators
+## API overview
+
+> Check the [docs]() for the technical documentation.
+
+- Core
+	- `IEskValidator` / `EskValidator` — object-based validators that return `EskResult`
+	- `EskResult` — `.isValid`, `.isNotValid`, `.expected`, `.value`, nice `toString()`
+
+- Common validators (examples)
+	- Types: `isType<T>()` e.g. `isType<String>()`; shorthands: `isString()`, `isInteger()`, `isDouble()`, `isBoolean()`
+	- Nullability: `isNull()`; make any validator nullable with `nullable(v)` or `v.nullable()`
+	- Numbers: `isGt(n)`, `isGte(n)`, `isLt(n)`, `isLte(n)`
+	- Equality: `isEq(value)`, deep equality `isDeepEq(value)`
+	- Strings: `stringIsOfLength(n)`, `stringContains(sub)`, `stringNotContains(sub)`, `stringMatchesPattern(pattern)`
+	- Lists: `listIsOfLength(n)`, `listEach(itemValidator)`, `eskemaList([...])`
+	- Maps: `eskema({ 'key': validator, ... })`
+
+- Composition
+	- `all([...])` — AND composition (stops on first failure)
+	- `any([...])` — OR composition (passes if any succeed)
+	- `not(v)` — invert a validator
+	- `nullable(v)` or `v.nullable()` — allow `null`
+
+- Results & helpers
+	- `.validate(value)` → `EskResult`
+	- `.isValid(value)` / `.isNotValid(value)` → bool
+	- `.validateOrThrow(value)` throws on invalid input
+
+Tip: Some zero-arg validators also have canonical aliases (e.g. `$isString`, `$isBoolean`) for concise usage.
+
+## Examples
+
+### Custom validators
+
+#### Zero-arg validator
+```dart
+final isHelloWorld = all([
+  $isString,
+  EskValidator((value) => EskResult(
+    isValid: value == 'Hello world',
+    expected: 'Hello world',
+    value: value,
+  )),
+]);
+
+print(isHelloWorld.isValid('Hello world'));  // true
+print(isHelloWorld.validate('hey'));         // false - 'Expected Hello world, got "hey"'
+```
+
+#### Validator with args
+```dart
+IEskValidator isInRange(num min, num max) {
+  return all([
+    isType<num>(),
+    EskValidator((value) => EskResult(
+      isValid: value >= min && value <= max,
+      expected: 'number to be between $min and $max',
+      value: value,
+    )),
+  ]);
+}
+
+print(isInRange(0, 5).isValid(2)); // true
+print(isInRange(0, 5).validate(6)); // false - "Expected number to be between 0 and 5, got 6"
+```
+
+### Class-based validators
 
 Prefer a class for complex/structured validation? Use `EskMap` with `EskField`.
 
@@ -98,38 +164,6 @@ print(result.isValid); // true
 ```
 
 
-
-## API overview
-
-> Check the [docs]() for the technical documentation.
-
-- Core
-	- `IEskValidator` / `EskValidator` — object-based validators that return `EskResult`
-	- `EskResult` — `.isValid`, `.isNotValid`, `.expected`, `.value`, nice `toString()`
-
-- Common validators (examples)
-	- Types: `isType<T>()` e.g. `isType<String>()`; shorthands: `isString()`, `isInteger()`, `isDouble()`, `isBoolean()`
-	- Nullability: `isNull()`; make any validator nullable with `nullable(v)` or `v.nullable()`
-	- Numbers: `isGt(n)`, `isGte(n)`, `isLt(n)`, `isLte(n)`
-	- Equality: `isEq(value)`, deep equality `isDeepEq(value)`
-	- Strings: `stringIsOfLength(n)`, `stringContains(sub)`, `stringNotContains(sub)`, `stringMatchesPattern(pattern)`
-	- Lists: `listIsOfLength(n)`, `listEach(itemValidator)`, `eskemaList([...])`
-	- Maps: `eskema({ 'key': validator, ... })`
-
-- Composition
-	- `all([...])` — AND composition (stops on first failure)
-	- `any([...])` — OR composition (passes if any succeed)
-	- `not(v)` — invert a validator
-	- `nullable(v)` or `v.nullable()` — allow `null`
-
-- Results & helpers
-	- `.validate(value)` → `EskResult`
-	- `.isValid(value)` / `.isNotValid(value)` → bool
-	- `.validateOrThrow(value)` throws on invalid input
-
-Tip: Some zero-arg validators also have canonical aliases (e.g. `$isString`, `$isBoolean`) for concise usage.
-
-## Examples
 
 ### Validate untyped API JSON
 
@@ -172,8 +206,8 @@ final config = eskema({
 	'allowedHosts': listEach(isString()).nullable(),
 });
 
-final cfgRes = config.validate(configMap);
-assert(cfgRes.isValid, 'Invalid config: $cfgRes');
+final isConfigValid = config.isValid(configMap);
+assert(isConfigValid, 'Invalid config: $cfgRes');
 ```
 
 ## More

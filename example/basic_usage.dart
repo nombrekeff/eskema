@@ -36,9 +36,7 @@ void main() {
     'purchases': nullable(listEach(purchaseEskema)),
   });
 
-  final isUserValid1 = userEskema.isValid({});
-  print(isUserValid1); // should be false
-
+  // Validate user data and get a result
   final isUserValid2 = userEskema.validate({
     'username': 'bob',
     'email': null,
@@ -50,20 +48,12 @@ void main() {
   print(isUserValid2.isValid); // true
   print(isUserValid2.expected); // null
 
-  final res2 = userEskema.validate({
-    'username': 'bob',
-    'email': null,
-    'age': 43,
-    'accounts': [
-      {'id': 123, 'name': 'account1'}
-    ],
-    'purchases': [
-      {'product_name': 'beer', 'price': 2.50}
-    ],
-  });
-  print(res2.isValid); // true
-  print(res2.expected); // null
+  // Check if the validator is valid or not
+  final userResult = userEskema.validate({});
+  print(userResult.isValid); // should be false
+  print(userResult.expected); // should contain expected errors
 
+  // You can also use the 'validate' extension method
   final mapData = {
     'username': 'bob',
     'email': null,
