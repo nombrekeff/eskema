@@ -54,6 +54,46 @@
 </h1></div>
 
     
+<section class="desc markdown">
+  <p>Abstract class from which to create class based validator schemes.
+EskMap is a utility class designed to facilitate the validation and transformation
+of map-like data structures in Dart. It provides a flexible way to define validation
+rules and apply them to input data, ensuring that the data conforms to expected
+formats or constraints.</p>
+<p>This is particularly useful when working with dynamic data sources such as JSON,
+form inputs, or external APIs, where the structure and types of the data may not
+be guaranteed.</p>
+<p>Example:</p>
+<pre class="language-dart"><code class="language-dart">class UserValidator extends EskMap {
+  final name = EskField(
+    id: 'name',
+    validators: [ $isString ],
+  );
+  final age = EskField(
+    id: 'age',
+    validators: [ $isInt, $isGt(0) ],
+  );
+  @override
+  get fields =&gt; [name, age];
+}
+
+final userValidator = UserValidator();
+
+final result = userValidator.validate({
+  'name': 'Alice',
+  'age': 30
+});
+
+if (result.isValid) {
+  print('Validation passed!');
+} else {
+  print(result.toString());
+}
+</code></pre>
+<p>In this example, <code>EskMap</code> is used to define a schema where <code>name</code> is a required
+string and <code>age</code> is an integer with a minimum value of 0. The <code>validate</code> method
+checks the input data against these rules and returns the result.</p>
+</section>
 
 
     <section>
@@ -65,7 +105,7 @@
       <li><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></li>
         <li><a href="../validator/IEskValidator-class.html">IEskValidator</a></li>
         <li><a href="../validator/EskValidator-class.html">EskValidator</a></li>
-        <li><a href="../validator/EskIdValidator-class.html">EskIdValidator</a></li>
+        <li><a href="../validator/IEskIdValidator-class.html">IEskIdValidator</a></li>
       <li>EskMap</li>
     </ul>
   </dd>
@@ -75,6 +115,10 @@
 
 
         
+  <dt>Available extensions</dt>
+  <dd><ul class="comma-separated clazz-relationships">
+      <li><a href="../extensions/EskemaEskValidatorOperations.html">EskemaEskValidatorOperations</a></li>
+  </ul></dd>
         
 
 
@@ -86,7 +130,7 @@
     <h2>Constructors</h2>
     <dl class="constructor-summary-list">
         <dt id="EskMap.new" class="callable">
-          <span class="name"><a href="../validator/EskMap/EskMap.html">EskMap.new</a></span><span class="signature">({<span class="parameter" id="-param-id"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">id</span> = <span class="default-value">&#39;class_validator&#39;</span>, </span><span class="parameter" id="-param-nullable"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">nullable</span> = <span class="default-value">false</span></span>})</span>
+          <span class="name"><a href="../validator/EskMap/EskMap.html">EskMap.new</a></span><span class="signature">({<span class="parameter" id="-param-id"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">id</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-nullable"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">nullable</span> = <span class="default-value">false</span></span>})</span>
         </dt>
         <dd>
           
@@ -101,12 +145,13 @@
     <dl class="properties">
         <dt id="fields" class="property">
   <span class="name"><a href="../validator/EskMap/fields.html">fields</a></span>
-  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>&gt;</span></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IEskIdValidator-class.html">IEskIdValidator</a></span>&gt;</span></span>
   
 
 </dt>
 <dd>
-  
+  List of <a href="../validator/IEskIdValidator-class.html">IEskIdValidator</a>s used to validate a dynamic <code>Map</code>.
+Each field represents a value in the map, <code>id</code> is used to identify the key from the map.
   <div class="features"><span class="feature">no setter</span></div>
 
 </dd>
@@ -124,13 +169,13 @@
 </dd>
 
         <dt id="id" class="property inherited">
-  <span class="name"><a href="../validator/EskIdValidator/id.html">id</a></span>
+  <span class="name"><a href="../validator/IEskIdValidator/id.html">id</a></span>
   <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
   
 
 </dt>
 <dd class="inherited">
-  
+  Identifier for this particular validator.
   <div class="features"><span class="feature">final</span><span class="feature">inherited</span></div>
 
 </dd>
@@ -142,8 +187,10 @@
 
 </dt>
 <dd class="inherited">
-  
-  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+  Whether the validator accepts null values.
+If isNullable is true, and the value being checked is null,
+the validation is considered valid.
+  <div class="features"><span class="feature">final</span><span class="feature">inherited</span></div>
 
 </dd>
 
@@ -176,7 +223,7 @@
 
 </dt>
 <dd>
-  
+  Creates a copy of the validator with the given parameters.
   <div class="features"><span class="feature">override</span></div>
 
 </dd>
@@ -189,7 +236,7 @@
 
 </dt>
 <dd class="inherited">
-  
+  Checks if the given value is not valid.
   <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
@@ -202,7 +249,7 @@
 
 </dt>
 <dd class="inherited">
-  
+  Checks if the given value is valid.
   <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
@@ -228,7 +275,7 @@
 
 </dt>
 <dd class="inherited">
-  
+  Creates a nullable copy of the validator.
   <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
@@ -254,7 +301,8 @@
 
 </dt>
 <dd class="inherited">
-  
+  Main validation method. Use this method if you want to validate
+that a dynamic value is valid, and get an error message if not.
   <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
@@ -267,7 +315,8 @@
 
 </dt>
 <dd class="inherited">
-  
+  Works the same as <a href="../validator/IEskValidator/validate.html">validate</a>, validates that a given value is valid,
+but throws instead if it's not.
   <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
@@ -280,7 +329,7 @@
 
 </dt>
 <dd>
-  
+  Validates the given <code>value</code> and returns the result.
   <div class="features"><span class="feature">override</span></div>
 
 </dd>
@@ -293,6 +342,23 @@
       id="operators">
     <h2>Operators</h2>
     <dl class="callables">
+        <dt id="operator &amp;" class="callable">
+  <span class="name"><a href="../extensions/EskemaEskValidatorOperations/operator_bitwise_and.html">operator &</a></span><span class="signature">(<wbr><span class="parameter" id="&-param-other"><span class="type-annotation"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator/IEskValidator-class.html">IEskValidator</a>,
+        provided by the <a href="../extensions/EskemaEskValidatorOperations.html">EskemaEskValidatorOperations</a> extension</span>
+      </p>
+  
+  
+
+</dd>
+
         <dt id="operator ==" class="callable inherited">
   <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
@@ -303,6 +369,23 @@
 <dd class="inherited">
   The equality operator.
   <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="operator |" class="callable">
+  <span class="name"><a href="../extensions/EskemaEskValidatorOperations/operator_bitwise_or.html">operator |</a></span><span class="signature">(<wbr><span class="parameter" id="|-param-other"><span class="type-annotation"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator/IEskValidator-class.html">IEskValidator</a>,
+        provided by the <a href="../extensions/EskemaEskValidatorOperations.html">EskemaEskValidatorOperations</a> extension</span>
+      </p>
+  
+  
 
 </dd>
 

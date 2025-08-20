@@ -69,15 +69,7 @@
 
 </dt>
 <dd>
-  
-</dd>
-
-          <dt id="EskIdValidator">
-  <span class="name "><a href="../validator/EskIdValidator-class.html">EskIdValidator</a></span> 
-
-</dt>
-<dd>
-  
+  An implementation of <a href="../validator/IEskIdValidator-class.html">IEskIdValidator</a>, which acepts a list of validators.
 </dd>
 
           <dt id="EskMap">
@@ -85,7 +77,11 @@
 
 </dt>
 <dd>
-  
+  Abstract class from which to create class based validator schemes.
+EskMap is a utility class designed to facilitate the validation and transformation
+of map-like data structures in Dart. It provides a flexible way to define validation
+rules and apply them to input data, ensuring that the data conforms to expected
+formats or constraints.
 </dd>
 
           <dt id="EskValidator">
@@ -93,7 +89,18 @@
 
 </dt>
 <dd>
-  
+  An implementation of <a href="../validator/IEskValidator-class.html">IEskValidator</a>, which accepts a validator function,
+which is used by the EskValidator to validate some data.
+</dd>
+
+          <dt id="IEskIdValidator">
+  <span class="name "><a href="../validator/IEskIdValidator-class.html">IEskIdValidator</a></span> 
+
+</dt>
+<dd>
+  A <a href="../validator/EskValidator-class.html">EskValidator</a> sub-class, which adds an identifier,
+which can be used to identify the validator,
+for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to validate its fields.
 </dd>
 
           <dt id="IEskValidator">
@@ -101,7 +108,7 @@
 
 </dt>
 <dd>
-  
+  Inmutable class from which all validators inherit.
 </dd>
 
       </dl>
@@ -126,7 +133,7 @@
 
   </dt>
   <dd>
-    
+    Type representing a validator function.
     
 
   </dd>

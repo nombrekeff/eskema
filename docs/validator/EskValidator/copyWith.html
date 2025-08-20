@@ -67,6 +67,9 @@
 
     </section>
     
+<section class="desc markdown">
+  <p>Creates a copy of the validator with the given parameters.</p>
+</section>
 
 
     
@@ -74,7 +77,10 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 IEskValidator copyWith({bool? nullable}) {
-  return EskValidator(_validator, nullable: nullable ?? isNullable);
+  return EskValidator(
+    _validator,
+    nullable: nullable ?? isNullable,
+  );
 }</code></pre>
 </section>
 

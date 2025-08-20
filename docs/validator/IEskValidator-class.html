@@ -54,6 +54,12 @@
 </h1></div>
 
     
+<section class="desc markdown">
+  <p>Inmutable class from which all validators inherit.</p>
+<p>You can use it to create custom validators,
+but consider using other ways of creating custom validators (<em>see <a href="https://github.com/nombrekeff/eskema/tree/main#custom-validators">Custom Validators</a></em>)</p>
+<p>Or consider using one of the <a href="../validators/">validators</a> for built in validation.</p>
+</section>
 
 
     <section>
@@ -69,6 +75,10 @@
           </ul></dd>
 
         
+  <dt>Available extensions</dt>
+  <dd><ul class="comma-separated clazz-relationships">
+      <li><a href="../extensions/EskemaEskValidatorOperations.html">EskemaEskValidatorOperations</a></li>
+  </ul></dd>
         
 
 
@@ -84,6 +94,7 @@
         </dt>
         <dd>
           
+            <div class="constructor-modifier features">const</div>
         </dd>
     </dl>
   </section>
@@ -112,8 +123,10 @@
 
 </dt>
 <dd>
-  
-  <div class="features"><span class="feature">no setter</span></div>
+  Whether the validator accepts null values.
+If isNullable is true, and the value being checked is null,
+the validation is considered valid.
+  <div class="features"><span class="feature">final</span></div>
 
 </dd>
 
@@ -146,7 +159,7 @@
 
 </dt>
 <dd>
-  
+  Creates a copy of the validator with the given parameters.
   
 
 </dd>
@@ -159,7 +172,7 @@
 
 </dt>
 <dd>
-  
+  Checks if the given value is not valid.
   
 
 </dd>
@@ -172,7 +185,7 @@
 
 </dt>
 <dd>
-  
+  Checks if the given value is valid.
   
 
 </dd>
@@ -198,7 +211,7 @@
 
 </dt>
 <dd>
-  
+  Creates a nullable copy of the validator.
   
 
 </dd>
@@ -224,7 +237,8 @@
 
 </dt>
 <dd>
-  
+  Main validation method. Use this method if you want to validate
+that a dynamic value is valid, and get an error message if not.
   
 
 </dd>
@@ -237,7 +251,8 @@
 
 </dt>
 <dd>
-  
+  Works the same as <a href="../validator/IEskValidator/validate.html">validate</a>, validates that a given value is valid,
+but throws instead if it's not.
   
 
 </dd>
@@ -250,7 +265,7 @@
 
 </dt>
 <dd>
-  
+  Validates the given <code>value</code> and returns the result.
   
 
 </dd>
@@ -263,6 +278,23 @@
       id="operators">
     <h2>Operators</h2>
     <dl class="callables">
+        <dt id="operator &amp;" class="callable">
+  <span class="name"><a href="../extensions/EskemaEskValidatorOperations/operator_bitwise_and.html">operator &</a></span><span class="signature">(<wbr><span class="parameter" id="&-param-other"><span class="type-annotation"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator/IEskValidator-class.html">IEskValidator</a>,
+        provided by the <a href="../extensions/EskemaEskValidatorOperations.html">EskemaEskValidatorOperations</a> extension</span>
+      </p>
+  
+  
+
+</dd>
+
         <dt id="operator ==" class="callable inherited">
   <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
@@ -273,6 +305,23 @@
 <dd class="inherited">
   The equality operator.
   <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="operator |" class="callable">
+  <span class="name"><a href="../extensions/EskemaEskValidatorOperations/operator_bitwise_or.html">operator |</a></span><span class="signature">(<wbr><span class="parameter" id="|-param-other"><span class="type-annotation"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator/IEskValidator-class.html">IEskValidator</a>,
+        provided by the <a href="../extensions/EskemaEskValidatorOperations.html">EskemaEskValidatorOperations</a> extension</span>
+      </p>
+  
+  
 
 </dd>
 

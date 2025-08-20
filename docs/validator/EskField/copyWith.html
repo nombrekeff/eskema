@@ -67,6 +67,9 @@
 
     </section>
     
+<section class="desc markdown">
+  <p>Creates a copy of the validator with the given parameters.</p>
+</section>
 
 
     
@@ -75,9 +78,7 @@
   <pre class="language-dart"><code class="language-dart">@override
 IEskValidator copyWith({bool? nullable}) {
   return EskField(
-    validators: List&lt;IEskValidator&gt;.from(
-      validators.map((v) =&gt; v.copyWith(nullable: nullable)),
-    ),
+    validators: validators,
     id: id,
     nullable: nullable ?? isNullable,
   );

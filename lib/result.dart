@@ -36,6 +36,20 @@ class EskResult {
     }
   }
 
+  EskResult copyWith({
+    bool? isValid,
+    String? expected,
+    dynamic value,
+    StackTrace? stackTrace,
+  }) {
+    return EskResult(
+      isValid: isValid ?? this.isValid,
+      expected: expected ?? this.expected,
+      value: value ?? this.value,
+      stackTrace: stackTrace ?? this.stackTrace,
+    );
+  }
+
   @override
   String toString() {
     return describeResult();

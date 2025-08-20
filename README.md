@@ -34,28 +34,52 @@ Validate a map using a schema-like validator and read a detailed result or a boo
 import 'package:eskema/eskema.dart';
 
 final userValidator = eskema({
-	'username': isString(),     // or use the canonical alias: $isString
-	'age': all([isInteger(), isGte(0)]),
-	'email': nullable(stringMatchesPattern(
-		RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$"),
-		expectedMessage: 'a valid email address',
-	)),
-});
+    'username': isString(),
+
+    // Combine validators using `all` and `any`
+    'age': all([isInteger(), isGte(0)]),
+
+    // or use operators for simplicity:
+    'theme': (isString() & (isEq('light') | isEq('dark'))).nullable(),
+
+    // Some zero-arg validators also have canonical aliases: e.g. `$isBoolean`, `$isString`
+    'premium': nullable($isBoolean),
+
+    // Make a validator nullable
+    'email': stringMatchesPattern(
+      RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$"),
+      expectedMessage: 'a valid email address',
+    ).nullable(),
+  });
+
+  final ok = userValidator.validate({
+    'username': 'bob',
+    'age': 42,
+  });
+  print("User is valid: $ok");
+
+  final res = userValidator.validate({
+    'username': 'alice',
+    'age': -1,
+  });
+  print(res); // false - "Expected age -> greater than or equal to 0, got -1"
 ```
 
 ### 2. Validate the eskema <!-- omit in toc -->
 
-Get a validation result (**EskResult**) with a string indicating what was expected.
+The simplest way to check if a validator is valid, is by using the `isValid` method:
 ```dart
-final res = userValidator.validate({ 'username': 'alice', 'age': 30, 'email': null });
-print(res.isValid);   // true
-print(res.expected);  // null when valid
+final ok = userValidator.isValid({ 'username': 'bob', 'age': 42 });
+print("User is valid: $ok");  // true
 ```
 
-Directly check if the object is valid
+You can use the `.validate` method to get a descriptive error message:
 ```dart
-// Boolean helpers
-final ok = userValidator.isValid({ 'username': 'bob', 'age': -1 }); // false
+final res = userValidator.validate({
+'username': 'alice',
+'age': -1,
+});
+print(res); // false - "Expected age -> greater than or equal to 0, got -1"
 ```
 
 You can also make the validation throw
@@ -69,12 +93,12 @@ try {
 
 ## Table of contents
 - [Eskema](#eskema)
-  - [Use cases](#use-cases)
-  - [Install](#install)
-  - [Quick start](#quick-start)
-  - [Table of contents](#table-of-contents)
-  - [API overview](#api-overview)
-  - [Examples](#examples)
+	- [Use cases](#use-cases)
+	- [Install](#install)
+	- [Quick start](#quick-start)
+	- [Table of contents](#table-of-contents)
+	- [API overview](#api-overview)
+	- [Examples](#examples)
 
 
 ## API overview

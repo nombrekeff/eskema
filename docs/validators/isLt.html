@@ -63,14 +63,20 @@
     </section>
     
 <section class="desc markdown">
-  <p>Checks whether the given value is less than <code>max</code></p>
+  <p>///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+Checks whether the given value is less than <code>max</code></p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator isLt(num max) =&gt; all([
+  <pre class="language-dart"><code class="language-dart">&#47;&#47; Logic&#47;comparison Validators
+&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;
+
+&#47;&#47;&#47; Checks whether the given value is less than [max]
+IEskValidator isLt(num max) =&gt; all([
       isType&lt;num&gt;(),
       EskValidator((value) =&gt; EskResult(
             isValid: value &lt; max,

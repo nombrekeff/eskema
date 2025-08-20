@@ -62,6 +62,23 @@
 
     </section>
     
+<section class="desc markdown">
+  <p>Returns a Validator that checks a value against the eskema provided,
+the eskema defines a validator for each item in the list</p>
+<p>Example:</p>
+<pre class="language-dart"><code class="language-dart">final isValidList = eskemaList([isType&lt;String&gt;(), isType&lt;int&gt;()]);
+isValidList(["1", 2]).isValid;   // true
+isValidList(["1", "2"]).isValid; // false
+isValidList([1, "2"]).isValid;   // false
+</code></pre>
+<p><code>isValidList</code> will only be valid:</p>
+<ul>
+<li>if the array is of length 2</li>
+<li>the first item is a string</li>
+<li>and the second item is an int</li>
+</ul>
+<p>This validator also checks that the value is a list</p>
+</section>
 
 
     

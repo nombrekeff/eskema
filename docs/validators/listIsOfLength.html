@@ -63,25 +63,14 @@
     </section>
     
 <section class="desc markdown">
-  <p>Validates that the list's length is the same as the provided <code>size</code></p>
-<p>This validator also validates that the value is a list first
-So there's no need to add the <a href="../validators/isList.html">isList</a> validator when using this validator</p>
+  <p>Validates that it's a list of <code>size</code> length</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator listIsOfLength(int size) =&gt; EskValidator((value) {
-      final isListResult = isType&lt;List&gt;().validate(value);
-      if (isListResult.isNotValid) return isListResult;
-
-      return EskResult(
-        isValid: (value as List).length == size,
-        expected: &#39;List of size $size&#39;,
-        value: value,
-      );
-    });</code></pre>
+  <pre class="language-dart"><code class="language-dart">IEskValidator listIsOfLength(int size) =&gt; listLength([isEq(size)]);</code></pre>
 </section>
 
 

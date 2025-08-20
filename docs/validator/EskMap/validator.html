@@ -67,6 +67,10 @@
 
     </section>
     
+<section class="desc markdown">
+  <p>Validates the given <code>value</code> and returns the result.</p>
+<p>Don't call directly, call <a href="../../validator/IEskValidator/validate.html">validate</a> instead.</p>
+</section>
 
 
     
@@ -78,32 +82,30 @@ EskResult validator(dynamic value) {
   if (superRes.isNotValid) return superRes;
 
   for (final field in fields) {
-    if (field is EskIdValidator) {
-      final mapValue = value[field.id];
-      &#47;&#47; If the field is nullable, we can skip validation if the value is null
-      if (mapValue == null &amp;&amp; field.isNullable) continue;
+    final mapValue = value[field.id];
+    &#47;&#47; If the field is nullable, we can skip validation if the value is null
+    if (mapValue == null &amp;&amp; field.isNullable) continue;
 
-      print(
-        &quot;Validating field: ${field.id}, value: $mapValue, with field: ${field}&quot;,
-      );
+    print(
+      &quot;Validating field: ${field.id}, value: $mapValue, with field: ${field}&quot;,
+    );
 
-      final result = field.validate(mapValue);
-      if (result.isValid) continue;
+    final result = field.validate(mapValue);
+    if (result.isValid) continue;
 
-      String expected = &#39;&#39;;
+    String expected = &#39;&#39;;
 
-      if (field is EskMap) {
-        expected += &#39;${field.id}.${result.expected}&#39;;
-      } else {
-        expected += &#39;${field.id} to be ${result.expected}&#39;;
-      }
-
-      return EskResult(
-        isValid: result.isValid,
-        expected: expected,
-        value: mapValue,
-      );
+    if (field is EskMap) {
+      expected += &#39;${field.id}.${result.expected}&#39;;
+    } else {
+      expected += &#39;${field.id} to be ${result.expected}&#39;;
     }
+
+    return EskResult(
+      isValid: result.isValid,
+      expected: expected,
+      value: mapValue,
+    );
   }
 
   return EskResult.valid(value);

@@ -5,15 +5,9 @@ import 'package:eskema/validator.dart';
 
 Function _collectionEquals = const DeepCollectionEquality().equals;
 
-/// Returns a [EskValidator] that checks if the given value is the correct type
-IEskValidator isType<T>() => EskValidator((value) => EskResult(
-      isValid: value is T,
-      expected: T.toString(),
-      value: value,
-    ));
-
-/// Returns a [EskValidator] that checks if the given value is the correct type
-IEskValidator isTypeOrNull<T>() => isType<T>().nullable();
+//////////////////////////////////////////////////////////////////////////////////
+// Logic/comparison Validators
+//////////////////////////////////////////////////////////////////////////////////
 
 /// Checks whether the given value is less than [max]
 IEskValidator isLt(num max) => all([
@@ -78,57 +72,28 @@ IEskValidator isDeepEq<T>(T expected) => all([
           )),
     ]);
 
-/// Checks whether the given value is a valid DateTime formattedString
-IEskValidator isDate() => EskValidator((value) => EskResult(
-      isValid: DateTime.tryParse(value) != null,
-      expected: 'a valid date',
-      value: value,
-    ));
-
-/// Validates that the list's length is the same as the provided [size]
-///
-/// This validator also validates that the value is a list first
-/// So there's no need to add the [isList] validator when using this validator
-IEskValidator listIsOfLength(int size) => EskValidator((value) {
-      final isListResult = isType<List>().validate(value);
-      if (isListResult.isNotValid) return isListResult;
-
-      return EskResult(
-        isValid: (value as List).length == size,
-        expected: 'List of size $size',
-        value: value,
-      );
+/// Checks
+IEskValidator length(List<IEskValidator> validators) => EskValidator((value) {
+      if (hasLengthProperty(value)) {
+        final result = all(validators).validate((value as dynamic).length);
+        return result.copyWith(
+          expected: 'length ${result.expected}',
+        );
+      } else {
+        return EskResult.invalid(
+          '${value.runtimeType} does not have a length property',
+          value,
+        );
+      }
     });
 
-/// Validates that the String's length is the same as the provided [size]
-///
-/// This validator also validates that the value is a String first
-/// So there's no need to add the [isString] validator when using this validator
-IEskValidator stringIsOfLength(int size) => EskValidator((value) {
-      final isStringResult = isType<String>().validate(value);
-      if (isStringResult.isNotValid) return isStringResult;
+/// Checks whether the given value is not empty
+IEskValidator isNotEmpty() => stringLength([isGt(0)]);
+IEskValidator isEmpty() => stringLength([isLte(0)]);
 
-      return EskResult(
-        isValid: (value as String).length == size,
-        expected: 'String of length $size',
-        value: value,
-      );
-    });
-
-/// Validates that the String contains [substring]
-///
-/// This validator also validates that the value is a String first
-/// So there's no need to add the [isString] validator when using this validator
-IEskValidator stringContains(String substring) => EskValidator((value) {
-      final isString = isType<String>().validate(value);
-      if (isString.isNotValid) return isString;
-
-      return EskResult(
-        isValid: (value as String).contains(substring),
-        expected: 'String to contain "$substring"',
-        value: value,
-      );
-    });
+//////////////////////////////////////////////////////////////////////////////////
+// List Validators
+//////////////////////////////////////////////////////////////////////////////////
 
 /// Validates that the List contains [item]
 ///
@@ -141,6 +106,46 @@ IEskValidator listContains<T>(T item) => EskValidator((value) {
       return EskResult(
         isValid: (value as List).contains(item),
         expected: 'List to contain ${pretifyValue(item)}',
+        value: value,
+      );
+    });
+
+/// Validates that it's a List and the length matches the validators
+IEskValidator listLength<T>(List<IEskValidator> validators) => all([
+      isList<T>(),
+      length(validators),
+    ]);
+
+/// Validates that it's a list of `size` length
+IEskValidator listIsOfLength(int size) => listLength([isEq(size)]);
+
+//////////////////////////////////////////////////////////////////////////////////
+// String Validators
+//////////////////////////////////////////////////////////////////////////////////
+
+/// Validates that the String's length matches the validators
+IEskValidator stringLength(List<IEskValidator> validators) => all([
+      $isString,
+      length(validators),
+    ]);
+
+/// Validates that the String's length is the same as the provided [size]
+///
+/// This validator also validates that the value is a String first
+/// So there's no need to add the [isString] validator when using this validator
+IEskValidator stringIsOfLength(int size) => stringLength([isEq(size)]);
+
+/// Validates that the String contains [substring]
+///
+/// This validator also validates that the value is a String first
+/// So there's no need to add the [isString] validator when using this validator
+IEskValidator stringContains(String substring) => EskValidator((value) {
+      final isString = isType<String>().validate(value);
+      if (isString.isNotValid) return isString;
+
+      return EskResult(
+        isValid: (value as String).contains(substring),
+        expected: 'String to contain "$substring"',
         value: value,
       );
     });
@@ -177,12 +182,21 @@ IEskValidator stringMatchesPattern(Pattern pattern, {String? expectedMessage}) {
   });
 }
 
+//////////////////////////////////////////////////////////////////////////////////
+// Combinators
+//////////////////////////////////////////////////////////////////////////////////
+
 /// Passes the test if any of the [EskValidator]s are valid, and fails if any are invalid
 IEskValidator any(List<IEskValidator> validators) => EskValidator((value) {
-      final results = validators.map((v) => v.validate(value)).toList();
+      final results = [];
+      for (final validator in validators) {
+        final result = validator.validate(value);
+        results.add(result);
+        if (result.isValid) return result;
+      }
 
       return EskResult(
-        isValid: results.any((r) => r.isValid),
+        isValid: false,
         expected: results.map((r) => r.expected).join(' or '),
         value: value,
       );
@@ -229,6 +243,10 @@ IEskValidator throwInstead(IEskValidator validator) => EskValidator((value) {
       if (result.isNotValid) throw ValidatorFailedException(result);
       return EskResult.valid(value);
     });
+
+//////////////////////////////////////////////////////////////////////////////////
+// Structure types
+//////////////////////////////////////////////////////////////////////////////////
 
 /// Returns a Validator that checks a value against a Map eskema that declares a validator for each key.
 ///
@@ -326,6 +344,20 @@ IEskValidator listEach(IEskValidator itemValidator) {
   });
 }
 
+//////////////////////////////////////////////////////////////////////////////////
+// Built in types
+//////////////////////////////////////////////////////////////////////////////////
+
+/// Returns a [EskValidator] that checks if the given value is the correct type
+IEskValidator isType<T>() => EskValidator((value) => EskResult(
+      isValid: value is T,
+      expected: T.toString(),
+      value: value,
+    ));
+
+/// Returns a [EskValidator] that checks if the given value is the correct type
+IEskValidator isTypeOrNull<T>() => isType<T>().nullable();
+
 /// Returns a [IEskValidator] that checks if the given value is `null`
 /// For better performance and readability, use the [$isNull] variable directly.
 IEskValidator isNull() => isType<Null>();
@@ -399,3 +431,10 @@ final $isFuture = isFuture();
 /// For better performance and readability, use the [$isIterable] variable directly.
 IEskValidator isIterable<T>() => isType<Iterable<T>>();
 final $isIterable = isIterable();
+
+/// Checks whether the given value is a valid DateTime formattedString
+IEskValidator isDate() => EskValidator((value) => EskResult(
+      isValid: DateTime.tryParse(value) != null,
+      expected: 'a valid date',
+      value: value,
+    ));

@@ -8,7 +8,7 @@ class EskMapTest extends EskMap {
   EskMapTest({super.nullable});
 
   @override
-  List<IEskValidator> get fields => [name];
+  get fields => [name];
 }
 
 void main() {

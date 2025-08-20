@@ -3,11 +3,34 @@ import 'package:eskema/validators.dart';
 
 import 'result.dart';
 
+/// Type representing a validator function.
 typedef EskValidatorFn = EskResult Function(dynamic value);
 
+/// Inmutable class from which all validators inherit.
+///
+/// You can use it to create custom validators,
+/// but consider using other ways of creating custom validators (_see [Custom Validators](https://github.com/nombrekeff/eskema/tree/main#custom-validators)_)
+///
+/// Or consider using one of the [validators] for built in validation.
 abstract class IEskValidator {
+  const IEskValidator({bool nullable = false}) : isNullable = nullable;
+
+  /// Whether the validator accepts null values.
+  /// If isNullable is true, and the value being checked is null,
+  /// the validation is considered valid.
+  final bool isNullable;
+
+  /// Validates the given [value] and returns the result.
+  ///
+  /// Don't call directly, call [validate] instead.
   EskResult validator(dynamic value);
 
+  /// Main validation method. Use this method if you want to validate
+  /// that a dynamic value is valid, and get an error message if not.
+  ///
+  /// You can also call [isValid] if you just want to check if the value is valid.
+  ///
+  /// If you want to to throw an error use [validateOrThrow]
   EskResult validate(dynamic value) {
     if (value == null && isNullable) {
       return EskResult.valid(value);
@@ -24,29 +47,33 @@ abstract class IEskValidator {
     return result;
   }
 
+  /// Works the same as [validate], validates that a given value is valid,
+  /// but throws instead if it's not.
   EskResult validateOrThrow(dynamic value) {
     final result = validate(value);
     if (result.isNotValid) throw ValidatorFailedException(result);
     return result;
   }
 
+  /// Checks if the given value is valid.
   bool isValid(dynamic value) => validate(value).isValid;
 
+  /// Checks if the given value is not valid.
   bool isNotValid(dynamic value) => !validate(value).isValid;
 
-  bool _nullable;
-
-  IEskValidator({bool nullable = false}) : _nullable = nullable;
-
-  bool get isNullable => _nullable;
-
+  /// Creates a copy of the validator with the given parameters.
   IEskValidator copyWith({bool? nullable});
 
+  /// Creates a nullable copy of the validator.
   IEskValidator nullable<T>() {
     return copyWith(nullable: true);
   }
 }
 
+/// An implementation of [IEskValidator], which accepts a validator function,
+/// which is used by the EskValidator to validate some data.
+///
+/// Take a look at [validators] for examples.
 class EskValidator extends IEskValidator {
   final EskValidatorFn _validator;
   EskValidator(this._validator, {super.nullable});
@@ -58,28 +85,45 @@ class EskValidator extends IEskValidator {
 
   @override
   IEskValidator copyWith({bool? nullable}) {
-    return EskValidator(_validator, nullable: nullable ?? isNullable);
+    return EskValidator(
+      _validator,
+      nullable: nullable ?? isNullable,
+    );
   }
 
   @override
   String toString() => 'Validator';
 }
 
-abstract class EskIdValidator extends EskValidator {
+/// A [EskValidator] sub-class, which adds an identifier,
+/// which can be used to identify the validator,
+/// for example [EskMap] uses it to validate its fields.
+class IEskIdValidator extends EskValidator {
+  /// Identifier for this particular validator.
   final String id;
 
-  EskIdValidator({
+  IEskIdValidator({
     required EskValidatorFn validator,
-    required this.id,
+    this.id = '',
     super.nullable,
   }) : super(validator);
 }
 
-class EskField extends EskIdValidator {
-  final List<IEskValidator> validators;
+/// An implementation of [IEskIdValidator], which acepts a list of validators.
+///
+/// See [example](https://github.com/nombrekeff/eskema/tree/main/example/class_validation.dart)
+class EskField extends IEskIdValidator {
+  EskField({
+    required this.validators,
+    super.id,
+    super.nullable,
+  }) : super(validator: EskResult.valid);
 
-  EskField({required this.validators, required super.id, super.nullable})
-      : super(validator: EskResult.valid);
+  /// List of validators to apply to the field.
+  ///
+  /// Each validator will be applied in order, and the first one to fail will
+  /// determine the error result, otherwise it will be considered valid.
+  final List<IEskValidator> validators;
 
   @override
   EskResult validator(dynamic value) {
@@ -99,19 +143,62 @@ class EskField extends EskIdValidator {
   @override
   IEskValidator copyWith({bool? nullable}) {
     return EskField(
-      validators: List<IEskValidator>.from(
-        validators.map((v) => v.copyWith(nullable: nullable)),
-      ),
+      validators: validators,
       id: id,
       nullable: nullable ?? isNullable,
     );
   }
 }
 
-abstract class EskMap<T extends Map> extends EskIdValidator {
-  List<IEskValidator> get fields;
-  EskMap({super.id = 'class_validator', super.nullable})
+/// Abstract class from which to create class based validator schemes.
+/// EskMap is a utility class designed to facilitate the validation and transformation
+/// of map-like data structures in Dart. It provides a flexible way to define validation
+/// rules and apply them to input data, ensuring that the data conforms to expected
+/// formats or constraints.
+///
+/// This is particularly useful when working with dynamic data sources such as JSON,
+/// form inputs, or external APIs, where the structure and types of the data may not
+/// be guaranteed.
+///
+/// Example:
+/// ```dart
+/// class UserValidator extends EskMap {
+///   final name = EskField(
+///     id: 'name',
+///     validators: [ $isString ],
+///   );
+///   final age = EskField(
+///     id: 'age',
+///     validators: [ $isInt, $isGt(0) ],
+///   );
+///   @override
+///   get fields => [name, age];
+/// }
+///
+/// final userValidator = UserValidator();
+///
+/// final result = userValidator.validate({
+///   'name': 'Alice',
+///   'age': 30
+/// });
+///
+/// if (result.isValid) {
+///   print('Validation passed!');
+/// } else {
+///   print(result.toString());
+/// }
+/// ```
+///
+/// In this example, `EskMap` is used to define a schema where `name` is a required
+/// string and `age` is an integer with a minimum value of 0. The `validate` method
+/// checks the input data against these rules and returns the result.
+abstract class EskMap<T extends Map> extends IEskIdValidator {
+  EskMap({super.id = '', super.nullable})
       : super(validator: isMap().validate);
+
+  /// List of [IEskIdValidator]s used to validate a dynamic `Map`.
+  /// Each field represents a value in the map, `id` is used to identify the key from the map.
+  List<IEskIdValidator> get fields;
 
   @override
   EskResult validator(dynamic value) {
@@ -119,32 +206,30 @@ abstract class EskMap<T extends Map> extends EskIdValidator {
     if (superRes.isNotValid) return superRes;
 
     for (final field in fields) {
-      if (field is EskIdValidator) {
-        final mapValue = value[field.id];
-        // If the field is nullable, we can skip validation if the value is null
-        if (mapValue == null && field.isNullable) continue;
+      final mapValue = value[field.id];
+      // If the field is nullable, we can skip validation if the value is null
+      if (mapValue == null && field.isNullable) continue;
 
-        print(
-          "Validating field: ${field.id}, value: $mapValue, with field: ${field}",
-        );
+      print(
+        "Validating field: ${field.id}, value: $mapValue, with field: ${field}",
+      );
 
-        final result = field.validate(mapValue);
-        if (result.isValid) continue;
+      final result = field.validate(mapValue);
+      if (result.isValid) continue;
 
-        String expected = '';
+      String expected = '';
 
-        if (field is EskMap) {
-          expected += '${field.id}.${result.expected}';
-        } else {
-          expected += '${field.id} to be ${result.expected}';
-        }
-
-        return EskResult(
-          isValid: result.isValid,
-          expected: expected,
-          value: mapValue,
-        );
+      if (field is EskMap) {
+        expected += '${field.id}.${result.expected}';
+      } else {
+        expected += '${field.id} to be ${result.expected}';
       }
+
+      return EskResult(
+        isValid: result.isValid,
+        expected: expected,
+        value: mapValue,
+      );
     }
 
     return EskResult.valid(value);
@@ -153,7 +238,7 @@ abstract class EskMap<T extends Map> extends EskIdValidator {
   @override
   IEskValidator copyWith({bool? nullable}) {
     throw Exception(
-        'copyWith not implemented for ${runtimeType}, as it defines properties that cannot be copied automaticaly.\n' +
-            'Please create a new instance manually. Or override the "copyWith" method.');
+        'copyWith not implemented for $runtimeType, as it defines properties that cannot be copied automaticaly.\n'
+        'Please create a new instance manually. Or override the "copyWith" method.');
   }
 }

@@ -64,23 +64,47 @@
 <pre class="language-dart"><code class="language-dart">import 'package:eskema/eskema.dart';
 
 final userValidator = eskema({
-	'username': isString(),     // or use the canonical alias: $isString
-	'age': all([isInteger(), isGte(0)]),
-	'email': nullable(stringMatchesPattern(
-		RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$"),
-		expectedMessage: 'a valid email address',
-	)),
-});
+    'username': isString(),
+
+    // Combine validators using `all` and `any`
+    'age': all([isInteger(), isGte(0)]),
+
+    // or use operators for simplicity:
+    'theme': (isString() &amp; (isEq('light') | isEq('dark'))).nullable(),
+
+    // Some zero-arg validators also have canonical aliases: e.g. `$isBoolean`, `$isString`
+    'premium': nullable($isBoolean),
+
+    // Make a validator nullable
+    'email': stringMatchesPattern(
+      RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$"),
+      expectedMessage: 'a valid email address',
+    ).nullable(),
+  });
+
+  final ok = userValidator.validate({
+    'username': 'bob',
+    'age': 42,
+  });
+  print("User is valid: $ok");
+
+  final res = userValidator.validate({
+    'username': 'alice',
+    'age': -1,
+  });
+  print(res); // false - "Expected age -&gt; greater than or equal to 0, got -1"
 </code></pre>
 <h3 id="2-validate-the-eskema----omit-in-toc---">2. Validate the eskema <!-- omit in toc --></h3>
-<p>Get a validation result (<strong>EskResult</strong>) with a string indicating what was expected.</p>
-<pre class="language-dart"><code class="language-dart">final res = userValidator.validate({ 'username': 'alice', 'age': 30, 'email': null });
-print(res.isValid);   // true
-print(res.expected);  // null when valid
+<p>The simplest way to check if a validator is valid, is by using the <code>isValid</code> method:</p>
+<pre class="language-dart"><code class="language-dart">final ok = userValidator.isValid({ 'username': 'bob', 'age': 42 });
+print("User is valid: $ok");  // true
 </code></pre>
-<p>Directly check if the object is valid</p>
-<pre class="language-dart"><code class="language-dart">// Boolean helpers
-final ok = userValidator.isValid({ 'username': 'bob', 'age': -1 }); // false
+<p>You can use the <code>.validate</code> method to get a descriptive error message:</p>
+<pre class="language-dart"><code class="language-dart">final res = userValidator.validate({
+'username': 'alice',
+'age': -1,
+});
+print(res); // false - "Expected age -&gt; greater than or equal to 0, got -1"
 </code></pre>
 <p>You can also make the validation throw</p>
 <pre class="language-dart"><code class="language-dart">try {
@@ -93,12 +117,15 @@ final ok = userValidator.isValid({ 'username': 'bob', 'age': -1 }); // false
 <ul>
 <li><a href="#eskema">Eskema</a>
 <ul>
-<li><a href="#use-cases">Use cases</a></li>
+<li><a href="#use-cases">Use cases</a>
+<ul>
 <li><a href="#install">Install</a></li>
 <li><a href="#quick-start">Quick start</a></li>
 <li><a href="#table-of-contents">Table of contents</a></li>
 <li><a href="#api-overview">API overview</a></li>
 <li><a href="#examples">Examples</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

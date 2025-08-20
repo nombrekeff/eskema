@@ -63,18 +63,29 @@
     </section>
     
 <section class="desc markdown">
-  <p>Passes the test if any of the <a href="../validator/EskValidator-class.html">EskValidator</a>s are valid, and fails if any are invalid</p>
+  <p>///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+Passes the test if any of the <a href="../validator/EskValidator-class.html">EskValidator</a>s are valid, and fails if any are invalid</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator any(List&lt;IEskValidator&gt; validators) =&gt; EskValidator((value) {
-      final results = validators.map((v) =&gt; v.validate(value)).toList();
+  <pre class="language-dart"><code class="language-dart">&#47;&#47; Combinators
+&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;
+
+&#47;&#47;&#47; Passes the test if any of the [EskValidator]s are valid, and fails if any are invalid
+IEskValidator any(List&lt;IEskValidator&gt; validators) =&gt; EskValidator((value) {
+      final results = [];
+      for (final validator in validators) {
+        final result = validator.validate(value);
+        results.add(result);
+        if (result.isValid) return result;
+      }
 
       return EskResult(
-        isValid: results.any((r) =&gt; r.isValid),
+        isValid: false,
         expected: results.map((r) =&gt; r.expected).join(&#39; or &#39;),
         value: value,
       );

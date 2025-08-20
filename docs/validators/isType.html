@@ -62,14 +62,20 @@
     </section>
     
 <section class="desc markdown">
-  <p>Returns a <a href="../validator/EskValidator-class.html">EskValidator</a> that checks if the given value is the correct type</p>
+  <p>///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+Returns a <a href="../validator/EskValidator-class.html">EskValidator</a> that checks if the given value is the correct type</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator isType&lt;T&gt;() =&gt; EskValidator((value) =&gt; EskResult(
+  <pre class="language-dart"><code class="language-dart">&#47;&#47; Built in types
+&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;
+
+&#47;&#47;&#47; Returns a [EskValidator] that checks if the given value is the correct type
+IEskValidator isType&lt;T&gt;() =&gt; EskValidator((value) =&gt; EskResult(
       isValid: value is T,
       expected: T.toString(),
       value: value,

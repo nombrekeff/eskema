@@ -119,4 +119,8 @@ void main() {
     expect(field.validate(123).expected, 'Map<dynamic, dynamic>');
     expect(field.validate(true).expected, 'Map<dynamic, dynamic>');
   });
+
+    test('mapper works', () {
+    final validator = stringLength([isGt(0)]);
+  });
 }

@@ -192,15 +192,29 @@ void main() {
 
       final res1 = validator.validate('1');
       expect(res1.isValid, false);
-      expect(res1.expected, 'String of length 2');
+      expect(res1.expected, 'length equal to 2');
 
       final res2 = validator.validate('123');
       expect(res2.isValid, false);
-      expect(res2.expected, 'String of length 2');
+      expect(res2.expected, 'length equal to 2');
 
       final res3 = validator.validate(1232);
       expect(res3.isValid, false);
       expect(res3.expected, 'String');
+    });
+   
+    test('stringLength works', () {
+      final stringLengthGt10 = stringLength([isGt(10)]);
+      final stringLengthEq5 = stringLength([isEq(5)]);
+
+      expect(stringLengthEq5.validate("12345").isValid, true);
+      expect(stringLengthEq5.validate("1234").isValid, false);
+      expect(stringLengthEq5.validate("123456").isValid, false);
+      expect(stringLengthEq5.validate(12345).toString(), 'Expected String, got 12345');
+
+      expect(stringLengthGt10.validate("12345678901").isValid, true);
+      expect(stringLengthGt10.validate("123456789012").isValid, true);
+      expect(stringLengthGt10.validate("1234567890").isValid, false);
     });
 
     test('stringContains works', () {
@@ -319,7 +333,7 @@ void main() {
 
       final res1 = validator.validate([]);
       expect(res1.isValid, false);
-      expect(res1.expected, 'List of size 2');
+      expect(res1.expected, 'length equal to 2');
 
       final res2 = validator.validate([1, 2]);
       expect(res2.isValid, false);
@@ -327,7 +341,7 @@ void main() {
 
       final res3 = validator.validate([1, 2, 3]);
       expect(res3.isValid, false);
-      expect(res3.expected, 'List of size 2');
+      expect(res3.expected, 'length equal to 2');
 
       final res4 = validator.validate(["1", 2]);
       expect(res4.isValid, true);

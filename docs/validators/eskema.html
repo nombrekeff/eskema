@@ -63,7 +63,9 @@
     </section>
     
 <section class="desc markdown">
-  <p>Returns a Validator that checks a value against a Map eskema that declares a validator for each key.</p>
+  <p>///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+Returns a Validator that checks a value against a Map eskema that declares a validator for each key.</p>
 <p>Example:</p>
 <pre class="language-dart"><code class="language-dart">final mapField = all([
   eskema({
@@ -85,7 +87,28 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator eskema(Map&lt;String, IEskValidator&gt; eskema) {
+  <pre class="language-dart"><code class="language-dart">&#47;&#47; Structure types
+&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;
+
+&#47;&#47;&#47; Returns a Validator that checks a value against a Map eskema that declares a validator for each key.
+&#47;&#47;&#47;
+&#47;&#47;&#47; Example:
+&#47;&#47;&#47; ```dart
+&#47;&#47;&#47; final mapField = all([
+&#47;&#47;&#47;   eskema({
+&#47;&#47;&#47;     &#39;name&#39;: all([isType&lt;String&gt;()]),
+&#47;&#47;&#47;     &#39;vat&#39;: or(
+&#47;&#47;&#47;       isTypeNull(),
+&#47;&#47;&#47;       isGte(0),
+&#47;&#47;&#47;     ),
+&#47;&#47;&#47;     &#39;age&#39;: all([
+&#47;&#47;&#47;       isType&lt;int&gt;(),
+&#47;&#47;&#47;       isGte(0),
+&#47;&#47;&#47;     ]),
+&#47;&#47;&#47;   }),
+&#47;&#47;&#47; ]);
+&#47;&#47;&#47; ```
+IEskValidator eskema(Map&lt;String, IEskValidator&gt; eskema) {
   return EskValidator((value) {
     if (value is! Map) return EskResult.invalid(&#39;Map&#39;, value);
 
