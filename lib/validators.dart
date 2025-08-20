@@ -57,7 +57,7 @@ IEskValidator isGte(num min) => all([
 
 /// Checks whether the given value is equal to the [expected] value of type [T]
 ///
-/// Even though this function accepts any Type, note that it will not work with Collections. For that usecase prefer using [isDeepEqual] instead.
+/// Even though this function accepts any Type, note that it will not work with Collections. For that usecase prefer using [isDeepEq] instead.
 IEskValidator isEq<T>(T expected) => all([
       isType<T>(),
       EskValidator((value) => EskResult(
@@ -88,7 +88,7 @@ IEskValidator isDate() => EskValidator((value) => EskResult(
 /// Validates that the list's length is the same as the provided [size]
 ///
 /// This validator also validates that the value is a list first
-/// So there's no need to add the [isTypeList] validator when using this validator
+/// So there's no need to add the [isList] validator when using this validator
 IEskValidator listIsOfLength(int size) => EskValidator((value) {
       final isListResult = isType<List>().validate(value);
       if (isListResult.isNotValid) return isListResult;
@@ -103,7 +103,7 @@ IEskValidator listIsOfLength(int size) => EskValidator((value) {
 /// Validates that the String's length is the same as the provided [size]
 ///
 /// This validator also validates that the value is a String first
-/// So there's no need to add the [isTypeString] validator when using this validator
+/// So there's no need to add the [isString] validator when using this validator
 IEskValidator stringIsOfLength(int size) => EskValidator((value) {
       final isStringResult = isType<String>().validate(value);
       if (isStringResult.isNotValid) return isStringResult;
@@ -118,7 +118,7 @@ IEskValidator stringIsOfLength(int size) => EskValidator((value) {
 /// Validates that the String contains [substring]
 ///
 /// This validator also validates that the value is a String first
-/// So there's no need to add the [isTypeString] validator when using this validator
+/// So there's no need to add the [isString] validator when using this validator
 IEskValidator stringContains(String substring) => EskValidator((value) {
       final isString = isType<String>().validate(value);
       if (isString.isNotValid) return isString;
@@ -133,7 +133,7 @@ IEskValidator stringContains(String substring) => EskValidator((value) {
 /// Validates that the List contains [item]
 ///
 /// This validator also validates that the value is a List first
-/// So there's no need to add the [isType<List>] validator when using this validator
+/// So there's no need to add the [isList] validator when using this validator
 IEskValidator listContains<T>(T item) => EskValidator((value) {
       final isListResult = isType<List>().validate(value);
       if (isListResult.isNotValid) return isListResult;
@@ -148,7 +148,7 @@ IEskValidator listContains<T>(T item) => EskValidator((value) {
 /// Validates that the String does not contain [substring]
 ///
 /// This validator also validates that the value is a String first
-/// So there's no need to add the [isTypeString] validator when using this validator
+/// So there's no need to add the [isString] validator when using this validator
 IEskValidator stringNotContains(String substring) => EskValidator((value) {
       final isListResult = isType<String>().validate(value);
       if (isListResult.isNotValid) return isListResult;
@@ -163,7 +163,7 @@ IEskValidator stringNotContains(String substring) => EskValidator((value) {
 /// Validates that the String matches the provided pattern
 ///
 /// This validator also validates that the value is a String first
-/// So there's no need to add the [isTypeString] validator when using this validator
+/// So there's no need to add the [isString] validator when using this validator
 IEskValidator stringMatchesPattern(Pattern pattern, {String? expectedMessage}) {
   return EskValidator((value) {
     final isListResult = isType<String>().validate(value);

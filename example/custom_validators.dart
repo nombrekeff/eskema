@@ -28,5 +28,5 @@ void main() {
 
   print(isInRange(0, 5).isValid(2)); // true
   print(isInRange(0, 5)
-      .validate(6)); // false - 'Expected number to be between 0 and 5, got 6'
+      .validate(6).describeResult()); // false - 'Expected number to be between 0 and 5, got 6'
 }

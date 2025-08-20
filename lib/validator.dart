@@ -13,7 +13,15 @@ abstract class IEskValidator {
       return EskResult.valid(value);
     }
 
-    return validator(value);
+    final result = validator(value);
+
+    try {
+      throw Exception('Validation failed');
+    } catch (e, trace) {
+      result.stackTrace = trace;
+    }
+
+    return result;
   }
 
   EskResult validateOrThrow(dynamic value) {

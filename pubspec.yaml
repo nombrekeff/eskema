@@ -1,6 +1,6 @@
 name: eskema
-description: Simple and powerful dynamic data validation
-version: 0.0.1
+description: Small & composable runtime validation library
+version: 0.1.0
 homepage: https://github.com/nombrekeff/eskema
 
 environment:

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="eskema API docs, for the Dart programming language.">
+  <title>eskema - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="https://github.com/nombrekeff/eskema">eskema package</a></li>
+  </ol>
+  <div class="self-name">eskema</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <p><img src="https://github.com/nombrekeff/eskema/raw/main/.github/Eskema.png" alt=""></p>
+<p><a href="https://codecov.io/gh/nombrekeff/eskema"><img src="https://codecov.io/gh/nombrekeff/eskema/branch/main/graph/badge.svg?token=ZF22N0G09J" alt="codecov"></a> <a href="https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml"><img src="https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml/badge.svg?branch=main" alt="build"></a> <img src="https://img.shields.io/pub/v/eskema?style=flat-square" alt="Pub Version"></p>
+<h1 id="eskema">Eskema</h1>
+<p>Eskema is a small, composable runtime validation library for Dart. It helps you validate dynamic values (JSON, Maps, Lists, primitives) with readable validators and clear error messages.</p>
+<h2 id="use-cases">Use cases</h2>
+<p>Here are some common usecases for Eskema:</p>
+<ul>
+<li><a href="#validate-untyped-api-json">Validate untyped API JSON</a> before mapping to models (catch missing/invalid fields early).</li>
+<li><a href="#guard-inbound-request-payloads">Guard inbound request payloads</a> (HTTP handlers, jobs) with clear, fail-fast errors.</li>
+<li><a href="#validate-runtime-config-and-feature-flags">Validate runtime config and feature flags</a> from files or remote sources.</li>
+</ul>
+<hr>
+<h2 id="install">Install</h2>
+<pre class="language-bash"><code class="language-bash">dart pub add eskema
+</code></pre>
+<h2 id="quick-start">Quick start</h2>
+<p>Validate a map using a schema-like validator and read a detailed result or a boolean.</p>
+<h3 id="1-create-a-simple-eskema----omit-in-toc---">1. Create a simple eskema <!-- omit in toc --></h3>
+<pre class="language-dart"><code class="language-dart">import 'package:eskema/eskema.dart';
+
+final userValidator = eskema({
+	'username': isString(),     // or use the canonical alias: $isString
+	'age': all([isInteger(), isGte(0)]),
+	'email': nullable(stringMatchesPattern(
+		RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$"),
+		expectedMessage: 'a valid email address',
+	)),
+});
+</code></pre>
+<h3 id="2-validate-the-eskema----omit-in-toc---">2. Validate the eskema <!-- omit in toc --></h3>
+<p>Get a validation result (<strong>EskResult</strong>) with a string indicating what was expected.</p>
+<pre class="language-dart"><code class="language-dart">final res = userValidator.validate({ 'username': 'alice', 'age': 30, 'email': null });
+print(res.isValid);   // true
+print(res.expected);  // null when valid
+</code></pre>
+<p>Directly check if the object is valid</p>
+<pre class="language-dart"><code class="language-dart">// Boolean helpers
+final ok = userValidator.isValid({ 'username': 'bob', 'age': -1 }); // false
+</code></pre>
+<p>You can also make the validation throw</p>
+<pre class="language-dart"><code class="language-dart">try {
+	userValidator.validateOrThrow({'username': 'bob'});
+} catch (e) {
+	print(e); // ValidatorFailedException with a helpful message
+}
+</code></pre>
+<h2 id="table-of-contents">Table of contents</h2>
+<ul>
+<li><a href="#eskema">Eskema</a>
+<ul>
+<li><a href="#use-cases">Use cases</a></li>
+<li><a href="#install">Install</a></li>
+<li><a href="#quick-start">Quick start</a></li>
+<li><a href="#table-of-contents">Table of contents</a></li>
+<li><a href="#api-overview">API overview</a></li>
+<li><a href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="api-overview">API overview</h2>
+<blockquote>
+<p>Check the <a href="">docs</a> for the technical documentation.</p>
+</blockquote>
+<ul>
+<li>
+<p>Core</p>
+<ul>
+<li><code>IEskValidator</code> / <code>EskValidator</code> — object-based validators that return <code>EskResult</code>
+<ul>
+<li><code>EskResult</code> — <code>.isValid</code>, <code>.isNotValid</code>, <code>.expected</code>, <code>.value</code>, nice <code>toString()</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Common validators (examples)</p>
+<ul>
+<li>Types: <code>isType&lt;T&gt;()</code> e.g. <code>isType&lt;String&gt;()</code>; shorthands: <code>isString()</code>, <code>isInteger()</code>, <code>isDouble()</code>, <code>isBoolean()</code>
+<ul>
+<li>Nullability: <code>isNull()</code>; make any validator nullable with <code>nullable(v)</code> or <code>v.nullable()</code></li>
+<li>Numbers: <code>isGt(n)</code>, <code>isGte(n)</code>, <code>isLt(n)</code>, <code>isLte(n)</code></li>
+<li>Equality: <code>isEq(value)</code>, deep equality <code>isDeepEq(value)</code></li>
+<li>Strings: <code>stringIsOfLength(n)</code>, <code>stringContains(sub)</code>, <code>stringNotContains(sub)</code>, <code>stringMatchesPattern(pattern)</code></li>
+<li>Lists: <code>listIsOfLength(n)</code>, <code>listEach(itemValidator)</code>, <code>eskemaList([...])</code></li>
+<li>Maps: <code>eskema({ 'key': validator, ... })</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Composition</p>
+<ul>
+<li><code>all([...])</code> — AND composition (stops on first failure)
+<ul>
+<li><code>any([...])</code> — OR composition (passes if any succeed)</li>
+<li><code>not(v)</code> — invert a validator</li>
+<li><code>nullable(v)</code> or <code>v.nullable()</code> — allow <code>null</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Results &amp; helpers</p>
+<ul>
+<li><code>.validate(value)</code> → <code>EskResult</code>
+<ul>
+<li><code>.isValid(value)</code> / <code>.isNotValid(value)</code> → bool</li>
+<li><code>.validateOrThrow(value)</code> throws on invalid input</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Tip: Some zero-arg validators also have canonical aliases (e.g. <code>$isString</code>, <code>$isBoolean</code>) for concise usage.</p>
+<h2 id="examples">Examples</h2>
+<h3 id="custom-validators----omit-in-toc---">Custom validators <!-- omit in toc --></h3>
+<h4 id="zero-arg-validator----omit-in-toc---">Zero-arg validator <!-- omit in toc --></h4>
+<pre class="language-dart"><code class="language-dart">final isHelloWorld = all([
+  $isString,
+  EskValidator((value) =&gt; EskResult(
+    isValid: value == 'Hello world',
+    expected: 'Hello world',
+    value: value,
+  )),
+]);
+
+print(isHelloWorld.isValid('Hello world'));  // true
+print(isHelloWorld.validate('hey'));         // false - 'Expected Hello world, got "hey"'
+</code></pre>
+<h4 id="validator-with-args----omit-in-toc---">Validator with args <!-- omit in toc --></h4>
+<pre class="language-dart"><code class="language-dart">IEskValidator isInRange(num min, num max) {
+  return all([
+    isType&lt;num&gt;(),
+    EskValidator((value) =&gt; EskResult(
+      isValid: value &gt;= min &amp;&amp; value &lt;= max,
+      expected: 'number to be between $min and $max',
+      value: value,
+    )),
+  ]);
+}
+
+print(isInRange(0, 5).isValid(2)); // true
+print(isInRange(0, 5).validate(6)); // false - "Expected number to be between 0 and 5, got 6"
+</code></pre>
+<h3 id="class-based-validators----omit-in-toc---">Class-based validators <!-- omit in toc --></h3>
+<p>Prefer a class for complex/structured validation? Use <code>EskMap</code> with <code>EskField</code>.</p>
+<pre class="language-dart"><code class="language-dart">import 'package:eskema/eskema.dart';
+
+enum Theme { light, dark }
+
+class SettingsValidator extends EskMap {
+	final theme = EskField(
+	    id: 'theme', 
+	    validators: [isOneOf(Theme.values)],
+    );
+
+	final notificationsEnabled = EskField(
+		id: 'notificationsEnabled',
+		nullable: true,
+		validators: [isBoolean()],
+	);
+
+	SettingsValidator({required super.id, super.nullable});
+
+	@override
+	get fields =&gt; [theme, notificationsEnabled];
+}
+
+class UserValidator extends EskMap {
+	final name = EskField(id: 'name', validators: [isString()]);
+	final settings = SettingsValidator(id: 'settings', nullable: true);
+
+	@override
+	get fields =&gt; [name, settings];
+}
+
+final v = UserValidator();
+final result = v.validate({ 'name': 'Test', 'settings': { 'theme': Theme.dark } });
+print(result.isValid); // true
+</code></pre>
+<h3 id="validate-untyped-api-json----omit-in-toc---">Validate untyped API JSON <!-- omit in toc --></h3>
+<pre class="language-dart"><code class="language-dart">import 'package:eskema/eskema.dart';
+
+final apiUser = eskema({
+	'id': isInteger(),
+	'email': stringMatchesPattern(
+		RegExp(r'^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$'),
+		expectedMessage: 'a valid email',
+	),
+	'name': isString(),
+	'roles': listEach(isString()).nullable(),
+});
+
+final result = apiUser.validate(apiJson);
+if (result.isNotValid) log('invalid user: $result');
+</code></pre>
+<h3 id="guard-inbound-request-payloads----omit-in-toc---">Guard inbound request payloads <!-- omit in toc --></h3>
+<pre class="language-dart"><code class="language-dart">final createUser = eskema({
+	'username': isString(),
+	'age': all([isInteger(), isGte(0)]),
+});
+
+final res = createUser.validate(request.body);
+if (res.isNotValid) return Response(400, body: request.body);
+</code></pre>
+<h3 id="validate-runtime-config-and-feature-flags----omit-in-toc---">Validate runtime config and feature flags <!-- omit in toc --></h3>
+<pre class="language-dart"><code class="language-dart">final config = eskema({
+	'featureX': isBoolean(),
+	'theme': isOneOf(['light', 'dark']),
+	'retry': all([isInteger(), isGte(0)]),
+	'allowedHosts': listEach(isString()).nullable(),
+});
+
+final isConfigValid = config.isValid(configMap);
+assert(isConfigValid, 'Invalid config: $cfgRes');
+</code></pre>
+<h2 id="more----omit-in-toc---">More <!-- omit in toc --></h2>
+<ul>
+<li>See <a href="./example/"><code>example/</code></a> for runnable demos</li>
+<li>Check <a href="./test/"><code>test/</code></a> for behavior coverage</li>
+</ul>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="eskema">
+  <span class="name"><a href="eskema/">eskema</a></span> 
+
+</dt>
+<dd>Eskema is a small, composable runtime validation library for Dart. It helps you validate dynamic values (JSON, Maps, Lists, primitives) with readable validators and clear error messages.
+</dd>
+
+          <dt id="extensions">
+  <span class="name"><a href="extensions/">extensions</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="result">
+  <span class="name"><a href="result/">result</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="util">
+  <span class="name"><a href="util/">util</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="validator">
+  <span class="name"><a href="validator/">validator</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="validators">
+  <span class="name"><a href="validators/">validators</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+        </dl>
+      </section>
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="https://github.com/nombrekeff/eskema">eskema package</a></li>
+</ol>
+
+    <h5 class="hidden-xs"><span class="package-name">eskema</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="eskema/">eskema</a></li>
+      <li><a href="extensions/">extensions</a></li>
+      <li><a href="result/">result</a></li>
+      <li><a href="util/">util</a></li>
+      <li><a href="validator/">validator</a></li>
+      <li><a href="validators/">validators</a></li>
+</ol>
+
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+</main>
+<footer>
+  <span class="no-break">
+    eskema
+      0.1.0
+  </span>
+  
+</footer>
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+
