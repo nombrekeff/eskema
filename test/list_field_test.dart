@@ -7,15 +7,15 @@ void main() {
 
     final invalidRes1 = field.validate([]);
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.expected, 'length equal to 2');
+    expect(invalidRes1.error, 'length equal to 2');
 
     final invalidRes2 = field.validate([1]);
     expect(invalidRes2.isValid, false);
-    expect(invalidRes2.expected, 'length equal to 2');
+    expect(invalidRes2.error, 'length equal to 2');
 
     final invalidRes3 = field.validate(123);
     expect(invalidRes3.isValid, false);
-    expect(invalidRes3.expected, 'List<dynamic>');
+    expect(invalidRes3.error, 'List<dynamic>');
 
     final validRes1 = field.validate([1, "2"]);
     expect(validRes1.isValid, true);
@@ -38,7 +38,7 @@ void main() {
 
     final invalidRes1 = isListValid.validate(['1', null, 3]);
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.expected, 'length equal to 2');
+    expect(invalidRes1.error, 'length equal to 2');
   });
 
   test('Basic ListField validates items', () {
@@ -53,7 +53,7 @@ void main() {
 
     final invalidRes1 = isValidList.validate(['string']);
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.expected, '[0] -> int');
+    expect(invalidRes1.error, '[0] -> int');
   });
 
   test('Nested ListField validates items', () {
@@ -77,13 +77,13 @@ void main() {
       [1]
     ]);
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.expected, '[0] -> length equal to 2');
+    expect(invalidRes1.error, '[0] -> length equal to 2');
 
     final invalidRes2 = isListValid.validate([
       [1, "aaaa"]
     ]);
     expect(invalidRes2.isValid, false);
-    expect(invalidRes2.expected, '[0] -> [1] -> int');
+    expect(invalidRes2.error, '[0] -> [1] -> int');
   });
 
   test('Map ListField', () {
@@ -100,6 +100,6 @@ void main() {
 
     final invalidRes1 = isValidList.validate([{}]);
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.expected, '[0] -> city -> String');
+    expect(invalidRes1.error, '[0] -> city -> String');
   });
 }

@@ -52,6 +52,18 @@ extension EskemaEskValidatorOperations on IEskValidator {
   //   //  excessive nested validators for the same field.
   // }
 
+  /// Combines two validators with a logical AND, same as using [all]
   IEskValidator operator &(IEskValidator other) => all([this, other]);
+
+  /// Combines two validators with a logical OR, same as using [any]
   IEskValidator operator |(IEskValidator other) => any([this, other]);
+
+  /// Returns a new validator that will return the [error] message if the validation fails
+  IEskValidator operator >(String error) => EskValidator(
+        (value) => EskResult(
+          isValid: validate(value).isValid,
+          error: error,
+          value: value,
+        ),
+      );
 }

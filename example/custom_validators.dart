@@ -7,7 +7,7 @@ void main() {
     $isString,
     EskValidator((value) => EskResult(
           isValid: value == 'Hello world',
-          expected: 'Hello world',
+          error: 'Hello world',
           value: value,
         )),
   ]);
@@ -20,7 +20,7 @@ void main() {
       isType<num>(),
       EskValidator((value) => EskResult(
             isValid: value >= min && value <= max,
-            expected: 'number to be between $min and $max',
+            error: 'number to be between $min and $max',
             value: value,
           )),
     ]);

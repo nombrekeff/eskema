@@ -63,17 +63,20 @@
     </section>
     
 <section class="desc markdown">
-  <p>Validates that it's a List and the length matches the validators</p>
+  <p>///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+Validates that it's a List and the length matches the validators</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator listLength&lt;T&gt;(List&lt;IEskValidator&gt; validators) =&gt; all([
-      isList&lt;T&gt;(),
-      length(validators),
-    ]);</code></pre>
+  <pre class="language-dart"><code class="language-dart">&#47;&#47; List Validators
+&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;
+
+&#47;&#47;&#47; Validates that it&#39;s a List and the length matches the validators
+IEskValidator listLength&lt;T&gt;(List&lt;IEskValidator&gt; validators) =&gt; isList&lt;T&gt;() &amp; length(validators);</code></pre>
 </section>
 
 

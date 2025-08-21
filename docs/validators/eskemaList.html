@@ -100,7 +100,7 @@ isValidList([1, "2"]).isValid;   // false
       final result = effectiveValidator.validate(item);
 
       if (result.isNotValid) {
-        return EskResult.invalid(&#39;[$index] -&gt; ${result.expected}&#39;, value);
+        return EskResult.invalid(&#39;[$index] -&gt; ${result.error}&#39;, value);
       }
     }
 

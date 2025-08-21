@@ -70,14 +70,8 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator isGte(num min) =&gt; all([
-      isType&lt;num&gt;(),
-      EskValidator((value) =&gt; EskResult(
-            isValid: value is num &amp;&amp; value &gt;= min,
-            expected: &#39;greater than or equal to $min&#39;,
-            value: value,
-          )),
-    ]);</code></pre>
+  <pre class="language-dart"><code class="language-dart">IEskValidator isGte(num min) =&gt;
+    isType&lt;num&gt;() &amp; ((isGt(min) | isEq(min)) &gt; &quot;greater than or equal to $min&quot;);</code></pre>
 </section>
 
 

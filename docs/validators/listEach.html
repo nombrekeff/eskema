@@ -80,7 +80,7 @@
       final result = itemValidator.validate(item);
 
       if (result.isNotValid) {
-        return EskResult.invalid(&#39;[$index] -&gt; ${result.expected}&#39;, item);
+        return EskResult.invalid(&#39;[$index] -&gt; ${result.error}&#39;, item);
       }
     }
 

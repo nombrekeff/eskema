@@ -76,14 +76,8 @@ Checks whether the given value is less than <code>max</code></p>
 &#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;
 
 &#47;&#47;&#47; Checks whether the given value is less than [max]
-IEskValidator isLt(num max) =&gt; all([
-      isType&lt;num&gt;(),
-      EskValidator((value) =&gt; EskResult(
-            isValid: value &lt; max,
-            expected: &#39;less than $max&#39;,
-            value: value,
-          )),
-    ]);</code></pre>
+IEskValidator isLt(num max) =&gt;
+    isType&lt;num&gt;() &amp; validator((value) =&gt; value &lt; max, (value) =&gt; &#39;less than $max&#39;);</code></pre>
 </section>
 
 

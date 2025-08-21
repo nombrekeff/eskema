@@ -78,7 +78,7 @@ So there's no need to add the <a href="../validators/isString.html">isString</a>
 
       return EskResult(
         isValid: !(value as String).contains(substring),
-        expected: &#39;String to not contain &quot;$substring&quot;&#39;,
+        error: &#39;String to not contain &quot;$substring&quot;&#39;,
         value: value,
       );
     });</code></pre>

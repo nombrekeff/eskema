@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
-<span class="name ">stringContains</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="stringContains-param-substring"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">substring</span></span></li>
+<span class="name ">stringContains</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="stringContains-param-str"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">str</span></span></li>
 </ol>)
 
         
@@ -63,7 +63,7 @@
     </section>
     
 <section class="desc markdown">
-  <p>Validates that the String contains <code>substring</code></p>
+  <p>Validates that the String contains <code>str</code></p>
 <p>This validator also validates that the value is a String first
 So there's no need to add the <a href="../validators/isString.html">isString</a> validator when using this validator</p>
 </section>
@@ -72,16 +72,8 @@ So there's no need to add the <a href="../validators/isString.html">isString</a>
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator stringContains(String substring) =&gt; EskValidator((value) {
-      final isString = isType&lt;String&gt;().validate(value);
-      if (isString.isNotValid) return isString;
-
-      return EskResult(
-        isValid: (value as String).contains(substring),
-        expected: &#39;String to contain &quot;$substring&quot;&#39;,
-        value: value,
-      );
-    });</code></pre>
+  <pre class="language-dart"><code class="language-dart">IEskValidator stringContains(String str) =&gt;
+    $isString &amp; (contains(str) &gt; &quot;String to contain ${pretifyValue(str)}&quot;);</code></pre>
 </section>
 
 

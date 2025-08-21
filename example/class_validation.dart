@@ -30,7 +30,7 @@ class SettingsValidator extends EskMap {
   final notificationsEnabled = EskField(
     id: 'notificationsEnabled',
     nullable: true,
-    validators: [$isBoolean],
+    validators: [$isBool],
   );
 
   SettingsValidator({required super.id, super.nullable});

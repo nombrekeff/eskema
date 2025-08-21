@@ -67,18 +67,18 @@ final userValidator = eskema({
     'username': isString(),
 
     // Combine validators using `all` and `any`
-    'age': all([isInteger(), isGte(0)]),
+    'age': all([isInt(), isGte(0)]),
 
     // or use operators for simplicity:
     'theme': (isString() &amp; (isEq('light') | isEq('dark'))).nullable(),
 
-    // Some zero-arg validators also have canonical aliases: e.g. `$isBoolean`, `$isString`
-    'premium': nullable($isBoolean),
+    // Some zero-arg validators also have canonical aliases: e.g. `$isBool`, `$isString`
+    'premium': nullable($isBool),
 
     // Make a validator nullable
     'email': stringMatchesPattern(
       RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$"),
-      expectedMessage: 'a valid email address',
+      error: 'a valid email address',
     ).nullable(),
   });
 
@@ -147,7 +147,7 @@ print(res); // false - "Expected age -&gt; greater than or equal to 0, got -1"
 <li>
 <p>Common validators (examples)</p>
 <ul>
-<li>Types: <code>isType&lt;T&gt;()</code> e.g. <code>isType&lt;String&gt;()</code>; shorthands: <code>isString()</code>, <code>isInteger()</code>, <code>isDouble()</code>, <code>isBoolean()</code>
+<li>Types: <code>isType&lt;T&gt;()</code> e.g. <code>isType&lt;String&gt;()</code>; shorthands: <code>isString()</code>, <code>isInt()</code>, <code>isDouble()</code>, <code>isBool()</code>
 <ul>
 <li>Nullability: <code>isNull()</code>; make any validator nullable with <code>nullable(v)</code> or <code>v.nullable()</code></li>
 <li>Numbers: <code>isGt(n)</code>, <code>isGte(n)</code>, <code>isLt(n)</code>, <code>isLte(n)</code></li>
@@ -183,7 +183,7 @@ print(res); // false - "Expected age -&gt; greater than or equal to 0, got -1"
 </ul>
 </li>
 </ul>
-<p>Tip: Some zero-arg validators also have canonical aliases (e.g. <code>$isString</code>, <code>$isBoolean</code>) for concise usage.</p>
+<p>Tip: Some zero-arg validators also have canonical aliases (e.g. <code>$isString</code>, <code>$isBool</code>) for concise usage.</p>
 <h2 id="examples">Examples</h2>
 <h3 id="custom-validators----omit-in-toc---">Custom validators <!-- omit in toc --></h3>
 <h4 id="zero-arg-validator----omit-in-toc---">Zero-arg validator <!-- omit in toc --></h4>
@@ -229,7 +229,7 @@ class SettingsValidator extends EskMap {
 	final notificationsEnabled = EskField(
 		id: 'notificationsEnabled',
 		nullable: true,
-		validators: [isBoolean()],
+		validators: [isBool()],
 	);
 
 	SettingsValidator({required super.id, super.nullable});
@@ -254,10 +254,10 @@ print(result.isValid); // true
 <pre class="language-dart"><code class="language-dart">import 'package:eskema/eskema.dart';
 
 final apiUser = eskema({
-	'id': isInteger(),
+	'id': isInt(),
 	'email': stringMatchesPattern(
 		RegExp(r'^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$'),
-		expectedMessage: 'a valid email',
+		error: 'a valid email',
 	),
 	'name': isString(),
 	'roles': listEach(isString()).nullable(),
@@ -269,7 +269,7 @@ if (result.isNotValid) log('invalid user: $result');
 <h3 id="guard-inbound-request-payloads----omit-in-toc---">Guard inbound request payloads <!-- omit in toc --></h3>
 <pre class="language-dart"><code class="language-dart">final createUser = eskema({
 	'username': isString(),
-	'age': all([isInteger(), isGte(0)]),
+	'age': all([isInt(), isGte(0)]),
 });
 
 final res = createUser.validate(request.body);
@@ -277,9 +277,9 @@ if (res.isNotValid) return Response(400, body: request.body);
 </code></pre>
 <h3 id="validate-runtime-config-and-feature-flags----omit-in-toc---">Validate runtime config and feature flags <!-- omit in toc --></h3>
 <pre class="language-dart"><code class="language-dart">final config = eskema({
-	'featureX': isBoolean(),
+	'featureX': isBool(),
 	'theme': isOneOf(['light', 'dark']),
-	'retry': all([isInteger(), isGte(0)]),
+	'retry': all([isInt(), isGte(0)]),
 	'allowedHosts': listEach(isString()).nullable(),
 });
 

@@ -87,23 +87,23 @@ EskResult validator(dynamic value) {
     if (mapValue == null &amp;&amp; field.isNullable) continue;
 
     print(
-      &quot;Validating field: ${field.id}, value: $mapValue, with field: ${field}&quot;,
+      &quot;Validating field: ${field.id}, value: $mapValue, with field: $field&quot;,
     );
 
     final result = field.validate(mapValue);
     if (result.isValid) continue;
 
-    String expected = &#39;&#39;;
+    String error = &#39;&#39;;
 
     if (field is EskMap) {
-      expected += &#39;${field.id}.${result.expected}&#39;;
+      error += &#39;${field.id}.${result.error}&#39;;
     } else {
-      expected += &#39;${field.id} to be ${result.expected}&#39;;
+      error += &#39;${field.id} to be ${result.error}&#39;;
     }
 
     return EskResult(
       isValid: result.isValid,
-      expected: expected,
+      error: error,
       value: mapValue,
     );
   }

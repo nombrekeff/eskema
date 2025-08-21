@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
-<span class="name ">isDeepEq</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="isDeepEq-param-expected"><span class="type-annotation">T</span> <span class="parameter-name">expected</span></span></li>
+<span class="name ">isDeepEq</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="isDeepEq-param-otherValue"><span class="type-annotation">T</span> <span class="parameter-name">otherValue</span></span></li>
 </ol>)
 
         
@@ -63,21 +63,19 @@
     </section>
     
 <section class="desc markdown">
-  <p>Checks whether the given value is equal to the <code>expected</code> value of type <code>T</code></p>
+  <p>Checks whether the given value is equal to the <code>otherValue</code> value of type <code>T</code></p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator isDeepEq&lt;T&gt;(T expected) =&gt; all([
-      isType&lt;T&gt;(),
-      EskValidator((value) =&gt; EskResult(
-            isValid: (_collectionEquals(value, expected)),
-            expected: &#39;equal to ${pretifyValue(expected)}&#39;,
-            value: value,
-          )),
-    ]);</code></pre>
+  <pre class="language-dart"><code class="language-dart">IEskValidator isDeepEq&lt;T&gt;(T otherValue) =&gt;
+    isType&lt;T&gt;() &amp;
+    validator(
+      (value) =&gt; _collectionEquals(value, otherValue),
+      (value) =&gt; &#39;equal to ${pretifyValue(otherValue)}&#39;,
+    );</code></pre>
 </section>
 
 

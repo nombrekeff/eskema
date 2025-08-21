@@ -75,11 +75,7 @@ Returns a <a href="../validator/EskValidator-class.html">EskValidator</a> that c
 &#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;
 
 &#47;&#47;&#47; Returns a [EskValidator] that checks if the given value is the correct type
-IEskValidator isType&lt;T&gt;() =&gt; EskValidator((value) =&gt; EskResult(
-      isValid: value is T,
-      expected: T.toString(),
-      value: value,
-    ));</code></pre>
+IEskValidator isType&lt;T&gt;() =&gt; validator((value) =&gt; value is T, (value) =&gt; T.toString());</code></pre>
 </section>
 
 

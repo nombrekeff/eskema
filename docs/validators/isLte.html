@@ -70,14 +70,8 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator isLte(num max) =&gt; all([
-      isType&lt;num&gt;(),
-      EskValidator((value) =&gt; EskResult(
-            isValid: value &lt;= max,
-            expected: &#39;less than or equal to $max&#39;,
-            value: value,
-          )),
-    ]);</code></pre>
+  <pre class="language-dart"><code class="language-dart">IEskValidator isLte(num max) =&gt;
+    isType&lt;num&gt;() &amp; ((isLt(max) | isEq(max)) &gt; &quot;less than or equal to $max&quot;);</code></pre>
 </section>
 
 

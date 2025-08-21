@@ -37,18 +37,18 @@ final userValidator = eskema({
     'username': isString(),
 
     // Combine validators using `all` and `any`
-    'age': all([isInteger(), isGte(0)]),
+    'age': all([isInt(), isGte(0)]),
 
     // or use operators for simplicity:
     'theme': (isString() & (isEq('light') | isEq('dark'))).nullable(),
 
-    // Some zero-arg validators also have canonical aliases: e.g. `$isBoolean`, `$isString`
-    'premium': nullable($isBoolean),
+    // Some zero-arg validators also have canonical aliases: e.g. `$isBool`, `$isString`
+    'premium': nullable($isBool),
 
     // Make a validator nullable
     'email': stringMatchesPattern(
       RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$"),
-      expectedMessage: 'a valid email address',
+      error: 'a valid email address',
     ).nullable(),
   });
 
@@ -110,7 +110,7 @@ try {
 	- `EskResult` — `.isValid`, `.isNotValid`, `.expected`, `.value`, nice `toString()`
 
 - Common validators (examples)
-	- Types: `isType<T>()` e.g. `isType<String>()`; shorthands: `isString()`, `isInteger()`, `isDouble()`, `isBoolean()`
+	- Types: `isType<T>()` e.g. `isType<String>()`; shorthands: `isString()`, `isInt()`, `isDouble()`, `isBool()`
 	- Nullability: `isNull()`; make any validator nullable with `nullable(v)` or `v.nullable()`
 	- Numbers: `isGt(n)`, `isGte(n)`, `isLt(n)`, `isLte(n)`
 	- Equality: `isEq(value)`, deep equality `isDeepEq(value)`
@@ -129,7 +129,7 @@ try {
 	- `.isValid(value)` / `.isNotValid(value)` → bool
 	- `.validateOrThrow(value)` throws on invalid input
 
-Tip: Some zero-arg validators also have canonical aliases (e.g. `$isString`, `$isBoolean`) for concise usage.
+Tip: Some zero-arg validators also have canonical aliases (e.g. `$isString`, `$isBool`) for concise usage.
 
 ## Examples
 
@@ -185,7 +185,7 @@ class SettingsValidator extends EskMap {
 	final notificationsEnabled = EskField(
 		id: 'notificationsEnabled',
 		nullable: true,
-		validators: [isBoolean()],
+		validators: [isBool()],
 	);
 
 	SettingsValidator({required super.id, super.nullable});
@@ -215,10 +215,10 @@ print(result.isValid); // true
 import 'package:eskema/eskema.dart';
 
 final apiUser = eskema({
-	'id': isInteger(),
+	'id': isInt(),
 	'email': stringMatchesPattern(
 		RegExp(r'^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$'),
-		expectedMessage: 'a valid email',
+		error: 'a valid email',
 	),
 	'name': isString(),
 	'roles': listEach(isString()).nullable(),
@@ -233,7 +233,7 @@ if (result.isNotValid) log('invalid user: $result');
 ```dart
 final createUser = eskema({
 	'username': isString(),
-	'age': all([isInteger(), isGte(0)]),
+	'age': all([isInt(), isGte(0)]),
 });
 
 final res = createUser.validate(request.body);
@@ -244,9 +244,9 @@ if (res.isNotValid) return Response(400, body: request.body);
 
 ```dart
 final config = eskema({
-	'featureX': isBoolean(),
+	'featureX': isBool(),
 	'theme': isOneOf(['light', 'dark']),
-	'retry': all([isInteger(), isGte(0)]),
+	'retry': all([isInt(), isGte(0)]),
 	'allowedHosts': listEach(isString()).nullable(),
 });
 

@@ -33,6 +33,6 @@ void main() {
     ].validate([testEskema, testEskema]);
 
     expect(result2.isValid, false);
-    expect(result2.expected, 'length equal to 2');
+    expect(result2.error, 'length equal to 2');
   });
 }

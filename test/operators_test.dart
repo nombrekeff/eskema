@@ -7,20 +7,20 @@ void main() {
 
     expect(username.validate('valid_username').isValid, true);
     expect(username.validate('').isValid, false);
-    expect(username.validate('').expected, 'length greater than 0');
+    expect(username.validate('').error, 'length greater than 0');
   });
 
   test('| works', () {
-    final stringOrInt = ($isString | isInteger());
+    final stringOrInt = ($isString | isInt());
 
     expect(stringOrInt.validate('bad').isValid, true);
     expect(stringOrInt.validate(123).isValid, true);
     expect(stringOrInt.validate(true).isValid, false);
-    expect(stringOrInt.validate([]).expected, 'String or int');
+    expect(stringOrInt.validate([]).error, 'String or int');
   });
 
   test('& | combined works', () {
-    final username = ($isInteger | (isString() & isEmpty()));
+    final username = ($isInt | (isString() & isEmpty()));
 
     expect(username.validate(123).isValid, true);
     expect(username.validate('').isValid, true);

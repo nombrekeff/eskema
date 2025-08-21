@@ -72,11 +72,13 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IEskValidator isOneOf&lt;T&gt;(List&lt;T&gt; options) =&gt; all([
       isType&lt;T&gt;(),
-      EskValidator((value) =&gt; EskResult(
-            isValid: options.contains(value),
-            expected: &#39;one of: ${pretifyValue(options)}&#39;,
-            value: value,
-          )),
+      EskValidator(
+        (value) =&gt; EskResult(
+          isValid: options.contains(value),
+          error: &#39;one of: ${pretifyValue(options)}&#39;,
+          value: value,
+        ),
+      ),
     ]);</code></pre>
 </section>
 

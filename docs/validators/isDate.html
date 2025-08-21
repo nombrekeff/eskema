@@ -62,18 +62,15 @@
     </section>
     
 <section class="desc markdown">
-  <p>Checks whether the given value is a valid DateTime formattedString</p>
+  <p>Checks whether the given value is a valid DateTime formatted String</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator isDate() =&gt; EskValidator((value) =&gt; EskResult(
-      isValid: DateTime.tryParse(value) != null,
-      expected: &#39;a valid date&#39;,
-      value: value,
-    ));</code></pre>
+  <pre class="language-dart"><code class="language-dart">IEskValidator isDate() =&gt; validator((value) =&gt; DateTime.tryParse(value) != null,
+    (value) =&gt; &#39;a valid DateTime formatted String&#39;);</code></pre>
 </section>
 
 

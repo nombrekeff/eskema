@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
-<span class="name ">isEq</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="isEq-param-expected"><span class="type-annotation">T</span> <span class="parameter-name">expected</span></span></li>
+<span class="name ">isEq</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="isEq-param-otherValue"><span class="type-annotation">T</span> <span class="parameter-name">otherValue</span></span></li>
 </ol>)
 
         
@@ -63,7 +63,7 @@
     </section>
     
 <section class="desc markdown">
-  <p>Checks whether the given value is equal to the <code>expected</code> value of type <code>T</code></p>
+  <p>Checks whether the given value is equal to the <code>otherValue</code> value of type <code>T</code></p>
 <p>Even though this function accepts any Type, note that it will not work with Collections. For that usecase prefer using <a href="../validators/isDeepEq.html">isDeepEq</a> instead.</p>
 </section>
 
@@ -71,15 +71,12 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator isEq&lt;T&gt;(T expected) =&gt; all([
-      isType&lt;T&gt;(),
-      EskValidator((value) =&gt; EskResult(
-            isValid: value == expected,
-            &#47;&#47; json.encode is here to format the value correctly, so we know if for example 10 is a number (10) or a string (&quot;10&quot;).
-            expected: &#39;equal to ${pretifyValue(expected)}&#39;,
-            value: value,
-          )),
-    ]);</code></pre>
+  <pre class="language-dart"><code class="language-dart">IEskValidator isEq&lt;T&gt;(T otherValue) =&gt;
+    isType&lt;T&gt;() &amp;
+    validator(
+      (value) =&gt; value == otherValue,
+      (value) =&gt; &#39;equal to ${pretifyValue(otherValue)}&#39;,
+    );</code></pre>
 </section>
 
 

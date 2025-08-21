@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
-<span class="name ">listContains</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="listContains-param-item"><span class="type-annotation">T</span> <span class="parameter-name">item</span></span></li>
+<span class="name ">listContains</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="listContains-param-item"><span class="type-annotation">dynamic</span> <span class="parameter-name">item</span></span></li>
 </ol>)
 
         
@@ -63,9 +63,7 @@
     </section>
     
 <section class="desc markdown">
-  <p>///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-Validates that the List contains <code>item</code></p>
+  <p>Validates that the List contains <code>item</code></p>
 <p>This validator also validates that the value is a List first
 So there's no need to add the <a href="../validators/isList.html">isList</a> validator when using this validator</p>
 </section>
@@ -74,23 +72,8 @@ So there's no need to add the <a href="../validators/isList.html">isList</a> val
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">&#47;&#47; List Validators
-&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;
-
-&#47;&#47;&#47; Validates that the List contains [item]
-&#47;&#47;&#47;
-&#47;&#47;&#47; This validator also validates that the value is a List first
-&#47;&#47;&#47; So there&#39;s no need to add the [isList] validator when using this validator
-IEskValidator listContains&lt;T&gt;(T item) =&gt; EskValidator((value) {
-      final isListResult = isType&lt;List&gt;().validate(value);
-      if (isListResult.isNotValid) return isListResult;
-
-      return EskResult(
-        isValid: (value as List).contains(item),
-        expected: &#39;List to contain ${pretifyValue(item)}&#39;,
-        value: value,
-      );
-    });</code></pre>
+  <pre class="language-dart"><code class="language-dart">IEskValidator listContains&lt;T&gt;(dynamic item) =&gt;
+    isList&lt;T&gt;() &amp; (contains(item) &gt; &quot;List to contain ${pretifyValue(item)}&quot;);</code></pre>
 </section>
 
 

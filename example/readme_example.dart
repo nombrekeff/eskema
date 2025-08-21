@@ -5,18 +5,18 @@ void main() {
     'username': isString(),
 
     // Combine validators using `all` and `any`
-    'age': all([isInteger(), isGte(0)]),
+    'age': all([isInt(), isGte(0)]),
 
     // or use operators for simplicity:
     'theme': (isString() & (isEq('light') | isEq('dark'))).nullable(),
 
-    // Some zero-arg validators also have canonical aliases: e.g. `$isBoolean`, `$isString`
-    'premium': nullable($isBoolean),
+    // Some zero-arg validators also have canonical aliases: e.g. `$isBool`, `$isString`
+    'premium': nullable($isBool),
 
     // Make a validator nullable
     'email': stringMatchesPattern(
       RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$"),
-      expectedMessage: 'a valid email address',
+      error: 'a valid email address',
     ).nullable(),
   });
 

@@ -76,10 +76,7 @@ Validates that the String's length matches the validators</p>
 &#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;
 
 &#47;&#47;&#47; Validates that the String&#39;s length matches the validators
-IEskValidator stringLength(List&lt;IEskValidator&gt; validators) =&gt; all([
-      $isString,
-      length(validators),
-    ]);</code></pre>
+IEskValidator stringLength(List&lt;IEskValidator&gt; validators) =&gt; $isString &amp; length(validators);</code></pre>
 </section>
 
 

@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the length function from the validators library, for the Dart programming language.">
-  <title>length function - validators library - Dart API</title>
+  <meta name="description" content="API docs for the isInt function from the validators library, for the Dart programming language.">
+  <title>isInt function - validators library - Dart API</title>
 
 
   
@@ -26,9 +26,9 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">eskema</a></li>
     <li><a href="../validators/">validators.dart</a></li>
-    <li class="self-crumb">length function</li>
+    <li class="self-crumb">isInt function</li>
   </ol>
-  <div class="self-name">length</div>
+  <div class="self-name">isInt</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -48,41 +48,29 @@
       data-above-sidebar="validators&#47;validators-library-sidebar.html"
       data-below-sidebar="">
       <div>
-<h1><span class="kind-function">length</span> function 
+<h1><span class="kind-function">isInt</span> function 
  
 </h1></div>
 
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
-<span class="name ">length</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="length-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span></li>
-</ol>)
+<span class="name ">isInt</span>(<wbr>)
 
         
 
     </section>
     
 <section class="desc markdown">
-  <p>Checks whether the given value has a length property and the length matches the validators</p>
+  <p>Returns a <a href="../validator/IEskValidator-class.html">IEskValidator</a> that checks if the given value is a <code>int</code>
+For better performance and readability, use the <a href="../eskema/$isInt.html">$isInt</a> variable directly.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator length(List&lt;IEskValidator&gt; validators) =&gt; EskValidator((value) {
-      if (hasLengthProperty(value)) {
-        final result = all(validators).validate((value as dynamic).length);
-        return result.copyWith(
-          error: &#39;length ${result.error}&#39;,
-        );
-      } else {
-        return EskResult.invalid(
-          &#39;${value.runtimeType} does not have a length property&#39;,
-          value,
-        );
-      }
-    });</code></pre>
+  <pre class="language-dart"><code class="language-dart">IEskValidator isInt() =&gt; isType&lt;int&gt;();</code></pre>
 </section>
 
 
@@ -97,7 +85,7 @@
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../index.html">eskema</a></li>
     <li><a href="../validators/">validators</a></li>
-    <li class="self-crumb">length function</li>
+    <li class="self-crumb">isInt function</li>
 </ol>
 
     <h5>validators library</h5>

@@ -193,8 +193,7 @@ class EskField extends IEskIdValidator {
 /// string and `age` is an integer with a minimum value of 0. The `validate` method
 /// checks the input data against these rules and returns the result.
 abstract class EskMap<T extends Map> extends IEskIdValidator {
-  EskMap({super.id = '', super.nullable})
-      : super(validator: isMap().validate);
+  EskMap({super.id = '', super.nullable}) : super(validator: isMap().validate);
 
   /// List of [IEskIdValidator]s used to validate a dynamic `Map`.
   /// Each field represents a value in the map, `id` is used to identify the key from the map.
@@ -211,23 +210,23 @@ abstract class EskMap<T extends Map> extends IEskIdValidator {
       if (mapValue == null && field.isNullable) continue;
 
       print(
-        "Validating field: ${field.id}, value: $mapValue, with field: ${field}",
+        "Validating field: ${field.id}, value: $mapValue, with field: $field",
       );
 
       final result = field.validate(mapValue);
       if (result.isValid) continue;
 
-      String expected = '';
+      String error = '';
 
       if (field is EskMap) {
-        expected += '${field.id}.${result.expected}';
+        error += '${field.id}.${result.error}';
       } else {
-        expected += '${field.id} to be ${result.expected}';
+        error += '${field.id} to be ${result.error}';
       }
 
       return EskResult(
         isValid: result.isValid,
-        expected: expected,
+        error: error,
         value: mapValue,
       );
     }

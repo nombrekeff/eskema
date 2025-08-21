@@ -63,7 +63,7 @@
     </section>
     
 <section class="desc markdown">
-  <p>Passes the test if the contition is !valid</p>
+  <p>Passes the test if the passed in validator is not valid</p>
 </section>
 
 
@@ -74,7 +74,7 @@
       final result = validator.validate(value);
       return EskResult(
         isValid: !result.isValid,
-        expected: &#39;not ${result.expected}&#39;,
+        error: &#39;not ${result.error}&#39;,
         value: value,
       );
     });</code></pre>

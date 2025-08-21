@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
       <span class="name ">EskResult</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="-param-isValid"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">isValid</span>, </span></li>
-<li><span class="parameter" id="-param-expected"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">expected</span>, </span></li>
+<li><span class="parameter" id="-param-error"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">error</span>, </span></li>
 <li><span class="parameter" id="-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, </span></li>
 <li><span class="parameter" id="-param-stackTrace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/StackTrace-class.html">StackTrace</a>?</span> <span class="parameter-name">stackTrace</span>, </span></li>
 </ol>})
@@ -66,8 +66,12 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">EskResult(
-    {required this.isValid, this.expected, this.value, this.stackTrace});</code></pre>
+  <pre class="language-dart"><code class="language-dart">EskResult({
+  required this.isValid,
+  this.error,
+  this.value,
+  this.stackTrace,
+});</code></pre>
 </section>
 
 

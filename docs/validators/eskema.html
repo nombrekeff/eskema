@@ -117,7 +117,7 @@ IEskValidator eskema(Map&lt;String, IEskValidator&gt; eskema) {
       final result = field!.validate(value[key]);
 
       if (result.isNotValid) {
-        return EskResult.invalid(&#39;$key -&gt; ${result.expected}&#39;, result.value);
+        return EskResult.invalid(&#39;$key -&gt; ${result.error}&#39;, result.value);
       }
     }
 
