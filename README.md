@@ -4,192 +4,233 @@
 
 [![codecov](https://codecov.io/gh/nombrekeff/eskema/branch/main/graph/badge.svg?token=ZF22N0G09J)](https://codecov.io/gh/nombrekeff/eskema) [![build](https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml/badge.svg?branch=main)](https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml) ![Pub Version](https://img.shields.io/pub/v/eskema?style=flat-square)
 
-**Eskema** is a tool to help you validate dynamic data with a simple yet powerful API. 
+# Eskema 
 
-It was initially intended to validate dynamic JSON returned from an API, passed in by a user or any other scenario where you might need to validate dynamic data. But it's not limited to JSON data, you can validate any type of dinamic data.
+Eskema is a small, composable runtime validation library for Dart. It helps you validate dynamic values (JSON, Maps, Lists, primitives) with readable validators and clear error messages.
 
-## Features
-* Simple API
-* Composable / Extensible
-* Safe
-* Fully tested
 
-## Getting started
-To use the package there's not much to do apart from installing the package or adding it to pubspec.yml. For a guide on how to do it, check [the install instructions](https://pub.dev/packages/eskema/install)
+## Use cases
 
-## Concepts
-### Validator
-Mostly everything in Eskema are [Validators], which are functions that take in a value and return a [IResult].
+Here are some common usecases for Eskema:
 
-The following are all validators:
-```dart
-isType<String>();
-listOfLength(2);
-listEach(isType<String>());
-all([isType<List>(), isListOfLength(2)]);
+- **Validate untyped API JSON** before mapping to models (catch missing/invalid fields early).
+- **Guard inbound request payloads** (HTTP handlers, jobs) with clear, fail-fast errors.
+- **Validate runtime config and feature flags** from files or remote sources.
+
+----
+
+## Install
+
+```bash
+dart pub add eskema
 ```
 
-### IResult
-This is a class that represents the result of a validation
+## Quick start
 
+Validate a map using a schema-like validator and read a detailed result or a boolean.
 
-## Usage
-An example explains more than 100 words, so here are a couple of simple examples.
-For more detailed examples check the [`/examples`](https://github.com/nombrekeff/eskema/tree/experiment/remove-nullable-add-omittable/example) folder.
-
-### Simple example
-> NOTE: that if you only want to validate a single value, you probably don't need **Eskema**.
-
-Otherwise let's check how to validate a single value. You can use validators individually:
+### 1. Create a simple eskema <!-- omit in toc -->
 ```dart
-final isString = isType<String>();
-const result1 = isString('valid string');
-const result2 = isString(123);
+import 'package:eskema/eskema.dart';
 
-result1.isValid;  // true
-result2.isValid;  // false
-result2.expected; // String
-```
+final userValidator = eskema({
+    'username': isString(),
 
+    // Combine validators using `all` and `any`
+    'age': all([isInt(), isGte(0)]),
 
-Or you can combine validators: 
-```dart
-all([isType<String>(), isDate()]);     // all validators must be valid
-or(isType<String>(), isType<int>());   // either validator must be valid
-and(isType<String>(), isType<int>());  // both validator must be valid
+    // or use operators for simplicity:
+    'theme': (isString() & (isEq('light') | isEq('dark'))).nullable(),
 
+    // Some zero-arg validators also have canonical aliases: e.g. `$isBool`, `$isString`
+    'premium': nullable($isBool),
 
-// This validator checks that, the value is a list of strings, with length 2, and contains item "test"
-all([
-  isOfLength(2),                    // checks that the list is of length 2
-  listEach(isTypeOrNull<String>()), // checks that each item is either string or null
-  listContains('test'),             // list must contain value "test"
-]);
-
-// This validator checks a map against a eskema. Map must contain property 'books', 
-// which is a list of maps that matches a sub-eskema. Subeskema validates that the map has a name which is a string
-final matchesEskema = eskema({
-  'books': listEach(
-    eskema({
-      'name': isType<String>(),
-    }),
-  ),
+    // Make a validator nullable
+    'email': stringMatchesPattern(
+      RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$"),
+      error: 'a valid email address',
+    ).nullable(),
 });
-matchesEskema({'books': [{'name': 'book name'}]});
 ```
 
-## Validators
+### 2. Validate the eskema <!-- omit in toc -->
 
-### isType<T>
-This validator checks that a value is of a certain type
+The simplest way to check if a validator is valid, is by using the `isValid` method:
 ```dart
-isType<String>();
-isType<int>();
-isType<double>();
-isType<List>();
-isType<Map>();
+final ok = userValidator.isValid({ 'username': 'bob', 'age': 42 });
+print("User is valid: $ok");  // true
 ```
 
-### isTypeOrNull<T>
-This validator checks that a value is of a certain type or is null
+You can use the `.validate` method to get a descriptive error message:
 ```dart
-isTypeOrNull<String>();
-isTypeOrNull<int>();
-```
-
-### nullable
-This validator allows to make validators allow null values
-```dart
-nullable(eskema({...}));
-```
-* The validator above, allows a map or null
-
-### eskema
-The most common use case will probably be validating JSON or dynamic maps. For this, you can use the `eskema` validator.
-
-In this example we validate a Map with optional fields and with nested fields.
-```dart
-final validateMap = eskema({
-  'name': isTypeString(),
-  'address': nullable(
-    eskema({
-      'city': isTypeString(),
-      'street': isTypeString(),
-      'number': all([
-        isTypeInt(),
-        isMin(0),
-      ]),
-      'additional': nullable(
-        eskema({
-          'doorbel_number': Field([isTypeInt()])
-        })
-      ),
-    })
-  )
+final res = userValidator.validate({
+'username': 'alice',
+'age': -1,
 });
-
-final invalidResult = validateMap.call({});
-invalidResult.isValid;    // false
-invalidResult.isNotValid; // true
-invalidResult.expected;   // name -> String
-invalidResult.message;    // Expected name -> String
-
-final validResult = validateMap.call({ 'name': 'bobby' });
-validResult.isValid;    // true
-validResult.isNotValid; // false
-validResult.expected;   // Valid
+print(res); // false - "Expected age -> greater than or equal to 0, got -1"
 ```
 
-### listEach
-The other common use case is validating dynamic Lists. For this, you can use the `listEach` class.
-
-This example validates that the provided value is a List of length 2, and each item must be of type int:
+You can also make the validation throw
 ```dart
-final isValidList = all([
-    listOfLength(2),
-    listEach(isTypeInt()),
-]);
-
-isValidList.validate(null).isValid;      // true
-isValidList.validate([]).isValid;        // true
-isValidList.validate([1, 2]).isValid;    // true
-isValidList.validate([1, "2"]).isValid;  // false
-isValidList.validate([1, "2"]).expected; // [1] -> int
-```
-
-
-
-### Additional Validators
-For a complete list of validators, check the [docs](https://pub.dev/documentation/eskema/latest/)
-
-### Custom Validators
-**Eskema** offers a set of common Validators located in `lib/src/validators.dart`. You are not limited to only using these validators, custom ones can be created very easily. 
-
-Let's see how to create a validator to check if a string matches a pattern:
-
-```dart
-Validator validateRegexp(RegExp regexp) {
-  return (value) {
-    return Result(
-      isValid: regexp.hasMatch(value),  
-      expected: 'match pattern $regexp', // the message explaining what this validator expected
-    );
-  };
+try {
+	userValidator.validateOrThrow({'username': 'bob'});
+} catch (e) {
+	print(e); // ValidatorFailedException with a helpful message
 }
 ```
 
-> If you want a validator you built to be part of the package, please send in a PR and I will consider adding it!!
+## Table of contents
+- [Eskema](#eskema)
+	- [Use cases](#use-cases)
+	- [Install](#install)
+	- [Quick start](#quick-start)
+	- [Table of contents](#table-of-contents)
+	- [API overview](#api-overview)
+	- [Examples](#examples)
 
-### More examples
-For more examples check out the [`/examples`](https://github.com/nombrekeff/eskema/tree/experiment/remove-nullable-add-omittable/example) folder. Or check out the [docs](https://pub.dev/documentation/eskema/latest/)
 
-## Package Name
-**Eskema** is the Vasque word for "Schema". I did not know what to call the package, and after looking for a bit I found the Vasque word for schema and decided to use it!
+## API overview
 
-## Additional information
+> Check the [docs]() for the technical documentation.
 
-* For more information check the [docs](https://pub.dev/documentation/eskema/latest/)
- out. 
-* If you find a bug please file an [issue](https://github.com/nombrekeff/eskema/issues/new) or send a PR my way.
-* Contributions are welcomed, feel free to send in fixes, new features, custom validators, etc...
+- Core
+	- `IEskValidator` / `EskValidator` — object-based validators that return `EskResult`
+	- `EskResult` — `.isValid`, `.isNotValid`, `.expected`, `.value`, nice `toString()`
 
+- Common validators (examples)
+	- Types: `isType<T>()` e.g. `isType<String>()`; shorthands: `isString()`, `isInt()`, `isDouble()`, `isBool()`
+	- Nullability: `isNull()`; make any validator nullable with `nullable(v)` or `v.nullable()`
+	- Numbers: `isGt(n)`, `isGte(n)`, `isLt(n)`, `isLte(n)`
+	- Equality: `isEq(value)`, deep equality `isDeepEq(value)`
+	- Strings: `stringIsOfLength(n)`, `stringContains(sub)`, `stringNotContains(sub)`, `stringMatchesPattern(pattern)`
+	- Lists: `listIsOfLength(n)`, `listEach(itemValidator)`, `eskemaList([...])`
+	- Maps: `eskema({ 'key': validator, ... })`
+
+- Composition
+	- `all([...])` — AND composition (stops on first failure)
+	- `any([...])` — OR composition (passes if any succeed)
+	- `not(v)` — invert a validator
+	- `nullable(v)` or `v.nullable()` — allow `null`
+
+- Results & helpers
+	- `.validate(value)` → `EskResult`
+	- `.isValid(value)` / `.isNotValid(value)` → bool
+	- `.validateOrThrow(value)` throws on invalid input
+
+Tip: Some zero-arg validators also have canonical aliases (e.g. `$isString`, `$isBool`) for concise usage.
+
+## Examples
+
+### Custom validators <!-- omit in toc -->
+
+#### Zero-arg validator <!-- omit in toc -->
+```dart
+final isHelloWorld = all([
+  $isString,
+  EskValidator((value) => EskResult(
+    isValid: value == 'Hello world',
+    expected: 'Hello world',
+    value: value,
+  )),
+]);
+
+print(isHelloWorld.isValid('Hello world'));  // true
+print(isHelloWorld.validate('hey'));         // false - 'Expected Hello world, got "hey"'
+```
+
+#### Validator with args <!-- omit in toc -->
+```dart
+IEskValidator isInRange(num min, num max) {
+  return all([
+    isType<num>(),
+    EskValidator((value) => EskResult(
+      isValid: value >= min && value <= max,
+      expected: 'number to be between $min and $max',
+      value: value,
+    )),
+  ]);
+}
+
+print(isInRange(0, 5).isValid(2)); // true
+print(isInRange(0, 5).validate(6)); // false - "Expected number to be between 0 and 5, got 6"
+```
+
+### Class-based validators <!-- omit in toc -->
+
+Prefer a class for complex/structured validation? Use `EskMap` with `EskField`.
+
+```dart
+import 'package:eskema/eskema.dart';
+
+enum Theme { light, dark }
+
+class SettingsValidator extends EskMap {
+	final theme = EskField(
+	    id: 'theme', 
+	    validators: [isOneOf(Theme.values)],
+    );
+
+	final notificationsEnabled = EskField(
+		id: 'notificationsEnabled',
+		nullable: true,
+		validators: [isBool()],
+	);
+
+	SettingsValidator({required super.id, super.nullable});
+
+	@override
+	get fields => [theme, notificationsEnabled];
+}
+
+class UserValidator extends EskMap {
+	final name = EskField(id: 'name', validators: [isString()]);
+	final settings = SettingsValidator(id: 'settings', nullable: true);
+
+	@override
+	get fields => [name, settings];
+}
+
+final v = UserValidator();
+final result = v.validate({ 'name': 'Test', 'settings': { 'theme': Theme.dark } });
+print(result.isValid); // true
+```
+
+
+
+### Validate untyped API JSON <!-- omit in toc -->
+
+```dart
+import 'package:eskema/eskema.dart';
+
+final apiUser = eskema({
+	'id': isInt(),
+	'email': stringMatchesPattern(
+		RegExp(r'^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$'),
+		error: 'a valid email',
+	),
+	'name': isString(),
+	'roles': listEach(isString()).nullable(),
+});
+
+final result = apiUser.validate(apiJson);
+if (result.isNotValid) log('invalid user: $result');
+```
+
+### Validate runtime config and feature flags <!-- omit in toc -->
+
+```dart
+final config = eskema({
+	'featureX': isBool(),
+	'theme': isOneOf(['light', 'dark']),
+	'retry': all([isInt(), isGte(0)]),
+	'allowedHosts': listEach(isString()).nullable(),
+});
+
+final isConfigValid = config.isValid(configMap);
+assert(isConfigValid, 'Invalid config: $cfgRes');
+```
+
+## More <!-- omit in toc -->
+
+- See [`example/`](./example/) for runnable demos
+- Check [`test/`](./test/) for behavior coverage

@@ -1,4 +1,4 @@
-include: package:flutter_lints/flutter.yaml
+include: package:lints/recommended.yaml
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
@@ -25,3 +25,6 @@ dart_code_metrics:
     - prefer-trailing-comma
     - prefer-conditional-expressions
     - no-equal-then-else
+analyzer:
+  errors:
+    unnecessary_library_name: ignore

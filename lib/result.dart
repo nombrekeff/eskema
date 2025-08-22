@@ -1,39 +1,61 @@
 import 'package:eskema/util.dart';
 
 /// Represents the result of a validation
-mixin IResult {
-  /// Tells us if this result is valid
-  bool get isValid;
-
-  /// Optional message for the expected result
-  String? get expected;
-
-  dynamic value;
-
-  /// Handy getter to check if this result is not valid
-  bool get isNotValid => !isValid;
-}
-
-/// Basic implementation of [IResult]
-class Result with IResult {
-  /// Valid result, use this instead if creating a new instance
-  static final Result valid = Result(isValid: true);
-
-  @override
+class EskResult {
   final bool isValid;
+  final String? error;
+  final dynamic value;
+  StackTrace? stackTrace;
 
-  @override
-  final String? expected;
+  bool get isNotValid => !isValid;
 
-  @override
-  dynamic value;
+  EskResult({
+    required this.isValid,
+    this.error,
+    this.value,
+    this.stackTrace,
+  });
 
-  Result({required this.isValid, this.expected, this.value});
+  EskResult.invalid(this.error, this.value, {this.stackTrace})
+      : isValid = false;
 
-  Result.invalid(this.expected, this.value) : isValid = false;
+  EskResult.valid(this.value, {this.stackTrace})
+      : isValid = true,
+        error = null;
+
+  String getCleanStackTrace() {
+    return stackTrace
+            ?.toString()
+            .split('\n')
+            .where((line) => !line.contains('(dart:'))
+            .join('\n') ??
+        '';
+  }
+
+  String describeResult({bool verbose = false}) {
+    if (isValid) {
+      return 'Valid: ${pretifyValue(value)}';
+    } else {
+      return 'Expected $error, got ${pretifyValue(value)}${verbose ? '\nStack trace: \n${getCleanStackTrace()}' : ''}';
+    }
+  }
+
+  EskResult copyWith({
+    bool? isValid,
+    String? error,
+    dynamic value,
+    StackTrace? stackTrace,
+  }) {
+    return EskResult(
+      isValid: isValid ?? this.isValid,
+      error: error ?? this.error,
+      value: value ?? this.value,
+      stackTrace: stackTrace ?? this.stackTrace,
+    );
+  }
 
   @override
   String toString() {
-    return isValid ? 'Valid' : 'Expected $expected, got ${pretifyValue(value)}';
+    return describeResult();
   }
 }

@@ -1,4 +1,14 @@
 {
-  "lcov.path": ["coverage/lcov.info"],
-  "coverage-status.searchPatterns": ["coverage/.resultset.json", "coverage/lcov*.info"]
+  "lcov.path": [
+    "coverage/lcov.info"
+  ],
+  "coverage-status.searchPatterns": [
+    "coverage/.resultset.json",
+    "coverage/lcov*.info"
+  ],
+  "dart.lineLength": 96,
+  "editor.rulers": [
+    96
+  ],
+  "editor.formatOnSave": true
 }

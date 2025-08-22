@@ -1,26 +1,26 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:eskema/eskema.dart';
 
 void main() {
   test('Basic ListField validates itself', () {
     final field = listIsOfLength(2);
 
-    final invalidRes1 = field.call([]);
+    final invalidRes1 = field.validate([]);
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.expected, 'List of size 2');
+    expect(invalidRes1.error, 'length equal to 2');
 
-    final invalidRes2 = field.call([1]);
+    final invalidRes2 = field.validate([1]);
     expect(invalidRes2.isValid, false);
-    expect(invalidRes2.expected, 'List of size 2');
+    expect(invalidRes2.error, 'length equal to 2');
 
-    final invalidRes3 = field.call(123);
+    final invalidRes3 = field.validate(123);
     expect(invalidRes3.isValid, false);
-    expect(invalidRes3.expected, 'List<dynamic>');
+    expect(invalidRes3.error, 'List<dynamic>');
 
-    final validRes1 = field.call([1, "2"]);
+    final validRes1 = field.validate([1, "2"]);
     expect(validRes1.isValid, true);
 
-    final validRes2 = field.call(['1', '2']);
+    final validRes2 = field.validate(['1', '2']);
     expect(validRes2.isValid, true);
   });
 
@@ -30,30 +30,30 @@ void main() {
       listEach(isTypeOrNull<String>()),
     ]));
 
-    final validRes1 = isListValid.call(null);
+    final validRes1 = isListValid.validate(null);
     expect(validRes1.isValid, true);
 
-    final validRes2 = isListValid.call(['1', null]);
+    final validRes2 = isListValid.validate(['1', null]);
     expect(validRes2.isValid, true);
 
-    final invalidRes1 = isListValid.call(['1', null, 3]);
+    final invalidRes1 = isListValid.validate(['1', null, 3]);
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.expected, 'List of size 2');
+    expect(invalidRes1.error, 'length equal to 2');
   });
 
   test('Basic ListField validates items', () {
     final isValidList = listEach(isType<int>());
 
-    final validRes1 = isValidList([1]);
+    final validRes1 = isValidList.validate([1]);
     expect(validRes1.isValid, true);
-    expect(isValidList([1, 2, 3]).isValid, true);
+    expect(isValidList.validate([1, 2, 3]).isValid, true);
 
-    final validRes2 = isValidList([]);
+    final validRes2 = isValidList.validate([]);
     expect(validRes2.isValid, true);
 
-    final invalidRes1 = isValidList(['string']);
+    final invalidRes1 = isValidList.validate(['string']);
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.expected, '[0] -> int');
+    expect(invalidRes1.error, '[0] -> int');
   });
 
   test('Nested ListField validates items', () {
@@ -64,26 +64,26 @@ void main() {
       ]),
     );
 
-    final validRes1 = isListValid([
+    final validRes1 = isListValid.validate([
       [1, 1],
       [2, 1]
     ]);
     expect(validRes1.isValid, true);
 
-    final validRes2 = isListValid([]);
+    final validRes2 = isListValid.validate([]);
     expect(validRes2.isValid, true);
 
-    final invalidRes1 = isListValid([
+    final invalidRes1 = isListValid.validate([
       [1]
     ]);
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.expected, '[0] -> List of size 2');
+    expect(invalidRes1.error, '[0] -> length equal to 2');
 
-    final invalidRes2 = isListValid([
+    final invalidRes2 = isListValid.validate([
       [1, "aaaa"]
     ]);
     expect(invalidRes2.isValid, false);
-    expect(invalidRes2.expected, '[0] -> [1] -> int');
+    expect(invalidRes2.error, '[0] -> [1] -> int');
   });
 
   test('Map ListField', () {
@@ -93,13 +93,13 @@ void main() {
         'street': isType<String>(),
       }),
     );
-    final validRes1 = isValidList.call([
+    final validRes1 = isValidList.validate([
       {'city': 'NY', 'street': '8th ave'}
     ]);
     expect(validRes1.isValid, true);
 
-    final invalidRes1 = isValidList.call([{}]);
+    final invalidRes1 = isValidList.validate([{}]);
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.expected, '[0] -> city -> String');
+    expect(invalidRes1.error, '[0] -> city -> String');
   });
 }
