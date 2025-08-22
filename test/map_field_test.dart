@@ -19,24 +19,22 @@ void main() {
 
     final invalidRes1 = mapField.validate({});
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.error, 'name -> String');
+    expect(invalidRes1.description, '.name: String, .age: int (value: {})');
 
     final invalidRes2 = mapField.validate({'name': 'test'});
     expect(invalidRes2.isValid, false);
-    expect(invalidRes2.error, 'age -> int');
+    expect(invalidRes2.description, '.age: int (value: {"name":"test"})');
 
     final invalidRes3 = mapField.validate({'name': 'test', 'age': -12});
     expect(invalidRes3.isValid, false);
-    expect(invalidRes3.error, 'age -> greater than or equal to 0');
-    expect(invalidRes3.toString(),
-        'Expected age -> greater than or equal to 0, got -12');
+    expect(invalidRes3.description,
+        '.age: greater than or equal to 0 (value: {"name":"test","age":-12})');
 
     final invalidRes4 = mapField.validate(null);
     expect(invalidRes4.isValid, false);
-    expect(invalidRes4.error, 'Map');
+    expect(invalidRes4.description, 'Map<dynamic, dynamic> (value: null)');
 
-    final validRes1 =
-        mapField.validate({'name': 'test', 'age': 12, 'vat': null});
+    final validRes1 = mapField.validate({'name': 'test', 'age': 12, 'vat': null});
     expect(validRes1.isValid, true);
   });
 
@@ -67,9 +65,7 @@ void main() {
       },
     });
     expect(invalidRes4.isValid, false);
-    expect(invalidRes4.error, 'address -> street -> String');
-    expect(invalidRes4.toString(),
-        'Expected address -> street -> String, got 132');
+    expect(invalidRes4.shortDescription, '.address.street: String');
 
     final invalidRes5 = isValidMap.validate({
       'address': {
@@ -80,12 +76,7 @@ void main() {
       },
     });
     expect(invalidRes5.isValid, false);
-    expect(
-        invalidRes5.error, 'address -> additional -> doorbel_number -> int');
-    expect(
-      invalidRes5.toString(),
-      'Expected address -> additional -> doorbel_number -> int, got null',
-    );
+    expect(invalidRes5.shortDescription, '.address.additional.doorbel_number: int');
 
     final validRes1 = isValidMap.validate({
       'address': {
@@ -123,10 +114,6 @@ void main() {
       'books': [{}]
     });
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.error, 'books -> [0] -> name -> String');
-    expect(
-      invalidRes1.toString(),
-      'Expected books -> [0] -> name -> String, got {}',
-    );
+    expect(invalidRes1.shortDescription, '.books[0].name: String');
   });
 }

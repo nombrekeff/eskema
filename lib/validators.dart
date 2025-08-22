@@ -7,13 +7,13 @@ import 'package:eskema/validator.dart';
 Function _collectionEquals = const DeepCollectionEquality().equals;
 
 EskValidator validator(
-  Function(dynamic value) comparisonFn,
-  Function(dynamic value) errorFn,
+  bool Function(dynamic value) comparisonFn,
+  EskError Function(dynamic value) errorFn,
 ) {
   return EskValidator(
     (value) => EskResult(
       isValid: comparisonFn(value),
-      error: errorFn(value),
+      errors: [errorFn(value)],
       value: value,
     ),
   );
@@ -25,7 +25,11 @@ EskValidator validator(
 
 /// Checks whether the given value is less than [max]
 IEskValidator isLt(num max) =>
-    isType<num>() & validator((value) => value < max, (value) => 'less than $max');
+    isType<num>() &
+    validator(
+      (value) => value < max,
+      (value) => EskError(message: 'less than $max', value: value),
+    );
 
 /// Checks whether the given value is less than or equal [max]
 IEskValidator isLte(num max) =>
@@ -33,7 +37,9 @@ IEskValidator isLte(num max) =>
 
 /// Checks whether the given value is greater than [max]
 IEskValidator isGt(num min) =>
-    isType<num>() & validator((value) => value > min, (value) => 'greater than $min');
+    isType<num>() &
+    validator((value) => value > min,
+        (value) => EskError(message: 'greater than $min', value: value));
 
 /// Checks whether the given value is greater or equal to [max]
 IEskValidator isGte(num min) =>
@@ -46,7 +52,7 @@ IEskValidator isEq<T>(T otherValue) =>
     isType<T>() &
     validator(
       (value) => value == otherValue,
-      (value) => 'equal to ${pretifyValue(otherValue)}',
+      (value) => EskError(message: 'equal to ${pretifyValue(otherValue)}', value: value),
     );
 
 /// Checks whether the given value is equal to the [otherValue] value of type [T]
@@ -54,7 +60,7 @@ IEskValidator isDeepEq<T>(T otherValue) =>
     isType<T>() &
     validator(
       (value) => _collectionEquals(value, otherValue),
-      (value) => 'equal to ${pretifyValue(otherValue)}',
+      (value) => EskError(message: 'equal to ${pretifyValue(otherValue)}', value: value),
     );
 
 /// Checks whether the given value has a length property and the length matches the validators
@@ -62,11 +68,16 @@ IEskValidator length(List<IEskValidator> validators) => EskValidator((value) {
       if (hasLengthProperty(value)) {
         final result = all(validators).validate((value as dynamic).length);
         return result.copyWith(
-          error: 'length ${result.error}',
+          errors: [EskError(message: 'length ${result.errors}', value: value)],
         );
       } else {
         return EskResult.invalid(
-          '${value.runtimeType} does not have a length property',
+          [
+            EskError(
+              message: '${value.runtimeType} does not have a length property',
+              value: value,
+            )
+          ],
           value,
         );
       }
@@ -79,12 +90,17 @@ IEskValidator contains<T>(T item) => EskValidator((value) {
       if (hasContainsProperty(value)) {
         return EskResult(
           isValid: value.contains(item),
-          error: 'contains ${pretifyValue(item)}',
+          errors: [EskError(message: 'contains ${pretifyValue(item)}', value: value)],
           value: value,
         );
       } else {
         return EskResult.invalid(
-          '${value.runtimeType} does not have a length property',
+          [
+            EskError(
+              message: '${value.runtimeType} does not have a length property',
+              value: value,
+            )
+          ],
           value,
         );
       }
@@ -147,7 +163,7 @@ IEskValidator stringMatchesPattern(Pattern pattern, {String? error}) {
   return isType<String>() &
       validator(
         (value) => pattern.allMatches(value).isNotEmpty,
-        (_) => error ?? 'String to match "$pattern"',
+        (value) => EskError(message: error ?? 'String to match "$pattern"', value: value),
       );
 }
 
@@ -157,7 +173,7 @@ IEskValidator stringMatchesPattern(Pattern pattern, {String? error}) {
 
 /// Passes the test if any of the [EskValidator]s are valid, and fails if any are invalid
 IEskValidator any(List<IEskValidator> validators) => EskValidator((value) {
-      final results = <EskResult>[];
+      final results = <IEskResult>[];
 
       for (final validator in validators) {
         final result = validator.validate(value);
@@ -167,7 +183,7 @@ IEskValidator any(List<IEskValidator> validators) => EskValidator((value) {
 
       return EskResult(
         isValid: false,
-        error: results.map((r) => r.error).join(' or '),
+        errors: results.expand((r) => r.errors).toList(),
         value: value,
       );
     });
@@ -185,17 +201,38 @@ IEskValidator all(List<IEskValidator> validators) => EskValidator((value) {
     });
 
 /// Passes the test if none of the validators pass
-IEskValidator none(List<IEskValidator> validators) => not(any(validators));
+IEskValidator none(List<IEskValidator> validators) {
+  return EskValidator((value) {
+    final validResults = <EskError>[];
+
+    for (final validator in validators) {
+      final result = not(validator).validate(value);
+
+      if (result.isNotValid) {
+        validResults.addAll(result.errors);
+      }
+    }
+
+    return validResults.isNotEmpty
+        ? EskResult.invalid(validResults, value)
+        : EskResult.valid(value);
+  });
+}
 
 /// Passes the test if the passed in validator is not valid
-IEskValidator not(IEskValidator validator) => EskValidator((value) {
-      final result = validator.validate(value);
-      return EskResult(
-        isValid: !result.isValid,
-        error: 'not ${result.error}',
-        value: value,
-      );
-    });
+IEskValidator not(IEskValidator validator) => EskValidator(
+      (value) {
+        final result = validator.validate(value);
+
+        return EskResult(
+          isValid: !result.isValid,
+          errors: result.errors
+              .map((error) => error.copyWith(message: 'not ${error.message}'))
+              .toList(),
+          value: value,
+        );
+      },
+    );
 
 /// Allows the passed in validator to be nullable
 IEskValidator nullable(IEskValidator validator) => validator.nullable();
@@ -206,7 +243,7 @@ IEskValidator isOneOf<T>(List<T> options) => all([
       EskValidator(
         (value) => EskResult(
           isValid: options.contains(value),
-          error: 'one of: ${pretifyValue(options)}',
+          errors: [EskError(message: 'one of: ${pretifyValue(options)}', value: value)],
           value: value,
         ),
       ),
@@ -242,20 +279,29 @@ IEskValidator throwInstead(IEskValidator validator) => EskValidator((value) {
 /// ]);
 /// ```
 IEskValidator eskema(Map<String, IEskValidator> eskema) {
-  return EskValidator((value) {
-    if (value is! Map) return EskResult.invalid('Map', value);
+  return $isMap &
+      EskValidator((value) {
+        final errors = <EskError>[];
 
-    for (final key in eskema.keys) {
-      final field = eskema[key];
-      final result = field!.validate(value[key]);
+        for (final key in eskema.keys) {
+          final field = eskema[key];
+          final result = field!.validate(value[key]);
 
-      if (result.isNotValid) {
-        return EskResult.invalid('$key -> ${result.error}', result.value);
-      }
-    }
+          if (result.isNotValid) {
+            for (var error in result.errors) {
+              errors.add(
+                EskError(
+                  message: error.message,
+                  value: error.value,
+                  path: '.$key${error.path != null ? '${error.path}' : ''}',
+                ),
+              );
+            }
+          }
+        }
 
-    return EskResult.valid(value);
-  });
+        return errors.isNotEmpty ? EskResult.invalid(errors, value) : EskResult.valid(value);
+      });
 }
 
 /// Returns a Validator that checks a value against the eskema provided,
@@ -275,48 +321,60 @@ IEskValidator eskema(Map<String, IEskValidator> eskema) {
 /// * and the second item is an int
 ///
 /// This validator also checks that the value is a list
-IEskValidator eskemaList(List<IEskValidator> eskema) {
-  return EskValidator((value) {
-    // Before checking the eskema, we validate that it's a list and matches the eskema length
-    final result = all([
-      isType<List>(),
-      listIsOfLength(eskema.length),
-    ]).validate(value);
+IEskValidator eskemaList<T>(List<IEskValidator> eskema) {
+  return isType<List>() &
+      listIsOfLength(eskema.length) &
+      EskValidator((value) {
+        final errors = <EskError>[];
 
-    if (result.isNotValid) return result;
+        for (int index = 0; index < value.length; index++) {
+          final item = value[index];
+          final effectiveValidator = eskema[index];
+          final result = effectiveValidator.validate(item);
 
-    for (int index = 0; index < value.length; index++) {
-      final item = value[index];
-      final effectiveValidator = eskema[index];
-      final result = effectiveValidator.validate(item);
+          if (result.isNotValid) {
+            for (var error in result.errors) {
+              errors.add(
+                EskError(
+                  message: error.message,
+                  value: error.value,
+                  path: '[$index]${error.path != null ? '${error.path}' : ''}',
+                ),
+              );
+            }
+          }
+        }
 
-      if (result.isNotValid) {
-        return EskResult.invalid('[$index] -> ${result.error}', value);
-      }
-    }
-
-    return EskResult.valid(value);
-  });
+        return errors.isNotEmpty ? EskResult.invalid(errors, value) : EskResult.valid(value);
+      });
 }
 
 /// Returns a Validator that runs [itemValidator] for each item in the list
 ///
 /// This validator also checks that the value is a list
 IEskValidator listEach(IEskValidator itemValidator) {
-  return EskValidator((value) {
-    if (value is! List) return EskResult.invalid('List', value);
+  return $isList &
+      EskValidator((value) {
+        final errors = <EskError>[];
+        for (int index = 0; index < value.length; index++) {
+          final item = value[index];
+          final result = itemValidator.validate(item);
 
-    for (int index = 0; index < value.length; index++) {
-      final item = value[index];
-      final result = itemValidator.validate(item);
+          if (result.isNotValid) {
+            for (var error in result.errors) {
+              errors.add(
+                EskError(
+                  message: error.message,
+                  value: error.value,
+                  path: '[$index]${error.path != null ? '${error.path}' : ''}',
+                ),
+              );
+            }
+          }
+        }
 
-      if (result.isNotValid) {
-        return EskResult.invalid('[$index] -> ${result.error}', item);
-      }
-    }
-
-    return EskResult.valid(value);
-  });
+        return errors.isNotEmpty ? EskResult.invalid(errors, value) : EskResult.valid(value);
+      });
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -324,7 +382,10 @@ IEskValidator listEach(IEskValidator itemValidator) {
 //////////////////////////////////////////////////////////////////////////////////
 
 /// Returns a [EskValidator] that checks if the given value is the correct type
-IEskValidator isType<T>() => validator((value) => value is T, (value) => T.toString());
+IEskValidator isType<T>() => validator(
+      (value) => value is T,
+      (value) => EskError(message: T.toString(), value: value),
+    );
 
 /// Returns a [EskValidator] that checks if the given value is the correct type
 IEskValidator isTypeOrNull<T>() => isType<T>() | isNull();
@@ -404,5 +465,7 @@ IEskValidator isIterable<T>() => isType<Iterable<T>>();
 final $isIterable = isIterable();
 
 /// Checks whether the given value is a valid DateTime formatted String
-IEskValidator isDate() => validator((value) => DateTime.tryParse(value) != null,
-    (value) => 'a valid DateTime formatted String');
+IEskValidator isDate() => validator(
+      (value) => DateTime.tryParse(value) != null,
+      (value) => EskError(message: 'a valid DateTime formatted String', value: value),
+    );

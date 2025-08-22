@@ -45,12 +45,13 @@ void main() {
     ],
   });
   print(isUserValid2.isValid); // true
-  print(isUserValid2.error); // null
+  print(isUserValid2.description); // null
 
   // Check if the validator is valid or not
   final userResult = userEskema.validate({});
   print(userResult.isValid); // should be false
-  print(userResult.error); // should contain expected errors
+  print(userResult.errors); // should contain expected errors
+  print(userResult.description); // a string representation of the errors
 
   // You can also use the 'validate' extension method
   final mapData = {

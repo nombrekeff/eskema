@@ -4,7 +4,7 @@ import 'package:eskema/validators.dart';
 import 'result.dart';
 
 /// Type representing a validator function.
-typedef EskValidatorFn = EskResult Function(dynamic value);
+typedef EskValidatorFn<T extends IEskResult> = T Function(dynamic value);
 
 /// Inmutable class from which all validators inherit.
 ///
@@ -23,7 +23,7 @@ abstract class IEskValidator {
   /// Validates the given [value] and returns the result.
   ///
   /// Don't call directly, call [validate] instead.
-  EskResult validator(dynamic value);
+  IEskResult validator(dynamic value);
 
   /// Main validation method. Use this method if you want to validate
   /// that a dynamic value is valid, and get an error message if not.
@@ -31,25 +31,19 @@ abstract class IEskValidator {
   /// You can also call [isValid] if you just want to check if the value is valid.
   ///
   /// If you want to to throw an error use [validateOrThrow]
-  EskResult validate(dynamic value) {
+  IEskResult validate(dynamic value) {
     if (value == null && isNullable) {
       return EskResult.valid(value);
     }
 
     final result = validator(value);
 
-    try {
-      throw Exception('Validation failed');
-    } catch (e, trace) {
-      result.stackTrace = trace;
-    }
-
     return result;
   }
 
   /// Works the same as [validate], validates that a given value is valid,
   /// but throws instead if it's not.
-  EskResult validateOrThrow(dynamic value) {
+  IEskResult validateOrThrow(dynamic value) {
     final result = validate(value);
     if (result.isNotValid) throw ValidatorFailedException(result);
     return result;
@@ -74,12 +68,12 @@ abstract class IEskValidator {
 /// which is used by the EskValidator to validate some data.
 ///
 /// Take a look at [validators] for examples.
-class EskValidator extends IEskValidator {
-  final EskValidatorFn _validator;
+class EskValidator<T extends IEskResult> extends IEskValidator {
+  final EskValidatorFn<T> _validator;
   EskValidator(this._validator, {super.nullable});
 
   @override
-  EskResult validator(dynamic value) {
+  T validator(dynamic value) {
     return _validator.call(value);
   }
 
@@ -126,7 +120,7 @@ class EskField extends IEskIdValidator {
   final List<IEskValidator> validators;
 
   @override
-  EskResult validator(dynamic value) {
+  IEskResult validator(dynamic value) {
     final superRes = super.validator(value);
     if (superRes.isNotValid) return superRes;
 
@@ -200,7 +194,7 @@ abstract class EskMap<T extends Map> extends IEskIdValidator {
   List<IEskIdValidator> get fields;
 
   @override
-  EskResult validator(dynamic value) {
+  IEskResult validator(dynamic value) {
     final superRes = super.validator(value);
     if (superRes.isNotValid) return superRes;
 
@@ -219,16 +213,15 @@ abstract class EskMap<T extends Map> extends IEskIdValidator {
       String error = '';
 
       if (field is EskMap) {
-        error += '${field.id}.${result.error}';
+        error += '${field.id}.${result.description}';
       } else {
-        error += '${field.id} to be ${result.error}';
+        error += '${field.id} to be ${result.description}';
       }
 
       return EskResult(
-        isValid: result.isValid,
-        error: error,
-        value: mapValue,
-      );
+          isValid: result.isValid,
+          errors: [EskError(message: error, value: mapValue)],
+          value: mapValue);
     }
 
     return EskResult.valid(value);

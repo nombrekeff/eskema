@@ -1,61 +1,126 @@
 import 'package:eskema/util.dart';
 
-/// Represents the result of a validation
-class EskResult {
-  final bool isValid;
-  final String? error;
-  final dynamic value;
-  StackTrace? stackTrace;
-
-  bool get isNotValid => !isValid;
-
-  EskResult({
+abstract class IEskResult {
+  IEskResult({
     required this.isValid,
-    this.error,
-    this.value,
-    this.stackTrace,
+    required this.errors,
+    required this.value,
   });
 
-  EskResult.invalid(this.error, this.value, {this.stackTrace})
-      : isValid = false;
+  final bool isValid;
+  final List<EskError> errors;
+  final dynamic value;
 
-  EskResult.valid(this.value, {this.stackTrace})
-      : isValid = true,
-        error = null;
+  bool get hasErrors => errors.isNotEmpty;
+  bool get isNotValid => !isValid;
 
-  String getCleanStackTrace() {
-    return stackTrace
-            ?.toString()
-            .split('\n')
-            .where((line) => !line.contains('(dart:'))
-            .join('\n') ??
-        '';
-  }
+  String get shortDescription;
+  String get description;
 
-  String describeResult({bool verbose = false}) {
-    if (isValid) {
-      return 'Valid: ${pretifyValue(value)}';
-    } else {
-      return 'Expected $error, got ${pretifyValue(value)}${verbose ? '\nStack trace: \n${getCleanStackTrace()}' : ''}';
-    }
-  }
-
-  EskResult copyWith({
+  IEskResult copyWith({
     bool? isValid,
-    String? error,
+    List<EskError>? errors,
     dynamic value,
-    StackTrace? stackTrace,
   }) {
     return EskResult(
       isValid: isValid ?? this.isValid,
-      error: error ?? this.error,
+      errors: errors ?? this.errors,
       value: value ?? this.value,
-      stackTrace: stackTrace ?? this.stackTrace,
+    );
+  }
+
+  IEskResult addErrors(List<EskError> newErrors) {
+    return copyWith(
+      isValid: false,
+      errors: [...errors, ...newErrors],
+    );
+  }
+
+  IEskResult negate() {
+    return copyWith(
+      isValid: !isValid,
     );
   }
 
   @override
   String toString() {
-    return describeResult();
+    return description;
+  }
+}
+
+class EskResult extends IEskResult {
+  EskResult({
+    required super.isValid,
+    required super.errors,
+    required super.value,
+  });
+
+  EskResult.valid(dynamic value) : super(isValid: true, errors: [], value: value);
+  EskResult.invalid(List<EskError> errors, dynamic value)
+      : super(isValid: false, errors: errors, value: value);
+
+  @override
+  String get shortDescription {
+    if (isValid) {
+      return 'Valid';
+    } else {
+      return errors.map((e) => e.shortDescription).join(', ');
+    }
+  }
+
+  @override
+  String get description {
+    if (isValid) {
+      return 'Valid: ${pretifyValue(value)}';
+    } else {
+      return '${errors.map((e) => e.shortDescription).join(', ')} (value: ${pretifyValue(value)})';
+    }
+  }
+}
+
+class EskError {
+  final String? path;
+  final String message;
+  final dynamic value;
+
+  EskError({
+    this.path,
+    required this.message,
+    required this.value,
+  });
+
+  String get shortDescription {
+    if (path != null && path!.isNotEmpty) {
+      return '$path: $message';
+    }
+
+    return message;
+  }
+
+  String get description {
+    final messageSuffix = '$message (value: ${pretifyValue(value)})';
+
+    if (path != null && path!.isNotEmpty) {
+      return '$path: $messageSuffix';
+    }
+
+    return messageSuffix;
+  }
+
+  EskError copyWith({
+    String? path,
+    String? message,
+    dynamic value,
+  }) {
+    return EskError(
+      path: path ?? this.path,
+      message: message ?? this.message,
+      value: value ?? this.value,
+    );
+  }
+
+  @override
+  String toString() {
+    return description;
   }
 }

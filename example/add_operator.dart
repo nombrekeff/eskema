@@ -3,7 +3,7 @@ import 'package:eskema/extensions.dart';
 
 void main() {
   final v1 = isString();
-  final v2 = stringLength([isGt(0)]); 
+  final v2 = stringLength([isGt(0)]);
 
   // You can combine validators using the + operator
   // This creates a new validator that requires both conditions to be met
@@ -12,6 +12,6 @@ void main() {
 
   final userVal = v1 & v2;
 
-  print(userVal.validate('')); // false - "Expected greater than 0, got 0"
+  print(userVal.validate('')); // false - "length [greater than 0 (value: 0)]"
   print(userVal.validate('a')); // true
 }
