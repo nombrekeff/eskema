@@ -109,20 +109,29 @@ Returns a Validator that checks a value against a Map eskema that declares a val
 &#47;&#47;&#47; ]);
 &#47;&#47;&#47; ```
 IEskValidator eskema(Map&lt;String, IEskValidator&gt; eskema) {
-  return EskValidator((value) {
-    if (value is! Map) return EskResult.invalid(&#39;Map&#39;, value);
+  return $isMap &amp;
+      EskValidator((value) {
+        final errors = &lt;EskError&gt;[];
 
-    for (final key in eskema.keys) {
-      final field = eskema[key];
-      final result = field!.validate(value[key]);
+        for (final key in eskema.keys) {
+          final field = eskema[key];
+          final result = field!.validate(value[key]);
 
-      if (result.isNotValid) {
-        return EskResult.invalid(&#39;$key -&gt; ${result.error}&#39;, result.value);
-      }
-    }
+          if (result.isNotValid) {
+            for (var error in result.errors) {
+              errors.add(
+                EskError(
+                  message: error.message,
+                  value: error.value,
+                  path: &#39;.$key${error.path != null ? &#39;${error.path}&#39; : &#39;&#39;}&#39;,
+                ),
+              );
+            }
+          }
+        }
 
-    return EskResult.valid(value);
-  });
+        return errors.isNotEmpty ? EskResult.invalid(errors, value) : EskResult.valid(value);
+      });
 }</code></pre>
 </section>
 

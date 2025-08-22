@@ -71,7 +71,9 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IEskValidator isGt(num min) =&gt;
-    isType&lt;num&gt;() &amp; validator((value) =&gt; value &gt; min, (value) =&gt; &#39;greater than $min&#39;);</code></pre>
+    isType&lt;num&gt;() &amp;
+    validator((value) =&gt; value &gt; min,
+        (value) =&gt; EskError(message: &#39;greater than $min&#39;, value: value));</code></pre>
 </section>
 
 

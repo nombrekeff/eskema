@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
       
-<span class="returntype"><a href="../../result/EskResult-class.html">EskResult</a></span>
-<span class="name ">validate</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="validate-param-eskema"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../validator/IEskValidator-class.html">IEskValidator</a></span>&gt;</span></span> <span class="parameter-name">eskema</span></span></li>
+<span class="returntype"><a href="../../result/IEskResult-class.html">IEskResult</a></span>
+<span class="name ">validate</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="validate-param-eskema"><span class="type-annotation"><a href="../../validator/IEskValidator-class.html">IEskValidator</a></span> <span class="parameter-name">eskema</span></span></li>
 </ol>)
 
       
@@ -84,8 +84,8 @@ isValidList([1, "2"]).isValid;   // false
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">EskResult validate(List&lt;IEskValidator&gt; eskema) {
-  return eskemaList(eskema).validate(this);
+  <pre class="language-dart"><code class="language-dart">IEskResult validate(IEskValidator eskema) {
+  return listEach(eskema).validate(this);
 }</code></pre>
 </section>
 

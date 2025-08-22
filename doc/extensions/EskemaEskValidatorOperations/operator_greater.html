@@ -73,7 +73,7 @@
   <pre class="language-dart"><code class="language-dart">IEskValidator operator &gt;(String error) =&gt; EskValidator(
       (value) =&gt; EskResult(
         isValid: validate(value).isValid,
-        error: error,
+        errors: [EskError(message: error, value: value)],
         value: value,
       ),
     );</code></pre>

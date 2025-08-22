@@ -54,10 +54,10 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/EskValidator-class.html">EskValidator</a></span>
-<span class="name ">validator</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="validator-param-comparisonFn"><span class="type-annotation">dynamic</span> <span class="parameter-name">comparisonFn</span>(<ol class="parameter-list single-line"> <li><span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span></li>
+<span class="returntype"><a href="../validator/EskValidator-class.html">EskValidator</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/IEskResult-class.html">IEskResult</a></span>&gt;</span></span>
+<span class="name ">validator</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="validator-param-comparisonFn"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">comparisonFn</span>(<ol class="parameter-list single-line"> <li><span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span></li>
 </ol>), </span></li>
-<li><span class="parameter" id="validator-param-errorFn"><span class="type-annotation">dynamic</span> <span class="parameter-name">errorFn</span>(<ol class="parameter-list single-line"> <li><span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span></li>
+<li><span class="parameter" id="validator-param-errorFn"><span class="type-annotation"><a href="../result/EskError-class.html">EskError</a></span> <span class="parameter-name">errorFn</span>(<ol class="parameter-list single-line"> <li><span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span></li>
 </ol>)</span></li>
 </ol>)
 
@@ -71,13 +71,13 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">EskValidator validator(
-  Function(dynamic value) comparisonFn,
-  Function(dynamic value) errorFn,
+  bool Function(dynamic value) comparisonFn,
+  EskError Function(dynamic value) errorFn,
 ) {
   return EskValidator(
     (value) =&gt; EskResult(
       isValid: comparisonFn(value),
-      error: errorFn(value),
+      errors: [errorFn(value)],
       value: value,
     ),
   );

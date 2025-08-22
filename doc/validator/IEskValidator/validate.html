@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
       
-<span class="returntype"><a href="../../result/EskResult-class.html">EskResult</a></span>
+<span class="returntype"><a href="../../result/IEskResult-class.html">IEskResult</a></span>
 <span class="name ">validate</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="validate-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span></li>
 </ol>)
 
@@ -73,18 +73,12 @@ that a dynamic value is valid, and get an error message if not.</p>
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">EskResult validate(dynamic value) {
+  <pre class="language-dart"><code class="language-dart">IEskResult validate(dynamic value) {
   if (value == null &amp;&amp; isNullable) {
     return EskResult.valid(value);
   }
 
   final result = validator(value);
-
-  try {
-    throw Exception(&#39;Validation failed&#39;);
-  } catch (e, trace) {
-    result.stackTrace = trace;
-  }
 
   return result;
 }</code></pre>

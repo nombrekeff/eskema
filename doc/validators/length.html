@@ -74,11 +74,16 @@
       if (hasLengthProperty(value)) {
         final result = all(validators).validate((value as dynamic).length);
         return result.copyWith(
-          error: &#39;length ${result.error}&#39;,
+          errors: [EskError(message: &#39;length ${result.errors}&#39;, value: value)],
         );
       } else {
         return EskResult.invalid(
-          &#39;${value.runtimeType} does not have a length property&#39;,
+          [
+            EskError(
+              message: &#39;${value.runtimeType} does not have a length property&#39;,
+              value: value,
+            )
+          ],
           value,
         );
       }

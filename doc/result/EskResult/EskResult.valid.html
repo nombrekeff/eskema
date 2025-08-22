@@ -54,9 +54,8 @@
 
     <section class="multi-line-signature">
       
-      <span class="name ">EskResult.valid</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="valid-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, {</span></li>
-<li><span class="parameter" id="valid-param-stackTrace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/StackTrace-class.html">StackTrace</a>?</span> <span class="parameter-name">stackTrace</span>, </span></li>
-</ol>})
+      <span class="name ">EskResult.valid</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="valid-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span></li>
+</ol>)
     </section>
     
 
@@ -64,9 +63,7 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">EskResult.valid(this.value, {this.stackTrace})
-    : isValid = true,
-      error = null;</code></pre>
+  <pre class="language-dart"><code class="language-dart">EskResult.valid(dynamic value) : super(isValid: true, errors: [], value: value);</code></pre>
 </section>
 
 

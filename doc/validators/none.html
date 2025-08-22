@@ -70,7 +70,23 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator none(List&lt;IEskValidator&gt; validators) =&gt; not(any(validators));</code></pre>
+  <pre class="language-dart"><code class="language-dart">IEskValidator none(List&lt;IEskValidator&gt; validators) {
+  return EskValidator((value) {
+    final validResults = &lt;EskError&gt;[];
+
+    for (final validator in validators) {
+      final result = not(validator).validate(value);
+
+      if (result.isNotValid) {
+        validResults.addAll(result.errors);
+      }
+    }
+
+    return validResults.isNotEmpty
+        ? EskResult.invalid(validResults, value)
+        : EskResult.valid(value);
+  });
+}</code></pre>
 </section>
 
 

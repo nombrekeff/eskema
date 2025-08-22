@@ -77,7 +77,7 @@ So there's no need to add the <a href="../validators/isString.html">isString</a>
   return isType&lt;String&gt;() &amp;
       validator(
         (value) =&gt; pattern.allMatches(value).isNotEmpty,
-        (_) =&gt; error ?? &#39;String to match &quot;$pattern&quot;&#39;,
+        (value) =&gt; EskError(message: error ?? &#39;String to match &quot;$pattern&quot;&#39;, value: value),
       );
 }</code></pre>
 </section>

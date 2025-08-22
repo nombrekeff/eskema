@@ -77,7 +77,7 @@ Passes the test if any of the <a href="../validator/EskValidator-class.html">Esk
 
 &#47;&#47;&#47; Passes the test if any of the [EskValidator]s are valid, and fails if any are invalid
 IEskValidator any(List&lt;IEskValidator&gt; validators) =&gt; EskValidator((value) {
-      final results = &lt;EskResult&gt;[];
+      final results = &lt;IEskResult&gt;[];
 
       for (final validator in validators) {
         final result = validator.validate(value);
@@ -87,7 +87,7 @@ IEskValidator any(List&lt;IEskValidator&gt; validators) =&gt; EskValidator((valu
 
       return EskResult(
         isValid: false,
-        error: results.map((r) =&gt; r.error).join(&#39; or &#39;),
+        errors: results.expand((r) =&gt; r.errors).toList(),
         value: value,
       );
     });</code></pre>

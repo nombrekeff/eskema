@@ -70,14 +70,19 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator not(IEskValidator validator) =&gt; EskValidator((value) {
-      final result = validator.validate(value);
-      return EskResult(
-        isValid: !result.isValid,
-        error: &#39;not ${result.error}&#39;,
-        value: value,
-      );
-    });</code></pre>
+  <pre class="language-dart"><code class="language-dart">IEskValidator not(IEskValidator validator) =&gt; EskValidator(
+      (value) {
+        final result = validator.validate(value);
+
+        return EskResult(
+          isValid: !result.isValid,
+          errors: result.errors
+              .map((error) =&gt; error.copyWith(message: &#39;not ${error.message}&#39;))
+              .toList(),
+          value: value,
+        );
+      },
+    );</code></pre>
 </section>
 
 

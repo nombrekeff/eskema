@@ -75,12 +75,17 @@
       if (hasContainsProperty(value)) {
         return EskResult(
           isValid: value.contains(item),
-          error: &#39;contains ${pretifyValue(item)}&#39;,
+          errors: [EskError(message: &#39;contains ${pretifyValue(item)}&#39;, value: value)],
           value: value,
         );
       } else {
         return EskResult.invalid(
-          &#39;${value.runtimeType} does not have a length property&#39;,
+          [
+            EskError(
+              message: &#39;${value.runtimeType} does not have a length property&#39;,
+              value: value,
+            )
+          ],
           value,
         );
       }

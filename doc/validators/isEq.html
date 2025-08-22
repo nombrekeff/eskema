@@ -75,7 +75,7 @@
     isType&lt;T&gt;() &amp;
     validator(
       (value) =&gt; value == otherValue,
-      (value) =&gt; &#39;equal to ${pretifyValue(otherValue)}&#39;,
+      (value) =&gt; EskError(message: &#39;equal to ${pretifyValue(otherValue)}&#39;, value: value),
     );</code></pre>
 </section>
 

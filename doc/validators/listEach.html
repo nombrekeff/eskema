@@ -72,20 +72,28 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IEskValidator listEach(IEskValidator itemValidator) {
-  return EskValidator((value) {
-    if (value is! List) return EskResult.invalid(&#39;List&#39;, value);
+  return $isList &amp;
+      EskValidator((value) {
+        final errors = &lt;EskError&gt;[];
+        for (int index = 0; index &lt; value.length; index++) {
+          final item = value[index];
+          final result = itemValidator.validate(item);
 
-    for (int index = 0; index &lt; value.length; index++) {
-      final item = value[index];
-      final result = itemValidator.validate(item);
+          if (result.isNotValid) {
+            for (var error in result.errors) {
+              errors.add(
+                EskError(
+                  message: error.message,
+                  value: error.value,
+                  path: &#39;[$index]${error.path != null ? &#39;${error.path}&#39; : &#39;&#39;}&#39;,
+                ),
+              );
+            }
+          }
+        }
 
-      if (result.isNotValid) {
-        return EskResult.invalid(&#39;[$index] -&gt; ${result.error}&#39;, item);
-      }
-    }
-
-    return EskResult.valid(value);
-  });
+        return errors.isNotEmpty ? EskResult.invalid(errors, value) : EskResult.valid(value);
+      });
 }</code></pre>
 </section>
 

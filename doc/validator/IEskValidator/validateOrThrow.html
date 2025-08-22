@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
       
-<span class="returntype"><a href="../../result/EskResult-class.html">EskResult</a></span>
+<span class="returntype"><a href="../../result/IEskResult-class.html">IEskResult</a></span>
 <span class="name ">validateOrThrow</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="validateOrThrow-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span></li>
 </ol>)
 
@@ -71,7 +71,7 @@ but throws instead if it's not.</p>
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">EskResult validateOrThrow(dynamic value) {
+  <pre class="language-dart"><code class="language-dart">IEskResult validateOrThrow(dynamic value) {
   final result = validate(value);
   if (result.isNotValid) throw ValidatorFailedException(result);
   return result;

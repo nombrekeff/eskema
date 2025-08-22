@@ -75,7 +75,7 @@
       EskValidator(
         (value) =&gt; EskResult(
           isValid: options.contains(value),
-          error: &#39;one of: ${pretifyValue(options)}&#39;,
+          errors: [EskError(message: &#39;one of: ${pretifyValue(options)}&#39;, value: value)],
           value: value,
         ),
       ),

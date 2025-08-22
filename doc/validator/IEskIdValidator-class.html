@@ -68,7 +68,7 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
     <ul class="gt-separated dark clazz-relationships">
       <li><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></li>
         <li><a href="../validator/IEskValidator-class.html">IEskValidator</a></li>
-        <li><a href="../validator/EskValidator-class.html">EskValidator</a></li>
+        <li><a href="../validator/EskValidator-class.html">EskValidator</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/IEskResult-class.html">IEskResult</a></span>&gt;</span></li>
       <li>IEskIdValidator</li>
     </ul>
   </dd>
@@ -98,7 +98,7 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
     <h2>Constructors</h2>
     <dl class="constructor-summary-list">
         <dt id="IEskIdValidator.new" class="callable">
-          <span class="name"><a href="../validator/IEskIdValidator/IEskIdValidator.html">IEskIdValidator.new</a></span><span class="signature">({<span class="parameter" id="-param-validator"><span>required</span> <span class="type-annotation"><a href="../validator/EskValidatorFn.html">EskValidatorFn</a></span> <span class="parameter-name">validator</span>, </span><span class="parameter" id="-param-id"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">id</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-nullable"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">nullable</span> = <span class="default-value">false</span></span>})</span>
+          <span class="name"><a href="../validator/IEskIdValidator/IEskIdValidator.html">IEskIdValidator.new</a></span><span class="signature">({<span class="parameter" id="-param-validator"><span>required</span> <span class="type-annotation"><a href="../validator/EskValidatorFn.html">EskValidatorFn</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/IEskResult-class.html">IEskResult</a></span>&gt;</span></span> <span class="parameter-name">validator</span>, </span><span class="parameter" id="-param-id"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">id</span> = <span class="default-value">&#39;&#39;</span>, </span><span class="parameter" id="-param-nullable"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">nullable</span> = <span class="default-value">false</span></span>})</span>
         </dt>
         <dd>
           
@@ -250,7 +250,7 @@ the validation is considered valid.
 
         <dt id="validate" class="callable inherited">
   <span class="name"><a href="../validator/IEskValidator/validate.html">validate</a></span><span class="signature">(<wbr><span class="parameter" id="validate-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../result/EskResult-class.html">EskResult</a></span>
+    <span class="returntype parameter">&#8594; <a href="../result/IEskResult-class.html">IEskResult</a></span>
   </span>
   
 
@@ -264,7 +264,7 @@ that a dynamic value is valid, and get an error message if not.
 
         <dt id="validateOrThrow" class="callable inherited">
   <span class="name"><a href="../validator/IEskValidator/validateOrThrow.html">validateOrThrow</a></span><span class="signature">(<wbr><span class="parameter" id="validateOrThrow-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../result/EskResult-class.html">EskResult</a></span>
+    <span class="returntype parameter">&#8594; <a href="../result/IEskResult-class.html">IEskResult</a></span>
   </span>
   
 
@@ -278,7 +278,7 @@ but throws instead if it's not.
 
         <dt id="validator" class="callable inherited">
   <span class="name"><a href="../validator/EskValidator/validator.html">validator</a></span><span class="signature">(<wbr><span class="parameter" id="validator-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../result/EskResult-class.html">EskResult</a></span>
+    <span class="returntype parameter">&#8594; <a href="../result/IEskResult-class.html">IEskResult</a></span>
   </span>
   
 

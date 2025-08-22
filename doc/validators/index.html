@@ -337,7 +337,7 @@ Returns a Validator that checks a value against a Map eskema that declares a val
 </dd>
 
           <dt id="eskemaList" class="callable">
-  <span class="name"><a href="../validators/eskemaList.html">eskemaList</a></span><span class="signature">(<wbr><span class="parameter" id="eskemaList-param-eskema"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>&gt;</span></span> <span class="parameter-name">eskema</span></span>)
+  <span class="name"><a href="../validators/eskemaList.html">eskemaList</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="eskemaList-param-eskema"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>&gt;</span></span> <span class="parameter-name">eskema</span></span>)
     <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
   </span>
   
@@ -919,8 +919,8 @@ Validates that the String's length matches the validators
 </dd>
 
           <dt id="validator" class="callable">
-  <span class="name"><a href="../validators/validator.html">validator</a></span><span class="signature">(<wbr><span class="parameter" id="validator-param-comparisonFn"><span class="type-annotation">dynamic</span> <span class="parameter-name">comparisonFn</span>(<span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>), </span><span class="parameter" id="validator-param-errorFn"><span class="type-annotation">dynamic</span> <span class="parameter-name">errorFn</span>(<span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)</span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/EskValidator-class.html">EskValidator</a></span>
+  <span class="name"><a href="../validators/validator.html">validator</a></span><span class="signature">(<wbr><span class="parameter" id="validator-param-comparisonFn"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">comparisonFn</span>(<span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>), </span><span class="parameter" id="validator-param-errorFn"><span class="type-annotation"><a href="../result/EskError-class.html">EskError</a></span> <span class="parameter-name">errorFn</span>(<span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)</span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/EskValidator-class.html">EskValidator</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/IEskResult-class.html">IEskResult</a></span>&gt;</span></span>
   </span>
   
 

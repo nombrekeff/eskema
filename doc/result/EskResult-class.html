@@ -53,30 +53,49 @@
 </h1></div>
 
     
-<section class="desc markdown">
-  <p>Represents the result of a validation</p>
-</section>
 
 
+    <section>
+      <dl class="dl-horizontal">
+        
+  <dt>Inheritance</dt>
+  <dd>
+    <ul class="gt-separated dark clazz-relationships">
+      <li><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></li>
+        <li><a href="../result/IEskResult-class.html">IEskResult</a></li>
+      <li>EskResult</li>
+    </ul>
+  </dd>
+
+        
+        
+
+
+        
+        
+
+
+      </dl>
+    </section>
 
     
   <section class="summary offset-anchor" id="constructors">
     <h2>Constructors</h2>
     <dl class="constructor-summary-list">
         <dt id="EskResult.new" class="callable">
-          <span class="name"><a href="../result/EskResult/EskResult.html">EskResult.new</a></span><span class="signature">({<span class="parameter" id="-param-isValid"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">isValid</span>, </span><span class="parameter" id="-param-error"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">error</span>, </span><span class="parameter" id="-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, </span><span class="parameter" id="-param-stackTrace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/StackTrace-class.html">StackTrace</a>?</span> <span class="parameter-name">stackTrace</span></span>})</span>
+          <span class="name"><a href="../result/EskResult/EskResult.html">EskResult.new</a></span><span class="signature">({<span class="parameter" id="-param-isValid"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">isValid</span>, </span><span class="parameter" id="-param-errors"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/EskError-class.html">EskError</a></span>&gt;</span></span> <span class="parameter-name">errors</span>, </span><span class="parameter" id="-param-value"><span>required</span> <span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>})</span>
         </dt>
         <dd>
           
         </dd>
         <dt id="EskResult.invalid" class="callable">
-          <span class="name"><a href="../result/EskResult/EskResult.invalid.html">EskResult.invalid</a></span><span class="signature">(<span class="parameter" id="invalid-param-error"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">error</span>, </span><span class="parameter" id="invalid-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, {</span><span class="parameter" id="invalid-param-stackTrace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/StackTrace-class.html">StackTrace</a>?</span> <span class="parameter-name">stackTrace</span></span>})</span>
+          <span class="name"><a href="../result/EskResult/EskResult.invalid.html">EskResult.invalid</a></span><span class="signature">(<span class="parameter" id="invalid-param-errors"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/EskError-class.html">EskError</a></span>&gt;</span></span> <span class="parameter-name">errors</span>, </span><span class="parameter" id="invalid-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)</span>
         </dt>
         <dd>
           
         </dd>
         <dt id="EskResult.valid" class="callable">
-          <span class="name"><a href="../result/EskResult/EskResult.valid.html">EskResult.valid</a></span><span class="signature">(<span class="parameter" id="valid-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, {</span><span class="parameter" id="valid-param-stackTrace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/StackTrace-class.html">StackTrace</a>?</span> <span class="parameter-name">stackTrace</span></span>})</span>
+          <span class="name"><a href="../result/EskResult/EskResult.valid.html">EskResult.valid</a></span><span class="signature">(<span class="parameter" id="valid-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)</span>
         </dt>
         <dd>
           
@@ -89,15 +108,39 @@
       id="instance-properties">
     <h2>Properties</h2>
     <dl class="properties">
-        <dt id="error" class="property">
-  <span class="name"><a href="../result/EskResult/error.html">error</a></span>
-  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span>
+        <dt id="description" class="property">
+  <span class="name"><a href="../result/EskResult/description.html">description</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
   
 
 </dt>
 <dd>
   
-  <div class="features"><span class="feature">final</span></div>
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="errors" class="property inherited">
+  <span class="name"><a href="../result/IEskResult/errors.html">errors</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/EskError-class.html">EskError</a></span>&gt;</span></span>
+  
+
+</dt>
+<dd class="inherited">
+  
+  <div class="features"><span class="feature">final</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="hasErrors" class="property inherited">
+  <span class="name"><a href="../result/IEskResult/hasErrors.html">hasErrors</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
 
 </dd>
 
@@ -113,27 +156,27 @@
 
 </dd>
 
-        <dt id="isNotValid" class="property">
-  <span class="name"><a href="../result/EskResult/isNotValid.html">isNotValid</a></span>
+        <dt id="isNotValid" class="property inherited">
+  <span class="name"><a href="../result/IEskResult/isNotValid.html">isNotValid</a></span>
   <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
   
 
 </dt>
-<dd>
+<dd class="inherited">
   
-  <div class="features"><span class="feature">no setter</span></div>
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
 
 </dd>
 
-        <dt id="isValid" class="property">
-  <span class="name"><a href="../result/EskResult/isValid.html">isValid</a></span>
+        <dt id="isValid" class="property inherited">
+  <span class="name"><a href="../result/IEskResult/isValid.html">isValid</a></span>
   <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
   
 
 </dt>
-<dd>
+<dd class="inherited">
   
-  <div class="features"><span class="feature">final</span></div>
+  <div class="features"><span class="feature">final</span><span class="feature">inherited</span></div>
 
 </dd>
 
@@ -149,27 +192,27 @@
 
 </dd>
 
-        <dt id="stackTrace" class="property">
-  <span class="name"><a href="../result/EskResult/stackTrace.html">stackTrace</a></span>
-  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/StackTrace-class.html">StackTrace</a>?</span>
+        <dt id="shortDescription" class="property">
+  <span class="name"><a href="../result/EskResult/shortDescription.html">shortDescription</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
   
 
 </dt>
 <dd>
   
-  <div class="features"><span class="feature">getter/setter pair</span></div>
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
 
 </dd>
 
-        <dt id="value" class="property">
-  <span class="name"><a href="../result/EskResult/value.html">value</a></span>
+        <dt id="value" class="property inherited">
+  <span class="name"><a href="../result/IEskResult/value.html">value</a></span>
   <span class="signature">&#8594; dynamic</span>
   
 
 </dt>
-<dd>
+<dd class="inherited">
   
-  <div class="features"><span class="feature">final</span></div>
+  <div class="features"><span class="feature">final</span><span class="feature">inherited</span></div>
 
 </dd>
 
@@ -178,46 +221,46 @@
 
     
   <section
-      class="summary offset-anchor"
+      class="summary offset-anchor inherited"
       id="instance-methods">
     <h2>Methods</h2>
     <dl class="callables">
-        <dt id="copyWith" class="callable">
-  <span class="name"><a href="../result/EskResult/copyWith.html">copyWith</a></span><span class="signature">(<wbr>{<span class="parameter" id="copyWith-param-isValid"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">isValid</span>, </span><span class="parameter" id="copyWith-param-error"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">error</span>, </span><span class="parameter" id="copyWith-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, </span><span class="parameter" id="copyWith-param-stackTrace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/StackTrace-class.html">StackTrace</a>?</span> <span class="parameter-name">stackTrace</span></span>})
-    <span class="returntype parameter">&#8594; <a href="../result/EskResult-class.html">EskResult</a></span>
+        <dt id="addErrors" class="callable inherited">
+  <span class="name"><a href="../result/IEskResult/addErrors.html">addErrors</a></span><span class="signature">(<wbr><span class="parameter" id="addErrors-param-newErrors"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/EskError-class.html">EskError</a></span>&gt;</span></span> <span class="parameter-name">newErrors</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../result/IEskResult-class.html">IEskResult</a></span>
   </span>
   
 
 </dt>
-<dd>
+<dd class="inherited">
   
-  
+  <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
 
-        <dt id="describeResult" class="callable">
-  <span class="name"><a href="../result/EskResult/describeResult.html">describeResult</a></span><span class="signature">(<wbr>{<span class="parameter" id="describeResult-param-verbose"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">verbose</span> = <span class="default-value">false</span></span>})
-    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+        <dt id="copyWith" class="callable inherited">
+  <span class="name"><a href="../result/IEskResult/copyWith.html">copyWith</a></span><span class="signature">(<wbr>{<span class="parameter" id="copyWith-param-isValid"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">isValid</span>, </span><span class="parameter" id="copyWith-param-errors"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/EskError-class.html">EskError</a></span>&gt;</span>?</span> <span class="parameter-name">errors</span>, </span><span class="parameter" id="copyWith-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../result/IEskResult-class.html">IEskResult</a></span>
   </span>
   
 
 </dt>
-<dd>
+<dd class="inherited">
   
-  
+  <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
 
-        <dt id="getCleanStackTrace" class="callable">
-  <span class="name"><a href="../result/EskResult/getCleanStackTrace.html">getCleanStackTrace</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+        <dt id="negate" class="callable inherited">
+  <span class="name"><a href="../result/IEskResult/negate.html">negate</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../result/IEskResult-class.html">IEskResult</a></span>
   </span>
   
 
 </dt>
-<dd>
+<dd class="inherited">
   
-  
+  <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
 
@@ -234,16 +277,16 @@
 
 </dd>
 
-        <dt id="toString" class="callable">
-  <span class="name"><a href="../result/EskResult/toString.html">toString</a></span><span class="signature">(<wbr>)
+        <dt id="toString" class="callable inherited">
+  <span class="name"><a href="../result/IEskResult/toString.html">toString</a></span><span class="signature">(<wbr>)
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
   </span>
   
 
 </dt>
-<dd>
+<dd class="inherited">
   A string representation of this object.
-  <div class="features"><span class="feature">override</span></div>
+  <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
 
