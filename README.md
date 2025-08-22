@@ -50,19 +50,7 @@ final userValidator = eskema({
       RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$"),
       error: 'a valid email address',
     ).nullable(),
-  });
-
-  final ok = userValidator.validate({
-    'username': 'bob',
-    'age': 42,
-  });
-  print("User is valid: $ok");
-
-  final res = userValidator.validate({
-    'username': 'alice',
-    'age': -1,
-  });
-  print(res); // false - "Expected age -> greater than or equal to 0, got -1"
+});
 ```
 
 ### 2. Validate the eskema <!-- omit in toc -->
