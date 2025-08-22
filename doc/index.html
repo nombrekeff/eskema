@@ -50,9 +50,9 @@
 <h2 id="use-cases">Use cases</h2>
 <p>Here are some common usecases for Eskema:</p>
 <ul>
-<li><a href="#validate-untyped-api-json">Validate untyped API JSON</a> before mapping to models (catch missing/invalid fields early).</li>
-<li><a href="#guard-inbound-request-payloads">Guard inbound request payloads</a> (HTTP handlers, jobs) with clear, fail-fast errors.</li>
-<li><a href="#validate-runtime-config-and-feature-flags">Validate runtime config and feature flags</a> from files or remote sources.</li>
+<li><strong>Validate untyped API JSON</strong> before mapping to models (catch missing/invalid fields early).</li>
+<li><strong>Guard inbound request payloads</strong> (HTTP handlers, jobs) with clear, fail-fast errors.</li>
+<li><strong>Validate runtime config and feature flags</strong> from files or remote sources.</li>
 </ul>
 <hr>
 <h2 id="install">Install</h2>
@@ -80,19 +80,7 @@ final userValidator = eskema({
       RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$"),
       error: 'a valid email address',
     ).nullable(),
-  });
-
-  final ok = userValidator.validate({
-    'username': 'bob',
-    'age': 42,
-  });
-  print("User is valid: $ok");
-
-  final res = userValidator.validate({
-    'username': 'alice',
-    'age': -1,
-  });
-  print(res); // false - "Expected age -&gt; greater than or equal to 0, got -1"
+});
 </code></pre>
 <h3 id="2-validate-the-eskema----omit-in-toc---">2. Validate the eskema <!-- omit in toc --></h3>
 <p>The simplest way to check if a validator is valid, is by using the <code>isValid</code> method:</p>
@@ -265,15 +253,6 @@ final apiUser = eskema({
 
 final result = apiUser.validate(apiJson);
 if (result.isNotValid) log('invalid user: $result');
-</code></pre>
-<h3 id="guard-inbound-request-payloads----omit-in-toc---">Guard inbound request payloads <!-- omit in toc --></h3>
-<pre class="language-dart"><code class="language-dart">final createUser = eskema({
-	'username': isString(),
-	'age': all([isInt(), isGte(0)]),
-});
-
-final res = createUser.validate(request.body);
-if (res.isNotValid) return Response(400, body: request.body);
 </code></pre>
 <h3 id="validate-runtime-config-and-feature-flags----omit-in-toc---">Validate runtime config and feature flags <!-- omit in toc --></h3>
 <pre class="language-dart"><code class="language-dart">final config = eskema({

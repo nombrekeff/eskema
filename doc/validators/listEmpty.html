@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the stringEmpty function from the validators library, for the Dart programming language.">
-  <title>stringEmpty function - validators library - Dart API</title>
+  <meta name="description" content="API docs for the listEmpty function from the validators library, for the Dart programming language.">
+  <title>listEmpty function - validators library - Dart API</title>
 
 
   
@@ -26,9 +26,9 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">eskema</a></li>
     <li><a href="../validators/">validators.dart</a></li>
-    <li class="self-crumb">stringEmpty&lt;<wbr><span class="type-parameter">T</span>&gt; function</li>
+    <li class="self-crumb">listEmpty&lt;<wbr><span class="type-parameter">T</span>&gt; function</li>
   </ol>
-  <div class="self-name">stringEmpty</div>
+  <div class="self-name">listEmpty</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -48,28 +48,28 @@
       data-above-sidebar="validators&#47;validators-library-sidebar.html"
       data-below-sidebar="">
       <div>
-<h1><span class="kind-function">stringEmpty&lt;<wbr><span class="type-parameter">T</span>&gt;</span> function 
+<h1><span class="kind-function">listEmpty&lt;<wbr><span class="type-parameter">T</span>&gt;</span> function 
  
 </h1></div>
 
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
-<span class="name ">stringEmpty</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr>)
+<span class="name ">listEmpty</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr>)
 
         
 
     </section>
     
 <section class="desc markdown">
-  <p>Validate that the string is empty</p>
+  <p>Validate that the list is empty</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator stringEmpty&lt;T&gt;() =&gt; stringLength([isLte(0)]);</code></pre>
+  <pre class="language-dart"><code class="language-dart">IEskValidator listEmpty&lt;T&gt;() =&gt; listLength&lt;T&gt;([isLte(0)]) &gt; &quot;List to be empty&quot;;</code></pre>
 </section>
 
 
@@ -84,7 +84,7 @@
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../index.html">eskema</a></li>
     <li><a href="../validators/">validators</a></li>
-    <li class="self-crumb">stringEmpty&lt;<wbr><span class="type-parameter">T</span>&gt; function</li>
+    <li class="self-crumb">listEmpty&lt;<wbr><span class="type-parameter">T</span>&gt; function</li>
 </ol>
 
     <h5>validators library</h5>
