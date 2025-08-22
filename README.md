@@ -13,9 +13,9 @@ Eskema is a small, composable runtime validation library for Dart. It helps you 
 
 Here are some common usecases for Eskema:
 
-- [Validate untyped API JSON](#validate-untyped-api-json) before mapping to models (catch missing/invalid fields early).
-- [Guard inbound request payloads](#guard-inbound-request-payloads) (HTTP handlers, jobs) with clear, fail-fast errors.
-- [Validate runtime config and feature flags](#validate-runtime-config-and-feature-flags) from files or remote sources.
+- **Validate untyped API JSON** before mapping to models (catch missing/invalid fields early).
+- **Guard inbound request payloads** (HTTP handlers, jobs) with clear, fail-fast errors.
+- **Validate runtime config and feature flags** from files or remote sources.
 
 ----
 
@@ -214,18 +214,6 @@ final apiUser = eskema({
 
 final result = apiUser.validate(apiJson);
 if (result.isNotValid) log('invalid user: $result');
-```
-
-### Guard inbound request payloads <!-- omit in toc -->
-
-```dart
-final createUser = eskema({
-	'username': isString(),
-	'age': all([isInt(), isGte(0)]),
-});
-
-final res = createUser.validate(request.body);
-if (res.isNotValid) return Response(400, body: request.body);
 ```
 
 ### Validate runtime config and feature flags <!-- omit in toc -->
