@@ -2,26 +2,31 @@ import 'package:eskema/eskema.dart';
 
 void main() {
   final userValidator = eskema({
+    // use built-in validator funtions
     'username': isString(),
 
-    // Combine validators using `all` and `any`
+    // Some zero-arg validators also have aliases: e.g. `$isBool`, `$isString` - prefer for zero-arg validators
+    'lastname': $isString,
+
+    // Combine validators using `all`, `any` and `none`
     'age': all([isInt(), isGte(0)]),
 
-    // or use operators for simplicity:
-    'theme': (isString() & (isEq('light') | isEq('dark'))).nullable(),
+    // or use operators for simplicity, same as using `all`, `any` and `none`, but shorter!!
+    'theme': (isString() & (isEq('light') | isEq('dark'))),
 
-    // Some zero-arg validators also have canonical aliases: e.g. `$isBool`, `$isString`
+    // Make validators nullable, if the field is missing it's considered invalid, use `optional` instead
+    // This will be valid if 'premium' exists in the map and is null or returns the result of the child validator
     'premium': nullable($isBool),
 
-    // Make a validator nullable
-    'email': stringMatchesPattern(
-      RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$"),
-      error: 'a valid email address',
-    ).nullable(),
+    // If you want to allow the field to not exist in the map, and accept null or empty strings
+    // You can use the `optional` validator
+    'birthday': optional(isDate()),
   });
 
   final ok = userValidator.validate({
     'username': 'bob',
+    'lastname': 'builder',
+    'theme': 'light',
     'age': 42,
   });
   print("User is valid: $ok");

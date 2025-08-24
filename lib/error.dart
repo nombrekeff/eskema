@@ -1,3 +1,4 @@
+import 'package:eskema/eskema.dart';
 import 'package:eskema/util.dart';
 
 class EskError {
@@ -44,6 +45,10 @@ class EskError {
   @override
   String toString() {
     return description;
+  }
+
+  EskResult toInvalidResult() {
+    return EskResult.invalid(value, error: this);
   }
 }
 

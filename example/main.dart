@@ -12,7 +12,7 @@ void main() {
   );
 
   final accountEskema = eskema({
-    // You can access some validators directly using the $ prefix
+    // You can access some validators directly using the $ prefix (prefer for zero-arg validators)
     'id': $isInt,
 
     // or you can build the validator using the function
@@ -27,12 +27,15 @@ void main() {
   final userEskema = eskema({
     'username': $isString,
     'age': $isInt,
-    // Nullable fields can be defined using the copyWith method
-    'accounts': listEach(accountEskema).copyWith(nullable: true),
-    // by using the orNullable method
+
+    // Value can be null (if key is not present it's considered invalid — use `optional()` if you want to allow missing keys)
     'email': isEmail.nullable(),
-    // or by using the nullable validator
+
+    // you can keep it functional by using the `nullable` validator function
     'purchases': nullable(listEach(purchaseEskema)),
+
+    // You can also use optional to allow missing keys, null, and empty strings
+    'accounts': optional(listEach(accountEskema)),
   });
 
   // Validate user data and get a result
@@ -40,18 +43,18 @@ void main() {
     'username': 'bob',
     'email': null,
     'age': 43,
+    'purchases': null,
     'accounts': [
       {'id': 123, 'name': 'account1'}
     ],
   });
   print(isUserValid2.isValid); // true
-  print(isUserValid2.description); // null
 
   // Check if the validator is valid or not
   final userResult = userEskema.validate({});
-  print(userResult.isValid); // should be false
-  print(userResult.errors); // should contain expected errors
-  print(userResult.description); // a string representation of the errors
+  print(userResult.isValid);     // should be false
+  print(userResult.errors);      // [.username: String (value: null), .age: int (value: null), .email: String (value: null), .purchases: List<dynamic> (value: null)]
+  print(userResult.description); // .username: String, .age: int, .email: String, .purchases: List<dynamic> (value: {})
 
   // You can also use the 'validate' extension method
   final mapData = {
@@ -63,5 +66,5 @@ void main() {
     ],
   };
 
-  mapData.validate(userEskema);
+  mapData.validate(userEskema); // 
 }

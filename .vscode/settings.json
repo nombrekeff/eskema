@@ -9,6 +9,5 @@
   "dart.lineLength": 96,
   "editor.rulers": [
     96
-  ],
-  "editor.formatOnSave": true
+  ]
 }

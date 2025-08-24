@@ -65,7 +65,8 @@ void main() {
       },
     });
     expect(invalidRes4.isValid, false);
-    expect(invalidRes4.shortDescription, '.address.street: String');
+    expect(invalidRes4.shortDescription,
+        '.address.street: String, .address.additional: Map<dynamic, dynamic>');
 
     final invalidRes5 = isValidMap.validate({
       'address': {
@@ -115,5 +116,61 @@ void main() {
     });
     expect(invalidRes1.isValid, false);
     expect(invalidRes1.shortDescription, '.books[0].name: String');
+  });
+
+  test('optional works', () {
+    final validListField = eskema({
+      'optional': optional(isString()),
+    });
+
+    expect(validListField.validate({'optional': 'test'}).isValid, true);
+    expect(validListField.validate({'optional': ''}).isValid, true);
+    expect(validListField.validate({}).isValid, true);
+
+    expect(validListField.validate({'optional': 123}).isValid, false);
+    expect(validListField.validate({'optional': null}).isValid, false);
+  });
+
+  test('optional and nullable works', () {
+    final validListField = eskema({
+      'optional': optional(nullable(isString())),
+    });
+
+    expect(validListField.validate({'optional': 'test'}).isValid, true);
+    expect(validListField.validate({'optional': ''}).isValid, true);
+    expect(validListField.validate({'optional': null}).isValid, true);
+    expect(validListField.validate({}).isValid, true);
+
+    expect(validListField.validate({'optional': 123}).isValid, false);
+  });
+
+  test('nullable works', () {
+    final validListField = eskema({
+      'nullable': nullable(isString()),
+    });
+
+    expect(validListField.validate({'nullable': 'test'}).isValid, true);
+    expect(validListField.validate({'nullable': ''}).isValid, true);
+    expect(validListField.validate({'nullable': null}).isValid, true);
+
+    expect(validListField.validate({}).isValid, false);
+    expect(validListField.validate({}).description, '.nullable: String (value: {})');
+    expect(validListField.validate({'nullable': 123}).isValid, false);
+  });
+
+    test('nullable single fields works', () {
+    final field = nullable(isString());
+
+    expect(field.validate('').isValid, true);
+    expect(field.validate(null, exists: true).isValid, true);
+    expect(field.validate(null, exists: false).isValid, false);
+  });
+
+  test('optional single fields works', () {
+    final field = optional(isString());
+
+    expect(field.isValid(''), true);
+    expect(field.isValid(false), false);
+    expect(field.isValid(null), false);
   });
 }

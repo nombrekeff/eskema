@@ -14,12 +14,17 @@ typedef EskValidatorFn<T extends EskResult> = T Function(dynamic value);
 ///
 /// Or consider using one of the [validators] for built in validation.
 abstract class IEskValidator {
-  const IEskValidator({bool nullable = false}) : isNullable = nullable;
+  const IEskValidator({bool nullable = false, bool optional = false})
+      : isNullable = nullable,
+        isOptional = optional;
 
-  /// Whether the validator accepts null values.
-  /// If isNullable is true, and the value being checked is null,
+  /// Marks the validator as nullable. This means that if the value being checked is null,
   /// the validation is considered valid.
   final bool isNullable;
+
+  /// Marks the validator as optional. This means that if the value being checked is null or missing,
+  /// the validation is considered valid.
+  final bool isOptional;
 
   /// Validates the given [value] and returns the result.
   ///
@@ -32,14 +37,15 @@ abstract class IEskValidator {
   /// You can also call [isValid] if you just want to check if the value is valid.
   ///
   /// If you want to to throw an error use [validateOrThrow]
-  EskResult validate(dynamic value) {
-    if (value == null && isNullable) {
+  ///
+  /// [exists] If set to true, the value is consider to "exist",
+  /// this is most useful for optional fields in maps.
+  EskResult validate(dynamic value, {bool exists = true}) {
+    if ((value == null && isNullable && exists) || (!exists && isOptional)) {
       return EskResult.valid(value);
     }
 
-    final result = validator(value);
-
-    return result;
+    return validator(value);
   }
 
   /// Works the same as [validate], validates that a given value is valid,
@@ -57,11 +63,16 @@ abstract class IEskValidator {
   bool isNotValid(dynamic value) => !validate(value).isValid;
 
   /// Creates a copy of the validator with the given parameters.
-  IEskValidator copyWith({bool? nullable});
+  IEskValidator copyWith({bool? nullable, bool? optional});
 
   /// Creates a nullable copy of the validator.
   IEskValidator nullable<T>() {
     return copyWith(nullable: true);
+  }
+
+  /// Creates a optional copy of the validator.
+  IEskValidator optional<T>() {
+    return copyWith(optional: true);
   }
 }
 
@@ -71,7 +82,7 @@ abstract class IEskValidator {
 /// Take a look at [validators] for examples.
 class EskValidator<T extends EskResult> extends IEskValidator {
   final EskValidatorFn<T> _validator;
-  EskValidator(this._validator, {super.nullable});
+  EskValidator(this._validator, {super.nullable, super.optional});
 
   @override
   T validator(dynamic value) {
@@ -79,10 +90,11 @@ class EskValidator<T extends EskResult> extends IEskValidator {
   }
 
   @override
-  IEskValidator copyWith({bool? nullable}) {
+  IEskValidator copyWith({bool? nullable, bool? optional}) {
     return EskValidator(
       _validator,
       nullable: nullable ?? isNullable,
+      optional: optional ?? isOptional,
     );
   }
 
@@ -101,6 +113,7 @@ class IEskIdValidator extends EskValidator {
     required EskValidatorFn validator,
     this.id = '',
     super.nullable,
+    super.optional,
   }) : super(validator);
 }
 
@@ -112,6 +125,7 @@ class EskField extends IEskIdValidator {
     required this.validators,
     super.id,
     super.nullable,
+    super.optional,
   }) : super(validator: EskResult.valid);
 
   /// List of validators to apply to the field.
@@ -136,11 +150,12 @@ class EskField extends IEskIdValidator {
   }
 
   @override
-  IEskValidator copyWith({bool? nullable}) {
+  IEskValidator copyWith({bool? nullable, bool? optional}) {
     return EskField(
       validators: validators,
       id: id,
       nullable: nullable ?? isNullable,
+      optional: optional ?? isOptional,
     );
   }
 }
@@ -204,10 +219,6 @@ abstract class EskMap<T extends Map> extends IEskIdValidator {
       // If the field is nullable, we can skip validation if the value is null
       if (mapValue == null && field.isNullable) continue;
 
-      print(
-        "Validating field: ${field.id}, value: $mapValue, with field: $field",
-      );
-
       final result = field.validate(mapValue);
       if (result.isValid) continue;
 
@@ -229,7 +240,7 @@ abstract class EskMap<T extends Map> extends IEskIdValidator {
   }
 
   @override
-  IEskValidator copyWith({bool? nullable}) {
+  IEskValidator copyWith({bool? nullable, bool? optional}) {
     throw Exception(
         'copyWith not implemented for $runtimeType, as it defines properties that cannot be copied automaticaly.\n'
         'Please create a new instance manually. Or override the "copyWith" method.');

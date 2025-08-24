@@ -34,22 +34,25 @@ Validate a map using a schema-like validator and read a detailed result or a boo
 import 'package:eskema/eskema.dart';
 
 final userValidator = eskema({
+	// use built-in validator funtions
     'username': isString(),
 
-    // Combine validators using `all` and `any`
+	// Some zero-arg validators also have aliases: e.g. `$isBool`, `$isString` - prefer for zero-arg validators
+	'lastname': $isString,
+
+    // Combine validators using `all`, `any` and `none`
     'age': all([isInt(), isGte(0)]),
 
-    // or use operators for simplicity:
-    'theme': (isString() & (isEq('light') | isEq('dark'))).nullable(),
+    // or use operators for simplicity, same as using `all`, `any` and `none`, but shorter!!
+    'theme': (isString() & (isEq('light') | isEq('dark'))),
 
-    // Some zero-arg validators also have canonical aliases: e.g. `$isBool`, `$isString`
+    // Make validators nullable, if the field is missing it's considered invalid, use `optional` instead
+	// This will be valid if 'premium' exists in the map and is null or returns the result of the child validator
     'premium': nullable($isBool),
 
-    // Make a validator nullable
-    'email': stringMatchesPattern(
-      RegExp(r"^[^@\s]+@[^@\s]+\.[^@\s]+$"),
-      error: 'a valid email address',
-    ).nullable(),
+	// If you want to allow the field to not exist in the map, and accept null or empty strings
+	// You can use the `optional` validator
+    'birthday': optional(isDate()),
 });
 ```
 
@@ -57,7 +60,7 @@ final userValidator = eskema({
 
 The simplest way to check if a validator is valid, is by using the `isValid` method:
 ```dart
-final ok = userValidator.isValid({ 'username': 'bob', 'age': 42 });
+final ok = userValidator.isValid({ 'username': 'bob', 'age': 42, 'theme': 'light', 'premium': false });
 print("User is valid: $ok");  // true
 ```
 
@@ -87,6 +90,11 @@ try {
 	- [Table of contents](#table-of-contents)
 	- [API overview](#api-overview)
 	- [Examples](#examples)
+		- [Custom validators](#custom-validators)
+			- [Zero-arg validator](#zero-arg-validator)
+			- [Validator with args](#validator-with-args)
+		- [Class-based validators](#class-based-validators)
+		- [Nullable vs optional](#nullable-vs-optional)
 
 
 ## API overview
@@ -110,7 +118,9 @@ try {
 	- `all([...])` — AND composition (stops on first failure)
 	- `any([...])` — OR composition (passes if any succeed)
 	- `not(v)` — invert a validator
-	- `nullable(v)` or `v.nullable()` — allow `null`
+	- 
+	- `nullable(v)` or `v.nullable()` — allow `null`, if field is missing it's considered invalid
+	- `optional(v)` or `v.optional()` — allow `null`, empty string, and missing fields
 
 - Results & helpers
 	- `.validate(value)` → `EskResult`
@@ -121,9 +131,9 @@ Tip: Some zero-arg validators also have canonical aliases (e.g. `$isString`, `$i
 
 ## Examples
 
-### Custom validators <!-- omit in toc -->
+### Custom validators 
 
-#### Zero-arg validator <!-- omit in toc -->
+#### Zero-arg validator 
 ```dart
 final isHelloWorld = all([
   $isString,
@@ -138,7 +148,7 @@ print(isHelloWorld.isValid('Hello world'));  // true
 print(isHelloWorld.validate('hey'));         // false - 'Expected Hello world, got "hey"'
 ```
 
-#### Validator with args <!-- omit in toc -->
+#### Validator with args 
 ```dart
 IEskValidator isInRange(num min, num max) {
   return all([
@@ -155,7 +165,7 @@ print(isInRange(0, 5).isValid(2)); // true
 print(isInRange(0, 5).validate(6)); // false - "Expected number to be between 0 and 5, got 6"
 ```
 
-### Class-based validators <!-- omit in toc -->
+### Class-based validators 
 
 Prefer a class for complex/structured validation? Use `EskMap` with `EskField`.
 
@@ -229,6 +239,52 @@ final config = eskema({
 final isConfigValid = config.isValid(configMap);
 assert(isConfigValid, 'Invalid config: $cfgRes');
 ```
+
+### Nullable vs optional
+
+Short summary
+
+- nullable (`v.nullable()` / `nullable(v)`): the key must be present in the map, but the value may be `null`.
+- optional (`optional(v)` / `v.optional()`): the key may be omitted; if it's present the inner validator is run. `optional` does not automatically allow `null` — the inner validator controls that.
+
+How this works under the hood
+
+- When validating a map, `eskema` calls each field's `.validate(value, exists: value.containsKey(key))`. The `exists` flag tells the field whether the key was present.
+- `nullable` returns valid only when the key exists and the value is `null`.
+- `optional` returns valid when the key is missing (`exists == false`). If the key exists, the inner validator runs normally.
+
+Examples
+
+```dart
+// 1) Required (default): key must exist and pass
+final required = eskema({'name': isString()});
+required.validate({}); // invalid: missing 'name'
+
+// 2) Nullable: key must exist, value may be null
+final nullableField = eskema({'bio': isString().nullable()});
+nullableField.validate({'bio': null}); // valid
+nullableField.validate({}); // invalid (missing 'bio')
+
+// Single-field: validate knows about presence via `exists`
+final field = isString().nullable();
+field.validate(null, exists: true); // valid
+field.validate(null, exists: false); // invalid (treated as missing)
+
+// 3) Optional: key may be omitted; if present it must validate
+final optionalField = eskema({'age': optional(isInt())});
+optionalField.validate({}); // valid (age omitted)
+optionalField.validate({'age': 30}); // valid
+optionalField.validate({'age': null}); // invalid (optional does NOT imply nullable)
+
+// Combine optional + nullable if you want both behaviors
+final optNullable = eskema({'age': optional(isInt().nullable())});
+optNullable.validate({}); // valid (omitted)
+optNullable.validate({'age': null}); // valid (present + null allowed)
+```
+
+Notes
+
+- Empty strings or other values are validated by the inner validator (e.g. `isString()` accepts `''`). `optional` does not change that behavior.
 
 ## More <!-- omit in toc -->
 

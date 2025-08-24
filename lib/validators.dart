@@ -68,15 +68,13 @@ IEskValidator isDeepEq<T>(T otherValue) =>
 IEskValidator length(List<IEskValidator> validators) => EskValidator((value) {
       if (hasLengthProperty(value)) {
         final result = all(validators).validate((value as dynamic).length);
+
         return result.copyWith(
           errors: [EskError(message: 'length ${result.errors}', value: value)],
         );
       } else {
-        return EskResult.invalid(value,
-            error: error(
-              '${value.runtimeType} does not have a length property',
-              value,
-            ));
+        return error('${value.runtimeType} does not have a length property', value)
+            .toInvalidResult();
       }
     });
 
@@ -91,13 +89,8 @@ IEskValidator contains<T>(T item) => EskValidator((value) {
           value: value,
         );
       } else {
-        return EskResult.invalid(
-          value,
-          error: error(
-            '${value.runtimeType} does not have a contains property',
-            value,
-          ),
-        );
+        return error('${value.runtimeType} does not have a contains property', value)
+            .toInvalidResult();
       }
     });
 
@@ -176,10 +169,9 @@ IEskValidator any(List<IEskValidator> validators) => EskValidator((value) {
         if (result.isValid) return result;
       }
 
-      return EskResult(
-        isValid: false,
+      return EskResult.invalid(
+        value,
         errors: results.expand((r) => r.errors).toList(),
-        value: value,
       );
     });
 
@@ -229,8 +221,51 @@ IEskValidator not(IEskValidator validator) => EskValidator(
       },
     );
 
-/// Allows the passed in validator to be nullable
+/// If the field is not present (null) it will be considered valid
+/// If you want to allow empty strings as valid, use [optional] instead
+///
+/// **Example**
+/// ```dart
+/// final isValid = nullable(isString()).validate(null);  // true
+/// final isValid = nullable(isString()).validate('');    // true
+/// final isValid = nullable(isString()).validate(false); // false
+///
+/// // It works a bit differently on maps:
+///
+/// final validListField = eskema({
+///    'nullable': nullable(isString()),
+/// });
+///
+/// validListField.isValid({'nullable': 'test'}); // true
+/// validListField.isValid({'nullable': ''});     // true
+/// validListField.isValid({'nullable': null});   // true
+///
+/// // If the field does not exists on the map, it's considered invalid.
+/// // You can use the `optional` validator to allow missing fields.
+/// validListField.isValid({});                   // false
+/// ```
 IEskValidator nullable(IEskValidator validator) => validator.nullable();
+
+/// If the field is not present, it will be considered valid, if present, it executes the [validator].
+/// It's different from nullable in that it also checks for empty strings
+///
+/// **Example**
+/// ```dart
+/// final isValid = optional(isString()).isValid('');    // true
+/// final isValid = optional(isString()).isValid(false); // false
+/// final isValid = optional(isString()).isValid(null);  // false
+///
+/// final validListField = eskema({
+///   'optional': optional(isString()),
+/// });
+///
+/// validListField.isValid({'optional': 'test'});  // true
+/// validListField.isValid({'optional': ''});      // true
+/// validListField.isValid({'optional ': null});   // false
+/// // If the field is missing from a map, it's considered valid.
+/// validListField.isValid({});                    // true
+/// ```
+IEskValidator optional(IEskValidator validator) => validator.optional();
 
 /// Checks whether the given value is one of the [options] values of type [T]
 IEskValidator isOneOf<T>(List<T> options) => all([
@@ -280,7 +315,7 @@ IEskValidator eskema(Map<String, IEskValidator> eskema) {
 
         for (final key in eskema.keys) {
           final field = eskema[key];
-          final result = field!.validate(value[key]);
+          final result = field!.validate(value[key], exists: value.containsKey(key));
 
           if (result.isNotValid) {
             for (var error in result.errors) {
