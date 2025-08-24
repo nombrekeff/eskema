@@ -168,7 +168,7 @@ IEskValidator stringMatchesPattern(Pattern pattern, {String? error}) {
 
 /// Passes the test if any of the [EskValidator]s are valid, and fails if any are invalid
 IEskValidator any(List<IEskValidator> validators) => EskValidator((value) {
-      final results = <IEskResult>[];
+      final results = <EskResult>[];
 
       for (final validator in validators) {
         final result = validator.validate(value);

@@ -24,6 +24,6 @@ bool hasContainsProperty(dynamic value) {
 
 class ValidatorFailedException implements Exception {
   String get message => result.toString();
-  IEskResult result;
+  EskResult result;
   ValidatorFailedException(this.result);
 }

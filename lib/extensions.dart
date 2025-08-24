@@ -5,7 +5,7 @@ import 'package:eskema/validators.dart';
 import 'validator.dart';
 
 extension EskemaMapExtension on Map {
-  IEskResult validate(IEskValidator validator) {
+  EskResult validate(IEskValidator validator) {
     return validator.validate(this);
   }
 
@@ -36,7 +36,7 @@ extension EskemaListExtension on List {
   /// * and the second item is an int
   ///
   /// This validator also checks that the value is a list
-  IEskResult validate(IEskValidator eskema) {
+  EskResult validate(IEskValidator eskema) {
     return listEach(eskema).validate(this);
   }
 }
