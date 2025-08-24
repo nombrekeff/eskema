@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:eskema/error.dart';
 import 'package:eskema/extensions.dart';
 import 'package:eskema/result.dart';
 import 'package:eskema/util.dart';
@@ -71,15 +72,11 @@ IEskValidator length(List<IEskValidator> validators) => EskValidator((value) {
           errors: [EskError(message: 'length ${result.errors}', value: value)],
         );
       } else {
-        return EskResult.invalid(
-          [
-            EskError(
-              message: '${value.runtimeType} does not have a length property',
-              value: value,
-            )
-          ],
-          value,
-        );
+        return EskResult.invalid(value,
+            error: error(
+              '${value.runtimeType} does not have a length property',
+              value,
+            ));
       }
     });
 
@@ -90,18 +87,16 @@ IEskValidator contains<T>(T item) => EskValidator((value) {
       if (hasContainsProperty(value)) {
         return EskResult(
           isValid: value.contains(item),
-          errors: [EskError(message: 'contains ${pretifyValue(item)}', value: value)],
+          error: error('contains ${pretifyValue(item)}', value),
           value: value,
         );
       } else {
         return EskResult.invalid(
-          [
-            EskError(
-              message: '${value.runtimeType} does not have a length property',
-              value: value,
-            )
-          ],
           value,
+          error: error(
+            '${value.runtimeType} does not have a contains property',
+            value,
+          ),
         );
       }
     });
@@ -203,18 +198,18 @@ IEskValidator all(List<IEskValidator> validators) => EskValidator((value) {
 /// Passes the test if none of the validators pass
 IEskValidator none(List<IEskValidator> validators) {
   return EskValidator((value) {
-    final validResults = <EskError>[];
+    final errors = <EskError>[];
 
     for (final validator in validators) {
       final result = not(validator).validate(value);
 
       if (result.isNotValid) {
-        validResults.addAll(result.errors);
+        errors.addAll(result.errors);
       }
     }
 
-    return validResults.isNotEmpty
-        ? EskResult.invalid(validResults, value)
+    return errors.isNotEmpty
+        ? EskResult.invalid(value, errors: errors)
         : EskResult.valid(value);
   });
 }
@@ -300,7 +295,9 @@ IEskValidator eskema(Map<String, IEskValidator> eskema) {
           }
         }
 
-        return errors.isNotEmpty ? EskResult.invalid(errors, value) : EskResult.valid(value);
+        return errors.isNotEmpty
+            ? EskResult.invalid(value, errors: errors)
+            : EskResult.valid(value);
       });
 }
 
@@ -345,7 +342,9 @@ IEskValidator eskemaList<T>(List<IEskValidator> eskema) {
           }
         }
 
-        return errors.isNotEmpty ? EskResult.invalid(errors, value) : EskResult.valid(value);
+        return errors.isNotEmpty
+            ? EskResult.invalid(value, errors: errors)
+            : EskResult.valid(value);
       });
 }
 
@@ -373,7 +372,9 @@ IEskValidator listEach(IEskValidator itemValidator) {
           }
         }
 
-        return errors.isNotEmpty ? EskResult.invalid(errors, value) : EskResult.valid(value);
+        return errors.isNotEmpty
+            ? EskResult.invalid(value, errors: errors)
+            : EskResult.valid(value);
       });
 }
 

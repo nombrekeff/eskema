@@ -1,3 +1,4 @@
+import 'package:eskema/error.dart';
 import 'package:eskema/util.dart';
 
 abstract class IEskResult {
@@ -51,13 +52,25 @@ abstract class IEskResult {
 class EskResult extends IEskResult {
   EskResult({
     required super.isValid,
-    required super.errors,
     required super.value,
-  });
+    List<EskError>? errors,
+    EskError? error,
+  })  : assert(
+          error != null || errors != null,
+          "Either 'errors' list or 'error' must be provided",
+        ),
+        super(
+          errors: errors ?? [error!],
+        );
 
   EskResult.valid(dynamic value) : super(isValid: true, errors: [], value: value);
-  EskResult.invalid(List<EskError> errors, dynamic value)
-      : super(isValid: false, errors: errors, value: value);
+
+  EskResult.invalid(dynamic value, {List<EskError>? errors, EskError? error})
+      : assert(
+          error != null || errors != null,
+          "Either 'errors' list or 'error' must be provided",
+        ),
+        super(isValid: false, errors: errors ?? [error!], value: value);
 
   @override
   String get shortDescription {
@@ -75,52 +88,5 @@ class EskResult extends IEskResult {
     } else {
       return '${errors.map((e) => e.shortDescription).join(', ')} (value: ${pretifyValue(value)})';
     }
-  }
-}
-
-class EskError {
-  final String? path;
-  final String message;
-  final dynamic value;
-
-  EskError({
-    this.path,
-    required this.message,
-    required this.value,
-  });
-
-  String get shortDescription {
-    if (path != null && path!.isNotEmpty) {
-      return '$path: $message';
-    }
-
-    return message;
-  }
-
-  String get description {
-    final messageSuffix = '$message (value: ${pretifyValue(value)})';
-
-    if (path != null && path!.isNotEmpty) {
-      return '$path: $messageSuffix';
-    }
-
-    return messageSuffix;
-  }
-
-  EskError copyWith({
-    String? path,
-    String? message,
-    dynamic value,
-  }) {
-    return EskError(
-      path: path ?? this.path,
-      message: message ?? this.message,
-      value: value ?? this.value,
-    );
-  }
-
-  @override
-  String toString() {
-    return description;
   }
 }

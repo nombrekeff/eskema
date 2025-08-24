@@ -479,7 +479,7 @@ void main() {
 
       expect(field.validate([1]).isValid, false);
       expect(field.validate(false).isValid, false);
-      expect(field.validate(false).shortDescription, 'bool does not have a length property');
+      expect(field.validate(false).shortDescription, 'bool does not have a contains property');
     });
 
     test('isEq<String> works', () {

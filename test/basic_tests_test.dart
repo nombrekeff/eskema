@@ -1,3 +1,4 @@
+import 'package:eskema/error.dart';
 import 'package:eskema/eskema.dart';
 import 'package:test/test.dart';
 
@@ -89,8 +90,8 @@ void main() {
       EskValidator((value) {
         if (value is num && value == 42) {
           return EskResult.invalid(
-            [EskError(message: 'that is the number', value: value)],
             value,
+            error: error('that is the number', value),
           );
         }
 
