@@ -55,9 +55,11 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../expectation/Expectation-class.html">Expectation</a></span>
-<span class="name ">expectation</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="expectation-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">message</span>, </span></li>
+<span class="name ">expectation</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="expectation-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">message</span>, </span></li>
 <li><span class="parameter" id="expectation-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, [</span></li>
-<li><span class="parameter" id="expectation-param-path"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">path</span></span></li>
+<li><span class="parameter" id="expectation-param-path"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">path</span>, </span></li>
+<li><span class="parameter" id="expectation-param-code"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">code</span>, </span></li>
+<li><span class="parameter" id="expectation-param-data"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a>?</span>&gt;</span>?</span> <span class="parameter-name">data</span>, </span></li>
 </ol>])
 
         
@@ -72,13 +74,9 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Expectation expectation(String message, dynamic value, [String? path]) {
-  return Expectation(
-    path: path,
-    message: message,
-    value: value,
-  );
-}</code></pre>
+  <pre class="language-dart"><code class="language-dart">Expectation expectation(String message, dynamic value,
+        [String? path, String? code, Map&lt;String, Object?&gt;? data]) =&gt;
+    Expectation(path: path, message: message, value: value, code: code, data: data);</code></pre>
 </section>
 
 

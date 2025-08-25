@@ -63,25 +63,26 @@
     </section>
     
 <section class="desc markdown">
-  <p>Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>double</code>
-or a <code>String</code> that can be parsed as a <code>double</code>. And passed the mapped value to the <code>child</code></p>
+  <p>Coerces a value to a double.</p>
+<p>Handles existing doubles, integers (by converting), and strings that can be
+parsed as a double.
+Passes the resulting double to the <code>child</code> validator.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator toDouble(IValidator child) {
-  return ($isDouble | $isNumber | $isDoubleString) &amp;
-      transform((v) {
-        return switch (v) {
-          double i =&gt; i,
-          int i =&gt; i.toDouble(),
-          String s =&gt; double.tryParse(s.trim()),
-          _ =&gt; null,
-        };
-      }, child);
-}</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator toDouble(IValidator child) =&gt;
+    ($isDouble | $isNumber | $isDoubleString) &amp;
+    transform((v) {
+      return switch (v) {
+        double i =&gt; i,
+        int i =&gt; i.toDouble(),
+        String s =&gt; double.tryParse(s.trim()),
+        _ =&gt; null,
+      };
+    }, child);</code></pre>
 </section>
 
 

@@ -63,25 +63,26 @@
     </section>
     
 <section class="desc markdown">
-  <p>Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>int</code>
-or a <code>String</code> that can be parsed as a <code>int</code>. And passed the mapped value to the <code>child</code></p>
+  <p>Coerces a value to an integer.</p>
+<p>Handles existing integers, doubles (by truncating), and strings that can be
+parsed as an integer.
+Passes the resulting integer to the <code>child</code> validator.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator toInt(IValidator child) {
-  return ($isInt | $isNumber | $isIntString) &amp;
-      transform((v) {
-        return switch (v) {
-          int n =&gt; n,
-          double n =&gt; n.toInt(),
-          String s =&gt; int.tryParse(s.trim()),
-          _ =&gt; null,
-        };
-      }, child);
-}</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator toInt(IValidator child) =&gt;
+    ($isInt | $isNumber | $isIntString) &amp;
+    transform((v) {
+      return switch (v) {
+        int n =&gt; n,
+        double n =&gt; n.toInt(),
+        String s =&gt; int.tryParse(s.trim()),
+        _ =&gt; null,
+      };
+    }, child);</code></pre>
 </section>
 
 

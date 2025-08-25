@@ -59,6 +59,10 @@
     </div>
 
     
+<section class="desc markdown">
+  <p>Validator library</p>
+<p>This library provides a set of classes for validating data. For built in va</p>
+</section>
 
 
     <section class="summary offset-anchor" id="classes">
@@ -90,6 +94,15 @@ for example <a href="../validator/MapValidator-class.html">MapValidator</a> uses
   Inmutable class from which all validators inherit.
 </dd>
 
+          <dt id="IWhenValidator">
+  <span class="name "><a href="../validator/IWhenValidator-class.html">IWhenValidator</a></span> 
+
+</dt>
+<dd>
+  A special type of validator that can operate on a parent map context.
+Used for conditional validation within an <code>eskema</code> map validator.
+</dd>
+
           <dt id="MapValidator">
   <span class="name "><a href="../validator/MapValidator-class.html">MapValidator</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a></span>&gt;</span></span> 
 
@@ -111,6 +124,14 @@ formats or constraints.
 which is used by the EskValidator to validate some data.
 </dd>
 
+          <dt id="WhenValidator">
+  <span class="name "><a href="../validator/WhenValidator-class.html">WhenValidator</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
       </dl>
     </section>
 
@@ -127,13 +148,13 @@ which is used by the EskValidator to validate some data.
           
   <dt id="ValidatorFunction" class="callable">
     <span class="name"><a href="../validator/ValidatorFunction.html">ValidatorFunction</a></span>&lt;<wbr><span class="type-parameter">T extends <a href="../result/Result-class.html">Result</a></span>&gt;<span class="signature">
-      <span class="returntype parameter">= T Function<span class="signature">(<span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)</span></span>
+      <span class="returntype parameter">= <a href="https://api.flutter.dev/flutter/dart-async/FutureOr-class.html">FutureOr</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span> Function<span class="signature">(<span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)</span></span>
     </span>
     
 
   </dt>
   <dd>
-    Type representing a validator function.
+    Type representing a validator function (may be sync or async).
     
 
   </dd>
@@ -141,6 +162,27 @@ which is used by the EskValidator to validate some data.
       </dl>
     </section>
 
+    <section class="summary offset-anchor" id="exceptions">
+      <h2>Exceptions / Errors</h2>
+      <dl>
+          <dt id="AsyncValidatorException">
+  <span class="name "><a href="../validator/AsyncValidatorException-class.html">AsyncValidatorException</a></span> 
+
+</dt>
+<dd>
+  Thrown when a synchronous validate() call encounters an async validator.
+</dd>
+
+          <dt id="ValidatorFailedException">
+  <span class="name "><a href="../validator/ValidatorFailedException-class.html">ValidatorFailedException</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+      </dl>
+    </section>
   </div> <!-- /.main-content -->
   <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
     <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
@@ -162,9 +204,17 @@ which is used by the EskValidator to validate some data.
       <li><a href="../extensions/">extensions</a></li>
       <li><a href="../result/">result</a></li>
       <li><a href="../transformers/">transformers</a></li>
-      <li><a href="../util/">util</a></li>
       <li><a href="../validator/">validator</a></li>
       <li><a href="../validators/">validators</a></li>
+      <li><a href="../cached_validators/">validators/cached</a></li>
+      <li><a href="../combinator_validators/">validators/combinator</a></li>
+      <li><a href="../comparison_validators/">validators/comparison</a></li>
+      <li><a href="../list_validators/">validators/list</a></li>
+      <li><a href="../number_validators/">validators/number</a></li>
+      <li><a href="../presence_validators/">validators/presence</a></li>
+      <li><a href="../string_validators/">validators/string</a></li>
+      <li><a href="../structure_validators/">validators/structure</a></li>
+      <li><a href="../type_validators/">validators/type</a></li>
 </ol>
 
   </div>

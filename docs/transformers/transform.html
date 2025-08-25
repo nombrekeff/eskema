@@ -65,23 +65,17 @@
     </section>
     
 <section class="desc markdown">
-  <p>Transform validators are used to modify the value being validated
-before passing it to the child validator.
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-Returns a <a href="../validator/IValidator-class.html">IValidator</a> that transforms the value using the provided function <code>fn</code></p>
+  <p>Transforms a value using a provided function.</p>
+<p>The <code>fn</code> function is applied to the input value, and the result is then
+passed to the <code>child</code> validator. This is a low-level building block for
+creating custom transformers.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;
-&#47;&#47; Transform validators
-&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;
-
-&#47;&#47;&#47; Returns a [IValidator] that transforms the value using the provided function [fn]
-IValidator transform&lt;T&gt;(T Function(dynamic) fn, IValidator child) {
+  <pre class="language-dart"><code class="language-dart">IValidator transform&lt;T&gt;(T Function(dynamic) fn, IValidator child) {
   return Validator((value) {
     return child.validate(fn(value));
   });

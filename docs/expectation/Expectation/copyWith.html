@@ -58,6 +58,8 @@
 <span class="name ">copyWith</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="copyWith-param-path"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">path</span>, </span></li>
 <li><span class="parameter" id="copyWith-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 <li><span class="parameter" id="copyWith-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, </span></li>
+<li><span class="parameter" id="copyWith-param-code"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">code</span>, </span></li>
+<li><span class="parameter" id="copyWith-param-data"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a>?</span>&gt;</span>?</span> <span class="parameter-name">data</span>, </span></li>
 </ol>})
 
       
@@ -73,11 +75,15 @@
   String? path,
   String? message,
   dynamic value,
+  String? code,
+  Map&lt;String, Object?&gt;? data,
 }) {
   return Expectation(
     path: path ?? this.path,
     message: message ?? this.message,
     value: value ?? this.value,
+    code: code ?? this.code,
+    data: data ?? this.data,
   );
 }</code></pre>
 </section>

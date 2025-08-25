@@ -59,7 +59,7 @@
         <li>@<a href="https://api.flutter.dev/flutter/dart-core/override-constant.html">override</a></li>
     </ol>
   </div>
-<span class="returntype"><a href="../../result/Result-class.html">Result</a></span>
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/FutureOr-class.html">FutureOr</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../result/Result-class.html">Result</a></span>&gt;</span></span>
 <span class="name ">validator</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="validator-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span></li>
 </ol>)
 
@@ -68,8 +68,8 @@
     </section>
     
 <section class="desc markdown">
-  <p>Validates the given <code>value</code> and returns the result.</p>
-<p>Don't call directly, call <a href="../../validator/IValidator/validate.html">validate</a> instead.</p>
+  <p>Core validation function (may return a Result or Future&lt;Result&gt;).
+Don't call directly, use <a href="../../validator/IValidator/validate.html">validate</a> or <a href="../../validator/IValidator/validateAsync.html">validateAsync</a>.</p>
 </section>
 
 
@@ -77,33 +77,12 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
-Result validator(dynamic value) {
-  final superRes = super.validator(value);
-  if (superRes.isNotValid) return superRes;
-
-  for (final field in fields) {
-    final mapValue = value[field.id];
-    &#47;&#47; If the field is nullable, we can skip validation if the value is null
-    if (mapValue == null &amp;&amp; field.isNullable) continue;
-
-    final result = field.validate(mapValue);
-    if (result.isValid) continue;
-
-    String error = &#39;&#39;;
-
-    if (field is MapValidator) {
-      error += &#39;${field.id}.${result.description}&#39;;
-    } else {
-      error += &#39;${field.id} to be ${result.description}&#39;;
-    }
-
-    return Result(
-        isValid: result.isValid,
-        expectations: [Expectation(message: error, value: mapValue)],
-        value: mapValue);
+FutureOr&lt;Result&gt; validator(dynamic value) {
+  final base = super.validator(value);
+  if (base is Future&lt;Result&gt;) {
+    return base.then((r) =&gt; _mapContinue(r, value));
   }
-
-  return Result.valid(value);
+  return _mapContinue(base, value);
 }</code></pre>
 </section>
 

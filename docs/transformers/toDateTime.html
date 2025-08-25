@@ -63,24 +63,25 @@
     </section>
     
 <section class="desc markdown">
-  <p>Accept either a String (attempt to parse) or an existing DateTime
-If parsing fails, return an invalid result with the standard DateTime expectation</p>
+  <p>Coerces a value to a <code>DateTime</code>.</p>
+<p>Handles existing <code>DateTime</code> objects and strings that can be parsed as a
+<code>DateTime</code>.
+Passes the resulting <code>DateTime</code> to the <code>child</code> validator.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator toDateTime(IValidator child) {
-  return transform((value) {
-        return switch (value) {
-          DateTime d =&gt; d,
-          String s =&gt; DateTime.tryParse(s.trim()),
-          _ =&gt; null,
-        };
-      }, child) &gt;
-      &#39;a valid DateTime formatted String&#39;;
-}</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator toDateTime(IValidator child) =&gt;
+    transform((value) {
+      return switch (value) {
+        DateTime d =&gt; d,
+        String s =&gt; DateTime.tryParse(s.trim()),
+        _ =&gt; null,
+      };
+    }, child) &gt;
+    Expectation(message: &#39;a valid DateTime formatted String&#39;);</code></pre>
 </section>
 
 

@@ -70,6 +70,7 @@ that a dynamic value is valid, and get an error message if not.</p>
 <p>If you want to to throw an error use <a href="../../validator/IValidator/validateOrThrow.html">validateOrThrow</a></p>
 <p><code>exists</code> If set to true, the value is consider to "exist",
 this is most useful for optional fields in maps.</p>
+<p>Will <code>throw</code> an error if used with async validators</p>
 </section>
 
 
@@ -80,8 +81,11 @@ this is most useful for optional fields in maps.</p>
   if ((value == null &amp;&amp; isNullable &amp;&amp; exists) || (!exists &amp;&amp; isOptional)) {
     return Result.valid(value);
   }
-
-  return validator(value);
+  final r = validator(value);
+  if (r is Future&lt;Result&gt;) {
+    throw AsyncValidatorException();
+  }
+  return r;
 }</code></pre>
 </section>
 

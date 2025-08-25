@@ -131,6 +131,10 @@ try {
 </li>
 <li><a href="#table-of-contents">Table of contents</a></li>
 <li><a href="#api-overview">API overview</a></li>
+</ul>
+</li>
+<li><a href="#expectation-codes">Expectation codes</a>
+<ul>
 <li><a href="#async-validation">Async validation</a>
 <ul>
 <li><a href="#creating-an-async-validator">Creating an async validator</a></li>
@@ -170,6 +174,7 @@ try {
 <blockquote>
 <p>Check the <a href="https://pub.dev/documentation/eskema/latest/">docs</a> for the full technical documentation.</p>
 </blockquote>
+<p>Need machine readable errors? See <a href="docs/expectation_codes.md">Expectation Codes &amp; Data</a> for the mapping between validators, codes and data payload.</p>
 <ul>
 <li>
 <p>Core</p>
@@ -369,6 +374,15 @@ validator.validate({ 'optional_and_not_nullable': null }); // Invalid
 validator.validate({ 'optional_and_nullable': null }); // Valid
 validator.validate({}); // Valid
 </code></pre>
+<h2 id="expectation-codes">Expectation codes</h2>
+<p>Eskema returns a list of <code>Expectation</code> objects on failure. Each carries:</p>
+<ul>
+<li><code>message</code> – Human friendly description</li>
+<li><code>code</code> – Namespaced identifier (e.g. <code>type.mismatch</code>, <code>value.range_out_of_bounds</code>)</li>
+<li><code>path</code> – Location within the validated structure (e.g. <code>.user.address[0].city</code>)</li>
+<li><code>data</code> – Structured metadata (e.g. <code>{ "expected": "String", "found": "int" }</code>)</li>
+</ul>
+<p>The full table of built‑in validators → codes lives in <a href="docs/expectation_codes.md"><code>docs/expectation_codes.md</code></a>. Use it to localize, categorize, or branch logic on specific error types. Codes are additive and stable (changes are breaking only in a major release). Always ignore unknown future codes for forward compatibility.</p>
 <h2 id="contributing">Contributing</h2>
 <p>Contributions are welcome! Whether you've found a bug, have a feature request, or want to contribute code, please feel free to open an issue or a pull request.</p>
 <h3 id="reporting-bugs">Reporting Bugs</h3>

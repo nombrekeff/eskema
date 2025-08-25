@@ -63,24 +63,24 @@
     </section>
     
 <section class="desc markdown">
-  <p>Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>num</code>
-or a <code>String</code> that can be parsed as a <code>num</code>.  And passed the mapped value to the <code>child</code></p>
+  <p>Coerces a value to a number (<code>num</code>).</p>
+<p>Handles existing numbers (<code>num</code>) and strings that can be parsed as a number.
+Passes the resulting number to the <code>child</code> validator.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator toNum(IValidator child) {
-  return ($isNumber | $isNumString) &amp;
-      transform((value) {
-        return switch (value) {
-          num n =&gt; n,
-          String s =&gt; num.tryParse(s.trim()),
-          _ =&gt; null,
-        };
-      }, child);
-}</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator toNum(IValidator child) =&gt;
+    ($isNumber | $isNumString) &amp;
+    transform((value) {
+      return switch (value) {
+        num n =&gt; n,
+        String s =&gt; num.tryParse(s.trim()),
+        _ =&gt; null,
+      };
+    }, child);</code></pre>
 </section>
 
 
