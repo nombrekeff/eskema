@@ -39,23 +39,21 @@ void main() {
   });
 
   test('Nested MapFields validates correctly', () {
-    final isValidMap = nullable(
-      eskema({
-        'address': eskema({
-          'city': all([$isString]),
-          'street': all([isString()]),
-          'number': all([
-            isType<int>(),
-            isGte(0),
-          ]),
-          'additional': nullable(
-            eskema({
-              'doorbel_number': all([isInt()])
-            }),
-          ),
-        }),
+    final isValidMap = eskema({
+      'address': eskema({
+        'city': all([$isString]),
+        'street': all([isString()]),
+        'number': all([
+          isType<int>(),
+          isGte(0),
+        ]),
+        'additional': nullable(
+          eskema({
+            'doorbel_number': all([isInt()])
+          }),
+        ),
       }),
-    );
+    });
 
     final invalidRes4 = isValidMap.validate({
       'address': {
@@ -158,7 +156,7 @@ void main() {
     expect(validListField.validate({'nullable': 123}).isValid, false);
   });
 
-    test('nullable single fields works', () {
+  test('nullable single fields works', () {
     final field = nullable(isString());
 
     expect(field.validate('').isValid, true);
@@ -172,5 +170,31 @@ void main() {
     expect(field.isValid(''), true);
     expect(field.isValid(false), false);
     expect(field.isValid(null), false);
+  });
+
+  group('eskemaStrict Validator', () {
+    final validator = eskemaStrict({
+      'name': isString(),
+      'age': isInt(),
+    });
+
+    test('should pass for a map with exact keys', () {
+      final map = {'name': 'John', 'age': 30};
+      expect(validator.validate(map).isValid, isTrue);
+    });
+
+    test('should fail for a map with unknown keys', () {
+      final map = {'name': 'John', 'age': 30, 'city': 'New York'};
+      final result = validator.validate(map);
+      expect(result.isValid, isFalse);
+      expect(result.expectations.first.message, 'has unknown keys: city');
+    });
+
+    test('should fail if inner validator fails', () {
+      final map = {'name': 'John', 'age': '30'};
+      final result = validator.validate(map);
+      expect(result.isValid, isFalse);
+      expect(result.shortDescription, '.age: int');
+    });
   });
 }

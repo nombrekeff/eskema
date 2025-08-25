@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
       
-<span class="returntype"><a href="../../validator/IEskValidator-class.html">IEskValidator</a></span>
-<span class="name ">operator |</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="|-param-other"><span class="type-annotation"><a href="../../validator/IEskValidator-class.html">IEskValidator</a></span> <span class="parameter-name">other</span></span></li>
+<span class="returntype"><a href="../../validator/IValidator-class.html">IValidator</a></span>
+<span class="name ">operator |</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="|-param-other"><span class="type-annotation"><a href="../../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">other</span></span></li>
 </ol>)
 
       
@@ -63,14 +63,15 @@
     </section>
     
 <section class="desc markdown">
-  <p>Combines two validators with a logical OR, same as using <a href="../../validators/any.html">any</a></p>
+  <p>Combines two validators with a logical OR, same as using <a href="../../validators_combinator_validators/any.html">any</a></p>
+<p>This is <strong>Sugar</strong>, it allows for more concise validator composition.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator operator |(IEskValidator other) =&gt; any([this, other]);</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator operator |(IValidator other) =&gt; any([this, other]);</code></pre>
 </section>
 
 
@@ -89,7 +90,7 @@
     <li class="self-crumb">operator | method</li>
 </ol>
 
-    <h5>EskemaEskValidatorOperations extension on <a href="../../validator/IEskValidator-class.html">IEskValidator</a></h5>
+    <h5>EskemaEskValidatorOperations extension on <a href="../../validator/IValidator-class.html">IValidator</a></h5>
     <div id="dartdoc-sidebar-left-content"></div>
   </div><!--/.sidebar-offcanvas-->
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">

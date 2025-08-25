@@ -55,19 +55,22 @@
     <section class="multi-line-signature">
       
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
-<span class="name ">isNotValid</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="isNotValid-param-eskema"><span class="type-annotation"><a href="../../validator/IEskValidator-class.html">IEskValidator</a></span> <span class="parameter-name">eskema</span></span></li>
+<span class="name ">isNotValid</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="isNotValid-param-eskema"><span class="type-annotation"><a href="../../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">eskema</span></span></li>
 </ol>)
 
       
 
     </section>
     
+<section class="desc markdown">
+  <p>Checks if the map is not valid against the provided <a href="../../validators/validator.html">validator</a>.</p>
+</section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">bool isNotValid(IEskValidator eskema) {
+  <pre class="language-dart"><code class="language-dart">bool isNotValid(IValidator eskema) {
   return !eskema.validate(this).isValid;
 }</code></pre>
 </section>

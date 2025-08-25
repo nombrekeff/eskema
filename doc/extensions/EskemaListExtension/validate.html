@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
       
-<span class="returntype"><a href="../../result/EskResult-class.html">EskResult</a></span>
-<span class="name ">validate</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="validate-param-eskema"><span class="type-annotation"><a href="../../validator/IEskValidator-class.html">IEskValidator</a></span> <span class="parameter-name">eskema</span></span></li>
+<span class="returntype"><a href="../../result/Result-class.html">Result</a></span>
+<span class="name ">validate</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="validate-param-eskema"><span class="type-annotation"><a href="../../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">eskema</span></span></li>
 </ol>)
 
       
@@ -84,7 +84,7 @@ isValidList([1, "2"]).isValid;   // false
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">EskResult validate(IEskValidator eskema) {
+  <pre class="language-dart"><code class="language-dart">Result validate(IValidator eskema) {
   return listEach(eskema).validate(this);
 }</code></pre>
 </section>

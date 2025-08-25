@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
-<span class="name ">any</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="any-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span></li>
+<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="name ">any</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="any-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span></li>
 </ol>)
 
         
@@ -65,7 +65,7 @@
 <section class="desc markdown">
   <p>///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-Passes the test if any of the <a href="../validator/EskValidator-class.html">EskValidator</a>s are valid, and fails if any are invalid</p>
+Passes the test if any of the <a href="../validator/Validator-class.html">Validator</a>s are valid, and fails if any are invalid</p>
 </section>
 
 
@@ -75,9 +75,9 @@ Passes the test if any of the <a href="../validator/EskValidator-class.html">Esk
   <pre class="language-dart"><code class="language-dart">&#47;&#47; Combinators
 &#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;
 
-&#47;&#47;&#47; Passes the test if any of the [EskValidator]s are valid, and fails if any are invalid
-IEskValidator any(List&lt;IEskValidator&gt; validators) =&gt; EskValidator((value) {
-      final results = &lt;EskResult&gt;[];
+&#47;&#47;&#47; Passes the test if any of the [Validator]s are valid, and fails if any are invalid
+IValidator any(List&lt;IValidator&gt; validators) =&gt; Validator((value) {
+      final results = &lt;Result&gt;[];
 
       for (final validator in validators) {
         final result = validator.validate(value);
@@ -85,9 +85,9 @@ IEskValidator any(List&lt;IEskValidator&gt; validators) =&gt; EskValidator((valu
         if (result.isValid) return result;
       }
 
-      return EskResult.invalid(
+      return Result.invalid(
         value,
-        errors: results.expand((r) =&gt; r.errors).toList(),
+        expectations: results.expand((r) =&gt; r.expectations).toList(),
       );
     });</code></pre>
 </section>

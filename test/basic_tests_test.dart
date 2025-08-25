@@ -1,4 +1,3 @@
-import 'package:eskema/error.dart';
 import 'package:eskema/eskema.dart';
 import 'package:test/test.dart';
 
@@ -48,7 +47,7 @@ void main() {
     final nullable2 = isType<String>().nullable();
     final nullable3 = nullable(isType<String>());
 
-    final nullableField = EskField(
+    final nullableField = Field(
       validators: [isType<String>()],
       id: '<id>',
       nullable: true,
@@ -87,15 +86,15 @@ void main() {
   test('custom validator ', () {
     final customValidator = all([
       isType<int>(),
-      EskValidator((value) {
+      Validator((value) {
         if (value is num && value == 42) {
-          return EskResult.invalid(
+          return Result.invalid(
             value,
-            error: error('that is the number', value),
+            expectation: expectation('that is the number', value),
           );
         }
 
-        return EskResult.valid(value);
+        return Result.valid(value);
       }),
     ]);
     expect(customValidator.validate(42).shortDescription, 'that is the number');

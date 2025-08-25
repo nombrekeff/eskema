@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
 <span class="name ">isDeepEq</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="isDeepEq-param-otherValue"><span class="type-annotation">T</span> <span class="parameter-name">otherValue</span></span></li>
 </ol>)
 
@@ -70,11 +70,11 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator isDeepEq&lt;T&gt;(T otherValue) =&gt;
+  <pre class="language-dart"><code class="language-dart">IValidator isDeepEq&lt;T&gt;(T otherValue) =&gt;
     isType&lt;T&gt;() &amp;
     validator(
       (value) =&gt; _collectionEquals(value, otherValue),
-      (value) =&gt; EskError(message: &#39;equal to ${pretifyValue(otherValue)}&#39;, value: value),
+      (value) =&gt; Expectation(message: &#39;equal to ${pretifyValue(otherValue)}&#39;, value: value),
     );</code></pre>
 </section>
 

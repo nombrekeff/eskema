@@ -1,19 +1,21 @@
-import 'package:eskema/error.dart';
 import 'package:eskema/result.dart';
 import 'package:eskema/validators.dart';
 
 import 'validator.dart';
 
 extension EskemaMapExtension on Map {
-  EskResult validate(IEskValidator validator) {
+  /// Validates the map against the provided [validator].
+  Result validate(IValidator validator) {
     return validator.validate(this);
   }
 
-  bool isValid(IEskValidator eskema) {
+  /// Checks if the map is valid against the provided [validator].
+  bool isValid(IValidator eskema) {
     return eskema.validate(this).isValid;
   }
 
-  bool isNotValid(IEskValidator eskema) {
+  /// Checks if the map is not valid against the provided [validator].
+  bool isNotValid(IValidator eskema) {
     return !eskema.validate(this).isValid;
   }
 }
@@ -36,31 +38,24 @@ extension EskemaListExtension on List {
   /// * and the second item is an int
   ///
   /// This validator also checks that the value is a list
-  EskResult validate(IEskValidator eskema) {
+  Result validate(IValidator eskema) {
     return listEach(eskema).validate(this);
   }
 }
 
-extension EskemaEskValidatorOperations on IEskValidator {
-  // IEskValidator operator +(IEskValidator other) {
-  //   // TODO: Find a way of identifying validators like `all` and `any`,
-  //   //  which contain a list of validators. If they are the same type,
-  //   //  we can combine them into a single validator, instead of having
-  //   //  excessive nested validators for the same field.
-  // }
-
+extension EskemaEskValidatorOperations on IValidator {
   /// Combines two validators with a logical AND, same as using [all]
-  IEskValidator operator &(IEskValidator other) => all([this, other]);
+  ///
+  /// This is **Sugar**, it allows for more concise validator composition.
+  IValidator operator &(IValidator other) => all([this, other]);
 
   /// Combines two validators with a logical OR, same as using [any]
-  IEskValidator operator |(IEskValidator other) => any([this, other]);
+  /// 
+  /// This is **Sugar**, it allows for more concise validator composition.
+  IValidator operator |(IValidator other) => any([this, other]);
 
   /// Returns a new validator that will return the [error] message if the validation fails
-  IEskValidator operator >(String error) => EskValidator(
-        (value) => EskResult(
-          isValid: validate(value).isValid,
-          errors: [EskError(message: error, value: value)],
-          value: value,
-        ),
-      );
+  ///
+  /// This is **Sugar**, it allows for more concise validator composition.
+  IValidator operator >(String error) => withError(this, error);
 }

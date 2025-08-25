@@ -1,7 +1,7 @@
 import 'package:eskema/eskema.dart';
 
-class TestClassValidator extends EskMap {
-  final name = EskField(
+class TestClassValidator extends MapValidator {
+  final name = Field(
     id: 'name',
     validators: [
       $isString,
@@ -19,15 +19,15 @@ class TestClassValidator extends EskMap {
 
 enum Theme { light, dark }
 
-class SettingsValidator extends EskMap {
-  final theme = EskField(
+class SettingsValidator extends MapValidator {
+  final theme = Field(
     id: 'theme',
     validators: [
       isOneOf(Theme.values),
     ],
   );
 
-  final notificationsEnabled = EskField(
+  final notificationsEnabled = Field(
     id: 'notificationsEnabled',
     nullable: true,
     validators: [$isBool],

@@ -53,7 +53,7 @@ void main() {
   // Check if the validator is valid or not
   final userResult = userEskema.validate({});
   print(userResult.isValid);     // should be false
-  print(userResult.errors);      // [.username: String (value: null), .age: int (value: null), .email: String (value: null), .purchases: List<dynamic> (value: null)]
+  print(userResult.expectations);      // [.username: String (value: null), .age: int (value: null), .email: String (value: null), .purchases: List<dynamic> (value: null)]
   print(userResult.description); // .username: String, .age: int, .email: String, .purchases: List<dynamic> (value: {})
 
   // You can also use the 'validate' extension method

@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
 <span class="name ">contains</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="contains-param-item"><span class="type-annotation">T</span> <span class="parameter-name">item</span></span></li>
 </ol>)
 
@@ -71,15 +71,15 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator contains&lt;T&gt;(T item) =&gt; EskValidator((value) {
+  <pre class="language-dart"><code class="language-dart">IValidator contains&lt;T&gt;(T item) =&gt; Validator((value) {
       if (hasContainsProperty(value)) {
-        return EskResult(
+        return Result(
           isValid: value.contains(item),
-          error: error(&#39;contains ${pretifyValue(item)}&#39;, value),
+          expectation: expectation(&#39;contains ${pretifyValue(item)}&#39;, value),
           value: value,
         );
       } else {
-        return error(&#39;${value.runtimeType} does not have a contains property&#39;, value)
+        return expectation(&#39;${value.runtimeType} does not have a contains property&#39;, value)
             .toInvalidResult();
       }
     });</code></pre>

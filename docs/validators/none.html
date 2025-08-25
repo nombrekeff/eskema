@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
-<span class="name ">none</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="none-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span></li>
+<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="name ">none</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="none-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span></li>
 </ol>)
 
         
@@ -70,21 +70,21 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator none(List&lt;IEskValidator&gt; validators) {
-  return EskValidator((value) {
-    final errors = &lt;EskError&gt;[];
+  <pre class="language-dart"><code class="language-dart">IValidator none(List&lt;IValidator&gt; validators) {
+  return Validator((value) {
+    final expectations = &lt;Expectation&gt;[];
 
     for (final validator in validators) {
       final result = not(validator).validate(value);
 
       if (result.isNotValid) {
-        errors.addAll(result.errors);
+        expectations.addAll(result.expectations);
       }
     }
 
-    return errors.isNotEmpty
-        ? EskResult.invalid(value, errors: errors)
-        : EskResult.valid(value);
+    return expectations.isNotEmpty
+        ? Result.invalid(value, expectations: expectations)
+        : Result.valid(value);
   });
 }</code></pre>
 </section>

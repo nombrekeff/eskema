@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
 <span class="name ">isType</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr>)
 
         
@@ -64,7 +64,7 @@
 <section class="desc markdown">
   <p>///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-Returns a <a href="../validator/EskValidator-class.html">EskValidator</a> that checks if the given value is the correct type</p>
+Returns a <a href="../validator/Validator-class.html">Validator</a> that checks if the given value is the correct type</p>
 </section>
 
 
@@ -74,10 +74,10 @@ Returns a <a href="../validator/EskValidator-class.html">EskValidator</a> that c
   <pre class="language-dart"><code class="language-dart">&#47;&#47; Built in types
 &#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;&#47;
 
-&#47;&#47;&#47; Returns a [EskValidator] that checks if the given value is the correct type
-IEskValidator isType&lt;T&gt;() =&gt; validator(
+&#47;&#47;&#47; Returns a [Validator] that checks if the given value is the correct type
+IValidator isType&lt;T&gt;() =&gt; validator(
       (value) =&gt; value is T,
-      (value) =&gt; EskError(message: T.toString(), value: value),
+      (value) =&gt; Expectation(message: T.toString(), value: value),
     );</code></pre>
 </section>
 

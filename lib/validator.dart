@@ -1,11 +1,21 @@
-import 'package:eskema/error.dart';
-import 'package:eskema/util.dart';
+/// Validator library
+///
+/// This library provides a set of classes for validating data. For built in va
+library validator;
+
+import 'package:eskema/expectation.dart';
 import 'package:eskema/validators.dart';
 
 import 'result.dart';
 
 /// Type representing a validator function.
-typedef EskValidatorFn<T extends EskResult> = T Function(dynamic value);
+typedef ValidatorFunction<T extends Result> = T Function(dynamic value);
+
+class ValidatorFailedException implements Exception {
+  String get message => result.toString();
+  Result result;
+  ValidatorFailedException(this.result);
+}
 
 /// Inmutable class from which all validators inherit.
 ///
@@ -13,8 +23,8 @@ typedef EskValidatorFn<T extends EskResult> = T Function(dynamic value);
 /// but consider using other ways of creating custom validators (_see [Custom Validators](https://github.com/nombrekeff/eskema/tree/main#custom-validators)_)
 ///
 /// Or consider using one of the [validators] for built in validation.
-abstract class IEskValidator {
-  const IEskValidator({bool nullable = false, bool optional = false})
+abstract class IValidator {
+  const IValidator({bool nullable = false, bool optional = false})
       : isNullable = nullable,
         isOptional = optional;
 
@@ -29,7 +39,7 @@ abstract class IEskValidator {
   /// Validates the given [value] and returns the result.
   ///
   /// Don't call directly, call [validate] instead.
-  EskResult validator(dynamic value);
+  Result validator(dynamic value);
 
   /// Main validation method. Use this method if you want to validate
   /// that a dynamic value is valid, and get an error message if not.
@@ -40,9 +50,9 @@ abstract class IEskValidator {
   ///
   /// [exists] If set to true, the value is consider to "exist",
   /// this is most useful for optional fields in maps.
-  EskResult validate(dynamic value, {bool exists = true}) {
+  Result validate(dynamic value, {bool exists = true}) {
     if ((value == null && isNullable && exists) || (!exists && isOptional)) {
-      return EskResult.valid(value);
+      return Result.valid(value);
     }
 
     return validator(value);
@@ -50,7 +60,7 @@ abstract class IEskValidator {
 
   /// Works the same as [validate], validates that a given value is valid,
   /// but throws instead if it's not.
-  EskResult validateOrThrow(dynamic value) {
+  Result validateOrThrow(dynamic value) {
     final result = validate(value);
     if (result.isNotValid) throw ValidatorFailedException(result);
     return result;
@@ -63,26 +73,35 @@ abstract class IEskValidator {
   bool isNotValid(dynamic value) => !validate(value).isValid;
 
   /// Creates a copy of the validator with the given parameters.
-  IEskValidator copyWith({bool? nullable, bool? optional});
+  IValidator copyWith({bool? nullable, bool? optional});
 
   /// Creates a nullable copy of the validator.
-  IEskValidator nullable<T>() {
+  IValidator nullable<T>() {
     return copyWith(nullable: true);
   }
 
   /// Creates a optional copy of the validator.
-  IEskValidator optional<T>() {
+  IValidator optional<T>() {
     return copyWith(optional: true);
   }
 }
 
-/// An implementation of [IEskValidator], which accepts a validator function,
+/// A special type of validator that can operate on a parent map context.
+/// Used for conditional validation within an `eskema` map validator.
+abstract class IWhenValidator extends IValidator {
+  IWhenValidator({super.nullable, super.optional});
+
+  /// Validates the [value] with access to the parent [map].
+  Result validateWithParent(dynamic value, Map<String, dynamic> map, {bool exists = true});
+}
+
+/// An implementation of [IValidator], which accepts a validator function,
 /// which is used by the EskValidator to validate some data.
 ///
 /// Take a look at [validators] for examples.
-class EskValidator<T extends EskResult> extends IEskValidator {
-  final EskValidatorFn<T> _validator;
-  EskValidator(this._validator, {super.nullable, super.optional});
+class Validator<T extends Result> extends IValidator {
+  final ValidatorFunction<T> _validator;
+  Validator(this._validator, {super.nullable, super.optional});
 
   @override
   T validator(dynamic value) {
@@ -90,8 +109,8 @@ class EskValidator<T extends EskResult> extends IEskValidator {
   }
 
   @override
-  IEskValidator copyWith({bool? nullable, bool? optional}) {
-    return EskValidator(
+  IValidator copyWith({bool? nullable, bool? optional}) {
+    return Validator(
       _validator,
       nullable: nullable ?? isNullable,
       optional: optional ?? isOptional,
@@ -102,40 +121,98 @@ class EskValidator<T extends EskResult> extends IEskValidator {
   String toString() => 'Validator';
 }
 
-/// A [EskValidator] sub-class, which adds an identifier,
+class WhenValidator extends IWhenValidator {
+  final IValidator condition;
+  final IValidator then;
+  final IValidator otherwise;
+
+  WhenValidator(this.condition, this.then, this.otherwise, {super.nullable, super.optional});
+
+  @override
+  Result validate(dynamic value, {bool exists = true}) {
+    // This validator must be used within an `eskema` map validator
+    // to have access to the parent map.
+    return Result.invalid(
+      value,
+      expectations: [
+        Expectation(
+          message: '`when` validator can only be used inside an `eskema` map validator',
+          value: value,
+        )
+      ],
+    );
+  }
+
+  @override
+  Result validateWithParent(dynamic value, Map<String, dynamic> map, {bool exists = true}) {
+    // This method should be used by the MapValidator to provide the parent map.
+    // By default, indicate that the when-validator requires a parent map for evaluation.
+    final conditionResult = condition.validate(map, exists: exists);
+    if (conditionResult.isValid) {
+      return then.validate(value);
+    } else {
+      return otherwise.validate(value);
+    }
+  }
+
+  @override
+  IValidator copyWith({
+    bool? nullable,
+    bool? optional,
+    IValidator? condition,
+    IValidator? then,
+    IValidator? otherwise,
+  }) {
+    return WhenValidator(
+      condition ?? this.condition,
+      then ?? this.then,
+      otherwise ?? this.otherwise,
+      nullable: nullable ?? isNullable,
+      optional: optional ?? isOptional,
+    );
+  }
+
+  @override
+  Result validator(value) {
+    // Not needed
+    throw UnimplementedError();
+  }
+}
+
+/// A [Validator] sub-class, which adds an identifier,
 /// which can be used to identify the validator,
-/// for example [EskMap] uses it to validate its fields.
-class IEskIdValidator extends EskValidator {
+/// for example [MapValidator] uses it to validate its fields.
+class IdValidator<T extends Result> extends Validator<T> {
   /// Identifier for this particular validator.
   final String id;
 
-  IEskIdValidator({
-    required EskValidatorFn validator,
+  IdValidator({
+    required ValidatorFunction<T> validator,
     this.id = '',
     super.nullable,
     super.optional,
   }) : super(validator);
 }
 
-/// An implementation of [IEskIdValidator], which acepts a list of validators.
+/// An implementation of [IdValidator], which acepts a list of validators.
 ///
 /// See [example](https://github.com/nombrekeff/eskema/tree/main/example/class_validation.dart)
-class EskField extends IEskIdValidator {
-  EskField({
+class Field extends IdValidator {
+  Field({
     required this.validators,
     super.id,
     super.nullable,
     super.optional,
-  }) : super(validator: EskResult.valid);
+  }) : super(validator: Result.valid);
 
   /// List of validators to apply to the field.
   ///
   /// Each validator will be applied in order, and the first one to fail will
   /// determine the error result, otherwise it will be considered valid.
-  final List<IEskValidator> validators;
+  final List<IValidator> validators;
 
   @override
-  EskResult validator(dynamic value) {
+  Result validator(dynamic value) {
     final superRes = super.validator(value);
     if (superRes.isNotValid) return superRes;
 
@@ -146,12 +223,12 @@ class EskField extends IEskIdValidator {
       }
     }
 
-    return EskResult.valid(value);
+    return Result.valid(value);
   }
 
   @override
-  IEskValidator copyWith({bool? nullable, bool? optional}) {
-    return EskField(
+  IValidator copyWith({bool? nullable, bool? optional}) {
+    return Field(
       validators: validators,
       id: id,
       nullable: nullable ?? isNullable,
@@ -202,15 +279,15 @@ class EskField extends IEskIdValidator {
 /// In this example, `EskMap` is used to define a schema where `name` is a required
 /// string and `age` is an integer with a minimum value of 0. The `validate` method
 /// checks the input data against these rules and returns the result.
-abstract class EskMap<T extends Map> extends IEskIdValidator {
-  EskMap({super.id = '', super.nullable}) : super(validator: isMap().validate);
+abstract class MapValidator<T extends Map> extends IdValidator {
+  MapValidator({super.id = '', super.nullable}) : super(validator: isMap().validate);
 
-  /// List of [IEskIdValidator]s used to validate a dynamic `Map`.
+  /// List of [IdValidator]s used to validate a dynamic `Map`.
   /// Each field represents a value in the map, `id` is used to identify the key from the map.
-  List<IEskIdValidator> get fields;
+  List<IdValidator> get fields;
 
   @override
-  EskResult validator(dynamic value) {
+  Result validator(dynamic value) {
     final superRes = super.validator(value);
     if (superRes.isNotValid) return superRes;
 
@@ -224,23 +301,23 @@ abstract class EskMap<T extends Map> extends IEskIdValidator {
 
       String error = '';
 
-      if (field is EskMap) {
+      if (field is MapValidator) {
         error += '${field.id}.${result.description}';
       } else {
         error += '${field.id} to be ${result.description}';
       }
 
-      return EskResult(
+      return Result(
           isValid: result.isValid,
-          errors: [EskError(message: error, value: mapValue)],
+          expectations: [Expectation(message: error, value: mapValue)],
           value: mapValue);
     }
 
-    return EskResult.valid(value);
+    return Result.valid(value);
   }
 
   @override
-  IEskValidator copyWith({bool? nullable, bool? optional}) {
+  IValidator copyWith({bool? nullable, bool? optional}) {
     throw Exception(
         'copyWith not implemented for $runtimeType, as it defines properties that cannot be copied automaticaly.\n'
         'Please create a new instance manually. Or override the "copyWith" method.');

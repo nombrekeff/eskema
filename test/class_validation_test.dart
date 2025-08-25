@@ -2,8 +2,8 @@ import 'package:eskema/validator.dart';
 import 'package:eskema/validators.dart';
 import 'package:test/test.dart';
 
-class EskMapTest extends EskMap {
-  final name = EskField(validators: [isType<String>()], id: 'name');
+class EskMapTest extends MapValidator {
+  final name = Field(validators: [isType<String>()], id: 'name');
 
   EskMapTest({super.nullable});
 
@@ -14,7 +14,7 @@ class EskMapTest extends EskMap {
 void main() {
   group('EskField', () {
     test('basic works', () {
-      final field = EskField(
+      final field = Field(
         id: 'testField',
         validators: [isType<String>()],
       );
@@ -26,7 +26,7 @@ void main() {
     });
 
     test('nullable works', () {
-      final field = EskField(
+      final field = Field(
         id: 'testField',
         validators: [isType<String>()],
         nullable: true,
@@ -37,7 +37,7 @@ void main() {
     });
 
     test('non-nullable works', () {
-      final field = EskField(
+      final field = Field(
         id: 'testField',
         validators: [isType<String>()],
       ).copyWith(nullable: false);

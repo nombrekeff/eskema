@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
 <span class="name ">isGt</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="isGt-param-min"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">min</span></span></li>
 </ol>)
 
@@ -70,10 +70,10 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator isGt(num min) =&gt;
+  <pre class="language-dart"><code class="language-dart">IValidator isGt(num min) =&gt;
     isType&lt;num&gt;() &amp;
     validator((value) =&gt; value &gt; min,
-        (value) =&gt; EskError(message: &#39;greater than $min&#39;, value: value));</code></pre>
+        (value) =&gt; Expectation(message: &#39;greater than $min&#39;, value: value));</code></pre>
 </section>
 
 

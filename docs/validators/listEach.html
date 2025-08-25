@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
-<span class="name ">listEach</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="listEach-param-itemValidator"><span class="type-annotation"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span> <span class="parameter-name">itemValidator</span></span></li>
+<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="name ">listEach</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="listEach-param-itemValidator"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">itemValidator</span></span></li>
 </ol>)
 
         
@@ -71,18 +71,18 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator listEach(IEskValidator itemValidator) {
+  <pre class="language-dart"><code class="language-dart">IValidator listEach(IValidator itemValidator) {
   return $isList &amp;
-      EskValidator((value) {
-        final errors = &lt;EskError&gt;[];
+      Validator((value) {
+        final errors = &lt;Expectation&gt;[];
         for (int index = 0; index &lt; value.length; index++) {
           final item = value[index];
           final result = itemValidator.validate(item);
 
           if (result.isNotValid) {
-            for (var error in result.errors) {
+            for (var error in result.expectations) {
               errors.add(
-                EskError(
+                Expectation(
                   message: error.message,
                   value: error.value,
                   path: &#39;[$index]${error.path != null ? &#39;${error.path}&#39; : &#39;&#39;}&#39;,
@@ -93,8 +93,8 @@
         }
 
         return errors.isNotEmpty
-            ? EskResult.invalid(value, errors: errors)
-            : EskResult.valid(value);
+            ? Result.invalid(value, expectations: errors)
+            : Result.valid(value);
       });
 }</code></pre>
 </section>

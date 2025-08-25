@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
 <span class="name ">isDate</span>(<wbr>)
 
         
@@ -69,9 +69,9 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator isDate() =&gt; validator(
+  <pre class="language-dart"><code class="language-dart">IValidator isDate() =&gt; validator(
       (value) =&gt; DateTime.tryParse(value) != null,
-      (value) =&gt; EskError(message: &#39;a valid DateTime formatted String&#39;, value: value),
+      (value) =&gt; Expectation(message: &#39;a valid DateTime formatted String&#39;, value: value),
     );</code></pre>
 </section>
 

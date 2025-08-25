@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
-<span class="name ">all</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="all-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span></li>
+<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="name ">all</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="all-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span></li>
 </ol>)
 
         
@@ -63,21 +63,21 @@
     </section>
     
 <section class="desc markdown">
-  <p>Passes the test if all of the <a href="../validator/EskValidator-class.html">EskValidator</a>s are valid, and fails if any of them are invalid</p>
-<p>In the case that a <a href="../validator/EskValidator-class.html">EskValidator</a> fails, it's <a href="../result/EskResult-class.html">EskResult</a> will be returned</p>
+  <p>Passes the test if all of the <a href="../validator/Validator-class.html">Validator</a>s are valid, and fails if any of them are invalid</p>
+<p>In the case that a <a href="../validator/Validator-class.html">Validator</a> fails, it's <a href="../result/Result-class.html">Result</a> will be returned</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IEskValidator all(List&lt;IEskValidator&gt; validators) =&gt; EskValidator((value) {
+  <pre class="language-dart"><code class="language-dart">IValidator all(List&lt;IValidator&gt; validators) =&gt; Validator((value) {
       for (final validator in validators) {
         final result = validator.validate(value);
         if (result.isNotValid) return result;
       }
 
-      return EskResult.valid(value);
+      return Result.valid(value);
     });</code></pre>
 </section>
 

@@ -1,4 +1,4 @@
-import 'package:eskema/error.dart';
+import 'package:eskema/expectation.dart';
 import 'package:eskema/result.dart';
 import 'package:eskema/validator.dart';
 import 'package:eskema/validators.dart';
@@ -6,9 +6,9 @@ import 'package:eskema/validators.dart';
 void main() {
   final isHelloWorld = all([
     $isString,
-    EskValidator((value) => EskResult(
+    Validator((value) => Result(
           isValid: value == 'Hello world',
-          errors: [EskError(message: 'Expected Hello world', value: value)],
+          expectations: [Expectation(message: 'Expected Hello world', value: value)],
           value: value,
         )),
   ]);
@@ -16,13 +16,13 @@ void main() {
   print(isHelloWorld.isValid('Hello world')); // true
   print(isHelloWorld.validate('hey')); // false - 'Expected Hello world (value: "hey")'
 
-  IEskValidator isInRange(num min, num max) {
+  IValidator isInRange(num min, num max) {
     return all([
       isType<num>(),
-      EskValidator(
-        (value) => EskResult(
+      Validator(
+        (value) => Result(
           isValid: value >= min && value <= max,
-          errors: [EskError(message: 'number to be between $min and $max', value: value)],
+          expectations: [Expectation(message: 'number to be between $min and $max', value: value)],
           value: value,
         ),
       ),

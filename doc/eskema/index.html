@@ -60,7 +60,8 @@
 
     
 <section class="desc markdown">
-  <p>Eskema is a small, composable runtime validation library for Dart. It helps you validate dynamic values (JSON, Maps, Lists, primitives) with readable validators and clear error messages.</p>
+  <p>Eskema is a small, composable runtime validation library for Dart. It helps you validate
+dynamic values (JSON, Maps, Lists, primitives) with readable validators and clear error messages.</p>
 <p><strong>Use cases</strong>:</p>
 <p>Here are some common usecases for Eskema:</p>
 <ul>
@@ -74,16 +75,51 @@
     <section class="summary offset-anchor" id="classes">
       <h2>Classes</h2>
       <dl>
-          <dt id="EskField">
-  <span class="name "><a href="../validator/EskField-class.html">EskField</a></span> 
+          <dt id="Expectation">
+  <span class="name "><a href="../expectation/Expectation-class.html">Expectation</a></span> 
 
 </dt>
 <dd>
-  An implementation of <a href="../validator/IEskIdValidator-class.html">IEskIdValidator</a>, which acepts a list of validators.
+  Represents an expectation for a validation result.
 </dd>
 
-          <dt id="EskMap">
-  <span class="name "><a href="../validator/EskMap-class.html">EskMap</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a></span>&gt;</span></span> 
+          <dt id="Field">
+  <span class="name "><a href="../validator/Field-class.html">Field</a></span> 
+
+</dt>
+<dd>
+  An implementation of <a href="../validator/IdValidator-class.html">IdValidator</a>, which acepts a list of validators.
+</dd>
+
+          <dt id="IdValidator">
+  <span class="name "><a href="../validator/IdValidator-class.html">IdValidator</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../result/Result-class.html">Result</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  A <a href="../validator/Validator-class.html">Validator</a> sub-class, which adds an identifier,
+which can be used to identify the validator,
+for example <a href="../validator/MapValidator-class.html">MapValidator</a> uses it to validate its fields.
+</dd>
+
+          <dt id="IValidator">
+  <span class="name "><a href="../validator/IValidator-class.html">IValidator</a></span> 
+
+</dt>
+<dd>
+  Inmutable class from which all validators inherit.
+</dd>
+
+          <dt id="IWhenValidator">
+  <span class="name "><a href="../validator/IWhenValidator-class.html">IWhenValidator</a></span> 
+
+</dt>
+<dd>
+  A special type of validator that can operate on a parent map context.
+Used for conditional validation within an <code>eskema</code> map validator.
+</dd>
+
+          <dt id="MapValidator">
+  <span class="name "><a href="../validator/MapValidator-class.html">MapValidator</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a></span>&gt;</span></span> 
 
 </dt>
 <dd>
@@ -94,39 +130,29 @@ rules and apply them to input data, ensuring that the data conforms to expected
 formats or constraints.
 </dd>
 
-          <dt id="EskResult">
-  <span class="name "><a href="../result/EskResult-class.html">EskResult</a></span> 
+          <dt id="Result">
+  <span class="name "><a href="../result/Result-class.html">Result</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Represents the result of a validation.
+</dd>
+
+          <dt id="Validator">
+  <span class="name "><a href="../validator/Validator-class.html">Validator</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../result/Result-class.html">Result</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  An implementation of <a href="../validator/IValidator-class.html">IValidator</a>, which accepts a validator function,
+which is used by the EskValidator to validate some data.
+</dd>
+
+          <dt id="WhenValidator">
+  <span class="name "><a href="../validator/WhenValidator-class.html">WhenValidator</a></span> 
 
 </dt>
 <dd>
   
-</dd>
-
-          <dt id="EskValidator">
-  <span class="name "><a href="../validator/EskValidator-class.html">EskValidator</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../result/EskResult-class.html">EskResult</a></span>&gt;</span></span> 
-
-</dt>
-<dd>
-  An implementation of <a href="../validator/IEskValidator-class.html">IEskValidator</a>, which accepts a validator function,
-which is used by the EskValidator to validate some data.
-</dd>
-
-          <dt id="IEskIdValidator">
-  <span class="name "><a href="../validator/IEskIdValidator-class.html">IEskIdValidator</a></span> 
-
-</dt>
-<dd>
-  A <a href="../validator/EskValidator-class.html">EskValidator</a> sub-class, which adds an identifier,
-which can be used to identify the validator,
-for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to validate its fields.
-</dd>
-
-          <dt id="IEskValidator">
-  <span class="name "><a href="../validator/IEskValidator-class.html">IEskValidator</a></span> 
-
-</dt>
-<dd>
-  Inmutable class from which all validators inherit.
 </dd>
 
       </dl>
@@ -140,7 +166,7 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
       <dl>
           <dt id="EskemaEskValidatorOperations">
   <span class="name "><a href="../extensions/EskemaEskValidatorOperations.html">EskemaEskValidatorOperations</a></span>
-  on <a href="../validator/IEskValidator-class.html">IEskValidator</a>
+  on <a href="../validator/IValidator-class.html">IValidator</a>
   
 
 </dt>
@@ -177,7 +203,19 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
       <dl class="properties">
           <dt id="$isBool" class="property">
   <span class="name"><a href="../eskema/$isBool.html">$isBool</a></span>
-  <span class="signature">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+          <dt id="$isDateTime" class="property">
+  <span class="name"><a href="../eskema/$isDateTime.html">$isDateTime</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   
 
 </dt>
@@ -189,7 +227,31 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
 
           <dt id="$isDouble" class="property">
   <span class="name"><a href="../eskema/$isDouble.html">$isDouble</a></span>
-  <span class="signature">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+          <dt id="$isDoubleString" class="property">
+  <span class="name"><a href="../eskema/$isDoubleString.html">$isDoubleString</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+          <dt id="$isEmail" class="property">
+  <span class="name"><a href="../eskema/$isEmail.html">$isEmail</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   
 
 </dt>
@@ -201,7 +263,7 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
 
           <dt id="$isEnum" class="property">
   <span class="name"><a href="../eskema/$isEnum.html">$isEnum</a></span>
-  <span class="signature">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   
 
 </dt>
@@ -213,7 +275,7 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
 
           <dt id="$isFunction" class="property">
   <span class="name"><a href="../eskema/$isFunction.html">$isFunction</a></span>
-  <span class="signature">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   
 
 </dt>
@@ -225,7 +287,7 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
 
           <dt id="$isFuture" class="property">
   <span class="name"><a href="../eskema/$isFuture.html">$isFuture</a></span>
-  <span class="signature">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   
 
 </dt>
@@ -237,7 +299,19 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
 
           <dt id="$isInt" class="property">
   <span class="name"><a href="../eskema/$isInt.html">$isInt</a></span>
-  <span class="signature">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+          <dt id="$isIntString" class="property">
+  <span class="name"><a href="../eskema/$isIntString.html">$isIntString</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   
 
 </dt>
@@ -249,7 +323,7 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
 
           <dt id="$isIterable" class="property">
   <span class="name"><a href="../eskema/$isIterable.html">$isIterable</a></span>
-  <span class="signature">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   
 
 </dt>
@@ -261,7 +335,19 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
 
           <dt id="$isList" class="property">
   <span class="name"><a href="../eskema/$isList.html">$isList</a></span>
-  <span class="signature">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+          <dt id="$isLowerCase" class="property">
+  <span class="name"><a href="../eskema/$isLowerCase.html">$isLowerCase</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   
 
 </dt>
@@ -273,7 +359,7 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
 
           <dt id="$isMap" class="property">
   <span class="name"><a href="../eskema/$isMap.html">$isMap</a></span>
-  <span class="signature">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   
 
 </dt>
@@ -285,7 +371,7 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
 
           <dt id="$isNull" class="property">
   <span class="name"><a href="../eskema/$isNull.html">$isNull</a></span>
-  <span class="signature">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   
 
 </dt>
@@ -297,7 +383,19 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
 
           <dt id="$isNumber" class="property">
   <span class="name"><a href="../eskema/$isNumber.html">$isNumber</a></span>
-  <span class="signature">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+          <dt id="$isNumString" class="property">
+  <span class="name"><a href="../eskema/$isNumString.html">$isNumString</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   
 
 </dt>
@@ -309,7 +407,7 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
 
           <dt id="$isRecord" class="property">
   <span class="name"><a href="../eskema/$isRecord.html">$isRecord</a></span>
-  <span class="signature">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   
 
 </dt>
@@ -321,7 +419,19 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
 
           <dt id="$isSet" class="property">
   <span class="name"><a href="../eskema/$isSet.html">$isSet</a></span>
-  <span class="signature">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+          <dt id="$isStrictUrl" class="property">
+  <span class="name"><a href="../eskema/$isStrictUrl.html">$isStrictUrl</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   
 
 </dt>
@@ -333,7 +443,7 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
 
           <dt id="$isString" class="property">
   <span class="name"><a href="../eskema/$isString.html">$isString</a></span>
-  <span class="signature">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   
 
 </dt>
@@ -345,7 +455,43 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
 
           <dt id="$isSymbol" class="property">
   <span class="name"><a href="../eskema/$isSymbol.html">$isSymbol</a></span>
-  <span class="signature">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+          <dt id="$isUpperCase" class="property">
+  <span class="name"><a href="../eskema/$isUpperCase.html">$isUpperCase</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+          <dt id="$isUrl" class="property">
+  <span class="name"><a href="../eskema/$isUrl.html">$isUrl</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+          <dt id="$isUuidV4" class="property">
+  <span class="name"><a href="../eskema/$isUuidV4.html">$isUuidV4</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   
 
 </dt>
@@ -357,7 +503,7 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
 
           <dt id="$listEmpty" class="property">
   <span class="name"><a href="../eskema/$listEmpty.html">$listEmpty</a></span>
-  <span class="signature">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   
 
 </dt>
@@ -369,7 +515,7 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
 
           <dt id="$stringEmpty" class="property">
   <span class="name"><a href="../eskema/$stringEmpty.html">$stringEmpty</a></span>
-  <span class="signature">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="signature">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   
 
 </dt>
@@ -386,36 +532,34 @@ for example <a href="../validator/EskMap-class.html">EskMap</a> uses it to valid
       <h2>Functions</h2>
       <dl class="callables">
           <dt id="all" class="callable">
-  <span class="name"><a href="../validators/all.html">all</a></span><span class="signature">(<wbr><span class="parameter" id="all-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_combinator_validators/all.html">all</a></span><span class="signature">(<wbr><span class="parameter" id="all-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Passes the test if all of the <a href="../validator/EskValidator-class.html">EskValidator</a>s are valid, and fails if any of them are invalid
+  Passes the test if all of the <a href="../validator/Validator-class.html">Validator</a>s are valid, and fails if any of them are invalid
   
 
 </dd>
 
           <dt id="any" class="callable">
-  <span class="name"><a href="../validators/any.html">any</a></span><span class="signature">(<wbr><span class="parameter" id="any-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_combinator_validators/any.html">any</a></span><span class="signature">(<wbr><span class="parameter" id="any-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  ///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-Passes the test if any of the <a href="../validator/EskValidator-class.html">EskValidator</a>s are valid, and fails if any are invalid
+  Passes the test if any of the <a href="../validator/Validator-class.html">Validator</a>s are valid, and fails if any are invalid
   
 
 </dd>
 
           <dt id="contains" class="callable">
-  <span class="name"><a href="../validators/contains.html">contains</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="contains-param-item"><span class="type-annotation">T</span> <span class="parameter-name">item</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_comparison_validators/contains.html">contains</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="contains-param-item"><span class="type-annotation">T</span> <span class="parameter-name">item</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -426,24 +570,48 @@ Passes the test if any of the <a href="../validator/EskValidator-class.html">Esk
 
 </dd>
 
-          <dt id="eskema" class="callable">
-  <span class="name"><a href="../validators/eskema.html">eskema</a></span><span class="signature">(<wbr><span class="parameter" id="eskema-param-eskema"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>&gt;</span></span> <span class="parameter-name">eskema</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+          <dt id="containsKey" class="callable">
+  <span class="name"><a href="../validators_comparison_validators/containsKey.html">containsKey</a></span><span class="signature">(<wbr><span class="parameter" id="containsKey-param-key"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">key</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  ///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-Returns a Validator that checks a value against a Map eskema that declares a validator for each key.
+  
+  
+
+</dd>
+
+          <dt id="defaultTo" class="callable">
+  <span class="name"><a href="../transformers/defaultTo.html">defaultTo</a></span><span class="signature">(<wbr><span class="parameter" id="defaultTo-param-defaultValue"><span class="type-annotation">dynamic</span> <span class="parameter-name">defaultValue</span>, </span><span class="parameter" id="defaultTo-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Provides a default value if the input is <code>null</code>.
+  
+
+</dd>
+
+          <dt id="eskema" class="callable">
+  <span class="name"><a href="../validators_structure_validators/eskema.html">eskema</a></span><span class="signature">(<wbr><span class="parameter" id="eskema-param-eskema"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">eskema</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Returns a Validator that checks a value against a Map eskema that declares a validator for each key.
   
 
 </dd>
 
           <dt id="eskemaList" class="callable">
-  <span class="name"><a href="../validators/eskemaList.html">eskemaList</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="eskemaList-param-eskema"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>&gt;</span></span> <span class="parameter-name">eskema</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_structure_validators/eskemaList.html">eskemaList</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="eskemaList-param-eskema"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">eskema</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -455,23 +623,63 @@ the eskema defines a validator for each item in the list
 
 </dd>
 
-          <dt id="isBool" class="callable">
-  <span class="name"><a href="../validators/isBool.html">isBool</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+          <dt id="eskemaStrict" class="callable">
+  <span class="name"><a href="../validators_structure_validators/eskemaStrict.html">eskemaStrict</a></span><span class="signature">(<wbr><span class="parameter" id="eskemaStrict-param-schema"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">schema</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns a <a href="../validator/IEskValidator-class.html">IEskValidator</a> that checks if the given value is a <code>bool</code>
+  Returns a Validator that checks a value against a Map eskema and fails if
+any keys exist in the map that are not defined in the <code>schema</code>.
+  
+
+</dd>
+
+          <dt id="expectation" class="callable">
+  <span class="name"><a href="../expectation/expectation.html">expectation</a></span><span class="signature">(<wbr><span class="parameter" id="expectation-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">message</span>, </span><span class="parameter" id="expectation-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, [</span><span class="parameter" id="expectation-param-path"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">path</span></span>])
+    <span class="returntype parameter">&#8594; <a href="../expectation/Expectation-class.html">Expectation</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Creates an expectation for a validation result.
+  
+
+</dd>
+
+          <dt id="getField" class="callable">
+  <span class="name"><a href="../transformers/getField.html">getField</a></span><span class="signature">(<wbr><span class="parameter" id="getField-param-key"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">key</span>, </span><span class="parameter" id="getField-param-inner"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">inner</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Extracts and validates a field from a map.
+  
+
+</dd>
+
+          <dt id="isBool" class="callable">
+  <span class="name"><a href="../validators_type_validators/isBool.html">isBool</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>bool</code>
 For better performance and readability, use the <a href="../eskema/$isBool.html">$isBool</a> variable directly.
   
 
 </dd>
 
           <dt id="isDate" class="callable">
-  <span class="name"><a href="../validators/isDate.html">isDate</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_type_validators/isDate.html">isDate</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -482,9 +690,23 @@ For better performance and readability, use the <a href="../eskema/$isBool.html"
 
 </dd>
 
+          <dt id="isDateTime" class="callable">
+  <span class="name"><a href="../validators_type_validators/isDateTime.html">isDateTime</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>DateTime</code>
+For better performance and readability, use the <a href="../eskema/$isDateTime.html">$isDateTime</a> variable directly.
+  
+
+</dd>
+
           <dt id="isDeepEq" class="callable">
-  <span class="name"><a href="../validators/isDeepEq.html">isDeepEq</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="isDeepEq-param-otherValue"><span class="type-annotation">T</span> <span class="parameter-name">otherValue</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_comparison_validators/isDeepEq.html">isDeepEq</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="isDeepEq-param-otherValue"><span class="type-annotation">T</span> <span class="parameter-name">otherValue</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -496,22 +718,48 @@ For better performance and readability, use the <a href="../eskema/$isBool.html"
 </dd>
 
           <dt id="isDouble" class="callable">
-  <span class="name"><a href="../validators/isDouble.html">isDouble</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_type_validators/isDouble.html">isDouble</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns a <a href="../validator/IEskValidator-class.html">IEskValidator</a> that checks if the given value is a <code>double</code>
+  Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>double</code>
 For better performance and readability, use the <a href="../eskema/$isDouble.html">$isDouble</a> variable directly.
   
 
 </dd>
 
+          <dt id="isDoubleString" class="callable">
+  <span class="name"><a href="../validators_type_validators/isDoubleString.html">isDoubleString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Validates that the String can be parsed as a <code>double</code> (e.g. '123.45', '-1e3')
+  
+
+</dd>
+
+          <dt id="isEmail" class="callable">
+  <span class="name"><a href="../validators_string_validators/isEmail.html">isEmail</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Validates that the String is a valid email address.
+  
+
+</dd>
+
           <dt id="isEmpty" class="callable">
-  <span class="name"><a href="../validators/isEmpty.html">isEmpty</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_string_validators/isEmpty.html">isEmpty</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -523,22 +771,22 @@ For better performance and readability, use the <a href="../eskema/$isDouble.htm
 </dd>
 
           <dt id="isEnum" class="callable">
-  <span class="name"><a href="../validators/isEnum.html">isEnum</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_type_validators/isEnum.html">isEnum</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns a <a href="../validator/IEskValidator-class.html">IEskValidator</a> that checks if the given value is a <code>Enum</code>
+  Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>Enum</code>
 For better performance and readability, use the <a href="../eskema/$isEnum.html">$isEnum</a> variable directly.
   
 
 </dd>
 
           <dt id="isEq" class="callable">
-  <span class="name"><a href="../validators/isEq.html">isEq</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="isEq-param-otherValue"><span class="type-annotation">T</span> <span class="parameter-name">otherValue</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_comparison_validators/isEq.html">isEq</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="isEq-param-otherValue"><span class="type-annotation">T</span> <span class="parameter-name">otherValue</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -550,36 +798,36 @@ For better performance and readability, use the <a href="../eskema/$isEnum.html"
 </dd>
 
           <dt id="isFunction" class="callable">
-  <span class="name"><a href="../validators/isFunction.html">isFunction</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_type_validators/isFunction.html">isFunction</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns a <a href="../validator/IEskValidator-class.html">IEskValidator</a> that checks if the given value is a <code>Function</code>
+  Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>Function</code>
 For better performance and readability, use the <a href="../eskema/$isFunction.html">$isFunction</a> variable directly.
   
 
 </dd>
 
           <dt id="isFuture" class="callable">
-  <span class="name"><a href="../validators/isFuture.html">isFuture</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_type_validators/isFuture.html">isFuture</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns a <a href="../validator/IEskValidator-class.html">IEskValidator</a> that checks if the given value is a <code>Future</code>
+  Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>Future</code>
 For better performance and readability, use the <a href="../eskema/$isFuture.html">$isFuture</a> variable directly.
   
 
 </dd>
 
           <dt id="isGt" class="callable">
-  <span class="name"><a href="../validators/isGt.html">isGt</a></span><span class="signature">(<wbr><span class="parameter" id="isGt-param-min"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">min</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_number_validators/isGt.html">isGt</a></span><span class="signature">(<wbr><span class="parameter" id="isGt-param-min"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">min</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -591,8 +839,8 @@ For better performance and readability, use the <a href="../eskema/$isFuture.htm
 </dd>
 
           <dt id="isGte" class="callable">
-  <span class="name"><a href="../validators/isGte.html">isGte</a></span><span class="signature">(<wbr><span class="parameter" id="isGte-param-min"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">min</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_number_validators/isGte.html">isGte</a></span><span class="signature">(<wbr><span class="parameter" id="isGte-param-min"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">min</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -603,66 +851,103 @@ For better performance and readability, use the <a href="../eskema/$isFuture.htm
 
 </dd>
 
-          <dt id="isInt" class="callable">
-  <span class="name"><a href="../validators/isInt.html">isInt</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+          <dt id="isInRange" class="callable">
+  <span class="name"><a href="../validators_number_validators/isInRange.html">isInRange</a></span><span class="signature">(<wbr><span class="parameter" id="isInRange-param-min"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">min</span>, </span><span class="parameter" id="isInRange-param-max"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">max</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns a <a href="../validator/IEskValidator-class.html">IEskValidator</a> that checks if the given value is a <code>int</code>
+  Checks whether the given numeric value is within the range <code>min, max</code> (inclusive).
+  
+
+</dd>
+
+          <dt id="isInt" class="callable">
+  <span class="name"><a href="../validators_type_validators/isInt.html">isInt</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>int</code>
 For better performance and readability, use the <a href="../eskema/$isInt.html">$isInt</a> variable directly.
   
 
 </dd>
 
-          <dt id="isIterable" class="callable">
-  <span class="name"><a href="../validators/isIterable.html">isIterable</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+          <dt id="isIntString" class="callable">
+  <span class="name"><a href="../validators_type_validators/isIntString.html">isIntString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns a <a href="../validator/IEskValidator-class.html">IEskValidator</a> that checks if the given value is a <code>Iterable</code>
+  Validates that the String can be parsed as an <code>int</code> (e.g. '123', '-42')
+  
+
+</dd>
+
+          <dt id="isIterable" class="callable">
+  <span class="name"><a href="../validators_type_validators/isIterable.html">isIterable</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>Iterable</code>
 For better performance and readability, use the <a href="../eskema/$isIterable.html">$isIterable</a> variable directly.
   
 
 </dd>
 
           <dt id="isList" class="callable">
-  <span class="name"><a href="../validators/isList.html">isList</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_type_validators/isList.html">isList</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns a <a href="../validator/IEskValidator-class.html">IEskValidator</a> that checks if the given value is a <code>List</code>
+  Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>List</code>
 For better performance and readability, use the <a href="../eskema/$isList.html">$isList</a> variable directly.
   
 
 </dd>
 
-          <dt id="isLt" class="callable">
-  <span class="name"><a href="../validators/isLt.html">isLt</a></span><span class="signature">(<wbr><span class="parameter" id="isLt-param-max"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">max</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+          <dt id="isLowerCase" class="callable">
+  <span class="name"><a href="../validators_string_validators/isLowerCase.html">isLowerCase</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  ///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-Checks whether the given value is less than <code>max</code>
+  Validates that it's a String and it's lowecase
+  
+
+</dd>
+
+          <dt id="isLt" class="callable">
+  <span class="name"><a href="../validators_number_validators/isLt.html">isLt</a></span><span class="signature">(<wbr><span class="parameter" id="isLt-param-max"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">max</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Checks whether the given value is less than <code>max</code>
   
 
 </dd>
 
           <dt id="isLte" class="callable">
-  <span class="name"><a href="../validators/isLte.html">isLte</a></span><span class="signature">(<wbr><span class="parameter" id="isLte-param-max"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">max</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_number_validators/isLte.html">isLte</a></span><span class="signature">(<wbr><span class="parameter" id="isLte-param-max"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">max</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -674,22 +959,22 @@ Checks whether the given value is less than <code>max</code>
 </dd>
 
           <dt id="isMap" class="callable">
-  <span class="name"><a href="../validators/isMap.html">isMap</a></span><span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_type_validators/isMap.html">isMap</a></span><span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns a <a href="../validator/IEskValidator-class.html">IEskValidator</a> that checks if the given value is a <code>Map</code>
+  Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>Map</code>
 For better performance and readability, use the <a href="../eskema/$isMap.html">$isMap</a> variable directly.
   
 
 </dd>
 
           <dt id="isNotEmpty" class="callable">
-  <span class="name"><a href="../validators/isNotEmpty.html">isNotEmpty</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_string_validators/isNotEmpty.html">isNotEmpty</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -701,36 +986,49 @@ For better performance and readability, use the <a href="../eskema/$isMap.html">
 </dd>
 
           <dt id="isNull" class="callable">
-  <span class="name"><a href="../validators/isNull.html">isNull</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_type_validators/isNull.html">isNull</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns a <a href="../validator/IEskValidator-class.html">IEskValidator</a> that checks if the given value is <code>null</code>
+  Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is <code>null</code>
 For better performance and readability, use the <a href="../eskema/$isNull.html">$isNull</a> variable directly.
   
 
 </dd>
 
           <dt id="isNumber" class="callable">
-  <span class="name"><a href="../validators/isNumber.html">isNumber</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_type_validators/isNumber.html">isNumber</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns a <a href="../validator/IEskValidator-class.html">IEskValidator</a> that checks if the given value is a <code>num</code>
+  Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>num</code>
 For better performance and readability, use the <a href="../eskema/$isNumber.html">$isNumber</a> variable directly.
   
 
 </dd>
 
+          <dt id="isNumString" class="callable">
+  <span class="name"><a href="../validators_type_validators/isNumString.html">isNumString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Validates that the String can be parsed as a <code>num</code> (int or double)
+  
+
+</dd>
+
           <dt id="isOneOf" class="callable">
-  <span class="name"><a href="../validators/isOneOf.html">isOneOf</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="isOneOf-param-options"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> <span class="parameter-name">options</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_comparison_validators/isOneOf.html">isOneOf</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="isOneOf-param-options"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> <span class="parameter-name">options</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -742,91 +1040,141 @@ For better performance and readability, use the <a href="../eskema/$isNumber.htm
 </dd>
 
           <dt id="isRecord" class="callable">
-  <span class="name"><a href="../validators/isRecord.html">isRecord</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_type_validators/isRecord.html">isRecord</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns a <a href="../validator/IEskValidator-class.html">IEskValidator</a> that checks if the given value is a <code>Record</code>
+  Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>Record</code>
   
 
 </dd>
 
           <dt id="isSet" class="callable">
-  <span class="name"><a href="../validators/isSet.html">isSet</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_type_validators/isSet.html">isSet</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns a <a href="../validator/IEskValidator-class.html">IEskValidator</a> that checks if the given value is a <code>Set</code>
+  Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>Set</code>
 For better performance and readability, use the <a href="../eskema/$isSet.html">$isSet</a> variable directly.
   
 
 </dd>
 
-          <dt id="isString" class="callable">
-  <span class="name"><a href="../validators/isString.html">isString</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+          <dt id="isStrictUrl" class="callable">
+  <span class="name"><a href="../validators_string_validators/isStrictUrl.html">isStrictUrl</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns a <a href="../validator/IEskValidator-class.html">IEskValidator</a> that checks if the given value is a <code>String</code>
+  
+  
+
+</dd>
+
+          <dt id="isString" class="callable">
+  <span class="name"><a href="../validators_type_validators/isString.html">isString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>String</code>
 For better performance and readability, use the <a href="../eskema/$isString.html">$isString</a> variable directly.
   
 
 </dd>
 
           <dt id="isSymbol" class="callable">
-  <span class="name"><a href="../validators/isSymbol.html">isSymbol</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_type_validators/isSymbol.html">isSymbol</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns a <a href="../validator/IEskValidator-class.html">IEskValidator</a> that checks if the given value is a <code>Symbol</code>
+  Returns a <a href="../validator/IValidator-class.html">IValidator</a> that checks if the given value is a <code>Symbol</code>
 For better performance and readability, use the <a href="../eskema/$isSymbol.html">$isSymbol</a> variable directly.
   
 
 </dd>
 
           <dt id="isType" class="callable">
-  <span class="name"><a href="../validators/isType.html">isType</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_type_validators/isType.html">isType</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  ///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-Returns a <a href="../validator/EskValidator-class.html">EskValidator</a> that checks if the given value is the correct type
+  Returns a <a href="../validator/Validator-class.html">Validator</a> that checks if the given value is the correct type
   
 
 </dd>
 
           <dt id="isTypeOrNull" class="callable">
-  <span class="name"><a href="../validators/isTypeOrNull.html">isTypeOrNull</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_type_validators/isTypeOrNull.html">isTypeOrNull</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns a <a href="../validator/EskValidator-class.html">EskValidator</a> that checks if the given value is the correct type
+  Returns a <a href="../validator/Validator-class.html">Validator</a> that checks if the given value is the correct type
+  
+
+</dd>
+
+          <dt id="isUpperCase" class="callable">
+  <span class="name"><a href="../validators_string_validators/isUpperCase.html">isUpperCase</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Validates that it's a String and it's uppercase
+  
+
+</dd>
+
+          <dt id="isUrl" class="callable">
+  <span class="name"><a href="../validators_string_validators/isUrl.html">isUrl</a></span><span class="signature">(<wbr>{<span class="parameter" id="isUrl-param-strict"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">strict</span> = <span class="default-value">false</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Validates that the String is a valid URL. By it uses non-strict validation (like "example.com").
+  
+
+</dd>
+
+          <dt id="isUuidV4" class="callable">
+  <span class="name"><a href="../validators_string_validators/isUuidV4.html">isUuidV4</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Validates that the String is a valid UUID (v4).
   
 
 </dd>
 
           <dt id="length" class="callable">
-  <span class="name"><a href="../validators/length.html">length</a></span><span class="signature">(<wbr><span class="parameter" id="length-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_comparison_validators/length.html">length</a></span><span class="signature">(<wbr><span class="parameter" id="length-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -838,8 +1186,8 @@ Returns a <a href="../validator/EskValidator-class.html">EskValidator</a> that c
 </dd>
 
           <dt id="listContains" class="callable">
-  <span class="name"><a href="../validators/listContains.html">listContains</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="listContains-param-item"><span class="type-annotation">dynamic</span> <span class="parameter-name">item</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_list_validators/listContains.html">listContains</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="listContains-param-item"><span class="type-annotation">dynamic</span> <span class="parameter-name">item</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -851,8 +1199,8 @@ Returns a <a href="../validator/EskValidator-class.html">EskValidator</a> that c
 </dd>
 
           <dt id="listEach" class="callable">
-  <span class="name"><a href="../validators/listEach.html">listEach</a></span><span class="signature">(<wbr><span class="parameter" id="listEach-param-itemValidator"><span class="type-annotation"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span> <span class="parameter-name">itemValidator</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_structure_validators/listEach.html">listEach</a></span><span class="signature">(<wbr><span class="parameter" id="listEach-param-itemValidator"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">itemValidator</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -864,8 +1212,8 @@ Returns a <a href="../validator/EskValidator-class.html">EskValidator</a> that c
 </dd>
 
           <dt id="listEmpty" class="callable">
-  <span class="name"><a href="../validators/listEmpty.html">listEmpty</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_list_validators/listEmpty.html">listEmpty</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -877,8 +1225,8 @@ Returns a <a href="../validator/EskValidator-class.html">EskValidator</a> that c
 </dd>
 
           <dt id="listIsOfLength" class="callable">
-  <span class="name"><a href="../validators/listIsOfLength.html">listIsOfLength</a></span><span class="signature">(<wbr><span class="parameter" id="listIsOfLength-param-size"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">size</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_list_validators/listIsOfLength.html">listIsOfLength</a></span><span class="signature">(<wbr><span class="parameter" id="listIsOfLength-param-size"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">size</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -890,23 +1238,21 @@ Returns a <a href="../validator/EskValidator-class.html">EskValidator</a> that c
 </dd>
 
           <dt id="listLength" class="callable">
-  <span class="name"><a href="../validators/listLength.html">listLength</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="listLength-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_list_validators/listLength.html">listLength</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="listLength-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  ///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-Validates that it's a List and the length matches the validators
+  Validates that it's a List and the length matches the validators
   
 
 </dd>
 
           <dt id="none" class="callable">
-  <span class="name"><a href="../validators/none.html">none</a></span><span class="signature">(<wbr><span class="parameter" id="none-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_combinator_validators/none.html">none</a></span><span class="signature">(<wbr><span class="parameter" id="none-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -918,8 +1264,8 @@ Validates that it's a List and the length matches the validators
 </dd>
 
           <dt id="not" class="callable">
-  <span class="name"><a href="../validators/not.html">not</a></span><span class="signature">(<wbr><span class="parameter" id="not-param-validator"><span class="type-annotation"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span> <span class="parameter-name">validator</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_combinator_validators/not.html">not</a></span><span class="signature">(<wbr><span class="parameter" id="not-param-validator"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -931,22 +1277,22 @@ Validates that it's a List and the length matches the validators
 </dd>
 
           <dt id="nullable" class="callable">
-  <span class="name"><a href="../validators/nullable.html">nullable</a></span><span class="signature">(<wbr><span class="parameter" id="nullable-param-validator"><span class="type-annotation"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span> <span class="parameter-name">validator</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_presence_validators/nullable.html">nullable</a></span><span class="signature">(<wbr><span class="parameter" id="nullable-param-validator"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
   If the field is not present (null) it will be considered valid
-If you want to allow empty strings as valid, use <a href="../validators/optional.html">optional</a> instead
+If you want to allow empty strings as valid, use <a href="../validators_presence_validators/optional.html">optional</a> instead
   
 
 </dd>
 
           <dt id="optional" class="callable">
-  <span class="name"><a href="../validators/optional.html">optional</a></span><span class="signature">(<wbr><span class="parameter" id="optional-param-validator"><span class="type-annotation"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span> <span class="parameter-name">validator</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_presence_validators/optional.html">optional</a></span><span class="signature">(<wbr><span class="parameter" id="optional-param-validator"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -958,9 +1304,22 @@ It's different from nullable in that it also checks for empty strings
 
 </dd>
 
+          <dt id="split" class="callable">
+  <span class="name"><a href="../transformers/split.html">split</a></span><span class="signature">(<wbr><span class="parameter" id="split-param-separator"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">separator</span>, </span><span class="parameter" id="split-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Splits a string into a list of substrings.
+  
+
+</dd>
+
           <dt id="stringContains" class="callable">
-  <span class="name"><a href="../validators/stringContains.html">stringContains</a></span><span class="signature">(<wbr><span class="parameter" id="stringContains-param-str"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">str</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_string_validators/stringContains.html">stringContains</a></span><span class="signature">(<wbr><span class="parameter" id="stringContains-param-str"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">str</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -972,21 +1331,21 @@ It's different from nullable in that it also checks for empty strings
 </dd>
 
           <dt id="stringEmpty" class="callable">
-  <span class="name"><a href="../validators/stringEmpty.html">stringEmpty</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_string_validators/stringEmpty.html">stringEmpty</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Validate that the string is empty
+  Validate that it's a String and the string is empty
   
 
 </dd>
 
           <dt id="stringIsOfLength" class="callable">
-  <span class="name"><a href="../validators/stringIsOfLength.html">stringIsOfLength</a></span><span class="signature">(<wbr><span class="parameter" id="stringIsOfLength-param-size"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">size</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_string_validators/stringIsOfLength.html">stringIsOfLength</a></span><span class="signature">(<wbr><span class="parameter" id="stringIsOfLength-param-size"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">size</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -998,23 +1357,21 @@ It's different from nullable in that it also checks for empty strings
 </dd>
 
           <dt id="stringLength" class="callable">
-  <span class="name"><a href="../validators/stringLength.html">stringLength</a></span><span class="signature">(<wbr><span class="parameter" id="stringLength-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_string_validators/stringLength.html">stringLength</a></span><span class="signature">(<wbr><span class="parameter" id="stringLength-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  ///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-Validates that the String's length matches the validators
+  Validates that the String's length matches the validators
   
 
 </dd>
 
           <dt id="stringMatchesPattern" class="callable">
-  <span class="name"><a href="../validators/stringMatchesPattern.html">stringMatchesPattern</a></span><span class="signature">(<wbr><span class="parameter" id="stringMatchesPattern-param-pattern"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Pattern-class.html">Pattern</a></span> <span class="parameter-name">pattern</span>, {</span><span class="parameter" id="stringMatchesPattern-param-error"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">error</span></span>})
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_string_validators/stringMatchesPattern.html">stringMatchesPattern</a></span><span class="signature">(<wbr><span class="parameter" id="stringMatchesPattern-param-pattern"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Pattern-class.html">Pattern</a></span> <span class="parameter-name">pattern</span>, {</span><span class="parameter" id="stringMatchesPattern-param-error"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">error</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -1026,27 +1383,171 @@ Validates that the String's length matches the validators
 </dd>
 
           <dt id="throwInstead" class="callable">
-  <span class="name"><a href="../validators/throwInstead.html">throwInstead</a></span><span class="signature">(<wbr><span class="parameter" id="throwInstead-param-validator"><span class="type-annotation"><a href="../validator/IEskValidator-class.html">IEskValidator</a></span> <span class="parameter-name">validator</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IEskValidator-class.html">IEskValidator</a></span>
+  <span class="name"><a href="../validators_combinator_validators/throwInstead.html">throwInstead</a></span><span class="signature">(<wbr><span class="parameter" id="throwInstead-param-validator"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Returns a <a href="../validator/EskValidator-class.html">EskValidator</a> that throws a <a href="../util/ValidatorFailedException-class.html">ValidatorFailedException</a> instead of returning a result
+  Returns a <a href="../validator/Validator-class.html">Validator</a> that throws a <a href="../validator/ValidatorFailedException-class.html">ValidatorFailedException</a> instead of returning a result
+  
+
+</dd>
+
+          <dt id="toBool" class="callable">
+  <span class="name"><a href="../transformers/toBool.html">toBool</a></span><span class="signature">(<wbr><span class="parameter" id="toBool-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Coerces a value to a boolean.
+  
+
+</dd>
+
+          <dt id="toDateTime" class="callable">
+  <span class="name"><a href="../transformers/toDateTime.html">toDateTime</a></span><span class="signature">(<wbr><span class="parameter" id="toDateTime-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Coerces a value to a <code>DateTime</code>.
+  
+
+</dd>
+
+          <dt id="toDouble" class="callable">
+  <span class="name"><a href="../transformers/toDouble.html">toDouble</a></span><span class="signature">(<wbr><span class="parameter" id="toDouble-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Coerces a value to a double.
+  
+
+</dd>
+
+          <dt id="toInt" class="callable">
+  <span class="name"><a href="../transformers/toInt.html">toInt</a></span><span class="signature">(<wbr><span class="parameter" id="toInt-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Coerces a value to an integer.
+  
+
+</dd>
+
+          <dt id="toLowerCase" class="callable">
+  <span class="name"><a href="../transformers/toLowerCase.html">toLowerCase</a></span><span class="signature">(<wbr><span class="parameter" id="toLowerCase-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Transforms a string to lowercase.
+  
+
+</dd>
+
+          <dt id="toNum" class="callable">
+  <span class="name"><a href="../transformers/toNum.html">toNum</a></span><span class="signature">(<wbr><span class="parameter" id="toNum-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Coerces a value to a number (<code>num</code>).
+  
+
+</dd>
+
+          <dt id="toUpperCase" class="callable">
+  <span class="name"><a href="../transformers/toUpperCase.html">toUpperCase</a></span><span class="signature">(<wbr><span class="parameter" id="toUpperCase-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Transforms a string to uppercase.
+  
+
+</dd>
+
+          <dt id="transform" class="callable">
+  <span class="name"><a href="../transformers/transform.html">transform</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="transform-param-fn"><span class="type-annotation">T</span> <span class="parameter-name">fn</span>(<span class="parameter" id="param-"><span class="type-annotation">dynamic</span></span>), </span><span class="parameter" id="transform-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Transforms a value using a provided function.
+  
+
+</dd>
+
+          <dt id="trim" class="callable">
+  <span class="name"><a href="../transformers/trim.html">trim</a></span><span class="signature">(<wbr><span class="parameter" id="trim-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Trims leading and trailing whitespace from a string.
   
 
 </dd>
 
           <dt id="validator" class="callable">
-  <span class="name"><a href="../validators/validator.html">validator</a></span><span class="signature">(<wbr><span class="parameter" id="validator-param-comparisonFn"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">comparisonFn</span>(<span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>), </span><span class="parameter" id="validator-param-errorFn"><span class="type-annotation"><a href="../error/EskError-class.html">EskError</a></span> <span class="parameter-name">errorFn</span>(<span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)</span>)
-    <span class="returntype parameter">&#8594; <a href="../validator/EskValidator-class.html">EskValidator</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/EskResult-class.html">EskResult</a></span>&gt;</span></span>
+  <span class="name"><a href="../validators/validator.html">validator</a></span><span class="signature">(<wbr><span class="parameter" id="validator-param-comparisonFn"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">comparisonFn</span>(<span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>), </span><span class="parameter" id="validator-param-errorFn"><span class="type-annotation"><a href="../expectation/Expectation-class.html">Expectation</a></span> <span class="parameter-name">errorFn</span>(<span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)</span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/Validator-class.html">Validator</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/Result-class.html">Result</a></span>&gt;</span></span>
   </span>
   
 
 </dt>
 <dd>
   
+  
+
+</dd>
+
+          <dt id="when" class="callable">
+  <span class="name"><a href="../validators_combinator_validators/when.html">when</a></span><span class="signature">(<wbr><span class="parameter" id="when-param-condition"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">condition</span>, {</span><span class="parameter" id="when-param-then"><span>required</span> <span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">then</span>, </span><span class="parameter" id="when-param-otherwise"><span>required</span> <span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">otherwise</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Creates a conditional validator. It's conditional based on some other field in the eskema.
+  
+
+</dd>
+
+          <dt id="withError" class="callable">
+  <span class="name"><a href="../validators_combinator_validators/withError.html">withError</a></span><span class="signature">(<wbr><span class="parameter" id="withError-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, </span><span class="parameter" id="withError-param-error"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">error</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Returns a <a href="../validator/IValidator-class.html">IValidator</a> that wraps the given <code>child</code> validator and adds the
+provided <code>error</code> message to the result if the validation fails.
   
 
 </dd>
@@ -1058,8 +1559,8 @@ Validates that the String's length matches the validators
       <h2>Typedefs</h2>
       <dl>
           
-  <dt id="EskValidatorFn" class="callable">
-    <span class="name"><a href="../validator/EskValidatorFn.html">EskValidatorFn</a></span>&lt;<wbr><span class="type-parameter">T extends <a href="../result/EskResult-class.html">EskResult</a></span>&gt;<span class="signature">
+  <dt id="ValidatorFunction" class="callable">
+    <span class="name"><a href="../validator/ValidatorFunction.html">ValidatorFunction</a></span>&lt;<wbr><span class="type-parameter">T extends <a href="../result/Result-class.html">Result</a></span>&gt;<span class="signature">
       <span class="returntype parameter">= T Function<span class="signature">(<span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)</span></span>
     </span>
     
@@ -1074,6 +1575,19 @@ Validates that the String's length matches the validators
       </dl>
     </section>
 
+    <section class="summary offset-anchor" id="exceptions">
+      <h2>Exceptions / Errors</h2>
+      <dl>
+          <dt id="ValidatorFailedException">
+  <span class="name "><a href="../validator/ValidatorFailedException-class.html">ValidatorFailedException</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+      </dl>
+    </section>
   </div> <!-- /.main-content -->
   <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
     <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
@@ -1090,13 +1604,22 @@ Validates that the String's length matches the validators
     <h5><span class="package-name">eskema</span> <span class="package-kind">package</span></h5>
     <ol>
       <li class="section-title">Libraries</li>
-      <li><a href="../error/">error</a></li>
       <li><a href="../eskema/">eskema</a></li>
+      <li><a href="../expectation/">expectation</a></li>
       <li><a href="../extensions/">extensions</a></li>
       <li><a href="../result/">result</a></li>
+      <li><a href="../transformers/">transformers</a></li>
       <li><a href="../util/">util</a></li>
       <li><a href="../validator/">validator</a></li>
       <li><a href="../validators/">validators</a></li>
+      <li><a href="../validators_combinator_validators/">validators/combinator_validators</a></li>
+      <li><a href="../validators_comparison_validators/">validators/comparison_validators</a></li>
+      <li><a href="../validators_list_validators/">validators/list_validators</a></li>
+      <li><a href="../validators_number_validators/">validators/number_validators</a></li>
+      <li><a href="../validators_presence_validators/">validators/presence_validators</a></li>
+      <li><a href="../validators_string_validators/">validators/string_validators</a></li>
+      <li><a href="../validators_structure_validators/">validators/structure_validators</a></li>
+      <li><a href="../validators_type_validators/">validators/type_validators</a></li>
 </ol>
 
   </div>

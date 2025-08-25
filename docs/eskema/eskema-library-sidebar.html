@@ -1,11 +1,12 @@
 <ol>
       <li class="section-title"><a href="eskema/#classes">Classes</a></li>
-        <li><a href="validator/EskField-class.html">EskField</a></li>
-        <li><a href="validator/EskMap-class.html">EskMap</a></li>
-        <li><a href="result/EskResult-class.html">EskResult</a></li>
-        <li><a href="validator/EskValidator-class.html">EskValidator</a></li>
-        <li><a href="validator/IEskIdValidator-class.html">IEskIdValidator</a></li>
-        <li><a href="validator/IEskValidator-class.html">IEskValidator</a></li>
+        <li><a href="expectation/Expectation-class.html">Expectation</a></li>
+        <li><a href="validator/Field-class.html">Field</a></li>
+        <li><a href="validator/IdValidator-class.html">IdValidator</a></li>
+        <li><a href="validator/IValidator-class.html">IValidator</a></li>
+        <li><a href="validator/MapValidator-class.html">MapValidator</a></li>
+        <li><a href="result/Result-class.html">Result</a></li>
+        <li><a href="validator/Validator-class.html">Validator</a></li>
 
 
 
@@ -13,16 +14,20 @@
 
       <li class="section-title"><a href="eskema/#properties">Properties</a></li>
         <li><a href="eskema/$isBool.html">$isBool</a></li>
+        <li><a href="eskema/$isDateTime.html">$isDateTime</a></li>
         <li><a href="eskema/$isDouble.html">$isDouble</a></li>
+        <li><a href="eskema/$isDoubleString.html">$isDoubleString</a></li>
         <li><a href="eskema/$isEnum.html">$isEnum</a></li>
         <li><a href="eskema/$isFunction.html">$isFunction</a></li>
         <li><a href="eskema/$isFuture.html">$isFuture</a></li>
         <li><a href="eskema/$isInt.html">$isInt</a></li>
+        <li><a href="eskema/$isIntString.html">$isIntString</a></li>
         <li><a href="eskema/$isIterable.html">$isIterable</a></li>
         <li><a href="eskema/$isList.html">$isList</a></li>
         <li><a href="eskema/$isMap.html">$isMap</a></li>
         <li><a href="eskema/$isNull.html">$isNull</a></li>
         <li><a href="eskema/$isNumber.html">$isNumber</a></li>
+        <li><a href="eskema/$isNumString.html">$isNumString</a></li>
         <li><a href="eskema/$isRecord.html">$isRecord</a></li>
         <li><a href="eskema/$isSet.html">$isSet</a></li>
         <li><a href="eskema/$isString.html">$isString</a></li>
@@ -34,12 +39,17 @@
         <li><a href="validators/all.html">all</a></li>
         <li><a href="validators/any.html">any</a></li>
         <li><a href="validators/contains.html">contains</a></li>
+        <li><a href="validators/containsKey.html">containsKey</a></li>
         <li><a href="validators/eskema.html">eskema</a></li>
         <li><a href="validators/eskemaList.html">eskemaList</a></li>
+        <li><a href="expectation/expectation.html">expectation</a></li>
+        <li><a href="transformers/getField.html">getField</a></li>
         <li><a href="validators/isBool.html">isBool</a></li>
         <li><a href="validators/isDate.html">isDate</a></li>
+        <li><a href="validators/isDateTime.html">isDateTime</a></li>
         <li><a href="validators/isDeepEq.html">isDeepEq</a></li>
         <li><a href="validators/isDouble.html">isDouble</a></li>
+        <li><a href="validators/isDoubleString.html">isDoubleString</a></li>
         <li><a href="validators/isEmpty.html">isEmpty</a></li>
         <li><a href="validators/isEnum.html">isEnum</a></li>
         <li><a href="validators/isEq.html">isEq</a></li>
@@ -48,6 +58,7 @@
         <li><a href="validators/isGt.html">isGt</a></li>
         <li><a href="validators/isGte.html">isGte</a></li>
         <li><a href="validators/isInt.html">isInt</a></li>
+        <li><a href="validators/isIntString.html">isIntString</a></li>
         <li><a href="validators/isIterable.html">isIterable</a></li>
         <li><a href="validators/isList.html">isList</a></li>
         <li><a href="validators/isLt.html">isLt</a></li>
@@ -56,6 +67,7 @@
         <li><a href="validators/isNotEmpty.html">isNotEmpty</a></li>
         <li><a href="validators/isNull.html">isNull</a></li>
         <li><a href="validators/isNumber.html">isNumber</a></li>
+        <li><a href="validators/isNumString.html">isNumString</a></li>
         <li><a href="validators/isOneOf.html">isOneOf</a></li>
         <li><a href="validators/isRecord.html">isRecord</a></li>
         <li><a href="validators/isSet.html">isSet</a></li>
@@ -79,10 +91,17 @@
         <li><a href="validators/stringLength.html">stringLength</a></li>
         <li><a href="validators/stringMatchesPattern.html">stringMatchesPattern</a></li>
         <li><a href="validators/throwInstead.html">throwInstead</a></li>
+        <li><a href="transformers/toDateTime.html">toDateTime</a></li>
+        <li><a href="transformers/toDouble.html">toDouble</a></li>
+        <li><a href="transformers/toInt.html">toInt</a></li>
+        <li><a href="transformers/toNum.html">toNum</a></li>
+        <li><a href="transformers/transform.html">transform</a></li>
+        <li><a href="transformers/trim.html">trim</a></li>
         <li><a href="validators/validator.html">validator</a></li>
+        <li><a href="validators/withError.html">withError</a></li>
 
       <li class="section-title"><a href="eskema/#typedefs">Typedefs</a></li>
-        <li><a href="validator/EskValidatorFn.html">EskValidatorFn</a></li>
+        <li><a href="validator/ValidatorFunction.html">ValidatorFunction</a></li>
 
 
       <li class="section-title"><a href="eskema/#extensions">Extensions</a></li>

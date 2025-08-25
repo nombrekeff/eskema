@@ -1,75 +1,78 @@
-import 'package:eskema/error.dart';
+/// Represents the result of a validation.
+/// 
+/// This class encapsulates the outcome of a validation process, including
+/// whether the validation was successful, the value that was validated,
+/// and any expectations that were not met.
+library result;
+
+import 'package:eskema/expectation.dart';
 import 'package:eskema/util.dart';
 
-class EskResult {
-  EskResult({
+/// Represents the result of a validation. 
+class Result<T> {
+  Result({
     required this.isValid,
     required this.value,
-    List<EskError>? errors,
-    EskError? error,
+    List<Expectation>? expectations,
+    Expectation? expectation,
   })  : assert(
-          error != null || errors != null,
-          "Either 'errors' list or 'error' must be provided",
+          isValid ||
+              (!isValid && expectation != null ||
+                  (expectations != null && expectations.isNotEmpty)),
+          "invalid -> provide an expectation or non-empty expectations list",
         ),
-        errors = errors ?? [error!];
+        expectations = List.unmodifiable(
+          expectations ?? (expectation == null ? const <Expectation>[] : [expectation]),
+        );
 
-  EskResult.valid(this.value)
+  Result.valid(this.value)
       : isValid = true,
-        errors = [];
+        expectations = const <Expectation>[];
 
-  EskResult.invalid(this.value, {List<EskError>? errors, EskError? error})
+  Result.invalid(this.value, {List<Expectation>? expectations, Expectation? expectation})
       : assert(
-          error != null || errors != null,
-          "Either 'errors' list or 'error' must be provided",
+          (expectation != null || (expectations != null && expectations.isNotEmpty)),
+          "If invalid, either 'expectation' or a non-empty 'expectations' list must be provided",
         ),
         isValid = false,
-        errors = errors ?? [error!];
+        expectations = (expectations != null
+            ? List.unmodifiable(expectations)
+            : List.unmodifiable([expectation!]));
 
   final bool isValid;
-  final List<EskError> errors;
-  final dynamic value;
+  /// The list of expectations for the validation result.
+  /// It will contain expectations independent of the validation result.
+  final List<Expectation> expectations;
+  final T value;
 
-  bool get hasErrors => errors.isNotEmpty;
+  bool get hasExpectations => expectations.isNotEmpty;
   bool get isNotValid => !isValid;
 
+  Expectation get firstExpectation => expectations.first;
+  Expectation get lastExpectation => expectations.last;
+
+  int get expectationCount => expectations.length;
+
   String get shortDescription {
-    if (isValid) {
-      return 'Valid';
-    } else {
-      return errors.map((e) => e.shortDescription).join(', ');
-    }
+    return isValid ? 'Valid' : expectations.map((e) => e.shortDescription).join(', ');
   }
 
   String get description {
-    if (isValid) {
-      return 'Valid: ${pretifyValue(value)}';
-    } else {
-      return '${errors.map((e) => e.shortDescription).join(', ')} (value: ${pretifyValue(value)})';
-    }
+    return isValid
+        ? 'Valid: ${pretifyValue(value)}'
+        : '$shortDescription (value: ${pretifyValue(value)})';
   }
 
-  EskResult copyWith({
+  /// Creates a copy of the result with the given parameters.
+  Result copyWith({
     bool? isValid,
-    List<EskError>? errors,
+    List<Expectation>? expectations,
     dynamic value,
   }) {
-    return EskResult(
+    return Result(
       isValid: isValid ?? this.isValid,
-      errors: errors ?? this.errors,
+      expectations: expectations ?? this.expectations,
       value: value ?? this.value,
-    );
-  }
-
-  EskResult addErrors(List<EskError> newErrors) {
-    return copyWith(
-      isValid: false,
-      errors: [...errors, ...newErrors],
-    );
-  }
-
-  EskResult negate() {
-    return copyWith(
-      isValid: !isValid,
     );
   }
 
