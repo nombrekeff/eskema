@@ -25,7 +25,7 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">eskema</a></li>
-    <li><a href="../validators/">validators.dart</a></li>
+    <li><a href="../validators/">validators&#47;combinator_validators.dart</a></li>
     <li class="self-crumb">throwInstead function</li>
   </ol>
   <div class="self-name">throwInstead</div>
@@ -63,18 +63,20 @@
     </section>
     
 <section class="desc markdown">
-  <p>Returns a <a href="../validator/Validator-class.html">Validator</a> that throws a <a href="../util/ValidatorFailedException-class.html">ValidatorFailedException</a> instead of returning a result</p>
+  <p>Returns a <a href="../validator/Validator-class.html">Validator</a> that throws a <a href="../validator/ValidatorFailedException-class.html">ValidatorFailedException</a> instead of returning a result</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator throwInstead(IValidator validator) =&gt; Validator((value) {
-      final result = validator.validate(value);
-      if (result.isNotValid) throw ValidatorFailedException(result);
-      return Result.valid(value);
-    });</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator throwInstead(IValidator validator) =&gt; Validator(
+      (value) {
+        final result = validator.validate(value);
+        if (result.isNotValid) throw ValidatorFailedException(result);
+        return Result.valid(value);
+      },
+    );</code></pre>
 </section>
 
 

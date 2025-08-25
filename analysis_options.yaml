@@ -28,3 +28,4 @@ dart_code_metrics:
 analyzer:
   errors:
     unnecessary_library_name: ignore
+    file_names: ignore

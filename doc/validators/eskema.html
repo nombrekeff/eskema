@@ -25,7 +25,7 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">eskema</a></li>
-    <li><a href="../validators/">validators.dart</a></li>
+    <li><a href="../validators/">validators&#47;structure_validators.dart</a></li>
     <li class="self-crumb">eskema function</li>
   </ol>
   <div class="self-name">eskema</div>
@@ -86,15 +86,27 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IValidator eskema(Map&lt;String, IValidator&gt; eskema) {
-  return $isMap &amp;
+  return isMap() &amp;
       Validator((value) {
         final errors = &lt;Expectation&gt;[];
 
-        for (final key in eskema.keys) {
-          final field = eskema[key];
-          final result = field!.validate(value[key], exists: value.containsKey(key));
+        for (final entry in eskema.entries) {
+          final key = entry.key;
+          final validator = entry.value;
+          final fieldValue = value[key];
 
-          if (result.isNotValid) {
+          final Result result;
+          if (validator is IWhenValidator) {
+            result = validator.validateWithParent(
+              fieldValue,
+              value,
+              exists: value.containsKey(key),
+            );
+          } else {
+            result = validator.validate(fieldValue, exists: value.containsKey(key));
+          }
+
+          if (!result.isValid) {
             for (var error in result.expectations) {
               errors.add(
                 Expectation(
@@ -107,9 +119,9 @@
           }
         }
 
-        return errors.isNotEmpty
-            ? Result.invalid(value, expectations: errors)
-            : Result.valid(value);
+        return errors.isEmpty
+            ? Result.valid(value)
+            : Result.invalid(value, expectations: errors);
       });
 }</code></pre>
 </section>
