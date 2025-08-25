@@ -102,6 +102,12 @@ try {
 		- [2. Validate your data](#2-validate-your-data)
 	- [Table of contents](#table-of-contents)
 	- [API overview](#api-overview)
+	- [Async validation](#async-validation)
+		- [Creating an async validator](#creating-an-async-validator)
+		- [Mixing sync \& async combinators](#mixing-sync--async-combinators)
+		- [When to prefer validateAsync()](#when-to-prefer-validateasync)
+		- [Error handling](#error-handling)
+		- [Upgrading existing code](#upgrading-existing-code)
 	- [Transformers](#transformers)
 	- [Conditional Validation](#conditional-validation)
 	- [Examples](#examples)
@@ -140,8 +146,67 @@ try {
 
 -   Results & Helpers
     -   `.validate(value)` → `Result`
+    -   `.validateAsync(value)` → `Future<Result>` (use when any validator is async)
     -   `.isValid(value)` → `bool`
     -   `.validateOrThrow(value)` → throws `ValidatorFailedException` on invalid input.
+    -   `AsyncValidatorException` — thrown if you call `.validate()` on a chain that contains async validators.
+
+## Async validation
+
+Eskema supports mixing synchronous and asynchronous validators without forcing everything to become async. Validators internally return `FutureOr<Result>` and only upgrade to a `Future` when an async boundary is encountered.
+
+Key points:
+
+- Use `.validate()` for purely synchronous validator chains (fast path, no allocations for Futures).
+- If any validator in the chain is async (uses `async` / returns a `Future<Result>`), call `.validateAsync()` instead.
+- Calling `.validate()` on a chain that resolves an async validator throws `AsyncValidatorException` with a helpful message.
+- Synchronous and async validators compose seamlessly; you do not need separate APIs for "async versions" of built-ins.
+
+### Creating an async validator
+
+You can make any custom validator async simply by returning a `Future<Result>` (e.g. using `async`). For example, checking a username against an in‑memory or remote store:
+
+```dart
+// Simulated async uniqueness check
+final $isUsernameAvailable = Validator((value) async {
+  await Future<void>.delayed(const Duration(milliseconds: 10));
+  const taken = {'alice', 'root'};
+  if (value is String && !taken.contains(value)) {
+    return Result.valid(value);
+  }
+  return Result.invalid(value, expectation: Expectation(message: 'not available', value: value));
+});
+
+final userValidator = eskema({
+  'username': isString() & isNotEmpty() & $isUsernameAvailable,
+  'age': isInt() & isGte(0),
+});
+
+// Because one link is async, use validateAsync()
+final r = await userValidator.validateAsync({'username': 'new_user', 'age': 30});
+print(r.isValid); // true
+
+// Calling validate() here would throw AsyncValidatorException
+```
+
+### Mixing sync & async combinators
+
+Combinators like `all`, `any`, `none`, `not`, schema validators (`eskema`, `eskemaStrict`, `eskemaList`, `listEach`) and `when` all propagate async seamlessly. They stay synchronous until a child returns a `Future` and only then switch to async.
+
+### When to prefer validateAsync()
+
+- Any time you intentionally include an async validator.
+- If you want a uniform `Future` interface regardless of sync/async (e.g. in higher‑level code). It is safe but you lose the micro‑optimization of the sync fast path.
+
+### Error handling
+
+- Use `validateAsync()` + check `r.isValid`.
+- Or, wrap an async chain with `throwInstead(v)` and handle `ValidatorFailedException` inside a `try/catch`.
+- Misuse (calling `.validate()` on async chain) → `AsyncValidatorException`.
+
+### Upgrading existing code
+
+Most existing synchronous validators require no changes. Only update call sites to `.validateAsync()` where you introduce an async validator.
 
 ## Transformers
 
