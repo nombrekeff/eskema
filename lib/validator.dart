@@ -3,13 +3,22 @@
 /// This library provides a set of classes for validating data. For built in va
 library validator;
 
+import 'dart:async';
 import 'package:eskema/expectation.dart';
 import 'package:eskema/validators.dart';
 
 import 'result.dart';
 
-/// Type representing a validator function.
-typedef ValidatorFunction<T extends Result> = T Function(dynamic value);
+/// Type representing a validator function (may be sync or async).
+typedef ValidatorFunction<T extends Result> = FutureOr<T> Function(dynamic value);
+
+/// Thrown when a synchronous validate() call encounters an async validator.
+class AsyncValidatorException implements Exception {
+  final String message =
+      'Cannot call validate() on a validator chain that contains async operations. Use validateAsync() instead.';
+  @override
+  String toString() => message;
+}
 
 class ValidatorFailedException implements Exception {
   String get message => result.toString();
@@ -36,10 +45,9 @@ abstract class IValidator {
   /// the validation is considered valid.
   final bool isOptional;
 
-  /// Validates the given [value] and returns the result.
-  ///
-  /// Don't call directly, call [validate] instead.
-  Result validator(dynamic value);
+  /// Core validation function (may return a Result or Future&lt;Result&gt;).
+  /// Don't call directly, use [validate] or [validateAsync].
+  FutureOr<Result> validator(dynamic value);
 
   /// Main validation method. Use this method if you want to validate
   /// that a dynamic value is valid, and get an error message if not.
@@ -50,12 +58,25 @@ abstract class IValidator {
   ///
   /// [exists] If set to true, the value is consider to "exist",
   /// this is most useful for optional fields in maps.
+  /// 
+  /// Will [throw] an error if used with async validators
   Result validate(dynamic value, {bool exists = true}) {
     if ((value == null && isNullable && exists) || (!exists && isOptional)) {
       return Result.valid(value);
     }
+    final r = validator(value);
+    if (r is Future<Result>) {
+      throw AsyncValidatorException();
+    }
+    return r;
+  }
 
-    return validator(value);
+  /// Always returns a Future, allowing async + sync validators to compose.
+  Future<Result> validateAsync(dynamic value, {bool exists = true}) async {
+    if ((value == null && isNullable && exists) || (!exists && isOptional)) {
+      return Result.valid(value);
+    }
+    return await validator(value);
   }
 
   /// Works the same as [validate], validates that a given value is valid,
@@ -91,8 +112,8 @@ abstract class IValidator {
 abstract class IWhenValidator extends IValidator {
   IWhenValidator({super.nullable, super.optional});
 
-  /// Validates the [value] with access to the parent [map].
-  Result validateWithParent(dynamic value, Map<String, dynamic> map, {bool exists = true});
+  /// Validates the [value] with access to the parent [map]. May be async.
+  FutureOr<Result> validateWithParent(dynamic value, Map<String, dynamic> map, {bool exists = true});
 }
 
 /// An implementation of [IValidator], which accepts a validator function,
@@ -104,9 +125,7 @@ class Validator<T extends Result> extends IValidator {
   Validator(this._validator, {super.nullable, super.optional});
 
   @override
-  T validator(dynamic value) {
-    return _validator.call(value);
-  }
+  FutureOr<T> validator(dynamic value) => _validator.call(value);
 
   @override
   IValidator copyWith({bool? nullable, bool? optional}) {
@@ -144,14 +163,19 @@ class WhenValidator extends IWhenValidator {
   }
 
   @override
-  Result validateWithParent(dynamic value, Map<String, dynamic> map, {bool exists = true}) {
-    // This method should be used by the MapValidator to provide the parent map.
-    // By default, indicate that the when-validator requires a parent map for evaluation.
-    final conditionResult = condition.validate(map, exists: exists);
+  FutureOr<Result> validateWithParent(dynamic value, Map<String, dynamic> map, {bool exists = true}) {
+    final cond = condition.validator(map);
+    if (cond is Future<Result>) {
+      return cond.then((cr) => _evalBranch(cr, value));
+    }
+    return _evalBranch(cond, value);
+  }
+
+  FutureOr<Result> _evalBranch(Result conditionResult, dynamic value) {
     if (conditionResult.isValid) {
-      return then.validate(value);
+      return then.validator(value);
     } else {
-      return otherwise.validate(value);
+      return otherwise.validator(value);
     }
   }
 
@@ -173,7 +197,7 @@ class WhenValidator extends IWhenValidator {
   }
 
   @override
-  Result validator(value) {
+  FutureOr<Result> validator(value) {
     // Not needed
     throw UnimplementedError();
   }
@@ -212,17 +236,21 @@ class Field extends IdValidator {
   final List<IValidator> validators;
 
   @override
-  Result validator(dynamic value) {
-    final superRes = super.validator(value);
-    if (superRes.isNotValid) return superRes;
-
-    for (var validator in validators) {
-      final result = validator.validate(value);
-      if (result.isNotValid) {
-        return result;
-      }
+  FutureOr<Result> validator(dynamic value) {
+    final base = super.validator(value);
+    if (base is Future<Result>) {
+      return base.then((r) => _continueChain(r, value));
     }
+    return _continueChain(base, value);
+  }
 
+  Result _continueChain(Result base, dynamic value) {
+    if (base.isNotValid) return base;
+    for (final v in validators) {
+      // Use sync path if possible; users can call validateAsync on the outer validator if needed.
+      final r = v.validate(value);
+      if (r.isNotValid) return r;
+    }
     return Result.valid(value);
   }
 
@@ -287,32 +315,30 @@ abstract class MapValidator<T extends Map> extends IdValidator {
   List<IdValidator> get fields;
 
   @override
-  Result validator(dynamic value) {
-    final superRes = super.validator(value);
-    if (superRes.isNotValid) return superRes;
+  FutureOr<Result> validator(dynamic value) {
+    final base = super.validator(value);
+    if (base is Future<Result>) {
+      return base.then((r) => _mapContinue(r, value));
+    }
+    return _mapContinue(base, value);
+  }
 
+  Result _mapContinue(Result base, dynamic value) {
+    if (base.isNotValid) return base;
     for (final field in fields) {
       final mapValue = value[field.id];
-      // If the field is nullable, we can skip validation if the value is null
       if (mapValue == null && field.isNullable) continue;
-
       final result = field.validate(mapValue);
       if (result.isValid) continue;
-
-      String error = '';
-
-      if (field is MapValidator) {
-        error += '${field.id}.${result.description}';
-      } else {
-        error += '${field.id} to be ${result.description}';
-      }
-
+      final error = field is MapValidator
+          ? '${field.id}.${result.description}'
+          : '${field.id} to be ${result.description}';
       return Result(
-          isValid: result.isValid,
-          expectations: [Expectation(message: error, value: mapValue)],
-          value: mapValue);
+        isValid: result.isValid,
+        expectations: [Expectation(message: error, value: mapValue)],
+        value: mapValue,
+      );
     }
-
     return Result.valid(value);
   }
 
