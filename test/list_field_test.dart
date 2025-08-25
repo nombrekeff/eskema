@@ -17,7 +17,7 @@ void main() {
     expect(invalidRes3.isValid, false);
     expect(invalidRes3.shortDescription, 'List<dynamic>');
 
-    final validRes1 = field.validate([1, "2"]);
+    final validRes1 = field.validate([1, '2']);
     expect(validRes1.isValid, true);
 
     final validRes2 = field.validate(['1', '2']);
@@ -80,7 +80,7 @@ void main() {
     expect(invalidRes1.shortDescription, '[0]: length [equal to 2 (value: 1)]');
 
     final invalidRes2 = isListValid.validate([
-      [1, "aaaa"]
+      [1, 'aaaa']
     ]);
     expect(invalidRes2.isValid, false);
     expect(invalidRes2.shortDescription, '[0][1]: int');

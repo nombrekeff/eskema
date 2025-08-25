@@ -25,7 +25,7 @@ IValidator isLt(num max) =>
 IValidator isLte(num max) =>
     isType<num>() &
   ((isLt(max) | isEq(max)) > Expectation(
-    message: "less than or equal to $max",
+    message: 'less than or equal to $max',
     code: 'value.range_out_of_bounds',
     data: {'operator': '<=', 'limit': max}));
 
@@ -45,7 +45,7 @@ IValidator isGt(num min) =>
 IValidator isGte(num min) =>
     isType<num>() &
   ((isGt(min) | isEq(min)) > Expectation(
-    message: "greater than or equal to $min",
+    message: 'greater than or equal to $min',
     code: 'value.range_out_of_bounds',
     data: {'operator': '>=', 'limit': min}));
 

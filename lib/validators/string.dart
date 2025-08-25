@@ -23,14 +23,14 @@ IValidator stringIsOfLength(int size) => stringLength([isEq(size)]);
 IValidator stringContains(String str) =>
     $isString &
   (contains(str) > Expectation(
-    message: "String to contain ${prettifyValue(str)}",
+    message: 'String to contain ${prettifyValue(str)}',
     code: 'value.contains_missing',
     data: {'needle': prettifyValue(str)}));
 
 /// Validate that it's a String and the string is empty
 IValidator stringEmpty<T>() =>
   stringLength([isLte(0)]) >
-  Expectation(message: "String to be empty", code: 'value.length_out_of_range', data: {'expected': 0});
+  Expectation(message: 'String to be empty', code: 'value.length_out_of_range', data: {'expected': 0});
 
 /// Validates that the String matches the provided pattern
 ///

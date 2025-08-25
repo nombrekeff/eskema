@@ -19,7 +19,7 @@ class Result<T> {
           isValid ||
               (!isValid && expectation != null ||
                   (expectations != null && expectations.isNotEmpty)),
-          "invalid -> provide an expectation or non-empty expectations list",
+          'invalid -> provide an expectation or non-empty expectations list',
         ),
         expectations = List.unmodifiable(
           expectations ?? (expectation == null ? const <Expectation>[] : [expectation]),

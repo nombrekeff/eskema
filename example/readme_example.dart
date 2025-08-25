@@ -29,7 +29,7 @@ void main() {
     'theme': 'light',
     'age': 42,
   });
-  print("User is valid: $ok");
+  print('User is valid: $ok');
 
   final res = userValidator.validate({
     'username': 'alice',

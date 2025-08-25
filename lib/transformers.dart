@@ -30,7 +30,7 @@
 /// only the value flowing through the validator pipeline.
 library transformers;
 
-import "package:eskema/eskema.dart";
+import 'package:eskema/eskema.dart';
 
 /// Transforms a value using a provided function.
 ///
@@ -52,9 +52,9 @@ IValidator toInt(IValidator child) =>
     ($isInt | $isNumber | $isIntString) &
     transform((v) {
       return switch (v) {
-        int n => n,
-        double n => n.toInt(),
-        String s => int.tryParse(s.trim()),
+        final int n => n,
+        final double n => n.toInt(),
+        final String s => int.tryParse(s.trim()),
         _ => null,
       };
     }, child);
@@ -68,9 +68,9 @@ IValidator toDouble(IValidator child) =>
     ($isDouble | $isNumber | $isDoubleString) &
     transform((v) {
       return switch (v) {
-        double i => i,
-        int i => i.toDouble(),
-        String s => double.tryParse(s.trim()),
+        final double i => i,
+        final int i => i.toDouble(),
+        final String s => double.tryParse(s.trim()),
         _ => null,
       };
     }, child);
@@ -83,8 +83,8 @@ IValidator toNum(IValidator child) =>
     ($isNumber | $isNumString) &
     transform((value) {
       return switch (value) {
-        num n => n,
-        String s => num.tryParse(s.trim()),
+        final num n => n,
+        final String s => num.tryParse(s.trim()),
         _ => null,
       };
     }, child);
@@ -98,9 +98,9 @@ IValidator toBool(IValidator child) {
   return ($isBool | isOneOf([0, 1]) | (toLowerCase(isString() & isOneOf(['true', 'false'])))) &
       transform((v) {
         return switch (v) {
-          bool b => b,
-          int i => i == 1,
-          String s => s.toLowerCase().trim() == 'true',
+          final bool b => b,
+          final int i => i == 1,
+          final String s => s.toLowerCase().trim() == 'true',
           _ => null,
         };
       }, child);
@@ -142,8 +142,8 @@ IValidator split(String separator, IValidator child) {
 IValidator toDateTime(IValidator child) =>
     transform((value) {
       return switch (value) {
-        DateTime d => d,
-        String s => DateTime.tryParse(s.trim()),
+        final DateTime d => d,
+        final String s => DateTime.tryParse(s.trim()),
         _ => null,
       };
     }, child) >

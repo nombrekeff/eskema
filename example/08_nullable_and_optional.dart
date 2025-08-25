@@ -32,7 +32,7 @@ void main() {
         'required_but_nullable': null
       })}");
   // Invalid: Key is missing.
-  print("Validating {}: ${validator.validate({})}");
+  print('Validating {}: ${validator.validate({})}');
 
   // --- `optional()` Behavior ---
   print('\n--- Testing `optional_and_not_nullable` ---');
@@ -42,7 +42,7 @@ void main() {
         'optional_and_not_nullable': 'hello'
       })}");
   // Valid: Key is missing.
-  print("Validating {}: ${validator.validate({})}");
+  print('Validating {}: ${validator.validate({})}');
   // Invalid: Key is present, but value is null.
   print(
       "Validating {'optional_and_not_nullable': null}: ${validator.validate({
@@ -60,7 +60,7 @@ void main() {
         'optional_and_nullable': null
       })}");
   // Valid: Key is missing.
-  print("Validating {}: ${validator.validate({})}");
+  print('Validating {}: ${validator.validate({})}');
 
   print('-' * 20);
 }

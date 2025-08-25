@@ -18,7 +18,7 @@ void main() {
         id: 'testField',
         validators: [isType<String>()],
       );
-      final res1 = field.validate("");
+      final res1 = field.validate('');
       expect(res1.isValid, true);
 
       final res4 = field.validate(null);

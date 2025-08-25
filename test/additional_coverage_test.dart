@@ -133,7 +133,7 @@ void main() {
 
     test('inside eskema async condition selects then', () async {
       final cond = Validator((map) async {
-        await Future<void>.delayed(Duration(milliseconds: 1));
+        await Future<void>.delayed(const Duration(milliseconds: 1));
         return Result.valid(map);
       });
       final v = eskema({
@@ -145,7 +145,7 @@ void main() {
 
     test('inside eskema async condition selects otherwise', () async {
       final cond = Validator((map) async {
-        await Future<void>.delayed(Duration(milliseconds: 1));
+        await Future<void>.delayed(const Duration(milliseconds: 1));
         return Result.invalid(map, expectation: Expectation(message: 'cond', value: map));
       });
       final v = eskema({

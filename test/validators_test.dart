@@ -4,7 +4,7 @@ import 'package:test/test.dart' hide isList, isNull, contains;
 void main() {
   group('isType', () {
     test('isNull works', () {
-      final res1 = isNull().validate("");
+      final res1 = isNull().validate('');
       expect(res1.isValid, false);
 
       final res2 = isNull().validate(123);
@@ -20,7 +20,7 @@ void main() {
     });
 
     test('isType<String> works', () {
-      final res1 = isType<String>().validate("");
+      final res1 = isType<String>().validate('');
       expect(res1.isValid, true);
 
       final res2 = isType<String>().validate(123);
@@ -36,7 +36,7 @@ void main() {
       final res1 = isType<int>().validate(123);
       expect(res1.isValid, true);
 
-      final res2 = isType<int>().validate("123");
+      final res2 = isType<int>().validate('123');
       expect(res2.isValid, false);
       expect(res2.description, 'int (value: "123")');
 
@@ -49,7 +49,7 @@ void main() {
       final res1 = isType<num>().validate(123);
       expect(res1.isValid, true);
 
-      final res2 = isType<num>().validate("123");
+      final res2 = isType<num>().validate('123');
       expect(res2.isValid, false);
       expect(res2.description, 'num (value: "123")');
 
@@ -62,7 +62,7 @@ void main() {
       final res1 = isType<double>().validate(123.12);
       expect(res1.isValid, true);
 
-      final res2 = isType<double>().validate("123");
+      final res2 = isType<double>().validate('123');
       expect(res2.isValid, false);
       expect(res2.description, 'double (value: "123")');
 
@@ -79,7 +79,7 @@ void main() {
       final res1 = isType<bool>().validate(true);
       expect(res1.isValid, true);
 
-      final res2 = isType<bool>().validate("123");
+      final res2 = isType<bool>().validate('123');
       expect(res2.isValid, false);
       expect(res2.description, 'bool (value: "123")');
 
@@ -92,7 +92,7 @@ void main() {
       final res1 = isType<Map>().validate({});
       expect(res1.isValid, true);
 
-      final res2 = isType<Map>().validate("123");
+      final res2 = isType<Map>().validate('123');
       expect(res2.isValid, false);
       expect(res2.description, 'Map<dynamic, dynamic> (value: "123")');
 
@@ -105,7 +105,7 @@ void main() {
       final res1 = isType<List>().validate([]);
       expect(res1.isValid, true);
 
-      final res2 = isType<List>().validate("123");
+      final res2 = isType<List>().validate('123');
       expect(res2.isValid, false);
       expect(res2.description, 'List<dynamic> (value: "123")');
 
@@ -181,9 +181,9 @@ void main() {
     test('stringIsOfLength works', () {
       final validator = stringIsOfLength(2);
 
-      expect(validator.validate("12").isValid, true);
-      expect(validator.validate("ab").isValid, true);
-      expect(validator.validate("--").isValid, true);
+      expect(validator.validate('12').isValid, true);
+      expect(validator.validate('ab').isValid, true);
+      expect(validator.validate('--').isValid, true);
 
       final res1 = validator.validate('1');
       expect(res1.isValid, false);
@@ -202,22 +202,22 @@ void main() {
       final stringLengthGt10 = stringLength([isGt(10)]);
       final stringLengthEq5 = stringLength([isEq(5)]);
 
-      expect(stringLengthEq5.validate("12345").isValid, true);
-      expect(stringLengthEq5.validate("1234").isValid, false);
-      expect(stringLengthEq5.validate("123456").isValid, false);
+      expect(stringLengthEq5.validate('12345').isValid, true);
+      expect(stringLengthEq5.validate('1234').isValid, false);
+      expect(stringLengthEq5.validate('123456').isValid, false);
       expect(stringLengthEq5.validate(12345).description, 'String (value: 12345)');
 
-      expect(stringLengthGt10.validate("12345678901").isValid, true);
-      expect(stringLengthGt10.validate("123456789012").isValid, true);
-      expect(stringLengthGt10.validate("1234567890").isValid, false);
+      expect(stringLengthGt10.validate('12345678901').isValid, true);
+      expect(stringLengthGt10.validate('123456789012').isValid, true);
+      expect(stringLengthGt10.validate('1234567890').isValid, false);
     });
 
     test('stringContains works', () {
-      final validator = stringContains("needle");
+      final validator = stringContains('needle');
 
-      expect(validator.validate("I used a needle").isValid, true);
-      expect(validator.validate("needles are cool").isValid, true);
-      expect(validator.validate("needle").isValid, true);
+      expect(validator.validate('I used a needle').isValid, true);
+      expect(validator.validate('needles are cool').isValid, true);
+      expect(validator.validate('needle').isValid, true);
 
       final res1 = validator.validate('this is a useless string');
       expect(res1.isValid, false);
@@ -232,9 +232,9 @@ void main() {
     });
 
     test('stringMatchesPattern works', () {
-      final validator = stringMatchesPattern(RegExp(r"[\d]"));
-      expect(validator.validate("123").isValid, true);
-      expect(validator.validate("55555").isValid, true);
+      final validator = stringMatchesPattern(RegExp(r'[\d]'));
+      expect(validator.validate('123').isValid, true);
+      expect(validator.validate('55555').isValid, true);
 
       final res2 = validator.validate('aaaaa');
       expect(res2.isValid, false);
@@ -246,11 +246,11 @@ void main() {
 
     test('stringMatchesPattern works with custom message', () {
       final validator = stringMatchesPattern(
-        RegExp(r"[\d]"),
-        error: "Incorrect numerical string",
+        RegExp(r'[\d]'),
+        error: 'Incorrect numerical string',
       );
-      expect(validator.validate("123").isValid, true);
-      expect(validator.validate("55555").isValid, true);
+      expect(validator.validate('123').isValid, true);
+      expect(validator.validate('55555').isValid, true);
 
       final res2 = validator.validate('aaaaa');
       expect(res2.isValid, false);
@@ -335,7 +335,7 @@ void main() {
       expect(res3.isValid, false);
       expect(res3.shortDescription, 'length [equal to 2 (value: 3)]');
 
-      final res4 = validator.validate(["1", 2]);
+      final res4 = validator.validate(['1', 2]);
       expect(res4.isValid, true);
     });
   });
@@ -495,7 +495,7 @@ void main() {
     });
 
     test('isEq<Map> works', () {
-      final map = {"test": "aaa"};
+      final map = {'test': 'aaa'};
       final validator = isEq<Map>(map);
 
       final res1 = validator.validate(map);
@@ -528,7 +528,7 @@ void main() {
 
   group('isType shorthands', () {
     test('isString works', () {
-      final res1 = isString().validate("");
+      final res1 = isString().validate('');
       expect(res1.isValid, true);
 
       final res2 = isString().validate(123);
@@ -537,7 +537,7 @@ void main() {
     });
 
     test('\$isString works', () {
-      final res1 = $isString.validate("");
+      final res1 = $isString.validate('');
       expect(res1.isValid, true);
 
       final res2 = $isString.validate(123);
@@ -546,7 +546,7 @@ void main() {
     });
 
     test('isInt works', () {
-      final res1 = isInt().validate("");
+      final res1 = isInt().validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'int');
 
@@ -558,13 +558,13 @@ void main() {
       final res1 = $isInt.validate(123);
       expect(res1.isValid, true);
 
-      final res2 = $isInt.validate("123");
+      final res2 = $isInt.validate('123');
       expect(res2.isValid, false);
       expect(res2.shortDescription, 'int');
     });
 
     test('isBool works', () {
-      final res1 = isBool().validate("");
+      final res1 = isBool().validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'bool');
 
@@ -573,7 +573,7 @@ void main() {
     });
 
     test('\$isBool works', () {
-      final res1 = $isBool.validate("");
+      final res1 = $isBool.validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'bool');
 
@@ -582,7 +582,7 @@ void main() {
     });
 
     test('isDouble works', () {
-      final res1 = isDouble().validate("");
+      final res1 = isDouble().validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'double');
 
@@ -591,7 +591,7 @@ void main() {
     });
 
     test('\$isDouble works', () {
-      final res1 = $isDouble.validate("");
+      final res1 = $isDouble.validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'double');
 
@@ -600,7 +600,7 @@ void main() {
     });
 
     test('isNum works', () {
-      final res1 = isNumber().validate("");
+      final res1 = isNumber().validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'num');
 
@@ -612,7 +612,7 @@ void main() {
     });
 
     test('\$isNumber works', () {
-      final res1 = $isNumber.validate("");
+      final res1 = $isNumber.validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'num');
 
@@ -624,7 +624,7 @@ void main() {
     });
 
     test('isFuture works', () {
-      final res1 = isFuture().validate("");
+      final res1 = isFuture().validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'Future<dynamic>');
 
@@ -633,7 +633,7 @@ void main() {
     });
 
     test('\$isFuture works', () {
-      final res1 = $isFuture.validate("");
+      final res1 = $isFuture.validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'Future<dynamic>');
 
@@ -642,7 +642,7 @@ void main() {
     });
 
     test('isEnum works', () {
-      final res1 = isEnum().validate("");
+      final res1 = isEnum().validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'Enum');
 
@@ -651,7 +651,7 @@ void main() {
     });
 
     test('\$isEnum works', () {
-      final res1 = $isEnum.validate("");
+      final res1 = $isEnum.validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'Enum');
 
@@ -660,7 +660,7 @@ void main() {
     });
 
     test('isList works', () {
-      final res1 = isList<int>().validate("");
+      final res1 = isList<int>().validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'List<int>');
 
@@ -669,7 +669,7 @@ void main() {
     });
 
     test('\$isList works', () {
-      final res1 = $isList.validate("");
+      final res1 = $isList.validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'List<dynamic>');
 
@@ -678,7 +678,7 @@ void main() {
     });
 
     test('isSet works', () {
-      final res1 = isSet<int>().validate("");
+      final res1 = isSet<int>().validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'Set<int>');
 
@@ -687,7 +687,7 @@ void main() {
     });
 
     test('\$isSet works', () {
-      final res1 = $isSet.validate("");
+      final res1 = $isSet.validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'Set<dynamic>');
 
@@ -696,7 +696,7 @@ void main() {
     });
 
     test('isRecord works', () {
-      final res1 = isRecord().validate("");
+      final res1 = isRecord().validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'Record');
 
@@ -705,7 +705,7 @@ void main() {
     });
 
     test('\$isRecord works', () {
-      final res1 = $isRecord.validate("");
+      final res1 = $isRecord.validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'Record');
 
@@ -714,7 +714,7 @@ void main() {
     });
 
     test('isIterable works', () {
-      final res1 = isIterable<int>().validate("");
+      final res1 = isIterable<int>().validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'Iterable<int>');
 
@@ -723,7 +723,7 @@ void main() {
     });
 
     test('\$isIterable works', () {
-      final res1 = $isIterable.validate("");
+      final res1 = $isIterable.validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'Iterable<dynamic>');
 
@@ -732,7 +732,7 @@ void main() {
     });
 
     test('isSymbol works', () {
-      final res1 = isSymbol().validate("");
+      final res1 = isSymbol().validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'Symbol');
 
@@ -741,7 +741,7 @@ void main() {
     });
 
     test('\$isSymbol works', () {
-      final res1 = $isSymbol.validate("");
+      final res1 = $isSymbol.validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'Symbol');
 
@@ -750,7 +750,7 @@ void main() {
     });
 
     test('isFunction works', () {
-      final res1 = isFunction().validate("");
+      final res1 = isFunction().validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'Function');
 
@@ -759,7 +759,7 @@ void main() {
     });
 
     test('\$isFunction works', () {
-      final res1 = $isFunction.validate("");
+      final res1 = $isFunction.validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'Function');
 
@@ -768,7 +768,7 @@ void main() {
     });
 
     test('\$isMap works', () {
-      final res1 = $isMap.validate("");
+      final res1 = $isMap.validate('');
       expect(res1.isValid, false);
       expect(res1.shortDescription, 'Map<dynamic, dynamic>');
 

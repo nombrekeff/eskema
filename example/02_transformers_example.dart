@@ -45,7 +45,7 @@ void main() {
   });
 
   // The 'theme' key is missing, so `defaultTo` provides 'light'.
-  print("Validating {}: ${settingsValidator.validate({})}"); // Valid
+  print('Validating {}: ${settingsValidator.validate({})}'); // Valid
 
   // The 'theme' key is present, so its value is used.
   print(
