@@ -34,7 +34,7 @@ Validate a map using a schema-like validator and read a detailed result or a boo
 import 'package:eskema/eskema.dart';
 
 final userValidator = eskema({
-	// use built-in validator funtions
+	// use built-in validator functions
     'username': isString(),
 
 	// Some zero-arg validators also have aliases: e.g. `$isBool`, `$isString` - prefer for zero-arg validators
@@ -46,12 +46,12 @@ final userValidator = eskema({
     // or use operators for simplicity, same as using `all`, `any` and `none`, but shorter!!
     'theme': (isString() & (isEq('light') | isEq('dark'))),
 
-    // Make validators nullable, if the field is missing it's considered invalid, use `optional` instead
-	// This will be valid if 'premium' exists in the map and is null or returns the result of the child validator
-    'premium': nullable($isBool),
+	// Make validators nullable: the key must exist but the value may be null.
+	// If you want to allow the key to be missing use `optional`.
+	'premium': nullable($isBool),
 
-	// If you want to allow the field to not exist in the map, and accept null or empty strings
-	// You can use the `optional` validator
+	// If you want to allow the field to not exist in the map, you can use the `optional` validator -
+	// will not allow null by default, that's done by the child validator
     'birthday': optional(isDate()),
 });
 ```
@@ -80,7 +80,7 @@ try {
 } catch (e) {
 	print(e); // ValidatorFailedException with a helpful message
 }
-```
+``` 
 
 ## Table of contents
 - [Eskema](#eskema)
@@ -119,8 +119,8 @@ try {
 	- `any([...])` — OR composition (passes if any succeed)
 	- `not(v)` — invert a validator
 	- 
-	- `nullable(v)` or `v.nullable()` — allow `null`, if field is missing it's considered invalid
-	- `optional(v)` or `v.optional()` — allow `null`, empty string, and missing fields
+	- `nullable(v)` or `v.nullable()` — allow `null`; if the field is missing it's considered invalid
+	- `optional(v)` or `v.optional()` — allow missing fields; if present the inner validator runs (it controls whether `null` or empty values are accepted)
 
 - Results & helpers
 	- `.validate(value)` → `EskResult`

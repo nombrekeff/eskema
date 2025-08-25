@@ -64,7 +64,7 @@
 <pre class="language-dart"><code class="language-dart">import 'package:eskema/eskema.dart';
 
 final userValidator = eskema({
-	// use built-in validator funtions
+	// use built-in validator functions
     'username': isString(),
 
 	// Some zero-arg validators also have aliases: e.g. `$isBool`, `$isString` - prefer for zero-arg validators
@@ -76,12 +76,12 @@ final userValidator = eskema({
     // or use operators for simplicity, same as using `all`, `any` and `none`, but shorter!!
     'theme': (isString() &amp; (isEq('light') | isEq('dark'))),
 
-    // Make validators nullable, if the field is missing it's considered invalid, use `optional` instead
-	// This will be valid if 'premium' exists in the map and is null or returns the result of the child validator
-    'premium': nullable($isBool),
+	// Make validators nullable: the key must exist but the value may be null.
+	// If you want to allow the key to be missing use `optional`.
+	'premium': nullable($isBool),
 
-	// If you want to allow the field to not exist in the map, and accept null or empty strings
-	// You can use the `optional` validator
+	// If you want to allow the field to not exist in the map, you can use the `optional` validator -
+	// will not allow null by default, that's done by the child validator
     'birthday': optional(isDate()),
 });
 </code></pre>
@@ -169,8 +169,8 @@ print(res); // false - "Expected age -&gt; greater than or equal to 0, got -1"
 <li><code>any([...])</code> — OR composition (passes if any succeed)</li>
 <li><code>not(v)</code> — invert a validator</li>
 <li></li>
-<li><code>nullable(v)</code> or <code>v.nullable()</code> — allow <code>null</code>, if field is missing it's considered invalid</li>
-<li><code>optional(v)</code> or <code>v.optional()</code> — allow <code>null</code>, empty string, and missing fields</li>
+<li><code>nullable(v)</code> or <code>v.nullable()</code> — allow <code>null</code>; if the field is missing it's considered invalid</li>
+<li><code>optional(v)</code> or <code>v.optional()</code> — allow missing fields; if present the inner validator runs (it controls whether <code>null</code> or empty values are accepted)</li>
 </ul>
 </li>
 </ul>
