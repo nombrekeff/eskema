@@ -19,10 +19,12 @@ void main() {
 
       // 2. `then`: If the condition is true, this validator is applied to the
       // `postal_code` field.
-      then: isString() & stringIsOfLength(5) > 'must be a 5-digit US zip code',
+      then: isString() & stringIsOfLength(5) >
+          Expectation(message: 'must be a 5-digit US zip code'),
 
       // 3. `otherwise`: If the condition is false, this validator is applied instead.
-      otherwise: isString() & stringIsOfLength(6) > 'must be a 6-character Canadian postal code',
+      otherwise: isString() & stringIsOfLength(6) >
+          Expectation(message: 'must be a 6-character Canadian postal code'),
     ),
   });
 

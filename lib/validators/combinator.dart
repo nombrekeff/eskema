@@ -7,24 +7,26 @@ import 'dart:async';
 import 'package:eskema/eskema.dart';
 
 /// Passes the test if any of the [Validator]s are valid, and fails if any are invalid
-IValidator any(List<IValidator> validators) => Validator<Result>((value) {
-      final collected = <Result>[];
+IValidator any(List<IValidator> validators) => Validator<Result>(
+      (value) {
+        final collected = <Result>[];
 
-      for (var i = 0; i < validators.length; i++) {
-        final resOr = validators[i].validator(value);
-        if (resOr is Future<Result>) {
-          return _anyAsync(value, validators, collected, i, resOr);
+        for (var i = 0; i < validators.length; i++) {
+          final resOr = validators[i].validator(value);
+          if (resOr is Future<Result>) {
+            return _anyAsync(value, validators, collected, i, resOr);
+          }
+          final res = resOr;
+          collected.add(res);
+          if (res.isValid) return res;
         }
-        final res = resOr;
-        collected.add(res);
-        if (res.isValid) return res;
-      }
 
-      return Result.invalid(
-        value,
-        expectations: collected.expand((r) => r.expectations).toList(),
-      );
-    });
+        return Result.invalid(
+          value,
+          expectations: collected.expand((r) => r.expectations).toList(),
+        );
+      },
+    );
 
 Future<Result> _anyAsync(
   dynamic value,
@@ -45,7 +47,10 @@ Future<Result> _anyAsync(
     if (r.isValid) return r;
   }
 
-  return Result.invalid(value, expectations: collected.expand((r) => r.expectations).toList());
+  return Result.invalid(
+    value,
+    expectations: collected.expand((r) => r.expectations).toList(),
+  );
 }
 
 /// Passes the test if all of the [Validator]s are valid, and fails if any of them are invalid
@@ -61,6 +66,7 @@ IValidator all(List<IValidator> validators) => Validator<Result>(
           final res = resOr;
           if (res.isNotValid) return res;
         }
+
         return Result.valid(value);
       },
     );
@@ -90,11 +96,12 @@ IValidator none(List<IValidator> validators) => Validator<Result>(
 
         for (var i = 0; i < validators.length; i++) {
           final resOr = not(validators[i]).validator(value);
+
           if (resOr is Future<Result>) {
             return _noneAsync(value, validators, expectations, i, resOr);
           }
-          final r = resOr;
-          if (r.isNotValid) expectations.addAll(r.expectations);
+
+          if (resOr.isNotValid) expectations.addAll(resOr.expectations);
         }
 
         return expectations.isNotEmpty
@@ -115,8 +122,8 @@ Future<Result> _noneAsync(
   if (first.isNotValid) expectations.addAll(first.expectations);
 
   for (var i = index + 1; i < validators.length; i++) {
-    final r = await not(validators[i]).validator(value);
-    if (r.isNotValid) expectations.addAll(r.expectations);
+    final res = await not(validators[i]).validator(value);
+    if (res.isNotValid) expectations.addAll(res.expectations);
   }
 
   return expectations.isNotEmpty
@@ -125,6 +132,9 @@ Future<Result> _noneAsync(
 }
 
 /// Passes the test if the passed in validator is not valid
+///
+/// When the inner validator succeeds, the failure will reuse its `code` if present,
+/// otherwise falls back to `logic.not_expected`. See docs/expectation_codes.md.
 IValidator not(IValidator validator) => Validator<Result>((value) {
       final resOr = validator.validator(value);
       if (resOr is Future<Result>) return _notAsync(value, resOr);
@@ -132,7 +142,8 @@ IValidator not(IValidator validator) => Validator<Result>((value) {
       return Result(
         isValid: !resOr.isValid,
         expectations: resOr.expectations
-            .map((error) => error.copyWith(message: 'not ${error.message}'))
+            .map((error) => error.copyWith(
+                message: 'not ${error.message}', code: error.code ?? 'logic.not_expected'))
             .toList(),
         value: value,
       );
@@ -144,7 +155,8 @@ Future<Result> _notAsync(dynamic value, Future<Result> pending) async {
   return Result(
     isValid: !result.isValid,
     expectations: result.expectations
-        .map((error) => error.copyWith(message: 'not ${error.message}'))
+        .map((error) =>
+            error.copyWith(message: 'not ${error.message}', code: error.code ?? 'logic.not_expected'))
         .toList(),
     value: value,
   );
@@ -166,20 +178,26 @@ Future<Result> _throwInsteadAsync(Future<Result> pending) async {
 
 /// Returns a [IValidator] that wraps the given [child] validator and adds the
 /// provided [error] message to the result if the validation fails.
-IValidator withError(IValidator child, String error) => Validator<Result>((value) {
+/// Preserves the underlying child's `code` and `data` (if the child failed).
+/// See docs/expectation_codes.md.
+IValidator withExpectation(IValidator child, Expectation error) => Validator<Result>((value) {
       final resOr = child.validator(value);
 
       if (resOr is Future<Result>) {
         return resOr.then((r) => Result(
               isValid: r.isValid,
-              expectations: [Expectation(message: error, value: value)],
+              expectations: [
+                error.copyWith(value: value, code: r.isValid ? null : r.firstExpectation.code)
+              ],
               value: value,
             ));
       }
 
       return Result(
         isValid: resOr.isValid,
-        expectations: [Expectation(message: error, value: value)],
+        expectations: [
+          error.copyWith(value: value, code: resOr.isValid ? null : resOr.firstExpectation.code)
+        ],
         value: value,
       );
     });

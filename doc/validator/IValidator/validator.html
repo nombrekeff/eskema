@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
       
-<span class="returntype"><a href="../../result/Result-class.html">Result</a></span>
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/FutureOr-class.html">FutureOr</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../result/Result-class.html">Result</a></span>&gt;</span></span>
 <span class="name ">validator</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="validator-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span></li>
 </ol>)
 
@@ -63,15 +63,15 @@
     </section>
     
 <section class="desc markdown">
-  <p>Validates the given <code>value</code> and returns the result.</p>
-<p>Don't call directly, call <a href="../../validator/IValidator/validate.html">validate</a> instead.</p>
+  <p>Core validation function (may return a Result or Future&lt;Result&gt;).
+Don't call directly, use <a href="../../validator/IValidator/validate.html">validate</a> or <a href="../../validator/IValidator/validateAsync.html">validateAsync</a>.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Result validator(dynamic value);</code></pre>
+  <pre class="language-dart"><code class="language-dart">FutureOr&lt;Result&gt; validator(dynamic value);</code></pre>
 </section>
 
 

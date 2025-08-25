@@ -25,7 +25,7 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">eskema</a></li>
-    <li><a href="../combinator_validators/">validators&#47;combinator_validators.dart</a></li>
+    <li><a href="../combinator_validators/">validators&#47;combinator.dart</a></li>
     <li class="self-crumb">any function</li>
   </ol>
   <div class="self-name">any</div>
@@ -70,18 +70,22 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator any(List&lt;IValidator&gt; validators) =&gt; Validator((value) {
-      final results = &lt;Result&gt;[];
+  <pre class="language-dart"><code class="language-dart">IValidator any(List&lt;IValidator&gt; validators) =&gt; Validator&lt;Result&gt;((value) {
+      final collected = &lt;Result&gt;[];
 
-      for (final validator in validators) {
-        final result = validator.validate(value);
-        results.add(result);
-        if (result.isValid) return result;
+      for (var i = 0; i &lt; validators.length; i++) {
+        final resOr = validators[i].validator(value);
+        if (resOr is Future&lt;Result&gt;) {
+          return _anyAsync(value, validators, collected, i, resOr);
+        }
+        final res = resOr;
+        collected.add(res);
+        if (res.isValid) return res;
       }
 
       return Result.invalid(
         value,
-        expectations: results.expand((r) =&gt; r.expectations).toList(),
+        expectations: collected.expand((r) =&gt; r.expectations).toList(),
       );
     });</code></pre>
 </section>

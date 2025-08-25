@@ -1,14 +1,14 @@
 /// Represents the result of a validation.
-/// 
+///
 /// This class encapsulates the outcome of a validation process, including
 /// whether the validation was successful, the value that was validated,
 /// and any expectations that were not met.
 library result;
 
 import 'package:eskema/expectation.dart';
-import 'package:eskema/util.dart';
+import 'package:eskema/src/util.dart';
 
-/// Represents the result of a validation. 
+/// Represents the result of a validation.
 class Result<T> {
   Result({
     required this.isValid,
@@ -40,6 +40,7 @@ class Result<T> {
             : List.unmodifiable([expectation!]));
 
   final bool isValid;
+
   /// The list of expectations for the validation result.
   /// It will contain expectations independent of the validation result.
   final List<Expectation> expectations;
@@ -59,8 +60,8 @@ class Result<T> {
 
   String get description {
     return isValid
-        ? 'Valid: ${pretifyValue(value)}'
-        : '$shortDescription (value: ${pretifyValue(value)})';
+        ? 'Valid: ${prettifyValue(value)}'
+        : '$shortDescription (value: ${prettifyValue(value)})';
   }
 
   /// Creates a copy of the result with the given parameters.
@@ -80,4 +81,10 @@ class Result<T> {
   String toString() {
     return description;
   }
+
+  Map<String, Object?> toJson() => {
+        'isValid': isValid,
+        if (value != null) 'value': value,
+        if (!isValid) 'errors': expectations.map((e) => e.toJson()).toList(growable: false),
+      };
 }

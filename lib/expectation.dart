@@ -1,5 +1,5 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/util.dart';
+import 'package:eskema/src/util.dart';
 
 /// Represents an expectation for a validation result.
 class Expectation {
@@ -8,10 +8,23 @@ class Expectation {
   final String message;
   final dynamic value;
 
+  /// Optional machine‑readable code (e.g. 'type_mismatch', 'required_missing')
+  ///
+  /// Each expectation can include a `code` (namespaced, e.g. `type.mismatch`, `value.range_out_of_bounds`) and
+  /// a structured `data` payload for machine processing (localization, analytics, conditional UI, etc.).
+  ///
+  /// See docs/expectation_codes.md for the authoritative mapping of built-in validators to codes & data shapes.
+  final String? code;
+
+  /// Optional structured metadata (e.g. {'expectedType': 'String', 'foundType': 'int'})
+  final Map<String, Object?>? data;
+
   Expectation({
     this.path,
     required this.message,
-    required this.value,
+    this.value,
+    this.code,
+    this.data,
   });
 
   /// Get a short description of the expectation.
@@ -25,7 +38,7 @@ class Expectation {
 
   /// Get a detailed description of the expectation.
   String get description {
-    final messageSuffix = '$message (value: ${pretifyValue(value)})';
+    final messageSuffix = '$message (value: ${prettifyValue(value)})';
 
     if (path != null && path!.isNotEmpty) {
       return '$path: $messageSuffix';
@@ -38,11 +51,15 @@ class Expectation {
     String? path,
     String? message,
     dynamic value,
+    String? code,
+    Map<String, Object?>? data,
   }) {
     return Expectation(
       path: path ?? this.path,
       message: message ?? this.message,
       value: value ?? this.value,
+      code: code ?? this.code,
+      data: data ?? this.data,
     );
   }
 
@@ -58,17 +75,19 @@ class Expectation {
     return description;
   }
 
+  Map<String, Object?> toJson() => {
+        'message': message,
+        if (code != null) 'code': code,
+        if (path != null) 'path': path,
+        if (value != null) 'value': value,
+        if (data != null && data!.isNotEmpty) 'data': data,
+      };
+
   /// Convenient method to convert the expectation to an invalid result.
-  Result toInvalidResult() {
-    return Result.invalid(value, expectation: this);
-  }
+  Result toInvalidResult() => Result.invalid(value, expectation: this);
 }
 
 /// Creates an expectation for a validation result.
-Expectation expectation(String message, dynamic value, [String? path]) {
-  return Expectation(
-    path: path,
-    message: message,
-    value: value,
-  );
-}
+Expectation expectation(String message, dynamic value,
+        [String? path, String? code, Map<String, Object?>? data]) =>
+    Expectation(path: path, message: message, value: value, code: code, data: data);

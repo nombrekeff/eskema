@@ -25,7 +25,7 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">eskema</a></li>
-    <li><a href="../structure_validators/">validators&#47;structure_validators.dart</a></li>
+    <li><a href="../structure_validators/">validators&#47;structure.dart</a></li>
     <li class="self-crumb">eskemaList&lt;<wbr><span class="type-parameter">T</span>&gt; function</li>
   </ol>
   <div class="self-name">eskemaList</div>
@@ -89,28 +89,32 @@ isValidList([1, "2"]).isValid;   // false
       listIsOfLength(eskema.length) &amp;
       Validator((value) {
         final errors = &lt;Expectation&gt;[];
-
-        for (int index = 0; index &lt; value.length; index++) {
+        FutureOr&lt;Result&gt; loop(int index) {
+          if (index &gt;= value.length) {
+            return errors.isEmpty
+                ? Result.valid(value)
+                : Result.invalid(value, expectations: errors);
+          }
           final item = value[index];
           final effectiveValidator = eskema[index];
-          final result = effectiveValidator.validate(item);
 
-          if (result.isNotValid) {
-            for (var error in result.expectations) {
-              errors.add(
-                Expectation(
-                  message: error.message,
-                  value: error.value,
-                  path: &#39;[$index]${error.path != null ? &#39;${error.path}&#39; : &#39;&#39;}&#39;,
-                ),
-              );
-            }
+          &#47;&#47; Nullable short-circuit
+          if (item == null &amp;&amp; effectiveValidator.isNullable) {
+            return loop(index + 1);
           }
+
+          final res = effectiveValidator.validator(item);
+          if (res is Future&lt;Result&gt;) {
+            return res.then((r) {
+              _collectListIndex(r, errors, index);
+              return loop(index + 1);
+            });
+          }
+          _collectListIndex(res, errors, index);
+          return loop(index + 1);
         }
 
-        return errors.isNotEmpty
-            ? Result.invalid(value, expectations: errors)
-            : Result.valid(value);
+        return loop(0);
       });
 }</code></pre>
 </section>

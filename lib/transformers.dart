@@ -147,7 +147,7 @@ IValidator toDateTime(IValidator child) =>
         _ => null,
       };
     }, child) >
-    'a valid DateTime formatted String';
+    Expectation(message: 'a valid DateTime formatted String');
 
 /// Extracts and validates a field from a map.
 ///

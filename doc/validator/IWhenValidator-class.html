@@ -273,6 +273,19 @@ that a dynamic value is valid, and get an error message if not.
 
 </dd>
 
+        <dt id="validateAsync" class="callable inherited">
+  <span class="name"><a href="../validator/IValidator/validateAsync.html">validateAsync</a></span><span class="signature">(<wbr><span class="parameter" id="validateAsync-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, {</span><span class="parameter" id="validateAsync-param-exists"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">exists</span> = <span class="default-value">true</span></span>})
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/Result-class.html">Result</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Always returns a Future, allowing async + sync validators to compose.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
         <dt id="validateOrThrow" class="callable inherited">
   <span class="name"><a href="../validator/IValidator/validateOrThrow.html">validateOrThrow</a></span><span class="signature">(<wbr><span class="parameter" id="validateOrThrow-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)
     <span class="returntype parameter">&#8594; <a href="../result/Result-class.html">Result</a></span>
@@ -289,26 +302,27 @@ but throws instead if it's not.
 
         <dt id="validateWithParent" class="callable">
   <span class="name"><a href="../validator/IWhenValidator/validateWithParent.html">validateWithParent</a></span><span class="signature">(<wbr><span class="parameter" id="validateWithParent-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, </span><span class="parameter" id="validateWithParent-param-map"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span> <span class="parameter-name">map</span>, {</span><span class="parameter" id="validateWithParent-param-exists"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">exists</span> = <span class="default-value">true</span></span>})
-    <span class="returntype parameter">&#8594; <a href="../result/Result-class.html">Result</a></span>
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/FutureOr-class.html">FutureOr</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/Result-class.html">Result</a></span>&gt;</span></span>
   </span>
   
 
 </dt>
 <dd>
-  Validates the <code>value</code> with access to the parent <code>map</code>.
+  Validates the <code>value</code> with access to the parent <code>map</code>. May be async.
   
 
 </dd>
 
         <dt id="validator" class="callable inherited">
   <span class="name"><a href="../validator/IValidator/validator.html">validator</a></span><span class="signature">(<wbr><span class="parameter" id="validator-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../result/Result-class.html">Result</a></span>
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/FutureOr-class.html">FutureOr</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/Result-class.html">Result</a></span>&gt;</span></span>
   </span>
   
 
 </dt>
 <dd class="inherited">
-  Validates the given <code>value</code> and returns the result.
+  Core validation function (may return a Result or Future&lt;Result&gt;).
+Don't call directly, use <a href="../validator/IValidator/validate.html">validate</a> or <a href="../validator/IValidator/validateAsync.html">validateAsync</a>.
   <div class="features"><span class="feature">inherited</span></div>
 
 </dd>

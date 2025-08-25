@@ -131,6 +131,15 @@ try {
 </li>
 <li><a href="#table-of-contents">Table of contents</a></li>
 <li><a href="#api-overview">API overview</a></li>
+<li><a href="#async-validation">Async validation</a>
+<ul>
+<li><a href="#creating-an-async-validator">Creating an async validator</a></li>
+<li><a href="#mixing-sync--async-combinators">Mixing sync &amp; async combinators</a></li>
+<li><a href="#when-to-prefer-validateasync">When to prefer validateAsync()</a></li>
+<li><a href="#error-handling">Error handling</a></li>
+<li><a href="#upgrading-existing-code">Upgrading existing code</a></li>
+</ul>
+</li>
 <li><a href="#transformers">Transformers</a></li>
 <li><a href="#conditional-validation">Conditional Validation</a></li>
 <li><a href="#examples">Examples</a>
@@ -194,11 +203,60 @@ try {
 <p>Results &amp; Helpers</p>
 <ul>
 <li><code>.validate(value)</code> → <code>Result</code></li>
+<li><code>.validateAsync(value)</code> → <code>Future&lt;Result&gt;</code> (use when any validator is async)</li>
 <li><code>.isValid(value)</code> → <code>bool</code></li>
 <li><code>.validateOrThrow(value)</code> → throws <code>ValidatorFailedException</code> on invalid input.</li>
+<li><code>AsyncValidatorException</code> — thrown if you call <code>.validate()</code> on a chain that contains async validators.</li>
 </ul>
 </li>
 </ul>
+<h2 id="async-validation">Async validation</h2>
+<p>Eskema supports mixing synchronous and asynchronous validators without forcing everything to become async. Validators internally return <code>FutureOr&lt;Result&gt;</code> and only upgrade to a <code>Future</code> when an async boundary is encountered.</p>
+<p>Key points:</p>
+<ul>
+<li>Use <code>.validate()</code> for purely synchronous validator chains (fast path, no allocations for Futures).</li>
+<li>If any validator in the chain is async (uses <code>async</code> / returns a <code>Future&lt;Result&gt;</code>), call <code>.validateAsync()</code> instead.</li>
+<li>Calling <code>.validate()</code> on a chain that resolves an async validator throws <code>AsyncValidatorException</code> with a helpful message.</li>
+<li>Synchronous and async validators compose seamlessly; you do not need separate APIs for "async versions" of built-ins.</li>
+</ul>
+<h3 id="creating-an-async-validator">Creating an async validator</h3>
+<p>You can make any custom validator async simply by returning a <code>Future&lt;Result&gt;</code> (e.g. using <code>async</code>). For example, checking a username against an in‑memory or remote store:</p>
+<pre class="language-dart"><code class="language-dart">// Simulated async uniqueness check
+final $isUsernameAvailable = Validator((value) async {
+  await Future&lt;void&gt;.delayed(const Duration(milliseconds: 10));
+  const taken = {'alice', 'root'};
+  if (value is String &amp;&amp; !taken.contains(value)) {
+    return Result.valid(value);
+  }
+  return Result.invalid(value, expectation: Expectation(message: 'not available', value: value));
+});
+
+final userValidator = eskema({
+  'username': isString() &amp; isNotEmpty() &amp; $isUsernameAvailable,
+  'age': isInt() &amp; isGte(0),
+});
+
+// Because one link is async, use validateAsync()
+final r = await userValidator.validateAsync({'username': 'new_user', 'age': 30});
+print(r.isValid); // true
+
+// Calling validate() here would throw AsyncValidatorException
+</code></pre>
+<h3 id="mixing-sync--async-combinators">Mixing sync &amp; async combinators</h3>
+<p>Combinators like <code>all</code>, <code>any</code>, <code>none</code>, <code>not</code>, schema validators (<code>eskema</code>, <code>eskemaStrict</code>, <code>eskemaList</code>, <code>listEach</code>) and <code>when</code> all propagate async seamlessly. They stay synchronous until a child returns a <code>Future</code> and only then switch to async.</p>
+<h3 id="when-to-prefer-validateasync">When to prefer validateAsync()</h3>
+<ul>
+<li>Any time you intentionally include an async validator.</li>
+<li>If you want a uniform <code>Future</code> interface regardless of sync/async (e.g. in higher‑level code). It is safe but you lose the micro‑optimization of the sync fast path.</li>
+</ul>
+<h3 id="error-handling">Error handling</h3>
+<ul>
+<li>Use <code>validateAsync()</code> + check <code>r.isValid</code>.</li>
+<li>Or, wrap an async chain with <code>throwInstead(v)</code> and handle <code>ValidatorFailedException</code> inside a <code>try/catch</code>.</li>
+<li>Misuse (calling <code>.validate()</code> on async chain) → <code>AsyncValidatorException</code>.</li>
+</ul>
+<h3 id="upgrading-existing-code">Upgrading existing code</h3>
+<p>Most existing synchronous validators require no changes. Only update call sites to <code>.validateAsync()</code> where you introduce an async validator.</p>
 <h2 id="transformers">Transformers</h2>
 <p>Transformers coerce or modify a value <em>before</em> it's passed to a child validator. This is useful for converting strings to numbers, trimming whitespace, or providing default values.</p>
 <pre class="language-dart"><code class="language-dart">// Coerce a string to an integer, then validate the number
@@ -378,13 +436,6 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
 <dd>Transformers
 </dd>
 
-          <dt id="util">
-  <span class="name"><a href="util/">util</a></span> 
-
-</dt>
-<dd>
-</dd>
-
           <dt id="validator">
   <span class="name"><a href="validator/">validator</a></span> 
 
@@ -399,57 +450,64 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
 <dd>Top‑level built‑in validators and combinators.
 </dd>
 
+          <dt id="cached_validators">
+  <span class="name"><a href="cached_validators/">validators/cached</a></span> 
+
+</dt>
+<dd>Cached Validators
+</dd>
+
           <dt id="combinator_validators">
-  <span class="name"><a href="combinator_validators/">validators/combinator_validators</a></span> 
+  <span class="name"><a href="combinator_validators/">validators/combinator</a></span> 
 
 </dt>
 <dd>Combinator Validators
 </dd>
 
           <dt id="comparison_validators">
-  <span class="name"><a href="comparison_validators/">validators/comparison_validators</a></span> 
+  <span class="name"><a href="comparison_validators/">validators/comparison</a></span> 
 
 </dt>
 <dd>Comparison Validators
 </dd>
 
           <dt id="list_validators">
-  <span class="name"><a href="list_validators/">validators/list_validators</a></span> 
+  <span class="name"><a href="list_validators/">validators/list</a></span> 
 
 </dt>
 <dd>List Validators
 </dd>
 
           <dt id="number_validators">
-  <span class="name"><a href="number_validators/">validators/number_validators</a></span> 
+  <span class="name"><a href="number_validators/">validators/number</a></span> 
 
 </dt>
 <dd>Number Validators
 </dd>
 
           <dt id="presence_validators">
-  <span class="name"><a href="presence_validators/">validators/presence_validators</a></span> 
+  <span class="name"><a href="presence_validators/">validators/presence</a></span> 
 
 </dt>
 <dd>Presence Validators
 </dd>
 
           <dt id="string_validators">
-  <span class="name"><a href="string_validators/">validators/string_validators</a></span> 
+  <span class="name"><a href="string_validators/">validators/string</a></span> 
 
 </dt>
 <dd>String Validators
 </dd>
 
           <dt id="structure_validators">
-  <span class="name"><a href="structure_validators/">validators/structure_validators</a></span> 
+  <span class="name"><a href="structure_validators/">validators/structure</a></span> 
 
 </dt>
 <dd>Structure Validators
 </dd>
 
           <dt id="type_validators">
-  <span class="name"><a href="type_validators/">validators/type_validators</a></span> 
+  <span class="name"><a href="type_validators/">validators/type</a></span> 
 
 </dt>
 <dd>Type Validators
@@ -477,17 +535,17 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
       <li><a href="extensions/">extensions</a></li>
       <li><a href="result/">result</a></li>
       <li><a href="transformers/">transformers</a></li>
-      <li><a href="util/">util</a></li>
       <li><a href="validator/">validator</a></li>
       <li><a href="validators/">validators</a></li>
-      <li><a href="combinator_validators/">validators/combinator_validators</a></li>
-      <li><a href="comparison_validators/">validators/comparison_validators</a></li>
-      <li><a href="list_validators/">validators/list_validators</a></li>
-      <li><a href="number_validators/">validators/number_validators</a></li>
-      <li><a href="presence_validators/">validators/presence_validators</a></li>
-      <li><a href="string_validators/">validators/string_validators</a></li>
-      <li><a href="structure_validators/">validators/structure_validators</a></li>
-      <li><a href="type_validators/">validators/type_validators</a></li>
+      <li><a href="cached_validators/">validators/cached</a></li>
+      <li><a href="combinator_validators/">validators/combinator</a></li>
+      <li><a href="comparison_validators/">validators/comparison</a></li>
+      <li><a href="list_validators/">validators/list</a></li>
+      <li><a href="number_validators/">validators/number</a></li>
+      <li><a href="presence_validators/">validators/presence</a></li>
+      <li><a href="string_validators/">validators/string</a></li>
+      <li><a href="structure_validators/">validators/structure</a></li>
+      <li><a href="type_validators/">validators/type</a></li>
 </ol>
 
   </div>

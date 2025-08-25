@@ -25,7 +25,7 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">eskema</a></li>
-    <li><a href="../combinator_validators/">validators&#47;combinator_validators.dart</a></li>
+    <li><a href="../combinator_validators/">validators&#47;combinator.dart</a></li>
     <li class="self-crumb">none function</li>
   </ol>
   <div class="self-name">none</div>
@@ -70,23 +70,24 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator none(List&lt;IValidator&gt; validators) {
-  return Validator((value) {
-    final expectations = &lt;Expectation&gt;[];
+  <pre class="language-dart"><code class="language-dart">IValidator none(List&lt;IValidator&gt; validators) =&gt; Validator&lt;Result&gt;(
+      (value) {
+        final expectations = &lt;Expectation&gt;[];
 
-    for (final validator in validators) {
-      final result = not(validator).validate(value);
+        for (var i = 0; i &lt; validators.length; i++) {
+          final resOr = not(validators[i]).validator(value);
+          if (resOr is Future&lt;Result&gt;) {
+            return _noneAsync(value, validators, expectations, i, resOr);
+          }
+          final r = resOr;
+          if (r.isNotValid) expectations.addAll(r.expectations);
+        }
 
-      if (result.isNotValid) {
-        expectations.addAll(result.expectations);
-      }
-    }
-
-    return expectations.isNotEmpty
-        ? Result.invalid(value, expectations: expectations)
-        : Result.valid(value);
-  });
-}</code></pre>
+        return expectations.isNotEmpty
+            ? Result.invalid(value, expectations: expectations)
+            : Result.valid(value);
+      },
+    );</code></pre>
 </section>
 
 

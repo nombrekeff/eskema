@@ -102,6 +102,7 @@ try {
 		- [2. Validate your data](#2-validate-your-data)
 	- [Table of contents](#table-of-contents)
 	- [API overview](#api-overview)
+  - [Expectation codes](#expectation-codes)
 	- [Async validation](#async-validation)
 		- [Creating an async validator](#creating-an-async-validator)
 		- [Mixing sync \& async combinators](#mixing-sync--async-combinators)
@@ -124,6 +125,8 @@ try {
 ## API overview
 
 > Check the [docs](https://pub.dev/documentation/eskema/latest/) for the full technical documentation.
+
+Need machine readable errors? See [Expectation Codes & Data](docs/expectation_codes.md) for the mapping between validators, codes and data payload.
 
 -   Core
     -   `IValidator` — The base class for all validators.
@@ -335,6 +338,17 @@ validator.validate({ 'optional_and_not_nullable': null }); // Invalid
 validator.validate({ 'optional_and_nullable': null }); // Valid
 validator.validate({}); // Valid
 ```
+
+## Expectation codes
+
+Eskema returns a list of `Expectation` objects on failure. Each carries:
+
+- `message` – Human friendly description
+- `code` – Namespaced identifier (e.g. `type.mismatch`, `value.range_out_of_bounds`)
+- `path` – Location within the validated structure (e.g. `.user.address[0].city`)
+- `data` – Structured metadata (e.g. `{ "expected": "String", "found": "int" }`)
+
+The full table of built‑in validators → codes lives in [`docs/expectation_codes.md`](docs/expectation_codes.md). Use it to localize, categorize, or branch logic on specific error types. Codes are additive and stable (changes are breaking only in a major release). Always ignore unknown future codes for forward compatibility.
 
 
 ## Contributing

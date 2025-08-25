@@ -25,7 +25,7 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">eskema</a></li>
-    <li><a href="../comparison_validators/">validators&#47;comparison_validators.dart</a></li>
+    <li><a href="../comparison_validators/">validators&#47;comparison.dart</a></li>
     <li class="self-crumb">isEq&lt;<wbr><span class="type-parameter">T</span>&gt; function</li>
   </ol>
   <div class="self-name">isEq</div>
@@ -75,7 +75,7 @@
     isType&lt;T&gt;() &amp;
     validator(
       (value) =&gt; value == otherValue,
-      (value) =&gt; Expectation(message: &#39;equal to ${pretifyValue(otherValue)}&#39;, value: value),
+      (value) =&gt; Expectation(message: &#39;equal to ${prettifyValue(otherValue)}&#39;, value: value),
     );</code></pre>
 </section>
 

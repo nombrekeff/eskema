@@ -8,7 +8,10 @@ import 'package:eskema/eskema.dart';
 /// Returns a [Validator] that checks if the given value is the correct type
 IValidator isType<T>() => validator(
       (value) => value is T,
-      (value) => Expectation(message: T.toString(), value: value),
+      (value) => Expectation(message: T.toString(), value: value, code: 'type.mismatch', data: {
+        'expected': T.toString(),
+        'found': value.runtimeType.toString(),
+      }),
     );
 
 /// Returns a [Validator] that checks if the given value is the correct type

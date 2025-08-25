@@ -1,7 +1,4 @@
-import 'package:eskema/result.dart';
-import 'package:eskema/validators.dart';
-
-import 'validator.dart';
+import 'package:eskema/eskema.dart';
 
 extension EskemaMapExtension on Map {
   /// Validates the map against the provided [validator].
@@ -50,12 +47,16 @@ extension EskemaEskValidatorOperations on IValidator {
   IValidator operator &(IValidator other) => all([this, other]);
 
   /// Combines two validators with a logical OR, same as using [any]
-  /// 
+  ///
   /// This is **Sugar**, it allows for more concise validator composition.
   IValidator operator |(IValidator other) => any([this, other]);
 
   /// Returns a new validator that will return the [error] message if the validation fails
   ///
   /// This is **Sugar**, it allows for more concise validator composition.
-  IValidator operator >(String error) => withError(this, error);
+  ///
+  /// The underlying child's error `code` (and `data`) are preserved and propagated into the
+  /// provided [error] (only the message is replaced). See docs/expectation_codes.md for the
+  /// canonical list of built‑in codes.
+  IValidator operator >(Expectation error) => withExpectation(this, error);
 }

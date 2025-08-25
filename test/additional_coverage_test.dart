@@ -98,7 +98,7 @@ void main() {
     });
 
     test('withError wraps async child', () async {
-      final v = withError(asyncFail('inner'), 'outer');
+      final v = withExpectation(asyncFail('inner'), Expectation(message: 'outer'));
       final r = await v.validateAsync('z');
       expect(r.isValid, false);
       expect(r.firstExpectation.message, 'outer');

@@ -25,7 +25,7 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">eskema</a></li>
-    <li><a href="../combinator_validators/">validators&#47;combinator_validators.dart</a></li>
+    <li><a href="../combinator_validators/">validators&#47;combinator.dart</a></li>
     <li class="self-crumb">withError function</li>
   </ol>
   <div class="self-name">withError</div>
@@ -72,15 +72,23 @@ provided <code>error</code> message to the result if the validation fails.</p>
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator withError(IValidator child, String error) {
-  return Validator(
-    (value) =&gt; Result(
-      isValid: child.validate(value).isValid,
-      expectations: [Expectation(message: error, value: value)],
-      value: value,
-    ),
-  );
-}</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator withError(IValidator child, String error) =&gt; Validator&lt;Result&gt;((value) {
+      final resOr = child.validator(value);
+
+      if (resOr is Future&lt;Result&gt;) {
+        return resOr.then((r) =&gt; Result(
+              isValid: r.isValid,
+              expectations: [Expectation(message: error, value: value)],
+              value: value,
+            ));
+      }
+
+      return Result(
+        isValid: resOr.isValid,
+        expectations: [Expectation(message: error, value: value)],
+        value: value,
+      );
+    });</code></pre>
 </section>
 
 

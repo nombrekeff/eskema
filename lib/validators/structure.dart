@@ -61,6 +61,13 @@ IValidator eskema(Map<String, IValidator> mapEskema) {
               res = validator.validateWithParent(fieldValue, value, exists: exists);
             } else {
               // Reproduce nullable/optional short-circuit semantics that validate() provided.
+              if (!exists) {
+                if (validator.isOptional) return loop(index + 1);
+                // For required field missing: validate with exists: false so nullable validators fail.
+                final missingRes = validator.validate(null, exists: false);
+                _collectEskema(missingRes, errors, key);
+                return loop(index + 1);
+              }
               if (!exists && validator.isOptional) {
                 return loop(index + 1);
               }
@@ -92,6 +99,8 @@ void _collectEskema(Result result, List<Expectation> errors, String key) {
       message: error.message,
       value: error.value,
       path: '.$key${error.path != null ? '${error.path}' : ''}',
+  code: error.code ?? 'structure.map_field_failed',
+      data: error.data,
     ));
   }
 }
@@ -119,7 +128,7 @@ IValidator eskemaStrict(Map<String, IValidator> schema) {
         return Result.invalid(
           value,
           expectations: [
-            Expectation(message: 'has unknown keys: ${unknownKeys.join(', ')}', value: value)
+            Expectation(message: 'has unknown keys: ${unknownKeys.join(', ')}', value: value, code: 'structure.unknown_key', data: {'keys': unknownKeys})
           ],
         );
       });
@@ -216,6 +225,8 @@ void _collectListIndex(Result result, List<Expectation> errors, int index) {
       message: error.message,
       value: error.value,
       path: '[$index]${error.path != null ? '${error.path}' : ''}',
+  code: error.code ?? 'structure.list_item_failed',
+      data: error.data,
     ));
   }
 }

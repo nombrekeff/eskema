@@ -25,7 +25,7 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">eskema</a></li>
-    <li><a href="../combinator_validators/">validators&#47;combinator_validators.dart</a></li>
+    <li><a href="../combinator_validators/">validators&#47;combinator.dart</a></li>
     <li class="self-crumb">all function</li>
   </ol>
   <div class="self-name">all</div>
@@ -71,14 +71,19 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator all(List&lt;IValidator&gt; validators) =&gt; Validator((value) {
-      for (final validator in validators) {
-        final result = validator.validate(value);
-        if (result.isNotValid) return result;
-      }
-
-      return Result.valid(value);
-    });</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator all(List&lt;IValidator&gt; validators) =&gt; Validator&lt;Result&gt;(
+      (value) {
+        for (var i = 0; i &lt; validators.length; i++) {
+          final resOr = validators[i].validator(value);
+          if (resOr is Future&lt;Result&gt;) {
+            return _allAsync(value, validators, i, resOr);
+          }
+          final res = resOr;
+          if (res.isNotValid) return res;
+        }
+        return Result.valid(value);
+      },
+    );</code></pre>
 </section>
 
 

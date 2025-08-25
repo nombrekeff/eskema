@@ -25,7 +25,7 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">eskema</a></li>
-    <li><a href="../structure_validators/">validators&#47;structure_validators.dart</a></li>
+    <li><a href="../structure_validators/">validators&#47;structure.dart</a></li>
     <li class="self-crumb">eskema function</li>
   </ol>
   <div class="self-name">eskema</div>
@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">eskema</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="eskema-param-eskema"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">eskema</span></span></li>
+<span class="name ">eskema</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="eskema-param-mapEskema"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">mapEskema</span></span></li>
 </ol>)
 
         
@@ -85,44 +85,64 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator eskema(Map&lt;String, IValidator&gt; eskema) {
+  <pre class="language-dart"><code class="language-dart">IValidator eskema(Map&lt;String, IValidator&gt; mapEskema) {
   return isMap() &amp;
-      Validator((value) {
-        final errors = &lt;Expectation&gt;[];
+      Validator(
+        (value) {
+          final errors = &lt;Expectation&gt;[];
+          final entries = mapEskema.entries.toList();
 
-        for (final entry in eskema.entries) {
-          final key = entry.key;
-          final validator = entry.value;
-          final fieldValue = value[key];
-
-          final Result result;
-          if (validator is IWhenValidator) {
-            result = validator.validateWithParent(
-              fieldValue,
-              value,
-              exists: value.containsKey(key),
-            );
-          } else {
-            result = validator.validate(fieldValue, exists: value.containsKey(key));
-          }
-
-          if (!result.isValid) {
-            for (var error in result.expectations) {
-              errors.add(
-                Expectation(
-                  message: error.message,
-                  value: error.value,
-                  path: &#39;.$key${error.path != null ? &#39;${error.path}&#39; : &#39;&#39;}&#39;,
-                ),
-              );
+          &#47;&#47; We intentionally implement `loop` returning `FutureOr&lt;Result&gt;`:
+          &#47;&#47; - Each validator may return a Result synchronously or a Future&lt;Result&gt;.
+          &#47;&#47; - If all validators are synchronous we want to return a plain Result
+          &#47;&#47;   so callers keep getting synchronous behavior (short-circuits and
+          &#47;&#47;   cheaper execution).
+          &#47;&#47; - If any validator is asynchronous we return a Future that chains the
+          &#47;&#47;   remaining validation steps. Using async&#47;await would always return
+          &#47;&#47;   a Future&lt;Result&gt; and change the observable behavior.
+          &#47;&#47;
+          &#47;&#47; The recursive loop lets us process entries one-by-one and only
+          &#47;&#47; escalate to a Future when a validator actually returns one.
+          FutureOr&lt;Result&gt; loop(int index) {
+            if (index &gt;= entries.length) {
+              return errors.isEmpty
+                  ? Result.valid(value)
+                  : Result.invalid(value, expectations: errors);
             }
-          }
-        }
 
-        return errors.isEmpty
-            ? Result.valid(value)
-            : Result.invalid(value, expectations: errors);
-      });
+            final entry = entries[index];
+            final key = entry.key;
+            final validator = entry.value;
+            final fieldValue = value[key];
+            final exists = value.containsKey(key);
+
+            FutureOr&lt;Result&gt; res;
+            if (validator is IWhenValidator) {
+              res = validator.validateWithParent(fieldValue, value, exists: exists);
+            } else {
+              &#47;&#47; Reproduce nullable&#47;optional short-circuit semantics that validate() provided.
+              if (!exists &amp;&amp; validator.isOptional) {
+                return loop(index + 1);
+              }
+              if (exists &amp;&amp; fieldValue == null &amp;&amp; validator.isNullable) {
+                return loop(index + 1);
+              }
+              res = validator.validator(fieldValue);
+            }
+
+            if (res is Future&lt;Result&gt;) {
+              return res.then((r) {
+                _collectEskema(r, errors, key);
+                return loop(index + 1);
+              });
+            }
+            _collectEskema(res, errors, key);
+            return loop(index + 1);
+          }
+
+          return loop(0);
+        },
+      );
 }</code></pre>
 </section>
 

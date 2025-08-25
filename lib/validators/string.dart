@@ -5,7 +5,7 @@
 library string_validators;
 
 import 'package:eskema/eskema.dart';
-import 'package:eskema/util.dart';
+import 'package:eskema/src/util.dart';
 
 /// Validates that the String's length matches the validators
 IValidator stringLength(List<IValidator> validators) => $isString & length(validators);
@@ -21,10 +21,16 @@ IValidator stringIsOfLength(int size) => stringLength([isEq(size)]);
 /// This validator also validates that the value is a String first
 /// So there's no need to add the [isString] validator when using this validator
 IValidator stringContains(String str) =>
-    $isString & (contains(str) > "String to contain ${pretifyValue(str)}");
+    $isString &
+  (contains(str) > Expectation(
+    message: "String to contain ${prettifyValue(str)}",
+    code: 'value.contains_missing',
+    data: {'needle': prettifyValue(str)}));
 
 /// Validate that it's a String and the string is empty
-IValidator stringEmpty<T>() => stringLength([isLte(0)]) > "String to be empty";
+IValidator stringEmpty<T>() =>
+  stringLength([isLte(0)]) >
+  Expectation(message: "String to be empty", code: 'value.length_out_of_range', data: {'expected': 0});
 
 /// Validates that the String matches the provided pattern
 ///
@@ -34,17 +40,26 @@ IValidator stringMatchesPattern(Pattern pattern, {String? error}) {
   return isType<String>() &
       validator(
         (value) => pattern.allMatches(value).isNotEmpty,
-        (value) => Expectation(message: error ?? 'String to match "$pattern"', value: value),
+        (value) => Expectation(
+          message: error ?? 'String to match "$pattern"',
+          value: value,
+          code: 'value.pattern_mismatch',
+          data: {'pattern': pattern.toString()},
+        ),
       );
 }
 
 /// Validates that it's a String and it's lowecase
 IValidator isLowerCase() =>
-    isString() & (stringMatchesPattern(RegExp(r'^[a-z]+$')) > 'lowercase string');
+    isString() &
+  (stringMatchesPattern(RegExp(r'^[a-z]+$')) >
+    Expectation(message: 'lowercase string', code: 'value.case_mismatch', data: {'expected_case': 'lower'}));
 
 /// Validates that it's a String and it's uppercase
 IValidator isUpperCase() =>
-    isString() & (stringMatchesPattern(RegExp(r'^[A-Z]+$')) > 'uppercase string');
+    isString() &
+  (stringMatchesPattern(RegExp(r'^[A-Z]+$')) >
+    Expectation(message: 'uppercase string', code: 'value.case_mismatch', data: {'expected_case': 'upper'}));
 
 /// Validates that the String is a valid email address.
 IValidator isEmail() {
@@ -65,7 +80,7 @@ IValidator isUrl({bool strict = false}) {
       validator(
         (value) =>
             strict ? Uri.tryParse(value)?.isAbsolute ?? false : Uri.tryParse(value) != null,
-        (value) => Expectation(message: 'a valid URL', value: value),
+  (value) => Expectation(message: 'a valid URL', value: value, code: 'value.format_invalid', data: {'format': 'url'}),
       );
 }
 
@@ -83,7 +98,8 @@ IValidator isIntString() =>
     isType<String>() &
     validator(
       (value) => int.tryParse(value.trim()) != null,
-      (value) => Expectation(message: 'a valid formatted int String', value: value),
+      (value) => Expectation(
+          message: 'a valid formatted int String', value: value, code: 'value.format_invalid', data: {'format': 'int'}),
     );
 
 /// Validates that the String can be parsed as a `double` (e.g. '123.45', '-1e3')
@@ -91,7 +107,8 @@ IValidator isDoubleString() =>
     isType<String>() &
     validator(
       (value) => double.tryParse(value.trim()) != null,
-      (value) => Expectation(message: 'a valid formatted double String', value: value),
+      (value) => Expectation(
+          message: 'a valid formatted double String', value: value, code: 'value.format_invalid', data: {'format': 'double'}),
     );
 
 /// Validates that the String can be parsed as a `num` (int or double)
@@ -99,11 +116,13 @@ IValidator isNumString() =>
     isType<String>() &
     validator(
       (value) => num.tryParse(value.trim()) != null,
-      (value) => Expectation(message: 'a valid formatted number String', value: value),
+      (value) => Expectation(
+          message: 'a valid formatted number String', value: value, code: 'value.format_invalid', data: {'format': 'num'}),
     );
 
 /// Checks whether the given value is a valid DateTime formatted String
 IValidator isDate() => validator(
       (value) => DateTime.tryParse(value) != null,
-      (value) => Expectation(message: 'a valid DateTime formatted String', value: value),
+      (value) => Expectation(
+          message: 'a valid DateTime formatted String', value: value, code: 'value.format_invalid', data: {'format': 'date_time'}),
     );
