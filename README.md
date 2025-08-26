@@ -35,18 +35,18 @@ final userValidator = eskema({
   // Use built-in validator functions
   'username': all([isString(), isNotEmpty()]),
 
-  // Some zero-arg validators also have cached aliases (e.g. $isBool, $isString)
+  // Some zero-arg validators also have cached aliases (e.g. $isBool, $isString), more efficient
   'lastname': $isString,
 
   // Combine validators using operators for simplicity and readability
-  'age': isInt() & isGte(0),
-  'theme': isString() & isIn(['light', 'dark']),
+  'age': $isInt & isGte(0),
+  'theme': $isString & isIn(['light', 'dark']),
 
   // The key must exist, but the value may be null.
-  'bio': nullable(isString()),
+  'bio': nullable($isString),
 
   // The key may be missing entirely. If present, it must be a valid DateTime string.
-  'birthday': optional(isDateTimeString()),
+  'birthday': optional(isDate()),
 });
 ```
 
@@ -95,32 +95,32 @@ try {
 ## Table of contents
 
 - [Eskema](#eskema)
-	- [Use cases](#use-cases)
-	- [Install](#install)
-	- [Quick start](#quick-start)
-		- [1. Create a validator](#1-create-a-validator)
-		- [2. Validate your data](#2-validate-your-data)
-	- [Table of contents](#table-of-contents)
-	- [API overview](#api-overview)
+  - [Use cases](#use-cases)
+  - [Install](#install)
+  - [Quick start](#quick-start)
+    - [1. Create a validator](#1-create-a-validator)
+    - [2. Validate your data](#2-validate-your-data)
+  - [Table of contents](#table-of-contents)
+  - [API overview](#api-overview)
+  - [Async validation](#async-validation)
+    - [Creating an async validator](#creating-an-async-validator)
+    - [Mixing sync \& async combinators](#mixing-sync--async-combinators)
+    - [When to prefer validateAsync()](#when-to-prefer-validateasync)
+    - [Error handling](#error-handling)
+    - [Upgrading existing code](#upgrading-existing-code)
+  - [Transformers](#transformers)
+  - [Conditional Validation](#conditional-validation)
+  - [Examples](#examples)
+    - [Custom validators](#custom-validators)
+    - [Nullable vs optional](#nullable-vs-optional)
   - [Expectation codes](#expectation-codes)
-	- [Async validation](#async-validation)
-		- [Creating an async validator](#creating-an-async-validator)
-		- [Mixing sync \& async combinators](#mixing-sync--async-combinators)
-		- [When to prefer validateAsync()](#when-to-prefer-validateasync)
-		- [Error handling](#error-handling)
-		- [Upgrading existing code](#upgrading-existing-code)
-	- [Transformers](#transformers)
-	- [Conditional Validation](#conditional-validation)
-	- [Examples](#examples)
-		- [Custom validators](#custom-validators)
-		- [Nullable vs optional](#nullable-vs-optional)
-	- [Contributing](#contributing)
-		- [Reporting Bugs](#reporting-bugs)
-		- [Feature Requests](#feature-requests)
-		- [Pull Requests](#pull-requests)
-		- [Project-Specific Guidelines](#project-specific-guidelines)
-			- [Requesting New Validators](#requesting-new-validators)
-			- [Code Style](#code-style)
+  - [Contributing](#contributing)
+    - [Reporting Bugs](#reporting-bugs)
+    - [Feature Requests](#feature-requests)
+    - [Pull Requests](#pull-requests)
+    - [Project-Specific Guidelines](#project-specific-guidelines)
+      - [Requesting New Validators](#requesting-new-validators)
+      - [Code Style](#code-style)
 
 ## API overview
 
@@ -181,8 +181,8 @@ final $isUsernameAvailable = Validator((value) async {
 });
 
 final userValidator = eskema({
-  'username': isString() & isNotEmpty() & $isUsernameAvailable,
-  'age': isInt() & isGte(0),
+  'username': $isString & isNotEmpty() & $isUsernameAvailable,
+  'age': $isInt & isGte(0),
 });
 
 // Because one link is async, use validateAsync()
@@ -217,7 +217,7 @@ Transformers coerce or modify a value *before* it's passed to a child validator.
 
 ```dart
 // Coerce a string to an integer, then validate the number
-final ageValidator = toInt(isInt() & isGte(18));
+final ageValidator = toInt($isInt & isGte(18));
 ageValidator.validate('25'); // Valid, value becomes 25
 ageValidator.validate('invalid'); // Invalid
 
@@ -228,7 +228,7 @@ final settingsValidator = eskema({
 settingsValidator.validate({}); // Valid, theme becomes 'light'
 
 // Split a string into a list and validate each item
-final tagsValidator = split(',', listEach(isString() & isNotEmpty()));
+final tagsValidator = split(',', listEach($isString & $isNotEmpty));
 tagsValidator.validate('dart,flutter,eskema'); // Valid
 ```
 
@@ -257,9 +257,9 @@ final addressValidator = eskema({
     // Condition (on the parent map)
     getField('country', isEq('USA')),
     // `then` validator (for the `postal_code` field)
-    then: isString() & hasLength(5) > 'a 5-digit US zip code',
+    then: $isString & hasLength(5) > 'a 5-digit US zip code',
     // `otherwise` validator (for the `postal_code` field)
-    otherwise: isString() & hasLength(6) > 'a 6-character Canadian postal code',
+    otherwise: $isString & hasLength(6) > 'a 6-character Canadian postal code',
   ),
 });
 
@@ -320,9 +320,9 @@ The distinction between `nullable` and `optional` is important for map validatio
 
 ```dart
 final validator = eskema({
-  'required_but_nullable': isString().nullable(),
-  'optional_and_not_nullable': isString().optional(),
-  'optional_and_nullable': isString().nullable().optional(),
+  'required_but_nullable': $isString.nullable(),
+  'optional_and_not_nullable': $isString.optional(),
+  'optional_and_nullable': $isString.nullable().optional(),
 });
 
 // Key must exist, value can be null
