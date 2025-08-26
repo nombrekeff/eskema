@@ -33,7 +33,7 @@ import 'package:eskema/eskema.dart';
 
 final userValidator = eskema({
   // Use built-in validator functions
-  'username': isString() & isNotEmpty(),
+  'username': all([isString(), isNotEmpty()]),
 
   // Some zero-arg validators also have cached aliases (e.g. $isBool, $isString)
   'lastname': $isString,
