@@ -25,15 +25,15 @@ void main() {
     test('valid object with nullable name null + missing optional age', () async {
       final m = {'id': 1, 'name': null, 'email': 'x', 'country': 'USA'};
       final r = await schema.validateAsync(m);
-      expect(r.isValid, true, reason: r.shortDescription);
+      expect(r.isValid, true, reason: r.description);
     });
 
     test('invalid object async failure age present', () async {
       final m = {'id': 1, 'name': 'John', 'email': 'x', 'age': 10};
       final r = await schema.validateAsync(m);
       expect(r.isValid, false);
-      expect(r.shortDescription.contains('too young'), true);
-      expect(r.shortDescription.contains('.age'), true);
+      expect(r.description.contains('too young'), true);
+      expect(r.description.contains('.age'), true);
     });
 
     test('validate() throws on async path', () {

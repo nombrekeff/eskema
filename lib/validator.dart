@@ -58,7 +58,7 @@ abstract class IValidator {
   ///
   /// [exists] If set to true, the value is consider to "exist",
   /// this is most useful for optional fields in maps.
-  /// 
+  ///
   /// Will [throw] an error if used with async validators
   Result validate(dynamic value, {bool exists = true}) {
     if ((value == null && isNullable && exists) || (!exists && isOptional)) {
@@ -90,8 +90,14 @@ abstract class IValidator {
   /// Checks if the given value is valid.
   bool isValid(dynamic value) => validate(value).isValid;
 
+  /// Checks if the given value is valid asynchronously.
+  FutureOr<bool> isValidAsync(dynamic value) async => (await validateAsync(value)).isValid;
+
   /// Checks if the given value is not valid.
   bool isNotValid(dynamic value) => !validate(value).isValid;
+
+  /// Checks if the given value is not valid asynchronously.
+  FutureOr<bool> isNotValidAsync(dynamic value) async => !(await isValidAsync(value));
 
   /// Creates a copy of the validator with the given parameters.
   IValidator copyWith({bool? nullable, bool? optional});
@@ -113,7 +119,8 @@ abstract class IWhenValidator extends IValidator {
   IWhenValidator({super.nullable, super.optional});
 
   /// Validates the [value] with access to the parent [map]. May be async.
-  FutureOr<Result> validateWithParent(dynamic value, Map<String, dynamic> map, {bool exists = true});
+  FutureOr<Result> validateWithParent(dynamic value, Map<String, dynamic> map,
+      {bool exists = true});
 }
 
 /// An implementation of [IValidator], which accepts a validator function,
@@ -121,6 +128,7 @@ abstract class IWhenValidator extends IValidator {
 ///
 /// Take a look at [validators] for examples.
 class Validator<T extends Result> extends IValidator {
+  static final Validator valid = Validator((v) => Result.valid(v));
   final ValidatorFunction<T> _validator;
   Validator(this._validator, {super.nullable, super.optional});
 
@@ -163,7 +171,8 @@ class WhenValidator extends IWhenValidator {
   }
 
   @override
-  FutureOr<Result> validateWithParent(dynamic value, Map<String, dynamic> map, {bool exists = true}) {
+  FutureOr<Result> validateWithParent(dynamic value, Map<String, dynamic> map,
+      {bool exists = true}) {
     final cond = condition.validator(map);
     if (cond is Future<Result>) {
       return cond.then((cr) => _evalBranch(cr, value));

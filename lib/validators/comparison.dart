@@ -94,7 +94,7 @@ IValidator containsKey(String key) =>
     });
 
 /// Checks whether the given value is one of the [options] values of type [T]
-IValidator isOneOf<T>(List<T> options) => all([
+IValidator isOneOf<T>(Iterable<T> options) => all([
       isType<T>(),
       Validator(
         (value) => Result(

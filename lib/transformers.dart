@@ -106,6 +106,11 @@ IValidator toBool(IValidator child) {
       }, child);
 }
 
+IValidator toString(IValidator child) =>
+    ($isString | $isNumber | $isBool | isType<DateTime>()) &
+        transform((v) => v.toString(), child) >
+    Expectation(message: 'a value convertible to a String');
+
 /// Trims leading and trailing whitespace from a string.
 ///
 /// Fails if the input value is not a string.

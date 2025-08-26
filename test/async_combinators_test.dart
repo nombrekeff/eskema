@@ -28,7 +28,7 @@ void main() {
     test('then branch async condition fail length', () async {
       final r = await schema.validateAsync({'country': 'USA', 'postal': '1234'});
       expect(r.isValid, false);
-      expect(r.shortDescription.contains('len5'), true);
+      expect(r.description.contains('len5'), true);
     });
   });
 }

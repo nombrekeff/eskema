@@ -24,7 +24,7 @@ void main() {
       final v = eskemaStrict({'id': isInt(), 'name': isString().optional()});
       final r = v.validate({'id': 1, 'name': 2});
       expect(r.isValid, false);
-      expect(r.shortDescription, '.name: String');
+      expect(r.description, '.name: String');
     });
 
 
@@ -32,23 +32,23 @@ void main() {
       final v = eskemaStrict({'id': isInt()});
       final r = v.validate({'id': 1, 'extra': true});
       expect(r.isValid, false);
-      expect(r.shortDescription.contains('has unknown keys'), true);
+      expect(r.description.contains('has unknown keys'), true);
     });
 
     test('async field pass but unknown key still detected', () async {
       final v = eskemaStrict({'id': asyncPass(), 'name': isString()});
       final r = await v.validateAsync({'id': 1, 'name': 'x', 'extra': 5});
       expect(r.isValid, false);
-      expect(r.shortDescription.contains('has unknown keys'), true);
+      expect(r.description.contains('has unknown keys'), true);
     });
 
     test('async field failure short-circuits before unknown keys', () async {
       final v = eskemaStrict({'id': asyncFail('bad id'), 'name': isString()});
       final r = await v.validateAsync({'id': 'oops', 'name': 'x', 'extra': 5});
       expect(r.isValid, false);
-      expect(r.shortDescription.contains('bad id'), true);
+      expect(r.description.contains('bad id'), true);
       // Should NOT include unknown key message because second phase skipped
-      expect(r.shortDescription.contains('has unknown keys'), false);
+      expect(r.description.contains('has unknown keys'), false);
     });
 
     test('validate() throws on async schema', () {

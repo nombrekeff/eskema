@@ -54,7 +54,7 @@ void main() {
       };
       final result = addressValidator.validate(address);
       expect(result.isValid, isFalse);
-      expect(result.shortDescription, '.postal_code: a 6-character Canadian postal code');
+      expect(result.description, '.postal_code: a 6-character Canadian postal code');
     });
 
     test('should fail if when is used outside of an eskema map validator', () {
@@ -65,7 +65,7 @@ void main() {
       );
       final result = validator.validate('some value');
       expect(result.isValid, isFalse);
-      expect(result.shortDescription,
+      expect(result.description,
           '`when` validator can only be used inside an `eskema` map validator');
     });
   });

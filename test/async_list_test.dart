@@ -16,14 +16,14 @@ void main() {
     test('listEach passes with all valid async', () async {
       final v = listEach(delayedInt);
       final r = await v.validateAsync([1,2,3]);
-      expect(r.isValid, true, reason: r.shortDescription);
+      expect(r.isValid, true, reason: r.description);
     });
 
     test('listEach fails early when first invalid async', () async {
       final v = listEach(delayedInt);
       final r = await v.validateAsync([1,'x',3]);
       expect(r.isValid, false);
-      expect(r.shortDescription.contains('[1]'), true);
+      expect(r.description.contains('[1]'), true);
     });
 
     test('eskemaList with mixed async+sync', () async {
@@ -36,7 +36,7 @@ void main() {
       final v = eskemaList([delayedInt, isString()]);
       final r = await v.validateAsync(['bad','ok']);
       expect(r.isValid, false);
-      expect(r.shortDescription.contains('[0]'), true);
+      expect(r.description.contains('[0]'), true);
     });
   });
 }

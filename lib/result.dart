@@ -54,14 +54,9 @@ class Result<T> {
 
   int get expectationCount => expectations.length;
 
-  String get shortDescription {
-    return isValid ? 'Valid' : expectations.map((e) => e.shortDescription).join(', ');
-  }
-
   String get description {
-    return isValid
-        ? 'Valid: ${prettifyValue(value)}'
-        : '$shortDescription (value: ${prettifyValue(value)})';
+        return isValid ? 'Valid' : expectations.map((e) => e.description).join(', ');
+
   }
 
   /// Creates a copy of the result with the given parameters.

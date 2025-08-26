@@ -14,13 +14,13 @@ void main() {
 
     expect(stringField.validate('not-valid').isValid, true);
     expect(stringField.validate(123).isValid, false);
-    expect(stringField.validate(123).shortDescription, 'String');
+    expect(stringField.validate(123).description, 'String');
 
     expect(intField.validate(123).isValid, true);
-    expect(intField.validate(123.2).shortDescription, 'int');
+    expect(intField.validate(123.2).description, 'int');
 
     expect(doubleField.validate(123.2).isValid, true);
-    expect(doubleField.validate(123).shortDescription, 'double');
+    expect(doubleField.validate(123).description, 'double');
 
     expect(numField.validate(123.2).isValid, true);
     expect(numField.validate(123).isValid, true);
@@ -36,7 +36,7 @@ void main() {
 
     final res = nonNullableField.validate(null);
     expect(res.isValid, false);
-    expect(res.shortDescription, 'String');
+    expect(res.description, 'String');
 
     expect(nullableField.validate('test').isValid, true);
     expect(nonNullableField.validate('test').isValid, true);
@@ -75,8 +75,8 @@ void main() {
     expect(intValidator.validate('not a valid number').isValid, false);
     expect(intValidator.validate(1).isValid, false);
     expect(intValidator.validate(5).isValid, false);
-    expect(intValidator.validate(1).shortDescription, 'greater than or equal to 2');
-    expect(intValidator.validate(5).shortDescription, 'less than or equal to 4');
+    expect(intValidator.validate(1).description, 'greater than or equal to 2');
+    expect(intValidator.validate(5).description, 'less than or equal to 4');
 
     expect(intValidator.validate(2).isValid, true);
     expect(intValidator.validate(3).isValid, true);
@@ -97,7 +97,7 @@ void main() {
         return Result.valid(value);
       }),
     ]);
-    expect(customValidator.validate(42).shortDescription, 'that is the number');
+    expect(customValidator.validate(42).description, 'that is the number');
     expect(customValidator.validate(12).isValid, true);
   });
 
@@ -109,9 +109,9 @@ void main() {
 
     expect(dateValidator.validate('1969-07-20 20:18:04Z').isValid, true);
     expect(
-        dateValidator.validate('sadasd').shortDescription, 'a valid DateTime formatted String');
-    expect(dateValidator.validate(123).shortDescription, 'String');
-    expect(dateValidator.validate(true).shortDescription, 'String');
+        dateValidator.validate('sadasd').description, 'a valid DateTime formatted String');
+    expect(dateValidator.validate(123).description, 'String');
+    expect(dateValidator.validate(true).description, 'String');
   });
 
   test('validate map', () {
@@ -119,8 +119,8 @@ void main() {
       isType<Map>(),
     ]);
     expect(field.validate({}).isValid, true);
-    expect(field.validate('sadasd').shortDescription, 'Map<dynamic, dynamic>');
-    expect(field.validate(123).shortDescription, 'Map<dynamic, dynamic>');
-    expect(field.validate(true).shortDescription, 'Map<dynamic, dynamic>');
+    expect(field.validate('sadasd').description, 'Map<dynamic, dynamic>');
+    expect(field.validate(123).description, 'Map<dynamic, dynamic>');
+    expect(field.validate(true).description, 'Map<dynamic, dynamic>');
   });
 }
