@@ -1,4 +1,4 @@
-import 'package:eskema/validators/builder.dart';
+import 'package:eskema/builder.dart';
 
 void main() async {
   final nameValidator = v()
