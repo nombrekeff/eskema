@@ -1,0 +1,9 @@
+.github/
+.vscode/
+coverage/
+benchmark/
+docs/
+
+# Tests & test data (keep if you want them published)
+test/
+scripts/
