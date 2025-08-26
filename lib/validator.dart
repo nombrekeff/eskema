@@ -33,8 +33,10 @@ class ValidatorFailedException implements Exception {
 ///
 /// Or consider using one of the [validators] for built in validation.
 abstract class IValidator {
-  const IValidator({bool nullable = false, bool optional = false})
-      : isNullable = nullable,
+  const IValidator({
+    bool nullable = false,
+    bool optional = false,
+  })  : isNullable = nullable,
         isOptional = optional;
 
   /// Marks the validator as nullable. This means that if the value being checked is null,
@@ -64,11 +66,14 @@ abstract class IValidator {
     if ((value == null && isNullable && exists) || (!exists && isOptional)) {
       return Result.valid(value);
     }
-    final r = validator(value);
-    if (r is Future<Result>) {
+
+    final result = validator(value);
+
+    if (result is Future<Result>) {
       throw AsyncValidatorException();
     }
-    return r;
+
+    return result;
   }
 
   /// Always returns a Future, allowing async + sync validators to compose.
@@ -76,7 +81,9 @@ abstract class IValidator {
     if ((value == null && isNullable && exists) || (!exists && isOptional)) {
       return Result.valid(value);
     }
-    return await validator(value);
+
+    final result = await validator(value);
+    return result;
   }
 
   /// Works the same as [validate], validates that a given value is valid,
@@ -100,7 +107,10 @@ abstract class IValidator {
   FutureOr<bool> isNotValidAsync(dynamic value) async => !(await isValidAsync(value));
 
   /// Creates a copy of the validator with the given parameters.
-  IValidator copyWith({bool? nullable, bool? optional});
+  IValidator copyWith({
+    bool? nullable,
+    bool? optional,
+  });
 
   /// Creates a nullable copy of the validator.
   IValidator nullable<T>() {
@@ -130,13 +140,20 @@ abstract class IWhenValidator extends IValidator {
 class Validator<T extends Result> extends IValidator {
   static final Validator valid = Validator((v) => Result.valid(v));
   final ValidatorFunction<T> _validator;
-  Validator(this._validator, {super.nullable, super.optional});
+  Validator(
+    this._validator, {
+    super.nullable,
+    super.optional,
+  });
 
   @override
   FutureOr<T> validator(dynamic value) => _validator.call(value);
 
   @override
-  IValidator copyWith({bool? nullable, bool? optional}) {
+  IValidator copyWith({
+    bool? nullable,
+    bool? optional,
+  }) {
     return Validator(
       _validator,
       nullable: nullable ?? isNullable,
