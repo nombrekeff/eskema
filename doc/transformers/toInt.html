@@ -77,9 +77,9 @@ Passes the resulting integer to the <code>child</code> validator.</p>
     ($isInt | $isNumber | $isIntString) &amp;
     transform((v) {
       return switch (v) {
-        int n =&gt; n,
-        double n =&gt; n.toInt(),
-        String s =&gt; int.tryParse(s.trim()),
+        final int n =&gt; n,
+        final double n =&gt; n.toInt(),
+        final String s =&gt; int.tryParse(s.trim()),
         _ =&gt; null,
       };
     }, child);</code></pre>
@@ -109,7 +109,7 @@ Passes the resulting integer to the <code>child</code> validator.</p>
 <footer>
   <span class="no-break">
     eskema
-      0.1.0
+      1.0.0
   </span>
   
 </footer>

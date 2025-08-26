@@ -73,7 +73,7 @@ So there's no need to add the <a href="../type_validators/isList.html">isList</a
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IValidator listContains&lt;T&gt;(dynamic item) =&gt; isList&lt;T&gt;() &amp;
-    (contains(item) &gt; Expectation(message: &quot;List to contain ${prettifyValue(item)}&quot;, code: &#39;value.contains_missing&#39;, data: {&#39;needle&#39;: prettifyValue(item)}));</code></pre>
+    (contains(item) &gt; Expectation(message: &#39;List to contain ${prettifyValue(item)}&#39;, code: &#39;value.contains_missing&#39;, data: {&#39;needle&#39;: prettifyValue(item)}));</code></pre>
 </section>
 
 
@@ -100,7 +100,7 @@ So there's no need to add the <a href="../type_validators/isList.html">isList</a
 <footer>
   <span class="no-break">
     eskema
-      0.1.0
+      1.0.0
   </span>
   
 </footer>

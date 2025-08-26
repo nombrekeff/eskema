@@ -77,9 +77,9 @@ Passes the resulting double to the <code>child</code> validator.</p>
     ($isDouble | $isNumber | $isDoubleString) &amp;
     transform((v) {
       return switch (v) {
-        double i =&gt; i,
-        int i =&gt; i.toDouble(),
-        String s =&gt; double.tryParse(s.trim()),
+        final double i =&gt; i,
+        final int i =&gt; i.toDouble(),
+        final String s =&gt; double.tryParse(s.trim()),
         _ =&gt; null,
       };
     }, child);</code></pre>
@@ -109,7 +109,7 @@ Passes the resulting double to the <code>child</code> validator.</p>
 <footer>
   <span class="no-break">
     eskema
-      0.1.0
+      1.0.0
   </span>
   
 </footer>

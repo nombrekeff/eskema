@@ -77,9 +77,9 @@ Passes the resulting boolean to the <code>child</code> validator.</p>
   return ($isBool | isOneOf([0, 1]) | (toLowerCase(isString() &amp; isOneOf([&#39;true&#39;, &#39;false&#39;])))) &amp;
       transform((v) {
         return switch (v) {
-          bool b =&gt; b,
-          int i =&gt; i == 1,
-          String s =&gt; s.toLowerCase().trim() == &#39;true&#39;,
+          final bool b =&gt; b,
+          final int i =&gt; i == 1,
+          final String s =&gt; s.toLowerCase().trim() == &#39;true&#39;,
           _ =&gt; null,
         };
       }, child);
@@ -110,7 +110,7 @@ Passes the resulting boolean to the <code>child</code> validator.</p>
 <footer>
   <span class="no-break">
     eskema
-      0.1.0
+      1.0.0
   </span>
   
 </footer>

@@ -76,8 +76,8 @@ Passes the resulting <code>DateTime</code> to the <code>child</code> validator.<
   <pre class="language-dart"><code class="language-dart">IValidator toDateTime(IValidator child) =&gt;
     transform((value) {
       return switch (value) {
-        DateTime d =&gt; d,
-        String s =&gt; DateTime.tryParse(s.trim()),
+        final DateTime d =&gt; d,
+        final String s =&gt; DateTime.tryParse(s.trim()),
         _ =&gt; null,
       };
     }, child) &gt;
@@ -108,7 +108,7 @@ Passes the resulting <code>DateTime</code> to the <code>child</code> validator.<
 <footer>
   <span class="no-break">
     eskema
-      0.1.0
+      1.0.0
   </span>
   
 </footer>

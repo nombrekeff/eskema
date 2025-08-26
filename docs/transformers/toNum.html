@@ -76,8 +76,8 @@ Passes the resulting number to the <code>child</code> validator.</p>
     ($isNumber | $isNumString) &amp;
     transform((value) {
       return switch (value) {
-        num n =&gt; n,
-        String s =&gt; num.tryParse(s.trim()),
+        final num n =&gt; n,
+        final String s =&gt; num.tryParse(s.trim()),
         _ =&gt; null,
       };
     }, child);</code></pre>
@@ -107,7 +107,7 @@ Passes the resulting number to the <code>child</code> validator.</p>
 <footer>
   <span class="no-break">
     eskema
-      0.1.0
+      1.0.0
   </span>
   
 </footer>
