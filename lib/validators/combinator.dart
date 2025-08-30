@@ -6,6 +6,17 @@ library validators.combinator;
 import 'dart:async';
 import 'package:eskema/eskema.dart';
 
+// Internal micro-helpers to reduce duplication in combinators.
+@pragma('vm:prefer-inline')
+Result _failWithMsg(dynamic value, String message) =>
+    Result.invalid(value, expectation: Expectation(message: message, value: value));
+
+@pragma('vm:prefer-inline')
+Expectation _applyOverride(Expectation base, String? message, dynamic value, {String? code}) {
+  if (message == null) return base.copyWith(value: value, code: code ?? base.code);
+  return base.copyWith(message: message, value: value, code: code ?? base.code);
+}
+
 /// Passes the test if any of the [Validator]s are valid, and fails if any are invalid
 ///
 /// **Usage Examples:**
@@ -22,58 +33,45 @@ import 'package:eskema/eskema.dart';
 ///   stringMatchesPattern(r'^.+@localhost$'), // Local development
 /// ]);
 /// ```
-IValidator any(List<IValidator> validators, {String? message}) => Validator<Result>(
-      (value) {
-        final collected = <Result>[];
-
-        for (var i = 0; i < validators.length; i++) {
-          final resOr = validators[i].validator(value);
-
-          if (resOr is Future<Result>) {
-            return _anyAsync(value, validators, collected, i, resOr);
-          }
-
-          final res = resOr;
-          collected.add(res);
-
-          if (res.isValid) return res;
+IValidator any(List<IValidator> validators, {String? message}) => Validator<Result>((value) {
+      List<Expectation>? expectations; // lazily allocate only when needed
+      for (var i = 0; i < validators.length; i++) {
+        final resOr = validators[i].validator(value);
+        if (resOr is Future<Result>) {
+          return _anyAsync(value, validators, expectations, i, resOr, message: message);
         }
-
-        final expectations = collected.expand((r) => r.expectations).toList();
-        if (message != null) {
-          return Result.invalid(
-            value,
-            expectation: Expectation(message: message, value: value),
-          );
+        final res = resOr;
+        if (res.isValid) return res;
+        if (message == null && res.expectations.isNotEmpty) {
+          (expectations ??= <Expectation>[]).addAll(res.expectations);
         }
-
-        return Result.invalid(value, expectations: expectations);
-      },
-    );
+      }
+      if (message != null) return _failWithMsg(value, message);
+      return Result.invalid(value, expectations: expectations ?? const <Expectation>[]);
+    });
 
 Future<Result> _anyAsync(
   dynamic value,
   List<IValidator> validators,
-  List<Result> collected,
+  List<Expectation>? expectations,
   int index,
-  Future<Result> pending,
-) async {
-  // resolve current pending
+  Future<Result> pending, {
+  String? message,
+}) async {
   final first = await pending;
-  collected.add(first);
   if (first.isValid) return first;
-
-  // continue with remaining
+  if (message == null && first.expectations.isNotEmpty) {
+    (expectations ??= <Expectation>[]).addAll(first.expectations);
+  }
   for (var i = index + 1; i < validators.length; i++) {
     final result = await validators[i].validator(value);
-    collected.add(result);
     if (result.isValid) return result;
+    if (message == null && result.expectations.isNotEmpty) {
+      (expectations ??= <Expectation>[]).addAll(result.expectations);
+    }
   }
-
-  return Result.invalid(
-    value,
-    expectations: collected.expand((r) => r.expectations).toList(),
-  );
+  if (message != null) return _failWithMsg(value, message);
+  return Result.invalid(value, expectations: expectations ?? const <Expectation>[]);
 }
 
 /// Passes the test if all of the [Validator]s are valid, and fails if any of them are invalid
@@ -99,22 +97,16 @@ Future<Result> _anyAsync(
 /// ```
 IValidator all(List<IValidator> validators, {String? message}) {
   FutureOr<Result> pipeline(dynamic value) {
-    // Thread potentially transformed values through the chain.
     for (var i = 0; i < validators.length; i++) {
       final resOr = validators[i].validator(value);
-
       if (resOr is Future<Result>) {
-        return _allAsync(value, validators, i, resOr);
+        return _allAsync(value, validators, i, resOr, message: message);
       }
-
-      if (resOr.isNotValid) return resOr; // early failure preserves transformed value so far
-
-      value = resOr.value; // adopt transformed value (if unchanged it's a no-op)
+      final res = resOr;
+      if (res.isNotValid) return message != null ? _failWithMsg(res.value, message) : res;
+      value = res.value;
     }
-
-    return message != null
-        ? Result.invalid(value, expectation: Expectation(message: message, value: value))
-        : Result.valid(value);
+    return message != null ? _failWithMsg(value, message) : Result.valid(value);
   }
 
   return Validator<Result>(pipeline);
@@ -124,21 +116,19 @@ Future<Result> _allAsync(
   dynamic value,
   List<IValidator> validators,
   int index,
-  Future<Result> pending,
-) async {
-  // Resolve the first async validator (all prior were sync and have already
-  // threaded their transformations into `value`).
+  Future<Result> pending, {
+  String? message,
+}) async {
+  var current = value;
   final first = await pending;
-  if (first.isNotValid) return first;
-  value = first.value;
-
+  if (first.isNotValid) return message != null ? _failWithMsg(first.value, message) : first;
+  current = first.value;
   for (var i = index + 1; i < validators.length; i++) {
-    final nextOr = await validators[i].validator(value);
-    if (nextOr.isNotValid) return nextOr;
-    value = nextOr.value;
+    final res = await validators[i].validator(current);
+    if (res.isNotValid) return message != null ? _failWithMsg(res.value, message) : res;
+    current = res.value;
   }
-
-  return Result.valid(value);
+  return message != null ? _failWithMsg(current, message) : Result.valid(current);
 }
 
 /// Passes the test if none of the validators pass
@@ -161,52 +151,50 @@ Future<Result> _allAsync(
 ///   isInRange(50, 60),   // Not 50-60
 /// ]);
 /// ```
-IValidator none(List<IValidator> validators, {String? message}) => Validator<Result>(
-      (value) {
-        final expectations = <Expectation>[];
-
-        for (var i = 0; i < validators.length; i++) {
-          final resOr = not(validators[i]).validator(value);
-
-          if (resOr is Future<Result>) {
-            return _noneAsync(value, validators, expectations, i, resOr);
-          }
-
-          if (resOr.isNotValid) expectations.addAll(resOr.expectations);
+IValidator none(List<IValidator> validators, {String? message}) => Validator<Result>((value) {
+      List<Expectation>? expectations;
+      for (var i = 0; i < validators.length; i++) {
+        final resOr = not(validators[i]).validator(value);
+        if (resOr is Future<Result>) {
+          return _noneAsync(value, validators, expectations, i, resOr, message: message);
         }
-
-        if (expectations.isNotEmpty) {
-          if (message != null) {
-            return Result.invalid(
-              value,
-              expectation: Expectation(message: message, value: value),
-            );
+        final res = resOr;
+        if (res.isNotValid) {
+          if (message == null && res.expectations.isNotEmpty) {
+            (expectations ??= <Expectation>[]).addAll(res.expectations);
+          } else if (message != null) {
+            return _failWithMsg(value, message);
           }
-
-          return Result.invalid(value, expectations: expectations);
         }
-
-        return Result.valid(value);
-      },
-    );
+      }
+      if (message != null) return Result.valid(value);
+      return (expectations != null && expectations.isNotEmpty)
+          ? Result.invalid(value, expectations: expectations)
+          : Result.valid(value);
+    });
 
 Future<Result> _noneAsync(
   dynamic value,
   List<IValidator> validators,
-  List<Expectation> expectations,
+  List<Expectation>? expectations,
   int index,
-  Future<Result> pending,
-) async {
+  Future<Result> pending, {
+  String? message,
+}) async {
   final first = await pending;
-
-  if (first.isNotValid) expectations.addAll(first.expectations);
-
+  if (first.isNotValid) {
+    if (message != null) return _failWithMsg(value, message);
+    (expectations ??= <Expectation>[]).addAll(first.expectations);
+  }
   for (var i = index + 1; i < validators.length; i++) {
     final res = await not(validators[i]).validator(value);
-    if (res.isNotValid) expectations.addAll(res.expectations);
+    if (res.isNotValid) {
+      if (message != null) return _failWithMsg(value, message);
+      (expectations ??= <Expectation>[]).addAll(res.expectations);
+    }
   }
-
-  return expectations.isNotEmpty
+  if (message != null) return Result.valid(value);
+  return (expectations != null && expectations.isNotEmpty)
       ? Result.invalid(value, expectations: expectations)
       : Result.valid(value);
 }
@@ -231,43 +219,25 @@ Future<Result> _noneAsync(
 /// // Validate that a field is NOT present (for optional fields)
 /// final fieldNotPresent = not(exists());
 /// ```
-IValidator not(IValidator validator, {String? message}) => Validator<Result>(
-      (value) {
-        final resOr = validator.validator(value);
-        if (resOr is Future<Result>) return _notAsync(value, resOr, message: message);
-
-        if (message != null && resOr.isValid) {
-          return Result.invalid(
-            value,
-            expectation: Expectation(message: message, value: value),
-          );
-        }
-
-        final expectations = resOr.expectations.map(
-          (error) => error.copyWith(
-            message: 'not ${error.message}',
-            code: error.code ?? 'logic.not_expected',
-          ),
-        );
-
-        return Result(isValid: resOr.isNotValid, expectations: expectations, value: value);
-      },
-    );
+IValidator not(IValidator validator, {String? message}) => Validator<Result>((value) {
+      final resOr = validator.validator(value);
+      if (resOr is Future<Result>) return _notAsync(value, resOr, message: message);
+      if (message != null && resOr.isValid) return _failWithMsg(value, message);
+      final mapped = resOr.expectations.map((e) => e.copyWith(
+            message: 'not ${e.message}',
+            code: e.code ?? 'logic.not_expected',
+          ));
+      return Result(isValid: resOr.isNotValid, expectations: mapped, value: value);
+    });
 
 Future<Result> _notAsync(dynamic value, Future<Result> pending, {String? message}) async {
   final result = await pending;
-  final expectations = result.expectations.map(
-    (error) => error.copyWith(
-      message: 'not ${error.message}',
-      code: error.code ?? 'logic.not_expected',
-    ),
-  );
-
-  if (message != null && result.isNotValid) {
-    return Result.invalid(value, expectation: Expectation(message: message, value: value));
-  }
-
-  return Result(isValid: result.isNotValid, expectations: expectations, value: value);
+  if (message != null && result.isNotValid) return _failWithMsg(value, message);
+  final mapped = result.expectations.map((e) => e.copyWith(
+        message: 'not ${e.message}',
+        code: e.code ?? 'logic.not_expected',
+      ));
+  return Result(isValid: result.isNotValid, expectations: mapped, value: value);
 }
 
 /// Returns a [Validator] that throws a [ValidatorFailedException] instead of returning a result
@@ -329,26 +299,17 @@ Future<Result> _throwInsteadAsync(Future<Result> pending) async {
 IValidator withExpectation(IValidator child, Expectation error, {String? message}) =>
     Validator<Result>((value) {
       final resOr = child.validator(value);
-
+      Expectation build(Result r) => _applyOverride(
+            error,
+            message,
+            value,
+            code: r.isValid ? null : r.firstExpectation.code,
+          );
       if (resOr is Future<Result>) {
-        return resOr.then((r) => Result(
-              isValid: r.isValid,
-              expectations: [
-                (message != null ? error.copyWith(message: message) : error)
-                    .copyWith(value: value, code: r.isValid ? null : r.firstExpectation.code)
-              ],
-              value: value,
-            ));
+        return resOr
+            .then((r) => Result(isValid: r.isValid, expectations: [build(r)], value: value));
       }
-
-      return Result(
-        isValid: resOr.isValid,
-        expectations: [
-          (message != null ? error.copyWith(message: message) : error)
-              .copyWith(value: value, code: resOr.isValid ? null : resOr.firstExpectation.code)
-        ],
-        value: value,
-      );
+      return Result(isValid: resOr.isValid, expectations: [build(resOr)], value: value);
     });
 
 /// Creates a conditional validator. It's conditional based on some other field in the eskema.
