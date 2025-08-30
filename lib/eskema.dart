@@ -18,3 +18,4 @@ export 'result.dart';
 export 'extensions.dart';
 export 'transformers.dart';
 export 'expectation.dart';
+export 'error_format.dart';

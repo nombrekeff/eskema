@@ -64,6 +64,8 @@ class Result<T> {
 
   @override
   String toString() {
+    // Keep valid results concise; invalid use joined expectation descriptions (legacy behavior).
+    // Callers needing structured formatting should use error_format.dart helpers.
     return description;
   }
 

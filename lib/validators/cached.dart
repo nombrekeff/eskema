@@ -138,3 +138,26 @@ final IValidator $listNotEmpty = not($listEmpty);
 /// Cached instance of [isStringEmpty].
 /// Validates that the value is empty (string, list, map, etc.).
 final IValidator $isStringEmpty = isStringEmpty();
+
+// Derived / composed cached validators
+
+/// Cached instance representing NOT null (i.e. value must be non-null).
+/// Equivalent to: `not($isNull)`.
+final IValidator $isNotNull = not($isNull);
+
+/// Cached instance representing a non-empty String.
+/// Equivalent to: `all([$isString, not($isStringEmpty)])`.
+/// Valid when the value is a String and not empty.
+final IValidator $isNonEmptyString = all([$isString, not($isStringEmpty)]);
+
+/// Cached instance for optional (nullable) non-empty string: accepts null OR a non-empty string.
+/// Usage: `$optionalNonEmptyString.validate(null)` -> valid; `.validate('')` -> invalid.
+final IValidator $optionalNonEmptyString = $isNonEmptyString.optional().nullable();
+
+/// Cached instance for a present (non-null AND non-empty) list.
+/// Equivalent to: `all([$isList, $listNotEmpty])`.
+final IValidator $isNonEmptyList = all([$isList, $listNotEmpty]);
+
+/// Cached instance for a nullable non-empty list (null passes, empty list fails).
+final IValidator $optionalNonEmptyList = $isNonEmptyList.optional().nullable();
+

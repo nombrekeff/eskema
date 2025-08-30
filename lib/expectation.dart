@@ -18,7 +18,7 @@ class Expectation {
   /// Optional structured metadata (e.g. {'expectedType': 'String', 'foundType': 'int'})
   final Map<String, Object?>? data;
 
-  Expectation({
+  const Expectation({
     this.path,
     required this.message,
     this.value,

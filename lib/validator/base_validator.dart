@@ -3,6 +3,7 @@ library validator.base;
 
 import 'dart:async';
 import 'package:eskema/result.dart';
+import 'package:eskema/error_format.dart';
 
 /// Type representing a validator function (may be sync or async).
 typedef ValidatorFunction<T extends Result> = FutureOr<T> Function(dynamic value);
@@ -17,9 +18,19 @@ class AsyncValidatorException implements Exception {
 
 /// Thrown when a validation fails and validateOrThrow() is used.
 class ValidatorFailedException implements Exception {
-  String get message => result.toString();
   final Result result;
-  ValidatorFailedException(this.result);
+  final DateTime timestamp = DateTime.now();
+  ValidatorFailedException(this.result) : assert(result.isNotValid);
+
+  /// Primary human friendly message.
+  String get message => buildValidationFailureMessage(result);
+
+  /// Machine friendly summary (single line) for logs.
+  String get summary =>
+      'ValidatorFailed(errors=${result.expectationCount}, type=${result.value.runtimeType})';
+
+  @override
+  String toString() => message;
 }
 
 /// Immutable base class from which all validators inherit.
