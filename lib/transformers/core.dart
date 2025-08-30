@@ -12,9 +12,7 @@ import 'package:eskema/eskema.dart';
 /// passed to the [child] validator. This is a low-level building block for
 /// creating custom transformers.
 IValidator transform<T>(T Function(dynamic) fn, IValidator child) {
-  return Validator((value) {
-    return child.validate(fn(value));
-  });
+  return Validator((value) => child.validate(fn(value)));
 }
 
 /// Unified helper for value pivoting operations.
@@ -37,13 +35,18 @@ IValidator pivotValue(
 }) {
   return Validator((value) {
     final transformed = transformFn(value);
+
     if (transformed == null) {
-      return Result.invalid(value,
-          expectation: Expectation(message: errorMessage, value: value));
+      return Result.invalid(
+        value,
+        expectation: Expectation(message: errorMessage, value: value),
+      );
     }
-    final r = child.validate(transformed);
-    if (r.isValid) return Result.valid(transformed);
-    return r;
+
+    final childResult = child.validate(transformed);
+    if (childResult.isValid) return Result.valid(transformed);
+
+    return childResult;
   });
 }
 
@@ -51,8 +54,10 @@ IValidator pivotValue(
 /// (useful for coercions where later constraints rely on the coerced type even on failure).
 IValidator expectPreserveValue(IValidator validator, Expectation expectation) =>
     Validator((value) {
-      final r = validator.validate(value);
-      if (r.isValid) return Result.valid(r.value);
-      return Result.invalid(r.value,
-          expectations: [expectation.copyWith(code: r.firstExpectation.code, value: r.value)]);
+      final innerResult = validator.validate(value);
+      if (innerResult.isValid) return Result.valid(innerResult.value);
+
+      return Result.invalid(innerResult.value, expectations: [
+        expectation.copyWith(code: innerResult.firstExpectation.code, value: innerResult.value)
+      ]);
     });

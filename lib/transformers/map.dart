@@ -61,7 +61,7 @@ IValidator flattenMapKeys(String delimiter, IValidator child, {String? message})
         }
 
         walk(value, '');
-        
+
         return flat;
       },
       child: child,
@@ -79,12 +79,12 @@ IValidator getField(String key, IValidator inner) =>
     isMap() &
     containsKey(key) &
     Validator((value) {
-      final r = inner.validate(value[key]);
-      if (r.isValid) return r;
+      final result = inner.validate(value[key]);
+      if (result.isValid) return result;
 
       return Result.invalid(
         value,
-        expectations: r.expectations
+        expectations: result.expectations
             .map((e) => Expectation(
                   message: e.message,
                   value: e.value,

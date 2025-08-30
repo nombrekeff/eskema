@@ -34,4 +34,6 @@ class ExpectationCodes {
 
   // Logic domain
   static const logicNotExpected = 'logic.not_expected';
+
+  static var typeMismatch = 'value.type_mismatch';
 }

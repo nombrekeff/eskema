@@ -59,9 +59,9 @@ Future<Result> _anyAsync(
 
   // continue with remaining
   for (var i = index + 1; i < validators.length; i++) {
-    final r = await validators[i].validator(value);
-    collected.add(r);
-    if (r.isValid) return r;
+    final result = await validators[i].validator(value);
+    collected.add(result);
+    if (result.isValid) return result;
   }
 
   return Result.invalid(
@@ -128,15 +128,16 @@ Future<Result> _allAsync(
   currentValue = first.value;
 
   for (var i = index + 1; i < validators.length; i++) {
-    final r = await validators[i].validator(currentValue);
-    if (r is Future<Result>) {
-      final awaited = await r; // support cascading async validators
+    final nextOr = await validators[i].validator(currentValue);
+    if (nextOr is Future<Result>) {
+      final awaited = await nextOr; // support cascading async validators
       if (awaited.isNotValid) return awaited;
       currentValue = awaited.value;
       continue;
     }
-    if (r.isNotValid) return r;
-    currentValue = r.value;
+    final result = nextOr;
+    if (result.isNotValid) return result;
+    currentValue = result.value;
   }
   return Result.valid(currentValue);
 }
