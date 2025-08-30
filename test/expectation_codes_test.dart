@@ -56,7 +56,7 @@ void main() {
     });
 
     test('copyWith preserves and overrides code/data', () {
-      final e = Expectation(message: 'm', value: 1, code: 'c1', data: {'a': 1});
+      final e = const Expectation(message: 'm', value: 1, code: 'c1', data: {'a': 1});
       final e2 = e.copyWith(message: 'm2', code: 'c2');
       expect(e2.message, 'm2');
       expect(e2.code, 'c2');
@@ -64,7 +64,7 @@ void main() {
     });
 
     test('toJson includes code, path, data', () {
-      final e = Expectation(message: 'm', value: 5, code: 'x', data: {'k': 'v'}, path: 'p');
+      final e = const Expectation(message: 'm', value: 5, code: 'x', data: {'k': 'v'}, path: 'p');
       final j = e.toJson();
       expect(j['code'], 'x');
       expect(j['path'], 'p');

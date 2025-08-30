@@ -510,7 +510,7 @@ void main() {
       final failingPivot = CustomPivot(
         (child) => Validator((value) {
           // Always fail with custom message
-          return Result.invalid(value, expectation: Expectation(message: 'Custom pivot failed'));
+          return Result.invalid(value, expectation: const Expectation(message: 'Custom pivot failed'));
         }),
         dropPre: true,
         kind: 'failing',

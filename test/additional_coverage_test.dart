@@ -40,7 +40,7 @@ class OuterMapValidator extends MapValidator<Map<String, dynamic>> {
 void main() {
   group('Expectation helpers', () {
     test('copyWith + addToPath + toInvalidResult', () {
-      final e = Expectation(path: 'user', message: 'is bad', value: 1);
+      final e = const Expectation(path: 'user', message: 'is bad', value: 1);
       final e2 = e.copyWith(message: 'really bad');
       expect(e2.message, 'really bad');
       final e3 = e2.addToPath('name');
@@ -54,8 +54,8 @@ void main() {
   group('Result helpers', () {
     test('copyWith changes fields + multi expectation description join', () {
       final r = Result.invalid(10, expectations: [
-        Expectation(message: 'e1', value: 10),
-        Expectation(message: 'e2', value: 10),
+        const Expectation(message: 'e1', value: 10),
+        const Expectation(message: 'e2', value: 10),
       ]);
       final r2 = r.copyWith(isValid: true, value: 11);
       expect(r2.isValid, true);
@@ -89,7 +89,7 @@ void main() {
     });
 
     test('withError wraps async child', () async {
-      final v = withExpectation(asyncFail('inner'), Expectation(message: 'outer'));
+      final v = withExpectation(asyncFail('inner'), const Expectation(message: 'outer'));
       final r = await v.validateAsync('z');
       expect(r.isValid, false);
       expect(r.firstExpectation.message, 'outer');
