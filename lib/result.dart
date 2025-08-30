@@ -14,27 +14,25 @@ class Result<T> {
   Result({
     required this.isValid,
     required this.value,
-    List<Expectation>? expectations,
+    Iterable<Expectation>? expectations,
     Expectation? expectation,
-  }) : expectations = List.unmodifiable(
-          expectations ?? (expectation == null ? _emptyExpectations : [expectation]),
-        );
+  }) : expectations =
+            expectations ?? (expectation == null ? _emptyExpectations : [expectation]);
 
   Result.valid(this.value)
       : isValid = true,
         expectations = _emptyExpectations;
 
-  Result.invalid(this.value, {List<Expectation>? expectations, Expectation? expectation})
+  Result.invalid(this.value, {Iterable<Expectation>? expectations, Expectation? expectation})
       : isValid = false,
-        expectations = List.unmodifiable(
-          expectations ?? (expectation == null ? _emptyExpectations : [expectation]),
-        );
+        expectations =
+            expectations ?? (expectation == null ? _emptyExpectations : [expectation]);
 
   final bool isValid;
 
   /// The list of expectations for the validation result.
   /// It will contain expectations independent of the validation result.
-  final List<Expectation> expectations;
+  final Iterable<Expectation> expectations;
   final T value;
 
   bool get hasExpectations => expectations.isNotEmpty;

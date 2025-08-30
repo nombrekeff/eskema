@@ -33,7 +33,7 @@ void main() {
 
     test('withExpectation extra message param override', () {
       final base = isInt();
-      final wrapped = withExpectation(base, Expectation(message: 'orig'), message: 'override');
+      final wrapped = withExpectation(base, const Expectation(message: 'orig'), message: 'override');
       final r = wrapped.validate('x');
       expect(r.isValid, false);
       expect(r.firstExpectation.message, 'override');
