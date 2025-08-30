@@ -1,7 +1,7 @@
 /// Number Validators
 ///
 /// This file contains validators for numeric values.
-library number_validators;
+library validators.number;
 
 import 'package:eskema/expectation.dart';
 import 'package:eskema/extensions.dart';

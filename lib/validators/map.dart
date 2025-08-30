@@ -2,7 +2,7 @@
 ///
 /// This file contains validators that are specific to Maps
 
-library map_validators;
+library validators.map;
 
 import 'package:eskema/eskema.dart';
 import 'package:eskema/src/util.dart';

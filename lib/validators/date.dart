@@ -1,5 +1,11 @@
+/// Date Validators
+///
+/// This file contains validators for working with DateTime values.
+library validators.date;
+
 import '../validator.dart';
 import '../expectation.dart';
+import '../expectation_codes.dart';
 import '../result.dart';
 
 /// DateTime must be before (or equal if inclusive) given bound.
@@ -11,7 +17,7 @@ IValidator isDateBefore(DateTime dt, {bool inclusive = false}) => Validator((val
           message:
               'a DateTime before${inclusive ? ' or equal to' : ''} ${dt.toIso8601String()}',
           value: value,
-          code: 'value.date_out_of_range',
+          code: ExpectationCodes.valueDateOutOfRange,
           data: {
             'bound': dt.toIso8601String(),
             'op': 'before',
@@ -30,7 +36,7 @@ IValidator isDateAfter(DateTime dt, {bool inclusive = false}) => Validator((valu
         expectation: Expectation(
           message: 'a DateTime after${inclusive ? ' or equal to' : ''} ${dt.toIso8601String()}',
           value: value,
-          code: 'value.date_out_of_range',
+          code: ExpectationCodes.valueDateOutOfRange,
           data: {
             'bound': dt.toIso8601String(),
             'op': 'after',
@@ -54,7 +60,7 @@ IValidator isDateBetween(DateTime start, DateTime end,
           message:
               'a DateTime between ${start.toIso8601String()} and ${end.toIso8601String()} (${inclusiveStart ? '[' : '('}${inclusiveEnd ? ']' : ')'})',
           value: value,
-          code: 'value.date_out_of_range',
+          code: ExpectationCodes.valueDateOutOfRange,
           data: {
             'start': start.toIso8601String(),
             'end': end.toIso8601String(),
@@ -77,7 +83,7 @@ IValidator isDateSameDay(DateTime dt) => Validator((value) {
         expectation: Expectation(
           message: 'a DateTime on the same day as ${dt.toIso8601String().substring(0, 10)}',
           value: value,
-          code: 'value.date_mismatch',
+          code: ExpectationCodes.valueDateMismatch,
           data: {'targetDay': dt.toIso8601String().substring(0, 10)},
         ),
         value: value,
@@ -94,7 +100,7 @@ IValidator isDateInPast({bool allowNow = true}) {
       expectation: Expectation(
         message: 'a DateTime in the past${allowNow ? ' or now' : ''}',
         value: value,
-        code: 'value.date_not_past',
+        code: ExpectationCodes.valueDateNotPast,
         data: {'now': now.toIso8601String(), 'allowNow': allowNow},
       ),
       value: value,
@@ -112,7 +118,7 @@ IValidator isDateInFuture({bool allowNow = true}) {
       expectation: Expectation(
         message: 'a DateTime in the future${allowNow ? ' or now' : ''}',
         value: value,
-        code: 'value.date_not_future',
+        code: ExpectationCodes.valueDateNotFuture,
         data: {'now': now.toIso8601String(), 'allowNow': allowNow},
       ),
       value: value,

@@ -1,7 +1,7 @@
 /// Combinator Validators
 ///
 /// This file contains validators for combining multiple validation rules.
-library combinator_validators;
+library validators.combinator;
 
 import 'dart:async';
 import 'package:eskema/eskema.dart';
@@ -57,23 +57,21 @@ Future<Result> _anyAsync(
 ///
 /// In the case that a [Validator] fails, it's [Result] will be returned
 IValidator all(List<IValidator> validators) {
-  FutureOr<Result> pipeline(value) {
+  FutureOr<Result> pipeline(dynamic value) {
+    // Thread potentially transformed values through the chain.
     for (var i = 0; i < validators.length; i++) {
       final resOr = validators[i].validator(value);
-
       if (resOr is Future<Result>) {
         return _allAsync(value, validators, i, resOr);
       }
-
-      if (resOr.isNotValid) return resOr;
+      if (resOr.isNotValid) return resOr; // early failure preserves transformed value so far
+      value = resOr.value; // adopt transformed value (if unchanged it's a no-op)
     }
-
     return Result.valid(value);
   }
 
   return Validator<Result>(pipeline);
 }
-
 
 Future<Result> _allAsync(
   dynamic value,
@@ -81,16 +79,25 @@ Future<Result> _allAsync(
   int index,
   Future<Result> pending,
 ) async {
-  // process any prior validators synchronously already validated before async encountered
+  // Resolve the first async validator (all prior were sync and have already
+  // threaded their transformations into `value`).
+  var currentValue = value;
   final first = await pending;
   if (first.isNotValid) return first;
+  currentValue = first.value;
 
   for (var i = index + 1; i < validators.length; i++) {
-    final r = await validators[i].validator(value);
+    final r = await validators[i].validator(currentValue);
+    if (r is Future<Result>) {
+      final awaited = await r; // support cascading async validators
+      if (awaited.isNotValid) return awaited;
+      currentValue = awaited.value;
+      continue;
+    }
     if (r.isNotValid) return r;
+    currentValue = r.value;
   }
-
-  return Result.valid(value);
+  return Result.valid(currentValue);
 }
 
 /// Passes the test if none of the validators pass

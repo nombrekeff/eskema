@@ -2,9 +2,10 @@
 ///
 /// This file contains validators for checking the format and content of strings.
 
-library string_validators;
+library validators.string;
 
 import 'package:eskema/eskema.dart';
+import 'package:eskema/expectation_codes.dart';
 import 'package:eskema/src/util.dart';
 
 /// Validates that the String's length matches the validators
@@ -25,7 +26,7 @@ IValidator stringContains(String str) =>
     (contains(str) >
         Expectation(
             message: 'String to contain ${prettifyValue(str)}',
-            code: 'value.contains_missing',
+            code: ExpectationCodes.valueContainsMissing,
             data: {'needle': prettifyValue(str)}));
 
 /// Validate that it's a String and the string is empty
@@ -33,7 +34,7 @@ IValidator stringEmpty<T>() =>
     stringLength([isLte(0)]) >
     Expectation(
         message: 'String to be empty',
-        code: 'value.length_out_of_range',
+        code: ExpectationCodes.valueLengthOutOfRange,
         data: {'expected': 0});
 
 /// Validates that the String matches the provided pattern
@@ -47,7 +48,7 @@ IValidator stringMatchesPattern(Pattern pattern, {String? error}) {
         (value) => Expectation(
           message: error ?? 'String to match "$pattern"',
           value: value,
-          code: 'value.pattern_mismatch',
+          code: ExpectationCodes.valuePatternMismatch,
           data: {'pattern': pattern.toString()},
         ),
       );
@@ -60,7 +61,7 @@ IValidator isLowerCase() =>
       (value) => value.toLowerCase() == value,
       (value) => Expectation(
         message: 'lowercase string',
-        code: 'value.case_mismatch',
+        code: ExpectationCodes.valueCaseMismatch,
         data: {'expected_case': 'lower'},
       ),
     );
@@ -72,15 +73,15 @@ IValidator isUpperCase() =>
       (value) => value.toUpperCase() == value,
       (value) => Expectation(
         message: 'uppercase string',
-        code: 'value.case_mismatch',
+        code: ExpectationCodes.valueCaseMismatch,
         data: {'expected_case': 'upper'},
       ),
     );
 
+final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+
 /// Validates that the String is a valid email address.
 IValidator isEmail() {
-  // A simple regex for email validation. For a more robust one, consider a dedicated package.
-  final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
   return isString() & stringMatchesPattern(emailRegex, error: 'a valid email address');
 }
 
@@ -99,17 +100,18 @@ IValidator isUrl({bool strict = false}) {
         (value) => Expectation(
             message: 'a valid URL',
             value: value,
-            code: 'value.format_invalid',
+            code: ExpectationCodes.valueFormatInvalid,
             data: {'format': 'url'}),
       );
 }
 
 IValidator isStrictUrl() => isUrl(strict: true);
 
+final uuidRegex = RegExp(
+    r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+
 /// Validates that the String is a valid UUID (v4).
 IValidator isUuidV4() {
-  final uuidRegex = RegExp(
-      r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
   return isString() & stringMatchesPattern(uuidRegex, error: 'a valid UUID v4');
 }
 
@@ -121,7 +123,7 @@ IValidator isIntString() =>
       (value) => Expectation(
           message: 'a valid formatted int String',
           value: value,
-          code: 'value.format_invalid',
+          code: ExpectationCodes.valueFormatInvalid,
           data: {'format': 'int'}),
     );
 
@@ -133,7 +135,7 @@ IValidator isDoubleString() =>
       (value) => Expectation(
           message: 'a valid formatted double String',
           value: value,
-          code: 'value.format_invalid',
+          code: ExpectationCodes.valueFormatInvalid,
           data: {'format': 'double'}),
     );
 
@@ -145,7 +147,7 @@ IValidator isNumString() =>
       (value) => Expectation(
           message: 'a valid formatted number String',
           value: value,
-          code: 'value.format_invalid',
+          code: ExpectationCodes.valueFormatInvalid,
           data: {'format': 'num'}),
     );
 
@@ -160,7 +162,7 @@ IValidator isBoolString() =>
       (value) => Expectation(
           message: 'a valid formatted boolean String',
           value: value,
-          code: 'value.format_invalid',
+          code: ExpectationCodes.valueFormatInvalid,
           data: {'format': 'bool'}),
     );
 

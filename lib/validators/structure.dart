@@ -2,10 +2,11 @@
 ///
 /// This file contains validators for checking the structure of complex data types.
 
-library structure_validators;
+library validators.structure;
 
 import 'dart:async';
 import 'package:eskema/eskema.dart';
+import 'package:eskema/expectation_codes.dart';
 
 /// Returns a Validator that checks a value against a Map eskema that declares a validator for each key.
 ///
@@ -98,13 +99,13 @@ IValidator eskema(Map<String, IValidator> mapEskema) {
 
 void _collectEskema(Result result, List<Expectation> errors, String key) {
   if (result.isValid) return;
-  
+
   for (final error in result.expectations) {
     errors.add(Expectation(
       message: error.message,
       value: error.value,
       path: '.$key${error.path != null ? '${error.path}' : ''}',
-      code: error.code ?? 'structure.map_field_failed',
+      code: error.code ?? ExpectationCodes.structureMapFieldFailed,
       data: error.data,
     ));
   }
@@ -136,7 +137,7 @@ IValidator eskemaStrict(Map<String, IValidator> schema) {
             Expectation(
               message: 'has unknown keys: ${unknownKeys.join(', ')}',
               value: value,
-              code: 'structure.unknown_key',
+              code: ExpectationCodes.structureUnknownKey,
               data: {'keys': unknownKeys},
             ),
           ],
@@ -246,7 +247,7 @@ void _collectListIndex(Result result, List<Expectation> errors, int index) {
       message: error.message,
       value: error.value,
       path: '[$index]${error.path != null ? '${error.path}' : ''}',
-      code: error.code ?? 'structure.list_item_failed',
+      code: error.code ?? ExpectationCodes.structureListItemFailed,
       data: error.data,
     ));
   }

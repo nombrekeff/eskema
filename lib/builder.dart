@@ -63,7 +63,31 @@ import 'validators/json.dart';
 /// discarded once a coercion is requested (since those validators target the
 /// original type). Validators added after coercion target the coerced type.
 // Kind of coercion applied to the chain (single pivot allowed).
-enum _CoercionKind { int_, double_, bool_, string_, datetime_, json_ }
+enum _CoercionKind { int_, double_, bool_, string_, datetime_, json_, custom }
+
+/// Represents a custom pivot for extensibility.
+///
+/// Use this to define custom type coercions or transformations that can be plugged into the builder chain.
+///
+/// Example:
+/// ```dart
+/// class MyPivot extends CustomPivot {
+///   MyPivot() : super(
+///     (child) => Validator((value) => child.validate(value.toString())),
+///     dropPre: true,
+///     kind: 'toString',
+///   );
+/// }
+///
+/// final validator = v().use(MyPivot()).lengthMin(1).build();
+/// ```
+class CustomPivot {
+  final IValidator Function(IValidator child) transformer;
+  final bool dropPre;
+  final String? kind; // optional, for documentation
+
+  CustomPivot(this.transformer, {this.dropPre = true, this.kind});
+}
 
 class Chain {
   // Validators accumulated BEFORE any type coercion (original type domain).
@@ -76,6 +100,8 @@ class Chain {
   _CoercionKind? _coercionKind;
   // A prefix transformer applied BEFORE coercion (value pivot like pluckValue / pick / flatten).
   IValidator Function(IValidator child)? _prefix;
+  // Whether pre-validators should be preserved when applying coercion
+  bool _preservePreValidators = false;
 
   bool get _hasCoercion => _coercionKind != null;
   bool _isKind(_CoercionKind k) => _coercionKind == k;
@@ -96,18 +122,25 @@ class Chain {
     }
   }
 
-  void setTransform(_CoercionKind kind, IValidator Function(IValidator child) transformer) {
-    if (_coercionKind != null) {
-      if (_coercionKind == kind) return; // same coercion => no-op (idempotent)
-      // Different coercion requested: swap transformer, drop post constraints (fresh domain).
+  void setTransform(_CoercionKind kind, IValidator Function(IValidator child) transformer,
+      {bool dropPre = true}) {
+    if (_coercionKind == null) {
+      // First pivot: drop pre validators (they targeted old domain)
       _coercionKind = kind;
       _coercion = transformer;
-      _postValidators = null;
+      _preservePreValidators = !dropPre;
+      if (dropPre) _preValidators = null;
       return;
     }
+    // Subsequent pivot: compose if either current or previous is custom; replace only if both are built-in
+    if (kind == _CoercionKind.custom || _coercionKind == _CoercionKind.custom) {
+      final previous = _coercion!;
+      _coercion = (child) => previous(transformer(child));
+    } else {
+      _coercion = transformer;
+    }
     _coercionKind = kind;
-    _coercion = transformer;
-    _preValidators = null; // drop previous validators targeting old type
+    _postValidators = null;
   }
 
   // Add a prefix value-mapping validator (runs before coercion & post validators).
@@ -126,7 +159,12 @@ class Chain {
     IValidator tail() {
       if (_coercion != null) {
         final child = _postValidators ?? Validator.valid;
-        return _coercion!(child);
+        final coerced = _coercion!(child);
+        // If preserving pre-validators, apply them before coercion
+        if (_preservePreValidators && _preValidators != null) {
+          return _preValidators! & coerced;
+        }
+        return coerced;
       }
       return _preValidators ?? Validator.valid;
     }
@@ -210,12 +248,6 @@ mixin TransformerMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
     return NumberBuilder(chain: _chain);
   }
 
-  // Uri pivot
-  GenericBuilder<Uri> toUri() {
-    _chain.setTransform(_CoercionKind.string_, (child) => tr.toUri(child));
-    return GenericBuilder<Uri>(chain: _chain);
-  }
-
   // DateOnly pivot (DateTime truncated to midnight)
   GenericBuilder<DateTime> toDateOnly() {
     _chain.setTransform(_CoercionKind.string_, (child) => tr.toDateOnly(child));
@@ -234,6 +266,12 @@ mixin TransformerMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
     if (_chain.coercedToDateTime) return DateTimeBuilder(chain: _chain);
     _chain.setTransform(_CoercionKind.datetime_, (child) => tr.toDateTime(child));
     return DateTimeBuilder(chain: _chain);
+  }
+
+  // Custom pivot for extensibility
+  GenericBuilder<dynamic> use(CustomPivot pivot) {
+    _chain.setTransform(_CoercionKind.custom, pivot.transformer, dropPre: pivot.dropPre);
+    return GenericBuilder<dynamic>(chain: _chain);
   }
 }
 mixin LengthMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
@@ -341,10 +379,6 @@ mixin StringMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
   B collapseWhitespace() => wrap((c) => tr.collapseWhitespace(c));
   B toLowerCase() => wrap((c) => tr.toLowerCaseString(c));
   B toUpperCase() => wrap((c) => tr.toUpperCaseString(c));
-  B normalizeUnicode() => wrap((c) => tr.normalizeUnicodeString(c));
-  B removeDiacritics() => wrap((c) => tr.removeDiacriticsString(c));
-  B slugify() => wrap((c) => tr.slugifyString(c));
-  B stripHtml() => wrap((c) => tr.stripHtmlString(c));
 }
 mixin MapMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
   B strict(Map<String, IValidator> schema) {

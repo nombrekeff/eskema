@@ -4,7 +4,7 @@
 /// and readability. Instead of calling `isString()` repeatedly, you can use the
 /// constant `$isString`.
 
-library cached_validators;
+library validators.cached;
 
 import 'package:eskema/validator.dart';
 import 'package:eskema/validators/combinator.dart';

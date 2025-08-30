@@ -2,7 +2,7 @@
 ///
 /// This file contains validators for checking the type of values.
 
-library type_validators;
+library validators.type;
 import 'package:eskema/eskema.dart';
 
 /// Returns a [Validator] that checks if the given value is the correct type

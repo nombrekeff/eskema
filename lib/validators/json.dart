@@ -1,3 +1,8 @@
+/// JSON Validators
+///
+/// This file contains validators for working with JSON data.
+library validators.json;
+
 import '../validator.dart';
 import '../expectation.dart';
 import '../result.dart';

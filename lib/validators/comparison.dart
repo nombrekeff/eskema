@@ -2,13 +2,14 @@
 ///
 /// This file contains validators for comparing values
 
-library comparison_validators;
+library validators.comparison;
 
 import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:eskema/src/util.dart';
 import '../eskema.dart';
+import 'package:eskema/expectation_codes.dart';
 
 Function _collectionEquals = const DeepCollectionEquality().equals;
 
@@ -22,7 +23,7 @@ IValidator isEq<T>(T otherValue) =>
       (value) => Expectation(
         message: 'equal to ${prettifyValue(otherValue)}',
         value: value,
-        code: 'value.equal_mismatch',
+        code: ExpectationCodes.valueEqualMismatch,
         data: {
           'expected': prettifyValue(otherValue),
           'found': prettifyValue(value),
@@ -39,7 +40,7 @@ IValidator isDeepEq<T>(T otherValue) =>
       (value) => Expectation(
         message: 'equal to ${prettifyValue(otherValue)}',
         value: value,
-        code: 'value.deep_equal_mismatch',
+        code: ExpectationCodes.valueDeepEqualMismatch,
         data: {
           'expected': prettifyValue(otherValue),
           'found': prettifyValue(value),
@@ -52,18 +53,20 @@ IValidator isDeepEq<T>(T otherValue) =>
 IValidator length(List<IValidator> validators) {
   FutureOr<Result> pipeline(value) {
     if (hasLengthProperty(value)) {
-      final result = all(validators).validate((value as dynamic).length);
-
-      return result.copyWith(
-        expectations: [
-          Expectation(
-            message: 'length ${result.expectations}',
-            value: value,
-            code: 'value.length_out_of_range',
-            data: {'length': (value as dynamic).length},
-          )
-        ],
-      );
+      final len = (value as dynamic).length;
+      final result = all(validators).validate(len);
+      if (result.isValid) return Result.valid(value);
+      // Re-wrap child expectations into a single consolidated expectation for clarity.
+      // Child messages (e.g. 'equal to 2') are wrapped in square brackets like prior behavior.
+      final joined = result.expectations.map((e) => e.message).join(' & ');
+      return Result.invalid(value, expectations: [
+        Expectation(
+          message: 'length [$joined]',
+          value: value,
+          code: ExpectationCodes.valueLengthOutOfRange,
+          data: {'length': len},
+        )
+      ]);
     } else {
       return expectation('${value.runtimeType} does not have a length property', value, null,
               'logic.predicate_failed')
@@ -81,8 +84,8 @@ IValidator contains<T>(T item) => Validator((value) {
       if (hasContainsProperty(value)) {
         return Result(
           isValid: value.contains(item),
-          expectation: expectation(
-              'contains ${prettifyValue(item)}', value, null, 'value.contains_missing'),
+          expectation: expectation('contains ${prettifyValue(item)}', value, null,
+              ExpectationCodes.valueContainsMissing),
           value: value,
         );
       } else {
@@ -102,7 +105,7 @@ IValidator isOneOf<T>(Iterable<T> options) => all([
             Expectation(
                 message: 'one of: ${prettifyValue(options)}',
                 value: value,
-                code: 'value.membership_mismatch',
+                code: ExpectationCodes.valueMembershipMismatch,
                 data: {'options': options.map((e) => e.toString()).toList()})
           ],
           value: value,

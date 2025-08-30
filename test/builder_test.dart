@@ -149,12 +149,6 @@ void main() {
       expect(validator.validate('notint').isValid, false);
     });
 
-    test('toUri parses URI strings', () {
-      final validator = v().string().toUri().build();
-      expect(validator.validate('https://example.com').isValid, true);
-      expect(validator.validate('not a uri').isValid, false);
-    });
-
     test('toDateOnly normalizes time', () {
       final validator = v().string().toDateOnly().build();
       expect(validator.validate(DateTime.now().toIso8601String()).isValid, true);
@@ -396,6 +390,160 @@ void main() {
       expect(validator.validate('ab').isValid, true);
       expect(validator.validate('toolong').isValid, false);
       expect(validator.validate('a').isValid, false);
+    });
+  });
+
+  group('Custom Pivot Extensibility', () {
+    test('basic custom pivot transforms value before validation', () {
+      final uppercasePivot = CustomPivot(
+        (child) => Validator((value) {
+          if (value is String) {
+            return child.validate(value.toUpperCase());
+          }
+          return child.validate(value);
+        }),
+        dropPre: true,
+        kind: 'uppercase',
+      );
+
+      final validator = v().string().use(uppercasePivot).lengthMin(3).build();
+
+      // 'hi' becomes 'HI' and fails lengthMin(3)
+      expect(validator.validate('hi').isValid, false);
+      expect(validator.validate('hi').value, 'HI');
+
+      // 'hello' becomes 'HELLO' and passes
+      expect(validator.validate('hello').isValid, true);
+      expect(validator.validate('hello').value, 'HELLO');
+    });
+
+    test('custom pivot with dropPre: false preserves pre-validators', () {
+      final toIntPivot = CustomPivot(
+        (child) => Validator((value) {
+          if (value is String) {
+            final parsed = int.tryParse(value);
+            return child.validate(parsed ?? value);
+          }
+          return child.validate(value);
+        }),
+        dropPre: false, // Keep pre-validators
+        kind: 'toInt',
+      );
+
+      final validator = v().string().lengthMin(2).use(toIntPivot).gte(10).build();
+
+      // String pre-validator passes, then toInt pivot, then numeric validator
+      expect(validator.validate('123').isValid, true); // '123'.length >= 2, then int(123) >= 10
+      expect(validator.validate('123').value, 123);
+
+      // String pre-validator fails
+      expect(validator.validate('1').isValid, false); // '1'.length < 2
+      expect(validator.validate('1').description.contains('length'), true);
+    });
+
+    test('custom pivot with dropPre: true drops pre-validators', () {
+      final toIntPivot = CustomPivot(
+        (child) => Validator((value) {
+          if (value is String) {
+            final parsed = int.tryParse(value);
+            return child.validate(parsed ?? value);
+          }
+          return child.validate(value);
+        }),
+        dropPre: true, // Drop pre-validators (default)
+        kind: 'toInt',
+      );
+
+      final validator = v().string().lengthMin(2).use(toIntPivot).gte(10).build();
+
+      // Pre-validators are dropped, so '1' passes string check but fails numeric
+      expect(validator.validate('1').isValid, false); // int(1) < 10
+      expect(validator.validate('123').isValid, true); // int(123) >= 10
+    });
+
+    test('custom pivot chains with built-in pivots', () {
+      final parseDoublePivot = CustomPivot(
+        (child) => Validator((value) {
+          if (value is String) {
+            final parsed = double.tryParse(value);
+            return child.validate(parsed ?? value);
+          }
+          return child.validate(value);
+        }),
+        dropPre: true,
+        kind: 'parseDouble',
+      );
+
+      final validator = v().string().use(parseDoublePivot).toInt().gte(5).build();
+
+      // '10.0' -> double 10.0 -> int 10 -> passes
+      expect(validator.validate('10.0').isValid, true);
+      expect(validator.validate('10.0').value, 10);
+
+      // '3.5' -> double 3.5 -> fails toIntStrict (not whole number)
+      expect(validator.validate('3.5').isValid, false);
+    });
+
+    test('custom pivot with non-string input', () {
+      final multiplyByTwoPivot = CustomPivot(
+        (child) => Validator((value) {
+          if (value is num) {
+            return child.validate(value * 2);
+          }
+          return child.validate(value);
+        }),
+        dropPre: true,
+        kind: 'multiplyByTwo',
+      );
+
+      final validator = v().number().use(multiplyByTwoPivot).lt(10).build();
+
+      // 3 * 2 = 6 < 10, passes
+      expect(validator.validate(3).isValid, true);
+      expect(validator.validate(3).value, 6);
+
+      // 6 * 2 = 12 >= 10, fails
+      expect(validator.validate(6).isValid, false);
+    });
+
+    test('custom pivot preserves error messages', () {
+      final failingPivot = CustomPivot(
+        (child) => Validator((value) {
+          // Always fail with custom message
+          return Result.invalid(value, expectation: Expectation(message: 'Custom pivot failed'));
+        }),
+        dropPre: true,
+        kind: 'failing',
+      );
+
+      final validator = v().string().use(failingPivot).build();
+      final result = validator.validate('test');
+
+      expect(result.isValid, false);
+      expect(result.description, 'Custom pivot failed');
+    });
+
+    test('multiple custom pivots in chain (latest wins)', () {
+      final addPrefixPivot = CustomPivot(
+        (child) => transform((value) => 'prefix_$value', child),
+        dropPre: true,
+        kind: 'addPrefix',
+      );
+
+      final toUpperPivot = CustomPivot(
+        (child) => transform((value) => value.toUpperCase(), child),
+        dropPre: true,
+        kind: 'toUpper',
+      );
+
+      final validator = v().string().use(addPrefixPivot).use(toUpperPivot).lengthMin(10).build();
+
+      // 'test' -> 'prefix_test' -> 'PREFIX_TEST' -> length check
+      expect(validator.validate('test').isValid, true);
+      expect(validator.validate('test').value, 'PREFIX_TEST');
+
+      // 'x' -> 'prefix_x' -> 'PREFIX_X' -> too short
+      expect(validator.validate('x').isValid, false);
     });
   });
 }
