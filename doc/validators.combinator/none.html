@@ -64,6 +64,23 @@
     
 <section class="desc markdown">
   <p>Passes the test if none of the validators pass</p>
+<p><strong>Usage Examples:</strong></p>
+<pre class="language-dart"><code class="language-dart">// Ensure a string is NOT a reserved keyword
+final notReserved = none([
+  isEq("class"),
+  isEq("function"),
+  isEq("var"),
+  isEq("const"),
+]);
+notReserved.validate("myVariable"); // Valid
+notReserved.validate("class");      // Invalid
+
+// Validate that a number is not in a forbidden range
+final notForbidden = none([
+  isInRange(0, 10),    // Not 0-10
+  isInRange(50, 60),   // Not 50-60
+]);
+</code></pre>
 </section>
 
 

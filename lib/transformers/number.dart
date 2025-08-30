@@ -12,16 +12,18 @@ import 'core.dart' as core;
 /// Handles existing integers, doubles (by truncating), and strings that can be
 /// parsed as an integer.
 /// Passes the resulting integer to the [child] validator.
-IValidator toInt(IValidator child) =>
-    ($isInt | $isNumber | $isIntString) &
-    core.transform((v) {
-      return switch (v) {
-        final int n => n,
-        final double n => n.toInt(),
-        final String s => int.tryParse(s.trim()),
-        _ => null,
-      };
-    }, child);
+IValidator toInt(IValidator child, {String? message}) {
+  final base = ($isInt | $isNumber | $isIntString) &
+      core.transform((v) {
+        return switch (v) {
+          final int n => n,
+          final double n => n.toInt(),
+          final String s => int.tryParse(s.trim()),
+          _ => null,
+        };
+      }, child);
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
+}
 
 /// Strict integer coercion.
 ///
@@ -36,17 +38,18 @@ IValidator toInt(IValidator child) =>
 /// See also:
 ///  * [toInt] – standard (allows doubles and int-like strings)
 ///  * [toIntSafe] – strict + safe 53-bit range guard
-IValidator toIntStrict(IValidator child) => core.expectPreserveValue(
-    ($isInt | $isIntString) &
-        core.transform((v) {
-          final converted = switch (v) {
-            final int n => n,
-            final String s => int.tryParse(s.trim()),
-            _ => null,
-          };
-          return converted;
-        }, child),
-    Expectation(message: 'a value strictly convertible to an int'));
+IValidator toIntStrict(IValidator child, {String? message}) {
+  final base = ($isInt | $isIntString) &
+      core.transform((v) {
+        final converted = switch (v) {
+          final int n => n,
+          final String s => int.tryParse(s.trim()),
+          _ => null,
+        };
+        return converted;
+      }, child);
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
+}
 
 /// Safe integer coercion (strict + 53-bit range guard).
 ///
@@ -64,55 +67,72 @@ IValidator toIntStrict(IValidator child) => core.expectPreserveValue(
 ///  * [toIntStrict] – strict without range guard
 const int _kMaxSafeInt = 9007199254740991;
 const int _kMinSafeInt = -9007199254740991;
-IValidator toIntSafe(IValidator child) => toIntStrict(Validator((value) {
-      if (value is int && value <= _kMaxSafeInt && value >= _kMinSafeInt) {
-        return child.validate(value);
-      }
-      return Result.invalid(value,
-          expectation: Expectation(
-              message: 'a value strictly convertible to an int within safe 53-bit range',
-              value: value));
-    }));
+IValidator toIntSafe(IValidator child, {String? message}) {
+  final strict = toIntStrict(Validator((value) {
+    if (value is int && value <= _kMaxSafeInt && value >= _kMinSafeInt) {
+      return child.validate(value);
+    }
+
+    return Result.invalid(
+      value,
+      expectation: Expectation(
+        message: 'a value strictly convertible to an int within safe 53-bit range',
+        value: value,
+      ),
+    );
+  }));
+
+  if (message != null) {
+    return core.expectPreserveValue(strict, Expectation(message: message));
+  }
+
+  return strict;
+}
 
 /// Coerces a value to a double.
 ///
 /// Handles existing doubles, integers (by converting), and strings that can be
 /// parsed as a double.
 /// Passes the resulting double to the [child] validator.
-IValidator toDouble(IValidator child) =>
-    ($isDouble | $isNumber | $isDoubleString) &
-    core.transform((v) {
-      return switch (v) {
-        final double i => i,
-        final int i => i.toDouble(),
-        final String s => double.tryParse(s.trim()),
-        _ => null,
-      };
-    }, child);
+IValidator toDouble(IValidator child, {String? message}) {
+  final base = ($isDouble | $isNumber | $isDoubleString) &
+      core.transform((v) {
+        return switch (v) {
+          final double i => i,
+          final int i => i.toDouble(),
+          final String s => double.tryParse(s.trim()),
+          _ => null,
+        };
+      }, child);
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
+}
 
 /// Coerces a value to a number (`num`).
 ///
 /// Handles existing numbers (`num`) and strings that can be parsed as a number.
 /// Passes the resulting number to the [child] validator.
-IValidator toNum(IValidator child) =>
-    ($isNumber | $isNumString) &
-    core.transform((value) {
-      return switch (value) {
-        final num n => n,
-        final String s => num.tryParse(s.trim()),
-        _ => null,
-      };
-    }, child);
+IValidator toNum(IValidator child, {String? message}) {
+  final base = ($isNumber | $isNumString) &
+      core.transform((value) {
+        return switch (value) {
+          final num n => n,
+          final String s => num.tryParse(s.trim()),
+          _ => null,
+        };
+      }, child);
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
+}
 
 /// Coerces value to a BigInt.
-IValidator toBigInt(IValidator child) =>
-    (isType<BigInt>() | $isInt | $isIntString) &
-        core.transform((v) {
-          return switch (v) {
-            final BigInt b => b,
-            final int i => BigInt.from(i),
-            final String s => BigInt.tryParse(s.trim()),
-            _ => null,
-          };
-        }, child) >
-    Expectation(message: 'a value convertible to a BigInt');
+IValidator toBigInt(IValidator child, {String? message}) {
+  final base = (isType<BigInt>() | $isInt | $isIntString) &
+      core.transform((v) {
+        return switch (v) {
+          final BigInt b => b,
+          final int i => BigInt.from(i),
+          final String s => BigInt.tryParse(s.trim()),
+          _ => null,
+        };
+      }, child);
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
+}

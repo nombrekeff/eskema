@@ -3,23 +3,23 @@ import 'package:eskema/eskema.dart';
 import 'package:test/test.dart' hide isNotEmpty;
 
 IValidator asyncValid([String? tag]) => Validator((v) async {
-  await Future.delayed(const Duration(milliseconds: 5));
-  return Result.valid(v);
-});
+      await Future.delayed(const Duration(milliseconds: 5));
+      return Result.valid(v);
+    });
 
 IValidator asyncInvalid(String msg) => Validator((v) async {
-  await Future.delayed(const Duration(milliseconds: 5));
-  return Result.invalid(v, expectations: [Expectation(message: msg, value: v)]);
-});
+      await Future.delayed(const Duration(milliseconds: 5));
+      return Result.invalid(v, expectations: [Expectation(message: msg, value: v)]);
+    });
 
 void main() {
   group('async eskema structure', () {
     final schema = eskema({
       'id': isInt(),
-      'name': (isString() & isNotEmpty()).nullable(),
+      'name': (isString() & not($isStringEmpty)).nullable(),
       'email': asyncValid(),
       'age': asyncInvalid('too young').optional(),
-      'country': isOneOf(['USA','CA']).optional(),
+      'country': isOneOf(['USA', 'CA']).optional(),
     });
 
     test('valid object with nullable name null + missing optional age', () async {

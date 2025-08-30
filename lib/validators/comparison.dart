@@ -16,12 +16,12 @@ Function _collectionEquals = const DeepCollectionEquality().equals;
 /// Checks whether the given value is equal to the [otherValue] value of type [T]
 ///
 /// Even though this function accepts any Type, note that it will not work with Collections. For that usecase prefer using [isDeepEq] instead.
-IValidator isEq<T>(T otherValue) =>
+IValidator isEq<T>(T otherValue, {String? message}) =>
     isType<T>() &
     validator(
       (value) => value == otherValue,
       (value) => Expectation(
-        message: 'equal to ${prettifyValue(otherValue)}',
+        message: message ?? 'equal to ${prettifyValue(otherValue)}',
         value: value,
         code: ExpectationCodes.valueEqualMismatch,
         data: {
@@ -33,12 +33,12 @@ IValidator isEq<T>(T otherValue) =>
     );
 
 /// Checks whether the given value is equal to the [otherValue] value of type [T]
-IValidator isDeepEq<T>(T otherValue) =>
+IValidator isDeepEq<T>(T otherValue, {String? message}) =>
     isType<T>() &
     validator(
       (value) => _collectionEquals(value, otherValue),
       (value) => Expectation(
-        message: 'equal to ${prettifyValue(otherValue)}',
+        message: message ?? 'equal to ${prettifyValue(otherValue)}',
         value: value,
         code: ExpectationCodes.valueDeepEqualMismatch,
         data: {
@@ -50,7 +50,7 @@ IValidator isDeepEq<T>(T otherValue) =>
     );
 
 /// Checks whether the given value has a length property and the length matches the validators
-IValidator length(List<IValidator> validators) {
+IValidator length(List<IValidator> validators, {String? message}) {
   FutureOr<Result> pipeline(value) {
     if (hasLengthProperty(value)) {
       final len = (value as dynamic).length;
@@ -61,15 +61,15 @@ IValidator length(List<IValidator> validators) {
       final joined = result.expectations.map((e) => e.message).join(' & ');
       return Result.invalid(value, expectations: [
         Expectation(
-          message: 'length [$joined]',
+          message: message ?? 'length [$joined]',
           value: value,
           code: ExpectationCodes.valueLengthOutOfRange,
           data: {'length': len},
         )
       ]);
     } else {
-      return expectation('${value.runtimeType} does not have a length property', value, null,
-              'logic.predicate_failed')
+      return expectation(message ?? '${value.runtimeType} does not have a length property',
+              value, null, 'logic.predicate_failed')
           .toInvalidResult();
     }
   }
@@ -80,30 +80,36 @@ IValidator length(List<IValidator> validators) {
 /// Checks whether the given value contains the [item] value of type [T]
 ///
 /// Works for iterables and strings
-IValidator contains<T>(T item) => Validator((value) {
+IValidator contains<T>(T item, {String? message}) => Validator((value) {
       if (hasContainsProperty(value)) {
         return Result(
           isValid: value.contains(item),
-          expectation: expectation('contains ${prettifyValue(item)}', value, null,
-              ExpectationCodes.valueContainsMissing),
+          expectation: Expectation(
+            message: message ?? 'contains ${prettifyValue(item)}',
+            value: value,
+            code: ExpectationCodes.valueContainsMissing,
+            data: {'needle': prettifyValue(item)},
+          ),
           value: value,
         );
       } else {
-        return expectation('${value.runtimeType} does not have a contains property', value,
-                null, 'logic.predicate_failed')
-            .toInvalidResult();
+        return Expectation(
+          message: '${value.runtimeType} does not have a contains property',
+          value: value,
+          code: ExpectationCodes.valueContainsMissing,
+        ).toInvalidResult();
       }
     });
 
 /// Checks whether the given value is one of the [options] values of type [T]
-IValidator isOneOf<T>(Iterable<T> options) => all([
+IValidator isOneOf<T>(Iterable<T> options, {String? message}) => all([
       isType<T>(),
       Validator(
         (value) => Result(
           isValid: options.contains(value),
           expectations: [
             Expectation(
-                message: 'one of: ${prettifyValue(options)}',
+                message: message ?? 'one of: ${prettifyValue(options)}',
                 value: value,
                 code: ExpectationCodes.valueMembershipMismatch,
                 data: {'options': options.map((e) => e.toString()).toList()})

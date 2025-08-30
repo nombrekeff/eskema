@@ -20,6 +20,7 @@ class AsyncValidatorException implements Exception {
   String toString() => message;
 }
 
+/// Thrown when a validation fails.
 class ValidatorFailedException implements Exception {
   String get message => result.toString();
   Result result;
@@ -165,6 +166,25 @@ class Validator<T extends Result> extends IValidator {
   String toString() => 'Validator';
 }
 
+/// A conditional validator that applies either the [then] or [otherwise]
+/// branch based on the result of the [condition] validator.
+/// 
+/// **Example**
+/// ```dart
+/// final user = {
+///   'id': '123',
+///   'email': 'test@example.com',
+///   'age': 25,
+/// };
+///
+/// final validator = WhenValidator(
+///   condition: Field('age').isAdult(),
+///   then: Field('email').isEmail(),
+///   otherwise: Field('email').isNotEmpty(),
+/// );
+///
+/// final result = validator.validate(user);
+/// ```
 class WhenValidator extends IWhenValidator {
   final IValidator condition;
   final IValidator then;

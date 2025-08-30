@@ -12,6 +12,9 @@ import 'core.dart' as core;
 /// If the input value is `null`, it is replaced with [defaultValue]. Otherwise,
 /// the original value is passed through.
 /// Passes the resulting value to the [child] validator.
-IValidator defaultTo(dynamic defaultValue, IValidator child) {
-  return core.transform((v) => v ?? defaultValue, child);
+IValidator defaultTo(dynamic defaultValue, IValidator child, {String? message}) {
+  final base = core.transform((v) => v ?? defaultValue, child);
+  return message != null
+      ? core.expectPreserveValue(base, Expectation(message: message))
+      : base;
 }

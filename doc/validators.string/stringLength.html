@@ -64,6 +64,17 @@
     
 <section class="desc markdown">
   <p>Validates that the String's length matches the validators</p>
+<p><strong>Usage Examples:</strong></p>
+<pre class="language-dart"><code class="language-dart">// Validate password length (8-20 characters)
+final passwordLength = stringLength([isInRange(8, 20)]);
+passwordLength.validate("mypassword");     // Valid
+passwordLength.validate("short");          // Invalid
+
+// Validate username length (exactly 10 characters)
+final usernameLength = stringLength([isEq(10)]);
+usernameLength.validate("user123456");     // Valid
+usernameLength.validate("user");           // Invalid
+</code></pre>
 </section>
 
 

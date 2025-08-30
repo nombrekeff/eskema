@@ -63,6 +63,16 @@
     
 <section class="desc markdown">
   <p>Validates that the String can be parsed as a <code>double</code> (e.g. '123.45', '-1e3')</p>
+<p><strong>Usage Examples:</strong></p>
+<pre class="language-dart"><code class="language-dart">final doubleStringValidator = isDoubleString();
+doubleStringValidator.validate("123.45");     // Valid
+doubleStringValidator.validate("-1e3");        // Valid
+doubleStringValidator.validate("12");          // Valid (int is also double)
+doubleStringValidator.validate("not-a-number"); // Invalid
+
+// For strict double-only validation
+final strictDouble = all([$isString, isDoubleString(), not(isIntString())]);
+</code></pre>
 </section>
 
 

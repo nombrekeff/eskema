@@ -266,7 +266,7 @@ void main() {
     });
 
     test('\$stringEmpty', () {
-      final field = $stringEmpty;
+      final field = not($isStringEmpty);
       expect(field.validate('').isValid, true);
       expect(field.validate('1').isValid, false);
       expect(field.validate('1').description, 'String to be empty');

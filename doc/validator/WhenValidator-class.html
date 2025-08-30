@@ -53,6 +53,25 @@
 </h1></div>
 
     
+<section class="desc markdown">
+  <p>A conditional validator that applies either the <a href="../validator/WhenValidator/then.html">then</a> or <a href="../validator/WhenValidator/otherwise.html">otherwise</a>
+branch based on the result of the <a href="../validator/WhenValidator/condition.html">condition</a> validator.</p>
+<p><strong>Example</strong></p>
+<pre class="language-dart"><code class="language-dart">final user = {
+  'id': '123',
+  'email': 'test@example.com',
+  'age': 25,
+};
+
+final validator = WhenValidator(
+  condition: Field('age').isAdult(),
+  then: Field('email').isEmail(),
+  otherwise: Field('email').isNotEmpty(),
+);
+
+final result = validator.validate(user);
+</code></pre>
+</section>
 
 
     <section>

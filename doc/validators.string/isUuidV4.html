@@ -63,6 +63,18 @@
     
 <section class="desc markdown">
   <p>Validates that the String is a valid UUID (v4).</p>
+<p><strong>Usage Examples:</strong></p>
+<pre class="language-dart"><code class="language-dart">final uuidValidator = isUuidV4();
+uuidValidator.validate("550e8400-e29b-41d4-a716-446655440000"); // Valid
+uuidValidator.validate("not-a-uuid");                        // Invalid
+uuidValidator.validate("550e8400-e29b-41d4-a716");            // Invalid
+
+// Combined with other validations
+final entityValidator = eskema({
+  'id': all([$isString, isUuidV4()]),
+  'name': $isString,
+});
+</code></pre>
 </section>
 
 

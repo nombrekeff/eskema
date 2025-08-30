@@ -5,12 +5,12 @@ import 'package:test/test.dart';
 void main() {
   group('when validator', () {
     final addressValidator = eskema({
-      'street': v.isString() & v.isNotEmpty(),
+      'street': v.isString() & v.not(v.$isStringEmpty),
       'country': v.isOneOf(['USA', 'Canada']),
       'postal_code': when(
         getField('country', v.isEq('USA')),
-        then: v.stringIsOfLength(5) > Expectation(message: 'a 5-digit US zip code'),
-        otherwise: v.stringIsOfLength(6) > Expectation(message: 'a 6-character Canadian postal code'),
+        then: v.stringIsOfLength(5, message: 'a 5-digit US zip code'),
+        otherwise: v.stringIsOfLength(6, message: 'a 6-character Canadian postal code'),
       ),
     });
 

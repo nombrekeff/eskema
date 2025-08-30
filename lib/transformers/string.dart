@@ -10,48 +10,75 @@ import 'core.dart' as core;
 final RegExp _reWhitespaceRuns = RegExp(r'\s+');
 
 /// Coerces a value to a `String`.
-IValidator toString(IValidator child) =>
-    ($isString | $isNumber | $isBool | isType<DateTime>()) &
-        core.transform((v) => v.toString(), child) >
-    Expectation(message: 'a value convertible to a String');
+IValidator toString(IValidator child, {String? message}) {
+  final base = ($isString | $isNumber | $isBool | isType<DateTime>()) &
+      core.transform((v) => v.toString(), child);
+  if (message != null) {
+    return core.expectPreserveValue(base, Expectation(message: message));
+  }
+
+  return base; // preserve original expectations / chaining semantics
+}
 
 /// String normalizer (no type pivot): trim leading/trailing whitespace.
-IValidator trimString(IValidator child) => core.transform((v) => v is String ? v.trim() : v, child);
+IValidator trimString(IValidator child, {String? message}) {
+  final base = core.transform((v) => v is String ? v.trim() : v, child);
+
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
+}
 
 /// Collapse internal whitespace runs to a single space and trim ends.
-IValidator collapseWhitespace(IValidator child) =>
-    core.transform((v) => v is String ? v.replaceAll(_reWhitespaceRuns, ' ').trim() : v, child);
+IValidator collapseWhitespace(IValidator child, {String? message}) {
+  final base = core.transform(
+    (v) => v is String ? v.replaceAll(_reWhitespaceRuns, ' ').trim() : v,
+    child,
+  );
+
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
+}
 
 /// Lowercase string (ASCII-focused; leaves non-letters unchanged).
-IValidator toLowerCaseString(IValidator child) =>
-    core.transform((v) => v is String ? v.toLowerCase() : v, child);
+IValidator toLowerCaseString(IValidator child, {String? message}) {
+  final base = core.transform((v) => v is String ? v.toLowerCase() : v, child);
+
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
+}
 
 /// Uppercase string.
-IValidator toUpperCaseString(IValidator child) =>
-    core.transform((v) => v is String ? v.toUpperCase() : v, child);
+IValidator toUpperCaseString(IValidator child, {String? message}) {
+  final base = core.transform((v) => v is String ? v.toUpperCase() : v, child);
+
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
+}
 
 /// Trims leading and trailing whitespace from a string.
 ///
 /// Fails if the input value is not a string.
 /// Passes the trimmed string to the [child] validator.
-IValidator trim(IValidator child) {
-  return isString() & core.transform((v) => v.trim(), child);
+IValidator trim(IValidator child, {String? message}) {
+  final base = isString() & core.transform((v) => v.trim(), child);
+
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
 }
 
 /// Transforms a string to lowercase.
 ///
 /// Fails if the input value is not a string.
 /// Passes the lowercase string to the [child] validator.
-IValidator toLowerCase(IValidator child) {
-  return isString() & core.transform((v) => v.toLowerCase(), child);
+IValidator toLowerCase(IValidator child, {String? message}) {
+  final base = isString() & core.transform((v) => v.toLowerCase(), child);
+
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
 }
 
 /// Transforms a string to uppercase.
 ///
 /// Fails if the input value is not a string.
 /// Passes the uppercase string to the [child] validator.
-IValidator toUpperCase(IValidator child) {
-  return isString() & core.transform((v) => v.toUpperCase(), child);
+IValidator toUpperCase(IValidator child, {String? message}) {
+  final base = isString() & core.transform((v) => v.toUpperCase(), child);
+
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
 }
 
 /// Splits a string into a list of substrings.
@@ -61,6 +88,8 @@ IValidator toUpperCase(IValidator child) {
 /// Passes the resulting list of strings to the [child] validator.
 ///
 /// Example: `split(',', listEach(toInt(isGte(0))))`
-IValidator split(String separator, IValidator child) {
-  return isString() & core.transform((v) => v.split(separator), child);
+IValidator split(String separator, IValidator child, {String? message}) {
+  final base = isString() & core.transform((v) => v.split(separator), child);
+
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
 }

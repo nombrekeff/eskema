@@ -7,7 +7,7 @@ import 'dart:convert' as convert;
 import 'package:eskema/eskema.dart';
 
 /// Coerces a JSON string into its decoded form (Map/List). Leaves existing Map/List untouched.
-IValidator toJsonDecoded(IValidator child) => Validator((value) {
+IValidator toJsonDecoded(IValidator child, {String? message}) => Validator((value) {
       final mapped = switch (value) {
         final Map m => m,
         final List l => l,
@@ -19,7 +19,7 @@ IValidator toJsonDecoded(IValidator child) => Validator((value) {
         return Result.invalid(
           value,
           expectation: Expectation(
-            message: 'a JSON decodable value (Map/List)',
+            message: message ?? 'a JSON decodable value (Map/List)',
             value: value,
           ),
         );

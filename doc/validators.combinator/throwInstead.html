@@ -64,6 +64,21 @@
     
 <section class="desc markdown">
   <p>Returns a <a href="../validator/Validator-class.html">Validator</a> that throws a <a href="../validator/ValidatorFailedException-class.html">ValidatorFailedException</a> instead of returning a result</p>
+<p><strong>Usage Examples:</strong></p>
+<pre class="language-dart"><code class="language-dart">// API endpoint validation that throws on invalid input
+final strictEmail = throwInstead($isEmail);
+try {
+  strictEmail.validate("invalid-email"); // Throws ValidatorFailedException
+} catch (e) {
+  print("Validation failed: ${e.message}");
+}
+
+// Form submission with immediate failure
+final formValidator = throwInstead(all([
+  $isString,
+  stringLength([isGte(5)]),
+]));
+</code></pre>
 </section>
 
 

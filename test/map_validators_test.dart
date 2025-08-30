@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:eskema/eskema.dart' hide isEmpty;
+import 'package:eskema/eskema.dart' hide isStringEmpty;
 
 void main() {
   group('Map Validators', () {

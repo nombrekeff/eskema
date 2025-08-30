@@ -22,16 +22,18 @@ import 'core.dart' as core;
 /// See also:
 ///  * [toBoolStrict] – strict literal parsing only
 ///  * [toBoolLenient] – permissive parsing of many textual toggles
-IValidator toBool(IValidator child) {
-  return (($isBool | isOneOf([0, 1]) | toLowerCase(isString() & isOneOf(['true', 'false'])))) &
-      core.transform((v) {
-        return switch (v) {
-          final bool b => b,
-          final int i => i == 1,
-          final String s => s.toLowerCase().trim() == 'true',
-          _ => null,
-        };
-      }, child);
+IValidator toBool(IValidator child, {String? message}) {
+  final base =
+      (($isBool | isOneOf([0, 1]) | toLowerCase(isString() & isOneOf(['true', 'false'])))) &
+          core.transform((v) {
+            return switch (v) {
+              final bool b => b,
+              final int i => i == 1,
+              final String s => s.toLowerCase().trim() == 'true',
+              _ => null,
+            };
+          }, child);
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
 }
 
 /// Strict bool coercion.
@@ -46,16 +48,16 @@ IValidator toBool(IValidator child) {
 /// See also:
 ///  * [toBool] – standard (bool + 1/0 + 'true'/'false')
 ///  * [toBoolLenient] – very permissive variants
-IValidator toBoolStrict(IValidator child) {
-  return (($isBool | toLowerCase(isString() & isOneOf(['true', 'false'])))) &
-          core.transform((v) {
-            return switch (v) {
-              final bool b => b,
-              final String s => s.toLowerCase().trim() == 'true',
-              _ => null,
-            };
-          }, child) >
-      Expectation(message: 'a value strictly convertible to a bool');
+IValidator toBoolStrict(IValidator child, {String? message}) {
+  final base = (($isBool | toLowerCase(isString() & isOneOf(['true', 'false'])))) &
+      core.transform((v) {
+        return switch (v) {
+          final bool b => b,
+          final String s => s.toLowerCase().trim() == 'true',
+          _ => null,
+        };
+      }, child);
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
 }
 
 /// Lenient / permissive bool coercion.
@@ -75,40 +77,28 @@ IValidator toBoolStrict(IValidator child) {
 /// See also:
 ///  * [toBool] – standard set
 ///  * [toBoolStrict] – only literal true/false (and bools)
-IValidator toBoolLenient(IValidator child) {
+IValidator toBoolLenient(IValidator child, {String? message}) {
   const trueSet = {'true', 't', 'yes', 'y', 'on', '1'};
   const falseSet = {'false', 'f', 'no', 'n', 'off', '0'};
-  return (($isBool |
-              isOneOf([0, 1]) |
-              toLowerCase(
-                isString() &
-                    isOneOf([
-                      'true',
-                      'false',
-                      't',
-                      'f',
-                      'yes',
-                      'no',
-                      'y',
-                      'n',
-                      'on',
-                      'off',
-                      '1',
-                      '0'
-                    ]),
-              ))) &
-          core.transform((v) {
-            return switch (v) {
-              final bool b => b,
-              final int i => i == 1,
-              final String s => () {
-                  final lower = s.toLowerCase().trim();
-                  if (trueSet.contains(lower)) return true;
-                  if (falseSet.contains(lower)) return false;
-                  return null;
-                }(),
-              _ => null,
-            };
-          }, child) >
-      Expectation(message: 'a value leniently convertible to a bool');
+  final base = (($isBool |
+          isOneOf([0, 1]) |
+          toLowerCase(
+            isString() &
+                isOneOf(
+                    ['true', 'false', 't', 'f', 'yes', 'no', 'y', 'n', 'on', 'off', '1', '0']),
+          ))) &
+      core.transform((v) {
+        return switch (v) {
+          final bool b => b,
+          final int i => i == 1,
+          final String s => () {
+              final lower = s.toLowerCase().trim();
+              if (trueSet.contains(lower)) return true;
+              if (falseSet.contains(lower)) return false;
+              return null;
+            }(),
+          _ => null,
+        };
+      }, child);
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
 }

@@ -53,6 +53,7 @@ export 'package:eskema/validators/comparison.dart';
 export 'package:eskema/validators/list.dart';
 export 'package:eskema/validators/map.dart';
 export 'package:eskema/validators/cached.dart';
+export 'package:eskema/validators/date.dart';
 
 Validator validator(
   bool Function(dynamic value) comparisonFn,

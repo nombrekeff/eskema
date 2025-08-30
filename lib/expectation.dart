@@ -76,6 +76,12 @@ class Expectation {
 }
 
 /// Creates an expectation for a validation result.
-Expectation expectation(String message, dynamic value,
-        [String? path, String? code, Map<String, Object?>? data]) =>
-    Expectation(path: path, message: message, value: value, code: code, data: data);
+Expectation expectation(
+  String message,
+  dynamic value, [
+  String? path,
+  String? code,
+  Map<String, Object?>? data,
+]) {
+  return Expectation(path: path, message: message, value: value, code: code, data: data);
+}

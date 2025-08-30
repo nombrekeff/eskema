@@ -13,7 +13,7 @@ class CombinatorBenchmark extends BenchmarkBase {
     // Create an 'all' validator with multiple rules
     validator = all([
       isString(),
-      isNotEmpty(),
+      not(isStringEmpty()),
       isLowerCase(),
       not(isUpperCase()),
       // Add more for stress testing
@@ -40,7 +40,7 @@ class CombinatorBenchmark2 extends BenchmarkBase {
     // Create an 'all' validator with multiple rules
     validator = all([
       $isString,
-      $isNotEmpty,
+      not($isStringEmpty),
       $isLowerCase,
       not($isUpperCase),
       // Add more for stress testing

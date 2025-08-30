@@ -23,8 +23,9 @@
 ///      final userAge = getField('age', toInt(isGte(18)));
 ///
 /// Expectations:
-///  * Each helper appends (via `> 'a valid DateTime formatted String'` etc.)
-///    a human readable expectation for clearer error messages.
+///  * If you supply a `message` parameter to a transformer factory, an overriding
+///    expectation is attached. Omitting `message` preserves the underlying validators'
+///    original expectations (backward compatible behavior).
 ///
 /// NOTE: These are “inline transformers” — they do not mutate external data,
 /// only the value flowing through the validator pipeline.

@@ -64,7 +64,7 @@ void main() {
   });
 
   group('toDateTime', () {
-    final v = toDateTime($isDateTime); // inner isDate ensures final value parses
+    final v = toDateTime($isDateTime, message: 'a valid DateTime formatted String'); // explicit message to preserve previous expectation
 
     test('parses ISO string', () {
       expect(v.validate('2024-01-02T03:04:05Z').isValid, true);

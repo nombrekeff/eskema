@@ -66,6 +66,17 @@
   <p>Validates that the String contains <code>str</code></p>
 <p>This validator also validates that the value is a String first
 So there's no need to add the <a href="../validators.type/isString.html">isString</a> validator when using this validator</p>
+<p><strong>Usage Examples:</strong></p>
+<pre class="language-dart"><code class="language-dart">// Check for required domain in email
+final hasDomain = stringContains("@example.com");
+hasDomain.validate("user@example.com");    // Valid
+hasDomain.validate("user@gmail.com");      // Invalid
+
+// Validate file extension
+final isImage = stringContains(".jpg") | stringContains(".png");
+isImage.validate("photo.jpg");             // Valid
+isImage.validate("document.pdf");          // Invalid
+</code></pre>
 </section>
 
 

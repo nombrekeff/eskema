@@ -64,6 +64,19 @@
     
 <section class="desc markdown">
   <p>Passes the test if any of the <a href="../validator/Validator-class.html">Validator</a>s are valid, and fails if any are invalid</p>
+<p><strong>Usage Examples:</strong></p>
+<pre class="language-dart"><code class="language-dart">// Accept either a string or a number
+final stringOrNumber = any([$isString, $isNumber]);
+stringOrNumber.validate("hello"); // Valid
+stringOrNumber.validate(42);      // Valid
+stringOrNumber.validate(true);    // Invalid
+
+// Multiple validation strategies for email
+final emailValidator = any([
+  $isEmail,  // Standard email format
+  stringMatchesPattern(r'^.+@localhost$'), // Local development
+]);
+</code></pre>
 </section>
 
 

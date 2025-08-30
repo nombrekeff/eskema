@@ -63,6 +63,15 @@
     
 <section class="desc markdown">
   <p>Validates that the String is a valid email address.</p>
+<p><strong>Usage Examples:</strong></p>
+<pre class="language-dart"><code class="language-dart">final emailValidator = isEmail();
+emailValidator.validate("user@example.com");    // Valid
+emailValidator.validate("invalid-email");       // Invalid
+emailValidator.validate("user@.com");           // Invalid
+
+// Combined with other validators
+final strictEmail = all([$isString, isEmail()]);
+</code></pre>
 </section>
 
 

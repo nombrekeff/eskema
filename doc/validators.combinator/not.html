@@ -66,6 +66,20 @@
   <p>Passes the test if the passed in validator is not valid</p>
 <p>When the inner validator succeeds, the failure will reuse its <code>code</code> if present,
 otherwise falls back to <code>logic.not_expected</code>. See docs/expectation_codes.md.</p>
+<p><strong>Usage Examples:</strong></p>
+<pre class="language-dart"><code class="language-dart">// Validate that a string is NOT empty
+final notEmpty = not(stringEmpty());
+notEmpty.validate("hello"); // Valid
+notEmpty.validate("");       // Invalid
+
+// Ensure a number is not zero
+final notZero = not(isEq(0));
+notZero.validate(5);  // Valid
+notZero.validate(0);  // Invalid
+
+// Validate that a field is NOT present (for optional fields)
+final fieldNotPresent = not(exists());
+</code></pre>
 </section>
 
 

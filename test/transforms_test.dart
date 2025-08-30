@@ -218,7 +218,7 @@ void main() {
   });
 
   group('defaultTo transformer', () {
-    final validator = defaultTo('default', v.isString() & v.isNotEmpty());
+    final validator = defaultTo('default', v.isString() & v.not(v.$isStringEmpty));
 
     test('should use default value for null', () {
       expect(validator.validate(null).isValid, isTrue);
@@ -229,7 +229,7 @@ void main() {
     });
 
     test('should fail if value after default is invalid', () {
-      final failingValidator = defaultTo('', v.isString() & v.isNotEmpty());
+      final failingValidator = defaultTo('', v.isString() & v.not(v.$isStringEmpty));
       expect(failingValidator.validate(null).isValid, isFalse);
     });
   });

@@ -68,6 +68,25 @@
 provided <code>error</code> message to the result if the validation fails.
 Preserves the underlying child's <code>code</code> and <code>data</code> (if the child failed).
 See docs/expectation_codes.md.</p>
+<p><strong>Usage Examples:</strong></p>
+<pre class="language-dart"><code class="language-dart">// Custom error message for age validation
+final ageValidator = withExpectation(
+  isInRange(0, 150),
+  Expectation(message: "Age must be between 0 and 150 years")
+);
+
+// Localized error messages
+final nameValidator = withExpectation(
+  stringLength([isGte(2)]),
+  Expectation(message: "El nombre debe tener al menos 2 caracteres")
+);
+
+// Preserve error codes while customizing message
+final emailValidator = withExpectation(
+  $isEmail,
+  Expectation(message: "Please enter a valid email address", code: "email.invalid")
+);
+</code></pre>
 </section>
 
 

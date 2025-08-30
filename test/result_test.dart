@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:eskema/eskema.dart' hide isEmpty, isNotEmpty, not;
+import 'package:eskema/eskema.dart' hide isStringEmpty, isNotEmpty, not;
 
 void main() {
   group('EskResult constructors (assertions)', () {

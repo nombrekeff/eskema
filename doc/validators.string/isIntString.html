@@ -63,6 +63,16 @@
     
 <section class="desc markdown">
   <p>Validates that the String can be parsed as an <code>int</code> (e.g. '123', '-42')</p>
+<p><strong>Usage Examples:</strong></p>
+<pre class="language-dart"><code class="language-dart">final intStringValidator = isIntString();
+intStringValidator.validate("123");        // Valid
+intStringValidator.validate("-42");        // Valid
+intStringValidator.validate("12.5");       // Invalid
+intStringValidator.validate("not-a-number"); // Invalid
+
+// Combined with length validation
+final idValidator = all([$isString, isIntString(), stringLength([isEq(9)])]);
+</code></pre>
 </section>
 
 

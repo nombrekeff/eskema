@@ -63,6 +63,20 @@
     
 <section class="desc markdown">
   <p>Validates that the String can be parsed as a <code>bool</code> ('true' or 'false', case insensitive)</p>
+<p><strong>Usage Examples:</strong></p>
+<pre class="language-dart"><code class="language-dart">final boolStringValidator = isBoolString();
+boolStringValidator.validate("true");       // Valid
+boolStringValidator.validate("false");      // Valid
+boolStringValidator.validate("TRUE");       // Valid (case insensitive)
+boolStringValidator.validate("yes");        // Invalid
+boolStringValidator.validate("1");          // Invalid
+
+// Combined with trimming
+final configValidator = eskema({
+  'enabled': all([$isString, isBoolString()]),
+  'debug': all([$isString, isBoolString()]),
+});
+</code></pre>
 </section>
 
 

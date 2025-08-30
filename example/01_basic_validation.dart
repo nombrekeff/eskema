@@ -14,10 +14,10 @@ void main() {
   final userValidator = eskema({
     // For the 'username' field, we require it to be a string AND not empty.
     // The `&` operator chains validators together in a logical AND.
-    'username': isString() & isNotEmpty(),
+    'username': all([isString(), not($isStringEmpty)]),
 
     // For 'age', it must be an integer AND greater than or equal to 0.
-    'age': isInt() & isGte(0),
+    'age': isInt() & isGte(0, message: 'All validators can specify a custom message!'),
 
     // For 'status', the value must be one of the strings in the provided list.
     'status': isString() & isOneOf(['active', 'inactive', 'pending']),

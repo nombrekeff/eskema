@@ -65,6 +65,20 @@
 <section class="desc markdown">
   <p>Validates that the String is a valid URL. By it uses non-strict validation (like "example.com").</p>
 <p>If you want to enforce strict validation (must include scheme), set <code>strict</code> to true or use <a href="../validators.string/isStrictUrl.html">isStrictUrl</a>.</p>
+<p><strong>Usage Examples:</strong></p>
+<pre class="language-dart"><code class="language-dart">final urlValidator = isUrl();
+urlValidator.validate("https://example.com");     // Valid
+urlValidator.validate("example.com");             // Valid (non-strict)
+urlValidator.validate("not-a-url");               // Invalid
+
+// Strict validation (requires scheme)
+final strictUrl = isUrl(strict: true);
+strictUrl.validate("https://example.com");        // Valid
+strictUrl.validate("example.com");                // Invalid
+
+// Or use the convenience method
+final strictUrl2 = isStrictUrl();
+</code></pre>
 </section>
 
 

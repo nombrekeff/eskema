@@ -64,6 +64,8 @@
 <p>This file contains cached instances of zero-argument validators for performance
 and readability. Instead of calling <code>isString()</code> repeatedly, you can use the
 constant <code>$isString</code>.</p>
+<p>These cached validators are pre-instantiated for better performance and provide
+the same functionality as their function counterparts.</p>
 </section>
 
 
@@ -83,7 +85,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isBool.html">isBool</a>.
+Validates that the value is a bool.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -95,7 +98,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isBoolString.html">isBoolString</a>.
+Validates that the string can be parsed as a boolean.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -107,7 +111,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isDate.html">isDate</a>.
+Validates that the string is a valid DateTime format.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -119,7 +124,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isDateTime.html">isDateTime</a>.
+Validates that the value is a DateTime.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -131,7 +137,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isDouble.html">isDouble</a>.
+Validates that the value is a double.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -143,7 +150,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isDoubleString.html">isDoubleString</a>.
+Validates that the string can be parsed as a double.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -155,7 +163,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isEmail.html">isEmail</a>.
+Validates that the string is a valid email address.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -167,7 +176,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isEmpty.html">isEmpty</a>.
+Validates that the value is empty (string, list, map, etc.).
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -179,7 +189,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isEnum.html">isEnum</a>.
+Validates that the value is an enum value.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -191,7 +202,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isFunction.html">isFunction</a>.
+Validates that the value is a Function.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -203,7 +215,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isFuture.html">isFuture</a>.
+Validates that the value is a Future.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -215,7 +228,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isInt.html">isInt</a>.
+Validates that the value is an int.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -227,7 +241,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isIntString.html">isIntString</a>.
+Validates that the string can be parsed as an integer.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -239,7 +254,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isIterable.html">isIterable</a>.
+Validates that the value is an Iterable.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -251,7 +267,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isList.html">isList</a>.
+Validates that the value is a List.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -263,7 +280,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isLowerCase.html">isLowerCase</a>.
+Validates that the string contains only lowercase characters.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -275,7 +293,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isMap.html">isMap</a>.
+Validates that the value is a Map.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -287,7 +306,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isNotEmpty.html">isNotEmpty</a>.
+Validates that the value is not empty (string, list, map, etc.).
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -299,7 +319,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isNull.html">isNull</a>.
+Validates that the value is null.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -311,7 +332,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isNumber.html">isNumber</a>.
+Validates that the value is a num (int or double).
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -323,7 +345,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isNumString.html">isNumString</a>.
+Validates that the string can be parsed as a number.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -335,7 +358,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isRecord.html">isRecord</a>.
+Validates that the value is a Record.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -347,7 +371,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isSet.html">isSet</a>.
+Validates that the value is a Set.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -359,7 +384,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isStrictUrl.html">isStrictUrl</a>.
+Validates that the string is a valid URL with strict requirements.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -371,7 +397,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isString.html">isString</a>.
+Validates that the value is a String.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -383,7 +410,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isSymbol.html">isSymbol</a>.
+Validates that the value is a Symbol.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -395,7 +423,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isUpperCase.html">isUpperCase</a>.
+Validates that the string contains only uppercase characters.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -407,7 +436,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isUrl.html">isUrl</a>.
+Validates that the string is a valid URL.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -419,7 +449,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isUuidV4.html">isUuidV4</a>.
+Validates that the string is a valid UUID v4.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -431,7 +462,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.list/listEmpty.html">listEmpty</a>.
+Validates that the list is empty.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -443,7 +475,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.combinator/not.html">not</a> applied to <a href="../eskema/$listEmpty.html">$listEmpty</a>.
+Validates that the list is not empty.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -455,7 +488,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/stringEmpty.html">stringEmpty</a>.
+Validates that the string is empty.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -467,7 +501,8 @@ constant <code>$isString</code>.</p>
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.combinator/not.html">not</a> applied to <a href="../eskema/$stringEmpty.html">$stringEmpty</a>.
+Validates that the string is not empty.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -494,6 +529,9 @@ constant <code>$isString</code>.</p>
     <ol>
       <li class="section-title">Libraries</li>
       <li><a href="../builder/">builder</a></li>
+      <li><a href="../builder.core/">builder/core</a></li>
+      <li><a href="../builder.mixins/">builder/mixins</a></li>
+      <li><a href="../builder.type_builders/">builder/type_builders</a></li>
       <li><a href="../eskema/">eskema</a></li>
       <li><a href="../expectation/">expectation</a></li>
       <li><a href="../expectation_codes/">expectation_codes</a></li>

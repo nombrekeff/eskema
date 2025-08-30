@@ -3,11 +3,11 @@ import 'package:test/test.dart' hide isNotEmpty, isEmpty;
 
 void main() {
   test('& works', () {
-    final username = ($isString & isNotEmpty());
+    final username = ($isString & not($isStringEmpty));
 
     expect(username.validate('valid_username').isValid, true);
     expect(username.validate('').isValid, false);
-    expect(username.validate('').description, 'length [greater than 0]');
+    expect(username.validate('').description, 'String to not be empty');
   });
 
   test('| works', () {
@@ -20,7 +20,7 @@ void main() {
   });
 
   test('& | combined works', () {
-    final username = ($isInt | (isString() & isEmpty()));
+    final username = ($isInt | (isString() & isStringEmpty()));
 
     expect(username.validate(123).isValid, true);
     expect(username.validate('').isValid, true);

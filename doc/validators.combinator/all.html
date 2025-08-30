@@ -65,6 +65,22 @@
 <section class="desc markdown">
   <p>Passes the test if all of the <a href="../validator/Validator-class.html">Validator</a>s are valid, and fails if any of them are invalid</p>
 <p>In the case that a <a href="../validator/Validator-class.html">Validator</a> fails, it's <a href="../result/Result-class.html">Result</a> will be returned</p>
+<p><strong>Usage Examples:</strong></p>
+<pre class="language-dart"><code class="language-dart">// Validate a password with multiple requirements
+final passwordValidator = all([
+  stringLength([isGte(8)]),           // At least 8 characters
+  stringMatchesPattern(r'[A-Z]'),     // Contains uppercase
+  stringMatchesPattern(r'[a-z]'),     // Contains lowercase
+  stringMatchesPattern(r'[0-9]'),     // Contains number
+]);
+
+// Chain transformations and validations
+final processedData = all([
+  toString(),                         // Convert to string first
+  stringLength([isGte(1)]),          // Then validate length
+  stringMatchesPattern(r'^[A-Z]'),    // Must start with uppercase
+]);
+</code></pre>
 </section>
 
 

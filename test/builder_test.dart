@@ -264,7 +264,7 @@ void main() {
 
   group('Builder bool / between / lengthRange', () {
     test('bool isTrue', () {
-      final validator = v().bool_().isTrue().build();
+      final validator = v().bool().isTrue().build();
       expect(validator.validate(true).isValid, true);
       expect(validator.validate(false).isValid, false);
     });

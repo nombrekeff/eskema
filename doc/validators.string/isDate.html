@@ -63,6 +63,20 @@
     
 <section class="desc markdown">
   <p>Checks whether the given value is a valid DateTime formatted String</p>
+<p><strong>Usage Examples:</strong></p>
+<pre class="language-dart"><code class="language-dart">final dateValidator = isDate();
+dateValidator.validate("2023-12-25");           // Valid
+dateValidator.validate("2023-12-25T10:30:00Z"); // Valid
+dateValidator.validate("not-a-date");           // Invalid
+dateValidator.validate("25-12-2023");           // Invalid
+
+// Combined with other validations
+final eventValidator = eskema({
+  'title': $isString,
+  'date': all([$isString, isDate()]),
+  'description': $isString.optional(),
+});
+</code></pre>
 </section>
 
 

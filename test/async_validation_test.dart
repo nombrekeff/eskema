@@ -46,7 +46,7 @@ void main() {
     });
 
     test('pure sync chain still works with validate()', () {
-      final v = all([isString(), isNotEmpty()]);
+      final v = all([isString(), not($isStringEmpty)]);
       final ok = v.validate('hi');
       expect(ok.isValid, true);
       final bad = v.validate('');

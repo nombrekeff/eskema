@@ -75,24 +75,32 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
     <section class="summary offset-anchor" id="classes">
       <h2>Classes</h2>
       <dl>
-          <dt id="BoolBuilder">
-  <span class="name "><a href="../builder/BoolBuilder-class.html">BoolBuilder</a></span> 
+          <dt id="BaseBuilder">
+  <span class="name "><a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
 
 </dt>
 <dd>
-  
+  Base functionality shared by all typed builders.
+</dd>
+
+          <dt id="BoolBuilder">
+  <span class="name "><a href="../builder.type_builders/BoolBuilder-class.html">BoolBuilder</a></span> 
+
+</dt>
+<dd>
+  Builder for boolean validations with boolean-specific methods.
 </dd>
 
           <dt id="Chain">
-  <span class="name "><a href="../builder/Chain-class.html">Chain</a></span> 
+  <span class="name "><a href="../builder.core/Chain-class.html">Chain</a></span> 
 
 </dt>
 <dd>
-  
+  Internal accumulator for a builder chain.
 </dd>
 
           <dt id="CustomPivot">
-  <span class="name "><a href="../builder/CustomPivot-class.html">CustomPivot</a></span> 
+  <span class="name "><a href="../builder.core/CustomPivot-class.html">CustomPivot</a></span> 
 
 </dt>
 <dd>
@@ -100,19 +108,19 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
 </dd>
 
           <dt id="DateTimeBuilder">
-  <span class="name "><a href="../builder/DateTimeBuilder-class.html">DateTimeBuilder</a></span> 
+  <span class="name "><a href="../builder.type_builders/DateTimeBuilder-class.html">DateTimeBuilder</a></span> 
 
 </dt>
 <dd>
-  
+  Builder for DateTime validations with date/time-specific methods.
 </dd>
 
           <dt id="DoubleBuilder">
-  <span class="name "><a href="../builder/DoubleBuilder-class.html">DoubleBuilder</a></span> 
+  <span class="name "><a href="../builder.type_builders/DoubleBuilder-class.html">DoubleBuilder</a></span> 
 
 </dt>
 <dd>
-  
+  Builder for double validations, inherits from NumberBuilder.
 </dd>
 
           <dt id="Expectation">
@@ -132,11 +140,11 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
 </dd>
 
           <dt id="GenericBuilder">
-  <span class="name "><a href="../builder/GenericBuilder-class.html">GenericBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> 
+  <span class="name "><a href="../builder.type_builders/GenericBuilder-class.html">GenericBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> 
 
 </dt>
 <dd>
-  
+  Generic builder that supports all validation methods.
 </dd>
 
           <dt id="IdValidator">
@@ -150,19 +158,19 @@ for example <a href="../validator/MapValidator-class.html">MapValidator</a> uses
 </dd>
 
           <dt id="IntBuilder">
-  <span class="name "><a href="../builder/IntBuilder-class.html">IntBuilder</a></span> 
+  <span class="name "><a href="../builder.type_builders/IntBuilder-class.html">IntBuilder</a></span> 
 
 </dt>
 <dd>
-  
+  Builder for integer validations, inherits from NumberBuilder.
 </dd>
 
           <dt id="IterableBuilder">
-  <span class="name "><a href="../builder/IterableBuilder-class.html">IterableBuilder</a></span> 
+  <span class="name "><a href="../builder.type_builders/IterableBuilder-class.html">IterableBuilder</a></span> 
 
 </dt>
 <dd>
-  
+  Builder for iterable validations with length and iteration methods.
 </dd>
 
           <dt id="IValidator">
@@ -183,27 +191,27 @@ Used for conditional validation within an <code>eskema</code> map validator.
 </dd>
 
           <dt id="JsonDecodedBuilder">
-  <span class="name "><a href="../builder/JsonDecodedBuilder-class.html">JsonDecodedBuilder</a></span> 
+  <span class="name "><a href="../builder.type_builders/JsonDecodedBuilder-class.html">JsonDecodedBuilder</a></span> 
 
 </dt>
 <dd>
-  
+  Builder for JSON-decoded data with both map and iterable methods.
 </dd>
 
           <dt id="ListBuilder">
-  <span class="name "><a href="../builder/ListBuilder-class.html">ListBuilder</a></span> 
+  <span class="name "><a href="../builder.type_builders/ListBuilder-class.html">ListBuilder</a></span> 
 
 </dt>
 <dd>
-  
+  Builder for list validations, inherits from IterableBuilder.
 </dd>
 
           <dt id="MapBuilder">
-  <span class="name "><a href="../builder/MapBuilder-class.html">MapBuilder</a></span> 
+  <span class="name "><a href="../builder.type_builders/MapBuilder-class.html">MapBuilder</a></span> 
 
 </dt>
 <dd>
-  
+  Builder for map validations with map-specific methods.
 </dd>
 
           <dt id="MapValidator">
@@ -219,11 +227,11 @@ formats or constraints.
 </dd>
 
           <dt id="NumberBuilder">
-  <span class="name "><a href="../builder/NumberBuilder-class.html">NumberBuilder</a></span> 
+  <span class="name "><a href="../builder.type_builders/NumberBuilder-class.html">NumberBuilder</a></span> 
 
 </dt>
 <dd>
-  
+  Builder for number validations with numeric comparison methods.
 </dd>
 
           <dt id="Result">
@@ -235,27 +243,27 @@ formats or constraints.
 </dd>
 
           <dt id="RootBuilder">
-  <span class="name "><a href="../builder/RootBuilder-class.html">RootBuilder</a></span> 
+  <span class="name "><a href="../builder.type_builders/RootBuilder-class.html">RootBuilder</a></span> 
 
 </dt>
 <dd>
-  
+  Root builder that provides entry points for different data types.
 </dd>
 
           <dt id="SetBuilder">
-  <span class="name "><a href="../builder/SetBuilder-class.html">SetBuilder</a></span> 
+  <span class="name "><a href="../builder.type_builders/SetBuilder-class.html">SetBuilder</a></span> 
 
 </dt>
 <dd>
-  
+  Builder for set validations, inherits from IterableBuilder.
 </dd>
 
           <dt id="StringBuilder">
-  <span class="name "><a href="../builder/StringBuilder-class.html">StringBuilder</a></span> 
+  <span class="name "><a href="../builder.type_builders/StringBuilder-class.html">StringBuilder</a></span> 
 
 </dt>
 <dd>
-  
+  Builder for string validations with string-specific methods.
 </dd>
 
           <dt id="Validator">
@@ -272,110 +280,124 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  A conditional validator that applies either the <a href="../validator/WhenValidator/then.html">then</a> or <a href="../validator/WhenValidator/otherwise.html">otherwise</a>
+branch based on the result of the <a href="../validator/WhenValidator/condition.html">condition</a> validator.
 </dd>
 
       </dl>
     </section>
 
+    <section class="summary offset-anchor" id="enums">
+      <h2>Enums</h2>
+      <dl>
+          <dt id="CoercionKind">
+  <span class="name "><a href="../builder.core/CoercionKind.html">CoercionKind</a></span> 
+
+</dt>
+<dd>
+  Kind of coercion applied to the chain (single pivot allowed).
+</dd>
+
+      </dl>
+    </section>
 
     <section class="summary offset-anchor" id="mixins">
       <h2>Mixins</h2>
       <dl>
           <dt id="BoolMixin">
-  <span class="name "><a href="../builder/BoolMixin-mixin.html">BoolMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends _BaseBuilder<span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+  <span class="name "><a href="../builder.mixins/BoolMixin-mixin.html">BoolMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
 
 </dt>
 <dd>
-  
+  Mixin providing boolean-specific validation methods.
 </dd>
 
           <dt id="ComparisonMixin">
-  <span class="name "><a href="../builder/ComparisonMixin-mixin.html">ComparisonMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends _BaseBuilder<span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+  <span class="name "><a href="../builder.mixins/ComparisonMixin-mixin.html">ComparisonMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
 
 </dt>
 <dd>
-  
+  Mixin providing comparison validation methods.
 </dd>
 
           <dt id="ContainsMixin">
-  <span class="name "><a href="../builder/ContainsMixin-mixin.html">ContainsMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends _BaseBuilder<span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+  <span class="name "><a href="../builder.mixins/ContainsMixin-mixin.html">ContainsMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
 
 </dt>
 <dd>
-  
+  Mixin providing contains validation methods.
 </dd>
 
           <dt id="DateTimeMixin">
-  <span class="name "><a href="../builder/DateTimeMixin-mixin.html">DateTimeMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends _BaseBuilder<span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+  <span class="name "><a href="../builder.mixins/DateTimeMixin-mixin.html">DateTimeMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
 
 </dt>
 <dd>
-  
+  Mixin providing DateTime-specific validation methods.
 </dd>
 
           <dt id="EmptyMixin">
-  <span class="name "><a href="../builder/EmptyMixin-mixin.html">EmptyMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends _BaseBuilder<span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+  <span class="name "><a href="../builder.mixins/EmptyMixin-mixin.html">EmptyMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
 
 </dt>
 <dd>
-  
+  Mixin providing empty validation methods.
 </dd>
 
           <dt id="IterableMixin">
-  <span class="name "><a href="../builder/IterableMixin-mixin.html">IterableMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends _BaseBuilder<span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+  <span class="name "><a href="../builder.mixins/IterableMixin-mixin.html">IterableMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
 
 </dt>
 <dd>
-  
+  Mixin providing iterable-specific validation methods.
 </dd>
 
           <dt id="JsonMixin">
-  <span class="name "><a href="../builder/JsonMixin-mixin.html">JsonMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends _BaseBuilder<span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+  <span class="name "><a href="../builder.mixins/JsonMixin-mixin.html">JsonMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
 
 </dt>
 <dd>
-  
+  Mixin providing JSON-specific validation methods.
 </dd>
 
           <dt id="LengthMixin">
-  <span class="name "><a href="../builder/LengthMixin-mixin.html">LengthMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends _BaseBuilder<span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+  <span class="name "><a href="../builder.mixins/LengthMixin-mixin.html">LengthMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
 
 </dt>
 <dd>
-  
+  Mixin providing length validation methods.
 </dd>
 
           <dt id="MapMixin">
-  <span class="name "><a href="../builder/MapMixin-mixin.html">MapMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends _BaseBuilder<span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+  <span class="name "><a href="../builder.mixins/MapMixin-mixin.html">MapMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
 
 </dt>
 <dd>
-  
+  Mixin providing map-specific validation methods.
 </dd>
 
           <dt id="NumberMixin">
-  <span class="name "><a href="../builder/NumberMixin-mixin.html">NumberMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends _BaseBuilder<span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+  <span class="name "><a href="../builder.mixins/NumberMixin-mixin.html">NumberMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
 
 </dt>
 <dd>
-  
+  Mixin providing number-specific validation methods.
 </dd>
 
           <dt id="StringMixin">
-  <span class="name "><a href="../builder/StringMixin-mixin.html">StringMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends _BaseBuilder<span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+  <span class="name "><a href="../builder.mixins/StringMixin-mixin.html">StringMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
 
 </dt>
 <dd>
-  
+  Mixin providing string-specific validation methods.
 </dd>
 
           <dt id="TransformerMixin">
-  <span class="name "><a href="../builder/TransformerMixin-mixin.html">TransformerMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends _BaseBuilder<span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+  <span class="name "><a href="../builder.mixins/TransformerMixin-mixin.html">TransformerMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
 
 </dt>
 <dd>
-  
+  Mixin providing type transformation methods for builders.
 </dd>
 
       </dl>
@@ -429,7 +451,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isBool.html">isBool</a>.
+Validates that the value is a bool.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -441,7 +464,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isBoolString.html">isBoolString</a>.
+Validates that the string can be parsed as a boolean.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -453,7 +477,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isDate.html">isDate</a>.
+Validates that the string is a valid DateTime format.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -465,7 +490,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isDateTime.html">isDateTime</a>.
+Validates that the value is a DateTime.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -477,7 +503,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isDouble.html">isDouble</a>.
+Validates that the value is a double.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -489,7 +516,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isDoubleString.html">isDoubleString</a>.
+Validates that the string can be parsed as a double.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -501,7 +529,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isEmail.html">isEmail</a>.
+Validates that the string is a valid email address.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -513,7 +542,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isEmpty.html">isEmpty</a>.
+Validates that the value is empty (string, list, map, etc.).
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -525,7 +555,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isEnum.html">isEnum</a>.
+Validates that the value is an enum value.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -537,7 +568,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isFunction.html">isFunction</a>.
+Validates that the value is a Function.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -549,7 +581,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isFuture.html">isFuture</a>.
+Validates that the value is a Future.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -561,7 +594,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isInt.html">isInt</a>.
+Validates that the value is an int.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -573,7 +607,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isIntString.html">isIntString</a>.
+Validates that the string can be parsed as an integer.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -585,7 +620,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isIterable.html">isIterable</a>.
+Validates that the value is an Iterable.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -597,7 +633,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isList.html">isList</a>.
+Validates that the value is a List.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -609,7 +646,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isLowerCase.html">isLowerCase</a>.
+Validates that the string contains only lowercase characters.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -621,7 +659,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isMap.html">isMap</a>.
+Validates that the value is a Map.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -633,7 +672,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isNotEmpty.html">isNotEmpty</a>.
+Validates that the value is not empty (string, list, map, etc.).
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -645,7 +685,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isNull.html">isNull</a>.
+Validates that the value is null.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -657,7 +698,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isNumber.html">isNumber</a>.
+Validates that the value is a num (int or double).
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -669,7 +711,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isNumString.html">isNumString</a>.
+Validates that the string can be parsed as a number.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -681,7 +724,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isRecord.html">isRecord</a>.
+Validates that the value is a Record.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -693,7 +737,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isSet.html">isSet</a>.
+Validates that the value is a Set.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -705,7 +750,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isStrictUrl.html">isStrictUrl</a>.
+Validates that the string is a valid URL with strict requirements.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -717,7 +763,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isString.html">isString</a>.
+Validates that the value is a String.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -729,7 +776,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.type/isSymbol.html">isSymbol</a>.
+Validates that the value is a Symbol.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -741,7 +789,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isUpperCase.html">isUpperCase</a>.
+Validates that the string contains only uppercase characters.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -753,7 +802,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isUrl.html">isUrl</a>.
+Validates that the string is a valid URL.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -765,7 +815,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/isUuidV4.html">isUuidV4</a>.
+Validates that the string is a valid UUID v4.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -777,7 +828,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.list/listEmpty.html">listEmpty</a>.
+Validates that the list is empty.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -789,7 +841,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.combinator/not.html">not</a> applied to <a href="../eskema/$listEmpty.html">$listEmpty</a>.
+Validates that the list is not empty.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -801,7 +854,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.string/stringEmpty.html">stringEmpty</a>.
+Validates that the string is empty.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -813,7 +867,8 @@ which is used by the EskValidator to validate some data.
 
 </dt>
 <dd>
-  
+  Cached instance of <a href="../validators.combinator/not.html">not</a> applied to <a href="../eskema/$stringEmpty.html">$stringEmpty</a>.
+Validates that the string is not empty.
   <div class="features"><span class="feature">final</span></div>
 
 </dd>
@@ -1505,7 +1560,7 @@ For better performance and readability, use the <a href="../eskema/$isSymbol.htm
 </dd>
 
           <dt id="isType" class="callable">
-  <span class="name"><a href="../validators.type/isType.html">isType</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>)
+  <span class="name"><a href="../validators.type/isType.html">isType</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>{<span class="parameter" id="isType-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -2093,14 +2148,14 @@ It's different from nullable in that it also checks for empty strings
 </dd>
 
           <dt id="v" class="callable">
-  <span class="name"><a href="../builder/v.html">v</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../builder/RootBuilder-class.html">RootBuilder</a></span>
+  <span class="name"><a href="../builder.type_builders/v.html">v</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/RootBuilder-class.html">RootBuilder</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Public entry function.
+  Creates and public entry point for the package's code-generation builders.
   
 
 </dd>
@@ -2186,7 +2241,7 @@ See docs/expectation_codes.md.
 
 </dt>
 <dd>
-  
+  Thrown when a validation fails.
 </dd>
 
       </dl>
@@ -2208,6 +2263,9 @@ See docs/expectation_codes.md.
     <ol>
       <li class="section-title">Libraries</li>
       <li><a href="../builder/">builder</a></li>
+      <li><a href="../builder.core/">builder/core</a></li>
+      <li><a href="../builder.mixins/">builder/mixins</a></li>
+      <li><a href="../builder.type_builders/">builder/type_builders</a></li>
       <li><a href="../eskema/">eskema</a></li>
       <li><a href="../expectation/">expectation</a></li>
       <li><a href="../expectation_codes/">expectation_codes</a></li>

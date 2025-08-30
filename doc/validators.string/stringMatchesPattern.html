@@ -67,6 +67,21 @@
   <p>Validates that the String matches the provided pattern</p>
 <p>This validator also validates that the value is a String first
 So there's no need to add the <a href="../validators.type/isString.html">isString</a> validator when using this validator</p>
+<p><strong>Usage Examples:</strong></p>
+<pre class="language-dart"><code class="language-dart">// Validate phone number format
+final phonePattern = stringMatchesPattern(r'^\+?[\d\s\-\(\)]+$');
+phonePattern.validate("+1-555-0123");     // Valid
+phonePattern.validate("invalid-phone");    // Invalid
+
+// Validate hexadecimal color
+final hexColor = stringMatchesPattern(r'^#[0-9A-Fa-f]{6}$');
+hexColor.validate("#FF5733");              // Valid
+hexColor.validate("#GGG");                 // Invalid
+
+// Custom error message
+final customPattern = stringMatchesPattern(r'^\d{4}-\d{2}-\d{2}$', 
+  error: 'Date must be in YYYY-MM-DD format');
+</code></pre>
 </section>
 
 
