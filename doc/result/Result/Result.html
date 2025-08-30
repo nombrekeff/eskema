@@ -71,14 +71,8 @@
   required this.value,
   List&lt;Expectation&gt;? expectations,
   Expectation? expectation,
-})  : assert(
-        isValid ||
-            (!isValid &amp;&amp; expectation != null ||
-                (expectations != null &amp;&amp; expectations.isNotEmpty)),
-        &#39;invalid -&gt; provide an expectation or non-empty expectations list&#39;,
-      ),
-      expectations = List.unmodifiable(
-        expectations ?? (expectation == null ? const &lt;Expectation&gt;[] : [expectation]),
+}) : expectations = List.unmodifiable(
+        expectations ?? (expectation == null ? _emptyExpectations : [expectation]),
       );</code></pre>
 </section>
 

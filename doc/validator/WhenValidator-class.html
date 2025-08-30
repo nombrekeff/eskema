@@ -222,6 +222,19 @@ the validation is considered valid.
 
 </dd>
 
+        <dt id="isNotValidAsync" class="callable inherited">
+  <span class="name"><a href="../validator/IValidator/isNotValidAsync.html">isNotValidAsync</a></span><span class="signature">(<wbr><span class="parameter" id="isNotValidAsync-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/FutureOr-class.html">FutureOr</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Checks if the given value is not valid asynchronously.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
         <dt id="isValid" class="callable inherited">
   <span class="name"><a href="../validator/IValidator/isValid.html">isValid</a></span><span class="signature">(<wbr><span class="parameter" id="isValid-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
@@ -231,6 +244,19 @@ the validation is considered valid.
 </dt>
 <dd class="inherited">
   Checks if the given value is valid.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="isValidAsync" class="callable inherited">
+  <span class="name"><a href="../validator/IValidator/isValidAsync.html">isValidAsync</a></span><span class="signature">(<wbr><span class="parameter" id="isValidAsync-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-async/FutureOr-class.html">FutureOr</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Checks if the given value is valid asynchronously.
   <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
@@ -375,7 +401,7 @@ Don't call directly, use <a href="../validator/WhenValidator/validate.html">vali
         <span>Available on <a href="../validator/IValidator-class.html">IValidator</a>,
         provided by the <a href="../extensions/EskemaEskValidatorOperations.html">EskemaEskValidatorOperations</a> extension</span>
       </p>
-  Combines two validators with a logical AND, same as using <a href="../combinator_validators/all.html">all</a>
+  Combines two validators with a logical AND, same as using <a href="../validators.combinator/all.html">all</a>
   
 
 </dd>
@@ -422,7 +448,7 @@ Don't call directly, use <a href="../validator/WhenValidator/validate.html">vali
         <span>Available on <a href="../validator/IValidator-class.html">IValidator</a>,
         provided by the <a href="../extensions/EskemaEskValidatorOperations.html">EskemaEskValidatorOperations</a> extension</span>
       </p>
-  Combines two validators with a logical OR, same as using <a href="../combinator_validators/any.html">any</a>
+  Combines two validators with a logical OR, same as using <a href="../validators.combinator/any.html">any</a>
   
 
 </dd>

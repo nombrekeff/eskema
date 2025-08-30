@@ -75,7 +75,9 @@
   if ((value == null &amp;&amp; isNullable &amp;&amp; exists) || (!exists &amp;&amp; isOptional)) {
     return Result.valid(value);
   }
-  return await validator(value);
+
+  final result = await validator(value);
+  return result;
 }</code></pre>
 </section>
 

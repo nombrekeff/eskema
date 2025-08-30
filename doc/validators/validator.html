@@ -77,7 +77,7 @@
   return Validator(
     (value) =&gt; Result(
       isValid: comparisonFn(value),
-      expectations: [errorFn(value)],
+      expectation: errorFn(value),
       value: value,
     ),
   );

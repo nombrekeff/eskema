@@ -66,14 +66,10 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Result.invalid(this.value, {List&lt;Expectation&gt;? expectations, Expectation? expectation})
-    : assert(
-        (expectation != null || (expectations != null &amp;&amp; expectations.isNotEmpty)),
-        &quot;If invalid, either &#39;expectation&#39; or a non-empty &#39;expectations&#39; list must be provided&quot;,
-      ),
-      isValid = false,
-      expectations = (expectations != null
-          ? List.unmodifiable(expectations)
-          : List.unmodifiable([expectation!]));</code></pre>
+    : isValid = false,
+      expectations = List.unmodifiable(
+        expectations ?? (expectation == null ? _emptyExpectations : [expectation]),
+      );</code></pre>
 </section>
 
 
