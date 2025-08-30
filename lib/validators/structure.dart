@@ -31,7 +31,6 @@ IValidator eskema(Map<String, IValidator> mapEskema) {
         (value) {
           final errors = <Expectation>[];
           final entries = mapEskema.entries.toList();
-
           // We intentionally implement `loop` returning `FutureOr<Result>`:
           // - Each validator may return a Result synchronously or a Future<Result>.
           // - If all validators are synchronous we want to return a plain Result
@@ -68,12 +67,15 @@ IValidator eskema(Map<String, IValidator> mapEskema) {
                 _collectEskema(missingRes, errors, key);
                 return loop(index + 1);
               }
+
               if (!exists && validator.isOptional) {
                 return loop(index + 1);
               }
+
               if (exists && fieldValue == null && validator.isNullable) {
                 return loop(index + 1);
               }
+
               res = validator.validator(fieldValue);
             }
 
@@ -83,7 +85,9 @@ IValidator eskema(Map<String, IValidator> mapEskema) {
                 return loop(index + 1);
               });
             }
+
             _collectEskema(res, errors, key);
+
             return loop(index + 1);
           }
 
@@ -94,12 +98,13 @@ IValidator eskema(Map<String, IValidator> mapEskema) {
 
 void _collectEskema(Result result, List<Expectation> errors, String key) {
   if (result.isValid) return;
+  
   for (final error in result.expectations) {
     errors.add(Expectation(
       message: error.message,
       value: error.value,
       path: '.$key${error.path != null ? '${error.path}' : ''}',
-  code: error.code ?? 'structure.map_field_failed',
+      code: error.code ?? 'structure.map_field_failed',
       data: error.data,
     ));
   }
@@ -128,7 +133,12 @@ IValidator eskemaStrict(Map<String, IValidator> schema) {
         return Result.invalid(
           value,
           expectations: [
-            Expectation(message: 'has unknown keys: ${unknownKeys.join(', ')}', value: value, code: 'structure.unknown_key', data: {'keys': unknownKeys})
+            Expectation(
+              message: 'has unknown keys: ${unknownKeys.join(', ')}',
+              value: value,
+              code: 'structure.unknown_key',
+              data: {'keys': unknownKeys},
+            ),
           ],
         );
       });
@@ -156,12 +166,14 @@ IValidator eskemaList<T>(List<IValidator> eskema) {
       listIsOfLength(eskema.length) &
       Validator((value) {
         final errors = <Expectation>[];
+
         FutureOr<Result> loop(int index) {
           if (index >= value.length) {
             return errors.isEmpty
                 ? Result.valid(value)
                 : Result.invalid(value, expectations: errors);
           }
+
           final item = value[index];
           final effectiveValidator = eskema[index];
 
@@ -171,13 +183,16 @@ IValidator eskemaList<T>(List<IValidator> eskema) {
           }
 
           final res = effectiveValidator.validator(item);
+
           if (res is Future<Result>) {
             return res.then((r) {
               _collectListIndex(r, errors, index);
               return loop(index + 1);
             });
           }
+
           _collectListIndex(res, errors, index);
+
           return loop(index + 1);
         }
 
@@ -198,19 +213,24 @@ IValidator listEach(IValidator itemValidator) {
                 ? Result.valid(value)
                 : Result.invalid(value, expectations: errors);
           }
+
           final item = value[index];
 
           if (item == null && itemValidator.isNullable) {
             return loop(index + 1);
           }
+
           final res = itemValidator.validator(item);
+
           if (res is Future<Result>) {
             return res.then((r) {
               _collectListIndex(r, errors, index);
               return loop(index + 1);
             });
           }
+
           _collectListIndex(res, errors, index);
+
           return loop(index + 1);
         }
 
@@ -220,12 +240,13 @@ IValidator listEach(IValidator itemValidator) {
 
 void _collectListIndex(Result result, List<Expectation> errors, int index) {
   if (result.isValid) return;
+
   for (var error in result.expectations) {
     errors.add(Expectation(
       message: error.message,
       value: error.value,
       path: '[$index]${error.path != null ? '${error.path}' : ''}',
-  code: error.code ?? 'structure.list_item_failed',
+      code: error.code ?? 'structure.list_item_failed',
       data: error.data,
     ));
   }

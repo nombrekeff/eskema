@@ -4,6 +4,8 @@
 
 library comparison_validators;
 
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:eskema/src/util.dart';
 import '../eskema.dart';
@@ -47,25 +49,30 @@ IValidator isDeepEq<T>(T otherValue) =>
     );
 
 /// Checks whether the given value has a length property and the length matches the validators
-IValidator length(List<IValidator> validators) => Validator((value) {
-      if (hasLengthProperty(value)) {
-        final result = all(validators).validate((value as dynamic).length);
+IValidator length(List<IValidator> validators) {
+  FutureOr<Result> pipeline(value) {
+    if (hasLengthProperty(value)) {
+      final result = all(validators).validate((value as dynamic).length);
 
-        return result.copyWith(
-          expectations: [
-            Expectation(
-              message: 'length ${result.expectations}',
-              value: value,
-              code: 'value.length_out_of_range',
-              data: {'length': (value as dynamic).length},
-            )
-          ],
-        );
-      } else {
-  return expectation('${value.runtimeType} does not have a length property', value, null, 'logic.predicate_failed')
-            .toInvalidResult();
-      }
-    });
+      return result.copyWith(
+        expectations: [
+          Expectation(
+            message: 'length ${result.expectations}',
+            value: value,
+            code: 'value.length_out_of_range',
+            data: {'length': (value as dynamic).length},
+          )
+        ],
+      );
+    } else {
+      return expectation('${value.runtimeType} does not have a length property', value, null,
+              'logic.predicate_failed')
+          .toInvalidResult();
+    }
+  }
+
+  return Validator(pipeline);
+}
 
 /// Checks whether the given value contains the [item] value of type [T]
 ///
@@ -74,23 +81,15 @@ IValidator contains<T>(T item) => Validator((value) {
       if (hasContainsProperty(value)) {
         return Result(
           isValid: value.contains(item),
-          expectation: expectation('contains ${prettifyValue(item)}', value, null, 'value.contains_missing'),
+          expectation: expectation(
+              'contains ${prettifyValue(item)}', value, null, 'value.contains_missing'),
           value: value,
         );
       } else {
-  return expectation('${value.runtimeType} does not have a contains property', value, null, 'logic.predicate_failed')
+        return expectation('${value.runtimeType} does not have a contains property', value,
+                null, 'logic.predicate_failed')
             .toInvalidResult();
       }
-    });
-
-IValidator containsKey(String key) =>
-    isMap() &
-    Validator((value) {
-      return Result(
-        isValid: value.containsKey(key),
-  expectation: expectation('contains key "$key"', value, key, 'value.contains_missing'),
-        value: value,
-      );
     });
 
 /// Checks whether the given value is one of the [options] values of type [T]
@@ -100,7 +99,11 @@ IValidator isOneOf<T>(Iterable<T> options) => all([
         (value) => Result(
           isValid: options.contains(value),
           expectations: [
-            Expectation(message: 'one of: ${prettifyValue(options)}', value: value, code: 'value_not_in_set', data: {'options': options.map((e)=>e.toString()).toList()} )
+            Expectation(
+                message: 'one of: ${prettifyValue(options)}',
+                value: value,
+                code: 'value.membership_mismatch',
+                data: {'options': options.map((e) => e.toString()).toList()})
           ],
           value: value,
         ),

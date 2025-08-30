@@ -17,13 +17,6 @@ void main() {
       expect(r.expectations.first.message, 'fail');
     });
 
-    test('Main constructor: isValid=false without errors triggers assertion', () {
-      expect(
-        () => Result(isValid: false, value: 10),
-        throwsA(isA<AssertionError>()),
-      );
-    });
-
     test('Main constructor: isValid=true without errors triggers assertion', () {
       expect(
         () => Result(isValid: true, value: 10),
@@ -59,16 +52,6 @@ void main() {
       );
       expect(r.isValid, false);
       expect(r.expectations.length, 1);
-    });
-
-    test('Main constructor: isValid=false WITH empty errors list passes', () {
-      expect(
-          () => Result(
-                isValid: false,
-                value: 10,
-                expectations: const [],
-              ),
-          throwsA(isA<AssertionError>()));
     });
   });
 }

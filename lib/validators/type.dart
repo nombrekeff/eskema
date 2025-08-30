@@ -15,7 +15,7 @@ IValidator isType<T>() => validator(
     );
 
 /// Returns a [Validator] that checks if the given value is the correct type
-IValidator isTypeOrNull<T>() => isType<T>() | isNull();
+IValidator isTypeOrNull<T>() => isType<T>().nullable();
 
 /// Returns a [IValidator] that checks if the given value is `null`
 /// For better performance and readability, use the [$isNull] variable directly.

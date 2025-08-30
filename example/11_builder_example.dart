@@ -1,19 +1,27 @@
 import 'package:eskema/builder.dart';
+import 'package:eskema/eskema.dart';
+
+Validator<Result> isValidName = Validator((value) async {
+  return Result.valid(await Future.value(false));
+});
 
 void main() async {
   final nameValidator = v()
       .string()
-      .lengthMin(3)
-      .lengthMax(10)
-      .notEmpty()
-      .async((v) async => await Future.value(true), 'value.available')
+      .lengthRange(3, 10)
+      .not.empty()
+      .add(isValidName)
       .build();
-
-  final ageValidator = v().int_().gt(0).nullable().build();
 
   final nameRes = await nameValidator.validateAsync('123');
   print(nameRes.description);
 
-  final ageRes = ageValidator.validate(3);
+  final ageValidator = v()
+    .int_()
+    .eq(0)
+    .nullable()
+    .build();
+
+  final ageRes = ageValidator.validate(0);
   print(ageRes.description);
 }

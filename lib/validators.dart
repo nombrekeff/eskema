@@ -31,7 +31,6 @@
 ///
 /// Conventions:
 /// - Prefer `$isType` constants for zero‑arg validators in hot paths.
-/// - Use `isTypeOrNull<T>()` for union of a type plus null.
 /// - For collection equality use `isDeepEq` instead of `isEq` on lists/maps/sets.
 ///
 /// See README for detailed examples and nullable vs optional explanation.
@@ -52,6 +51,7 @@ export 'package:eskema/validators/string.dart';
 export 'package:eskema/validators/type.dart';
 export 'package:eskema/validators/comparison.dart';
 export 'package:eskema/validators/list.dart';
+export 'package:eskema/validators/map.dart';
 export 'package:eskema/validators/cached.dart';
 
 Validator validator(
@@ -61,7 +61,7 @@ Validator validator(
   return Validator(
     (value) => Result(
       isValid: comparisonFn(value),
-      expectations: [errorFn(value)],
+      expectation: errorFn(value),
       value: value,
     ),
   );

@@ -12,6 +12,8 @@ import 'package:eskema/validators/list.dart';
 import 'package:eskema/validators/string.dart';
 import 'package:eskema/validators/type.dart';
 
+
+
 // Type validators
 final IValidator $isNull = isNull();
 final IValidator $isString = isString();
@@ -42,8 +44,13 @@ final IValidator $isUuidV4 = isUuidV4();
 final IValidator $isIntString = isIntString();
 final IValidator $isDoubleString = isDoubleString();
 final IValidator $isNumString = isNumString();
+final IValidator $isBoolString = isBoolString();
 final IValidator $isDate = isDate();
 
 // List validators
 final IValidator $listEmpty = listEmpty();
 final IValidator $listNotEmpty = not($listEmpty);
+
+// Generic
+final IValidator $isEmpty = isEmpty();
+final IValidator $isNotEmpty = isNotEmpty();

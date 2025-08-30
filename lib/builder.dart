@@ -37,139 +37,240 @@
 
 library builder;
 
-import 'dart:async';
-import 'package:eskema/eskema.dart';
-import 'package:eskema/eskema.dart' as esk;
+// NOTE: Avoid importing the umbrella eskema.dart here because it re‑exports this
+// file, which would create a circular import. Instead we import the specific
+// source libraries we need. We import validators.dart twice: once unprefixed so
+// existing calls (isGte, isLte, etc.) keep working, and once with the alias
+// 'esk' so we can disambiguate symbols that clash with builder members (like
+// the 'not' combinator) via esk.not().
 
-/// Internal accumulator shared across all builder instances in a chain.
-class _Chain {
-  IValidator? _acc;
+import 'dart:async';
+
+import 'validators.dart';
+import 'validator.dart';
+import 'expectation.dart';
+import 'result.dart';
+import 'extensions.dart';
+import 'transformers.dart' as tr;
+import 'validators.dart' as esk; // for esk.not / esk.contains, etc.
+import 'validators/date.dart';
+import 'validators/json.dart';
+
+/// Internal accumulator for a builder chain.
+///
+/// We model the pipeline with at most one type‑changing transformer. Everything
+/// added before the first *Coerce() call is considered pre‑coercion and will be
+/// discarded once a coercion is requested (since those validators target the
+/// original type). Validators added after coercion target the coerced type.
+// Kind of coercion applied to the chain (single pivot allowed).
+enum _CoercionKind { int_, double_, bool_, string_, datetime_, json_ }
+
+class Chain {
+  // Validators accumulated BEFORE any type coercion (original type domain).
+  IValidator? _preValidators;
+  // Validators accumulated AFTER coercion (new type domain).
+  IValidator? _postValidators;
+  // The single coercion transformer (wraps _postValidators when building).
+  IValidator Function(IValidator child)? _coercion;
+  // Which coercion (if any) has been applied.
+  _CoercionKind? _coercionKind;
+  // A prefix transformer applied BEFORE coercion (value pivot like pluckValue / pick / flatten).
+  IValidator Function(IValidator child)? _prefix;
+
+  bool get _hasCoercion => _coercionKind != null;
+  bool _isKind(_CoercionKind k) => _coercionKind == k;
 
   void add(IValidator v) {
-    _acc = _acc == null ? v : (_acc! & v);
+    if (_hasCoercion) {
+      _postValidators = _postValidators == null ? v : (_postValidators! & v);
+    } else {
+      _preValidators = _preValidators == null ? v : (_preValidators! & v);
+    }
   }
 
-  IValidator build() => _acc ?? Validator.valid;
-  bool get isEmpty => _acc == null;
   void wrap(IValidator Function(IValidator current) fn) {
-    if (_acc != null) _acc = fn(_acc!);
-  }
-}
-
-/// Base functionality shared by all typed builders.
-abstract class _BaseBuilder<B extends _BaseBuilder<B, T>, T> {
-  final _Chain _chain;
-  _BaseBuilder(this._chain);
-
-  B get _self => this as B;
-
-  B wrap(IValidator Function(IValidator) fn, {String? message}) {
-    _chain.wrap(
-      (c) => message != null ? fn(c) > Expectation(message: message) : fn(c),
-    );
-    return _self;
+    if (_hasCoercion) {
+      if (_postValidators != null) _postValidators = fn(_postValidators!);
+    } else if (_preValidators != null) {
+      _preValidators = fn(_preValidators!);
+    }
   }
 
-  B add(IValidator validator, {String? message}) {
-    _chain.add(
-      message != null ? validator > Expectation(message: message) : validator,
-    );
-    return _self;
+  void setTransform(_CoercionKind kind, IValidator Function(IValidator child) transformer) {
+    if (_coercionKind != null) {
+      if (_coercionKind == kind) return; // same coercion => no-op (idempotent)
+      // Different coercion requested: swap transformer, drop post constraints (fresh domain).
+      _coercionKind = kind;
+      _coercion = transformer;
+      _postValidators = null;
+      return;
+    }
+    _coercionKind = kind;
+    _coercion = transformer;
+    _preValidators = null; // drop previous validators targeting old type
   }
 
-  /// Mark current chain optional (skipped when key absent).
-  B optional({String? message}) {
-    return wrap((c) => c.optional(), message: message);
+  // Add a prefix value-mapping validator (runs before coercion & post validators).
+  void addPrefix(IValidator Function(IValidator child) prefix) {
+    if (_prefix == null) {
+      _prefix = prefix;
+    } else {
+      final existing = _prefix!;
+      _prefix = (child) => existing(prefix(child));
+    }
   }
 
-  /// Mark current chain nullable (null accepted as valid).
-  B nullable({String? message}) {
-    return wrap(
-      (c) => c.nullable(),
-      message: message,
-    );
+  IValidator build() {
+    IValidator core;
+    // Apply prefix first so coercion sees transformed value.
+    IValidator tail() {
+      if (_coercion != null) {
+        final child = _postValidators ?? Validator.valid;
+        return _coercion!(child);
+      }
+      return _preValidators ?? Validator.valid;
+    }
+
+    core = _prefix != null ? _prefix!(tail()) : tail();
+    return core;
   }
 
-  /// Override final error message (retains codes).
-  B error(String message) {
-    return wrap((c) => c > Expectation(message: message));
-  }
-
-  /// Add custom asynchronous predicate.
-  B async(
-    Future<bool> Function(dynamic v) test,
-    String message, {
-    String code = 'logic.predicate_failed',
-  }) {
-    final v = Validator((value) async {
-      final ok = await test(value);
-      return ok
-          ? Result.valid(value)
-          : expectation(message, value, null, code).toInvalidResult();
-    });
-
-    return add(v);
-  }
-
-  B oneOf(Iterable<T> values, {String? message}) {
-    return add(isOneOf(values), message: message);
-  }
-
-  /// Build resulting validator.
-  IValidator build() => _chain.build();
-
-  /// Convenience validate (sync only chain).
-  Result validate(dynamic value) => build().validate(value);
-
-  /// Convenience validateAsync (mixed / async).
-  Future<Result> validateAsync(dynamic value) => build().validateAsync(value);
+  // Readable getters for coercion state (used by transformer mixin).
+  bool get coercedToInt => _isKind(_CoercionKind.int_);
+  bool get coercedToDouble => _isKind(_CoercionKind.double_);
+  bool get coercedToBool => _isKind(_CoercionKind.bool_);
+  bool get coercedToString => _isKind(_CoercionKind.string_);
+  bool get coercedToDateTime => _isKind(_CoercionKind.datetime_);
+  bool get coercedToJson => _isKind(_CoercionKind.json_);
 }
 
 mixin TransformerMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
-  B toIntCoerce({String? message}) {
-    return wrap((c) => toInt(c), message: message);
+  IntBuilder toInt({String? message}) {
+    if (_chain.coercedToInt) return IntBuilder(chain: _chain); // idempotent
+    _chain.setTransform(_CoercionKind.int_, (child) => tr.toInt(child));
+    return IntBuilder(chain: _chain);
   }
 
-  B toDoubleCoerce({String? message}) {
-    return wrap((c) => toDouble(c), message: message);
+  IntBuilder toIntStrict({String? message}) {
+    if (_chain.coercedToInt) return IntBuilder(chain: _chain);
+    _chain.setTransform(_CoercionKind.int_, (child) => tr.toIntStrict(child));
+    return IntBuilder(chain: _chain);
   }
 
-  B toStringCoerce({String? message}) {
-    return wrap((c) => esk.toString(c), message: message);
+  IntBuilder toIntSafe({String? message}) {
+    if (_chain.coercedToInt) return IntBuilder(chain: _chain);
+    _chain.setTransform(_CoercionKind.int_, (child) => tr.toIntSafe(child));
+    return IntBuilder(chain: _chain);
+  }
+
+  DoubleBuilder toDouble({String? message}) {
+    if (_chain.coercedToDouble) return DoubleBuilder(chain: _chain);
+    _chain.setTransform(_CoercionKind.double_, (child) => tr.toDouble(child));
+    return DoubleBuilder(chain: _chain);
+  }
+
+  BoolBuilder toBool({String? message}) {
+    if (_chain.coercedToBool) return BoolBuilder(chain: _chain);
+    _chain.setTransform(_CoercionKind.bool_, (child) => tr.toBool(child));
+    return BoolBuilder(chain: _chain);
+  }
+
+  BoolBuilder toBoolStrict({String? message}) {
+    if (_chain.coercedToBool) return BoolBuilder(chain: _chain);
+    _chain.setTransform(_CoercionKind.bool_, (child) => tr.toBoolStrict(child));
+    return BoolBuilder(chain: _chain);
+  }
+
+  BoolBuilder toBoolLenient({String? message}) {
+    if (_chain.coercedToBool) return BoolBuilder(chain: _chain);
+    _chain.setTransform(_CoercionKind.bool_, (child) => tr.toBoolLenient(child));
+    return BoolBuilder(chain: _chain);
+  }
+
+  StringBuilder toString_({String? message}) {
+    // Use the toString() transformer from transformers.dart (imported unprefixed)
+    // but qualify via a helper variable to avoid confusion with Object.toString.
+    if (_chain.coercedToString) return StringBuilder(chain: _chain);
+    _chain.setTransform(_CoercionKind.string_, (child) => tr.toString(child));
+    return StringBuilder(chain: _chain);
+  }
+
+  // Additional primitive pivots (drop previous constraints like other pivots)
+  NumberBuilder toNum() {
+    if (_chain.coercedToDouble || _chain.coercedToInt) return NumberBuilder(chain: _chain);
+    _chain.setTransform(_CoercionKind.double_, (child) => tr.toNum(child));
+    return NumberBuilder(chain: _chain);
+  }
+
+  // For BigInt we reuse NumberBuilder semantics but user must add BigInt-specific constraints manually.
+  NumberBuilder toBigInt() {
+    // Represent BigInt coercion using double_ slot to avoid new enum value (keeps simplicity)
+    if (_chain.coercedToDouble) return NumberBuilder(chain: _chain);
+    _chain.setTransform(_CoercionKind.double_, (child) => tr.toBigInt(child));
+    return NumberBuilder(chain: _chain);
+  }
+
+  // Uri pivot
+  GenericBuilder<Uri> toUri() {
+    _chain.setTransform(_CoercionKind.string_, (child) => tr.toUri(child));
+    return GenericBuilder<Uri>(chain: _chain);
+  }
+
+  // DateOnly pivot (DateTime truncated to midnight)
+  GenericBuilder<DateTime> toDateOnly() {
+    _chain.setTransform(_CoercionKind.string_, (child) => tr.toDateOnly(child));
+    return GenericBuilder<DateTime>(chain: _chain);
+  }
+
+  // JSON decode pivot (Map/List)
+  JsonDecodedBuilder toJson() {
+    if (_chain.coercedToJson) return JsonDecodedBuilder(chain: _chain);
+    _chain.setTransform(_CoercionKind.json_, (child) => tr.toJsonDecoded(child));
+    return JsonDecodedBuilder(chain: _chain);
+  }
+
+  // DateTime pivot (string -> DateTime parse)
+  DateTimeBuilder toDateTime() {
+    if (_chain.coercedToDateTime) return DateTimeBuilder(chain: _chain);
+    _chain.setTransform(_CoercionKind.datetime_, (child) => tr.toDateTime(child));
+    return DateTimeBuilder(chain: _chain);
   }
 }
 mixin LengthMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
-  // Length constraints
+  B length(List<IValidator> lengthValidators, {String? message}) {
+    return add(esk.length(lengthValidators), message: message);
+  }
+
   B lengthMin(int min, {String? message}) {
-    return add(length([isGte(min)]), message: message);
+    return length([isGte(min)], message: message);
   }
 
   B lengthMax(int max, {String? message}) {
-    return add(length([isLte(max)]), message: message);
+    return length([isLte(max)], message: message);
   }
 
   B lengthRange(int min, int max, {String? message}) {
-    return add(length([isInRange(min, max)]), message: message);
+    return length([isInRange(min, max)], message: message);
   }
 }
-mixin ChecksMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
-  B notEmpty({String? message}) {
-    return add(isNotEmpty(), message: message);
-  }
-
+mixin EmptyMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
   B empty({String? message}) {
     return add(isEmpty(), message: message);
   }
+}
+mixin ComparisonMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {}
+mixin ContainsMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
+  B contains(value, {String? message}) {
+    return add(esk.contains(value), message: message ?? 'A value that contains value: $value');
+  }
+}
 
+mixin BoolMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
   B isTrue({String message = 'true'}) {
     return add(isEq(true), message: message);
   }
-
-  B isFalse({String message = 'false'}) {
-    return add(isEq(false), message: message);
-  }
 }
-mixin NumberChecksMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
+mixin NumberMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
   B lt(num n, {String? message}) {
     return add(isLt(n), message: message);
   }
@@ -190,16 +291,62 @@ mixin NumberChecksMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
     return add(isInRange(min, max), message: message);
   }
 }
-mixin StringChecksMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
+mixin StringMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
   B matches(RegExp pattern, {String? message}) {
     return add(stringMatchesPattern(pattern), message: message);
   }
 
-  // Future extension examples (uncomment / implement as needed):
-  // StringBuilder email() { return add(isEmail()); }
-  // StringBuilder url() { return add(isUrl()); }
+  B email({String? message}) {
+    return add($isEmail, message: message);
+  }
+
+  B lowerCase({String? message}) {
+    return add(isLowerCase(), message: message);
+  }
+
+  B upperCase({String? message}) {
+    return add(isUpperCase(), message: message);
+  }
+
+  B url({String? message, bool strict = false}) {
+    return add(isUrl(strict: strict), message: message);
+  }
+
+  B strictUrl({String? message}) {
+    return url(message: message, strict: true);
+  }
+
+  B intString({String? message}) {
+    return add($isIntString, message: message);
+  }
+
+  B doubleString({String? message}) {
+    return add($isDoubleString, message: message);
+  }
+
+  B numString({String? message}) {
+    return add($isNumString, message: message);
+  }
+
+  B boolString({String? message}) {
+    return add($isBoolString, message: message);
+  }
+
+  B isDate({String? message}) {
+    return add($isDate, message: message);
+  }
+
+  // --- Normalizers via transformer helpers (string-preserving) ---
+  B trim() => wrap((c) => tr.trimString(c));
+  B collapseWhitespace() => wrap((c) => tr.collapseWhitespace(c));
+  B toLowerCase() => wrap((c) => tr.toLowerCaseString(c));
+  B toUpperCase() => wrap((c) => tr.toUpperCaseString(c));
+  B normalizeUnicode() => wrap((c) => tr.normalizeUnicodeString(c));
+  B removeDiacritics() => wrap((c) => tr.removeDiacriticsString(c));
+  B slugify() => wrap((c) => tr.slugifyString(c));
+  B stripHtml() => wrap((c) => tr.stripHtmlString(c));
 }
-mixin MapChecksMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
+mixin MapMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
   B strict(Map<String, IValidator> schema) {
     return add(eskemaStrict(schema));
   }
@@ -207,6 +354,82 @@ mixin MapChecksMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
   B schema(Map<String, IValidator> schema) {
     return add(eskema(schema));
   }
+
+  B containsKey(key, {String? message}) {
+    return add(esk.containsKey(key), message: message ?? 'A value that contains key: $key');
+  }
+
+  // Map/object transformers
+  B pick(Iterable<String> keys) {
+    return wrap((c) => tr.pickKeys(keys, c));
+  }
+
+  B pluck(String key) {
+    // Keep backward type (MapBuilder) to allow chaining map operations; provide
+    // a separate pluckValue() that returns a GenericBuilder for further numeric/string ops.
+    _chain.wrap((child) => tr.pluckKey(key, child));
+    return _self;
+  }
+
+  GenericBuilder<dynamic> pluckValue(String key) {
+    // Pivot value early so subsequent coercions (e.g., toIntStrict) see the plucked scalar.
+    // Also add a containsKey guard in pre-validators for clearer error when missing.
+    add(esk.containsKey(key));
+    _chain.addPrefix((child) => tr.pluckKey(key, child));
+    return GenericBuilder<dynamic>(chain: _chain);
+  }
+
+  B flattenKeys([String delimiter = '.']) {
+    return wrap((c) => tr.flattenMapKeys(delimiter, c));
+  }
+}
+
+// DateTime specific comparisons & helpers
+mixin DateTimeMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
+  B before(DateTime dt, {bool inclusive = false, String? message}) {
+    return add(isDateBefore(dt, inclusive: inclusive), message: message);
+  }
+
+  B after(DateTime dt, {bool inclusive = false, String? message}) {
+    return add(isDateAfter(dt, inclusive: inclusive), message: message);
+  }
+
+  B betweenDates(DateTime start, DateTime end,
+      {bool inclusiveStart = true, bool inclusiveEnd = true, String? message}) {
+    assert(!end.isBefore(start), 'end must be >= start');
+    return add(
+        isDateBetween(start, end, inclusiveStart: inclusiveStart, inclusiveEnd: inclusiveEnd),
+        message: message);
+  }
+
+  B sameDay(DateTime dt, {String? message}) {
+    return add(isDateSameDay(dt), message: message);
+  }
+
+  B inPast({bool allowNow = true, String? message}) {
+    return add(isDateInPast(allowNow: allowNow), message: message);
+  }
+
+  B inFuture({bool allowNow = true, String? message}) {
+    return add(isDateInFuture(allowNow: allowNow), message: message);
+  }
+}
+
+// JSON decoded (Map/List) specific helpers
+mixin JsonMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
+  B jsonContainer({String? message}) => add(isJsonContainer(), message: message);
+  B jsonObject({String? message}) => add(isJsonObject(), message: message);
+  B jsonArray({String? message}) => add(isJsonArray(), message: message);
+  B jsonRequiresKeys(Iterable<String> keys, {String? message}) =>
+      add(jsonHasKeys(keys), message: message);
+  B jsonArrayLen({int? min, int? max, String? message}) => add(
+        jsonArrayLength(min: min, max: max),
+        message: message,
+      );
+  B jsonArrayEach(IValidator elementValidator, {String? message}) => add(
+        jsonArrayEvery(elementValidator),
+        message: message,
+      );
 }
 mixin IterableMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
   B each(IValidator elementValidator) {
@@ -215,139 +438,197 @@ mixin IterableMixin<B extends _BaseBuilder<B, T>, T> on _BaseBuilder<B, T> {
 }
 
 /* ------------------------------- Builders -------------------------- */
+/// Base functionality shared by all typed builders.
+abstract class _BaseBuilder<B extends _BaseBuilder<B, T>, T> {
+  final Chain _chain;
+  bool _negated;
+
+  bool get negated => _negated;
+  set negated(val) {
+    _negated = val;
+  }
+
+  _BaseBuilder({bool? negated = false, Chain? chain})
+      : _chain = chain ?? Chain(),
+        _negated = negated ?? false;
+
+  B get _self => this as B;
+
+  /// Return a negated version of the builder
+  /// (the negation flag is consumed by the next added validator)
+  B get not => _self..negated = true;
+
+  B wrap(IValidator Function(IValidator) fn, {String? message}) {
+    _chain.wrap((c) => _maybeAddMessage(_maybeNegate(fn(c)), message));
+    return _self..negated = false;
+  }
+
+  B add(IValidator validator, {String? message}) {
+    _chain.add(_maybeAddMessage(_maybeNegate(validator), message));
+    return _self..negated = false;
+  }
+
+  /// Mark current chain optional (skipped when key absent).
+  B optional({String? message}) {
+    return wrap((c) => c.optional(), message: message);
+  }
+
+  /// Mark current chain nullable (null accepted as valid).
+  B nullable({String? message}) {
+    return wrap(
+      (c) => c.nullable(),
+      message: message,
+    );
+  }
+
+  /// Override final error message (retains codes).
+  B error(String message) {
+    return wrap((c) => c > Expectation(message: message));
+  }
+
+  B oneOf(Iterable<T> values, {String? message}) {
+    return add(isOneOf(values), message: message);
+  }
+
+  B eq(T value, {String? message}) {
+    return add(isEq(value), message: message ?? value.toString());
+  }
+
+  B deepEq(T value, {String? message}) {
+    return add(isDeepEq(value), message: message ?? value.toString());
+  }
+
+  /// Build resulting validator.
+  IValidator build() => _chain.build();
+
+  /// Convenience validate (sync only chain).
+  Result validate(dynamic value) => build().validate(value);
+
+  /// Convenience validateAsync (mixed / async).
+  Future<Result> validateAsync(dynamic value) => build().validateAsync(value);
+
+  IValidator _maybeAddMessage(IValidator validator, String? message) {
+    return (message != null && message.isNotEmpty)
+        ? validator > Expectation(message: message)
+        : validator;
+  }
+
+  IValidator _maybeNegate(IValidator validator) {
+    return negated ? esk.not(validator) : validator;
+  }
+}
 
 class StringBuilder extends _BaseBuilder<StringBuilder, String>
-    with LengthMixin, ChecksMixin, TransformerMixin, StringChecksMixin {
-  StringBuilder(super.chain);
+    with
+        LengthMixin,
+        EmptyMixin,
+        ComparisonMixin,
+        TransformerMixin,
+        StringMixin,
+        ContainsMixin {
+  StringBuilder({super.negated = false, super.chain}) : super();
 }
 
 class NumberBuilder extends _BaseBuilder<NumberBuilder, num>
-    with TransformerMixin, NumberChecksMixin {
-  NumberBuilder(super.chain);
+    with TransformerMixin, NumberMixin, ComparisonMixin {
+  NumberBuilder({super.chain}) : super();
 }
 
 class IntBuilder extends NumberBuilder {
-  IntBuilder(super.c);
-  // Additional int‑specific helpers could go here (e.g., even(), odd()).
+  IntBuilder({super.chain}) : super();
 }
 
 class DoubleBuilder extends NumberBuilder {
-  DoubleBuilder(super.c);
+  DoubleBuilder({super.chain}) : super();
 }
 
-class BoolBuilder extends _BaseBuilder<BoolBuilder, bool> with TransformerMixin {
-  BoolBuilder(super.chain);
+class BoolBuilder extends _BaseBuilder<BoolBuilder, bool> with TransformerMixin, BoolMixin {
+  BoolBuilder({super.chain}) : super();
+}
+
+class DateTimeBuilder extends _BaseBuilder<DateTimeBuilder, DateTime>
+    with TransformerMixin, DateTimeMixin, ComparisonMixin {
+  DateTimeBuilder({super.chain}) : super();
 }
 
 class IterableBuilder extends _BaseBuilder<IterableBuilder, Iterable>
-    with LengthMixin, ChecksMixin, IterableMixin {
-  IterableBuilder(super.chain);
-}
+    with LengthMixin, EmptyMixin, ComparisonMixin, IterableMixin, ContainsMixin {}
 
-class ListBuilder extends IterableBuilder {
-  ListBuilder(super.chain);
-  // Add list specific stuff here.
-}
+class ListBuilder extends IterableBuilder {}
 
-class SetBuilder extends IterableBuilder {
-  SetBuilder(super.chain);
-  // Add set specific stuff here.
-}
+class SetBuilder extends IterableBuilder {}
 
-class MapBuilder extends _BaseBuilder<MapBuilder, Map> with TransformerMixin, MapChecksMixin {
-  MapBuilder(super.chain);
+class MapBuilder extends _BaseBuilder<MapBuilder, Map>
+    with TransformerMixin, MapMixin, EmptyMixin, ComparisonMixin {}
+
+class JsonDecodedBuilder extends _BaseBuilder<JsonDecodedBuilder, dynamic>
+    with TransformerMixin, JsonMixin, ComparisonMixin, MapMixin, IterableMixin {
+  JsonDecodedBuilder({super.chain}) : super();
 }
 
 class GenericBuilder<T> extends _BaseBuilder<GenericBuilder<T>, T>
     with
-        NumberChecksMixin,
+        NumberMixin,
         LengthMixin,
-        ChecksMixin,
+        EmptyMixin,
+        ComparisonMixin,
         TransformerMixin,
-        StringChecksMixin,
-        MapChecksMixin {
-  GenericBuilder(super.chain);
+        StringMixin,
+        MapMixin,
+        DateTimeMixin,
+        JsonMixin {
+  GenericBuilder({super.chain});
 }
 
 class RootBuilder {
   /// Expect a String; returns a StringBuilder with string‑specific methods.
   StringBuilder string({String? message}) {
-    return StringBuilder(
-      _Chain()
-        ..add(
-          message != null ? $isString > Expectation(message: message) : $isString,
-        ),
-    );
+    return StringBuilder()..add($isString, message: message);
   }
 
   /// Expect an int.
   IntBuilder int_({String? message}) {
-    return IntBuilder(
-      _Chain()
-        ..add(
-          message != null ? $isInt > Expectation(message: message) : $isInt,
-        ),
-    );
+    return IntBuilder()..add($isInt, message: message);
   }
 
   /// Expect a double.
   DoubleBuilder double_({String? message}) {
-    return DoubleBuilder(
-      _Chain()
-        ..add(
-          message != null ? $isDouble > Expectation(message: message) : $isDouble,
-        ),
-    );
+    return DoubleBuilder()..add($isDouble, message: message);
   }
 
   /// Expect a number (int or double).
   NumberBuilder number({String? message}) {
-    return NumberBuilder(
-      _Chain()
-        ..add(
-          message != null ? $isNumber > Expectation(message: message) : $isNumber,
-        ),
-    );
+    return NumberBuilder()..add($isNumber, message: message);
   }
 
   /// Expect a bool.
   BoolBuilder bool_({String? message}) {
-    return BoolBuilder(
-      _Chain()
-        ..add(
-          message != null ? $isBool > Expectation(message: message) : $isBool,
-        ),
-    );
+    return BoolBuilder()..add($isBool, message: message);
+  }
+
+  /// Expect a Iterable.
+  IterableBuilder iterable({String? message}) {
+    return IterableBuilder()..add($isIterable, message: message);
   }
 
   /// Expect a List.
   ListBuilder list({String? message}) {
-    return ListBuilder(
-      _Chain()
-        ..add(
-          message != null ? $isList > Expectation(message: message) : $isList,
-        ),
-    );
+    return ListBuilder()..add($isList, message: message);
   }
 
   /// Expect a Map.
   MapBuilder map({String? message}) {
-    return MapBuilder(
-      _Chain()
-        ..add(
-          message != null ? $isMap > Expectation(message: message) : $isMap,
-        ),
-    );
+    return MapBuilder()..add($isMap, message: message);
+  }
+
+  /// Expect a DateTime.
+  DateTimeBuilder dateTime({String? message}) {
+    return DateTimeBuilder()..add(isType<DateTime>(), message: message);
   }
 
   /// Generic type guard (rarely needed; concrete helpers preferred).
   GenericBuilder type<T>({String? message}) {
-    return GenericBuilder<T>(
-      _Chain()
-        ..add(
-          message != null ? isType<T>() > Expectation(message: message) : isType<T>(),
-        ),
-    );
+    return GenericBuilder<T>()..add(isType<T>(), message: message);
   }
 }
 

@@ -6,7 +6,8 @@
 library result;
 
 import 'package:eskema/expectation.dart';
-import 'package:eskema/src/util.dart';
+
+const _emptyExpectations = <Expectation>[];
 
 /// Represents the result of a validation.
 class Result<T> {
@@ -15,29 +16,19 @@ class Result<T> {
     required this.value,
     List<Expectation>? expectations,
     Expectation? expectation,
-  })  : assert(
-          isValid ||
-              (!isValid && expectation != null ||
-                  (expectations != null && expectations.isNotEmpty)),
-          'invalid -> provide an expectation or non-empty expectations list',
-        ),
-        expectations = List.unmodifiable(
-          expectations ?? (expectation == null ? const <Expectation>[] : [expectation]),
+  }) : expectations = List.unmodifiable(
+          expectations ?? (expectation == null ? _emptyExpectations : [expectation]),
         );
 
   Result.valid(this.value)
       : isValid = true,
-        expectations = const <Expectation>[];
+        expectations = _emptyExpectations;
 
   Result.invalid(this.value, {List<Expectation>? expectations, Expectation? expectation})
-      : assert(
-          (expectation != null || (expectations != null && expectations.isNotEmpty)),
-          "If invalid, either 'expectation' or a non-empty 'expectations' list must be provided",
-        ),
-        isValid = false,
-        expectations = (expectations != null
-            ? List.unmodifiable(expectations)
-            : List.unmodifiable([expectation!]));
+      : isValid = false,
+        expectations = List.unmodifiable(
+          expectations ?? (expectation == null ? _emptyExpectations : [expectation]),
+        );
 
   final bool isValid;
 
@@ -55,8 +46,7 @@ class Result<T> {
   int get expectationCount => expectations.length;
 
   String get description {
-        return isValid ? 'Valid' : expectations.map((e) => e.description).join(', ');
-
+    return isValid ? 'Valid' : expectations.map((e) => e.description).join(', ');
   }
 
   /// Creates a copy of the result with the given parameters.

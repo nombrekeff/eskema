@@ -19,11 +19,11 @@ void main() {
       expect(r.firstExpectation.code, 'value.format_invalid');
     });
 
-  test('value_not_in_set via isOneOf', () {
+  test('value.membership_mismatch via isOneOf', () {
       final r = isOneOf<int>([1, 2, 3]).validate(4);
       expect(r.isValid, false);
       final e = r.firstExpectation;
-      expect(e.code, 'value_not_in_set');
+      expect(e.code, 'value.membership_mismatch');
       expect(e.data?['options'], isA<List>());
     });
 

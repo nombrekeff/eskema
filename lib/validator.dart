@@ -63,7 +63,7 @@ abstract class IValidator {
   ///
   /// Will [throw] an error if used with async validators
   Result validate(dynamic value, {bool exists = true}) {
-    if ((value == null && isNullable && exists) || (!exists && isOptional)) {
+    if ((value == null && isNullable && exists) || (value == null && isOptional && !exists)) {
       return Result.valid(value);
     }
 

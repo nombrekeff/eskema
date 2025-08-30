@@ -13,4 +13,4 @@ dependencies:
 dev_dependencies:
   test: ^1.26.3
   lints: ^6.0.0
-  
+  benchmark_harness: ^2.3.1

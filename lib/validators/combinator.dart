@@ -56,20 +56,24 @@ Future<Result> _anyAsync(
 /// Passes the test if all of the [Validator]s are valid, and fails if any of them are invalid
 ///
 /// In the case that a [Validator] fails, it's [Result] will be returned
-IValidator all(List<IValidator> validators) => Validator<Result>(
-      (value) {
-        for (var i = 0; i < validators.length; i++) {
-          final resOr = validators[i].validator(value);
-          if (resOr is Future<Result>) {
-            return _allAsync(value, validators, i, resOr);
-          }
-          final res = resOr;
-          if (res.isNotValid) return res;
-        }
+IValidator all(List<IValidator> validators) {
+  FutureOr<Result> pipeline(value) {
+    for (var i = 0; i < validators.length; i++) {
+      final resOr = validators[i].validator(value);
 
-        return Result.valid(value);
-      },
-    );
+      if (resOr is Future<Result>) {
+        return _allAsync(value, validators, i, resOr);
+      }
+
+      if (resOr.isNotValid) return resOr;
+    }
+
+    return Result.valid(value);
+  }
+
+  return Validator<Result>(pipeline);
+}
+
 
 Future<Result> _allAsync(
   dynamic value,
@@ -135,28 +139,30 @@ Future<Result> _noneAsync(
 ///
 /// When the inner validator succeeds, the failure will reuse its `code` if present,
 /// otherwise falls back to `logic.not_expected`. See docs/expectation_codes.md.
-IValidator not(IValidator validator) => Validator<Result>((value) {
-      final resOr = validator.validator(value);
-      if (resOr is Future<Result>) return _notAsync(value, resOr);
+IValidator not(IValidator validator) => Validator<Result>(
+      (value) {
+        final resOr = validator.validator(value);
+        if (resOr is Future<Result>) return _notAsync(value, resOr);
 
-      return Result(
-        isValid: !resOr.isValid,
-        expectations: resOr.expectations
-            .map((error) => error.copyWith(
-                message: 'not ${error.message}', code: error.code ?? 'logic.not_expected'))
-            .toList(),
-        value: value,
-      );
-    });
+        return Result(
+          isValid: resOr.isNotValid,
+          expectations: resOr.expectations
+              .map((error) => error.copyWith(
+                  message: 'not ${error.message}', code: error.code ?? 'logic.not_expected'))
+              .toList(),
+          value: value,
+        );
+      },
+    );
 
 Future<Result> _notAsync(dynamic value, Future<Result> pending) async {
   final result = await pending;
 
   return Result(
-    isValid: !result.isValid,
+    isValid: result.isNotValid,
     expectations: result.expectations
-        .map((error) =>
-            error.copyWith(message: 'not ${error.message}', code: error.code ?? 'logic.not_expected'))
+        .map((error) => error.copyWith(
+            message: 'not ${error.message}', code: error.code ?? 'logic.not_expected'))
         .toList(),
     value: value,
   );

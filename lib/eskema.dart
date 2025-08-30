@@ -13,6 +13,7 @@ library eskema;
 
 export 'validators.dart';
 export 'validator.dart';
+export 'builder.dart';
 export 'result.dart';
 export 'extensions.dart';
 export 'transformers.dart';
