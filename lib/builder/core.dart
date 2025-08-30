@@ -81,8 +81,11 @@ class Chain {
   /// **Composition Rules:**
   /// - First coercion: Sets the coercion and optionally drops pre-validators
   /// - Subsequent coercions: If either is custom, composes them; otherwise replaces
-  void setTransform(CoercionKind kind, IValidator Function(IValidator child) transformer,
-      {bool dropPre = true}) {
+  void setTransform(
+    CoercionKind kind,
+    IValidator Function(IValidator child) transformer, {
+    bool dropPre = true,
+  }) {
     if (_coercionKind == null) {
       // First pivot: drop pre validators (they targeted old domain)
       _coercionKind = kind;
@@ -217,11 +220,13 @@ class BaseBuilder<B extends BaseBuilder<B, T>, T> {
   /// (the negation flag is consumed by the next added validator)
   B get not => self..negated = true;
 
+  /// Wrap the current chain with a custom function.
   B wrap(IValidator Function(IValidator) fn, {String? message}) {
     chain.wrap((c) => _maybeAddMessage(_maybeNegate(fn(c)), message));
     return self..negated = false;
   }
 
+  /// Add a validator to the chain.
   B add(IValidator validator, {String? message}) {
     chain.add(_maybeAddMessage(_maybeNegate(validator), message));
     return self..negated = false;
@@ -245,14 +250,17 @@ class BaseBuilder<B extends BaseBuilder<B, T>, T> {
     return wrap((c) => c > Expectation(message: message));
   }
 
+  /// Require the value to be one of the specified options.
   B oneOf(Iterable<T> values, {String? message}) {
     return add(isOneOf(values), message: message);
   }
 
+  /// Require the value to be equal to the specified value.
   B eq(T value, {String? message}) {
     return add(isEq(value), message: message ?? value.toString());
   }
 
+  /// Require the value to be deeply equal to the specified value.
   B deepEq(T value, {String? message}) {
     return add(isDeepEq(value), message: message ?? value.toString());
   }

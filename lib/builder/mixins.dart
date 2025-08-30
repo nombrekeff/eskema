@@ -286,8 +286,9 @@ mixin DateTimeMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   }) {
     assert(!end.isBefore(start), 'end must be >= start');
     return add(
-        isDateBetween(start, end, inclusiveStart: inclusiveStart, inclusiveEnd: inclusiveEnd),
-        message: message);
+      isDateBetween(start, end, inclusiveStart: inclusiveStart, inclusiveEnd: inclusiveEnd),
+      message: message,
+    );
   }
 
   /// Validate that the DateTime is on the same day as the specified date.
