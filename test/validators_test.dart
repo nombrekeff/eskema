@@ -187,11 +187,11 @@ void main() {
 
       final res1 = validator.validate('1');
       expect(res1.isValid, false);
-      expect(res1.description, 'length [equal to 2]');
+      expect(res1.description, 'String length [to be 2]');
 
       final res2 = validator.validate('123');
       expect(res2.isValid, false);
-      expect(res2.description, 'length [equal to 2]');
+      expect(res2.description, 'String length [to be 2]');
 
       final res3 = validator.validate(1232);
       expect(res3.isValid, false);
@@ -258,18 +258,18 @@ void main() {
     });
 
     test('stringEmpty', () {
-      final field = stringEmpty();
+      final field = isStringEmpty();
 
       expect(field.validate('').isValid, true);
       expect(field.validate('1').isValid, false);
       expect(field.validate('1').description, 'String to be empty');
     });
 
-    test('\$stringEmpty', () {
+    test('not(\$isStringEmpty)', () {
       final field = not($isStringEmpty);
-      expect(field.validate('').isValid, true);
-      expect(field.validate('1').isValid, false);
-      expect(field.validate('1').description, 'String to be empty');
+      expect(field.validate('').isValid, false);
+      expect(field.validate('').description, 'not String to be empty');
+      expect(field.validate('1').isValid, true);
     });
   });
 

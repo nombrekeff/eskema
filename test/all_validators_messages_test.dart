@@ -22,7 +22,7 @@ void main() {
       _ValidatorCase('isGte', () => isGte(2, message: 'gte 2'), 1, 'gte 2'),
       _ValidatorCase('isInRange', () => isInRange(5, 8, message: 'range 5-8'), 3, 'range 5-8'),
       _ValidatorCase('stringContains', () => stringContains('abc', message: 'must contain abc'), 'zzz', 'must contain abc'),
-      _ValidatorCase('stringEmpty', () => stringEmpty(message: 'must be empty'), 'not', 'must be empty'),
+      _ValidatorCase('stringEmpty', () => isStringEmpty(message: 'must be empty'), 'not', 'must be empty'),
       _ValidatorCase('isLowerCase', () => isLowerCase(message: 'lower only'), 'ABC', 'lower only'),
       _ValidatorCase('isUpperCase', () => isUpperCase(message: 'upper only'), 'abc', 'upper only'),
       _ValidatorCase('isEmail', () => isEmail(message: 'bad email'), 'nope', 'bad email'),

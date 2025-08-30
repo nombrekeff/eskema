@@ -22,13 +22,16 @@ import 'package:eskema/src/util.dart';
 /// usernameLength.validate("user123456");     // Valid
 /// usernameLength.validate("user");           // Invalid
 /// ```
-IValidator stringLength(List<IValidator> validators, {String? message}) => $isString & length(validators, message: message);
+IValidator stringLength(List<IValidator> validators, {String? message}) =>
+    ($isString & length(validators, message: message));
 
 /// Validates that the String's length is the same as the provided [size]
 ///
 /// This validator also validates that the value is a String first
 /// So there's no need to add the [isString] validator when using this validator
-IValidator stringIsOfLength(int size, {String? message}) => stringLength([isEq(size)], message: message);
+IValidator stringIsOfLength(int size, {String? message}) {
+  return stringLength([isEq(size)], message: message ?? 'String length [to be $size]');
+}
 
 /// Validates that the String contains [str]
 ///
@@ -47,21 +50,13 @@ IValidator stringIsOfLength(int size, {String? message}) => stringLength([isEq(s
 /// isImage.validate("photo.jpg");             // Valid
 /// isImage.validate("document.pdf");          // Invalid
 /// ```
-IValidator stringContains(String str, {String? message}) =>
-    $isString &
-    (contains(str) >
-        Expectation(
-            message: message ?? 'String to contain ${prettifyValue(str)}',
-            code: ExpectationCodes.valueContainsMissing,
-            data: {'needle': prettifyValue(str)}));
-
-/// Validate that it's a String and the string is empty
-IValidator stringEmpty<T>({String? message}) =>
-    stringLength([isLte(0)]) >
-    Expectation(
-        message: message ?? 'String to be empty',
-        code: ExpectationCodes.valueLengthOutOfRange,
-        data: {'expected': 0});
+IValidator stringContains(String str, {String? message}) {
+  return ($isString &
+      contains(
+        str,
+        message: message ?? 'String to contain ${prettifyValue(str)}',
+      ));
+}
 
 /// Validates that the String matches the provided pattern
 ///
@@ -136,11 +131,19 @@ final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 /// final strictEmail = all([$isString, isEmail()]);
 /// ```
 IValidator isEmail({String? message}) {
-  return isString() & stringMatchesPattern(emailRegex, error: message ?? 'a valid email address');
+  return isString() &
+      stringMatchesPattern(emailRegex, error: message ?? 'a valid email address');
 }
 
 /// Checks whether the given string is empty
-IValidator isStringEmpty({String? message}) => stringLength([isLte(0)], message: message ?? 'empty String');
+IValidator isStringEmpty({String? message}) {
+  return stringLength([isLte(0)]) >
+      Expectation(
+        message: message ?? 'String to be empty',
+        code: ExpectationCodes.valueLengthOutOfRange,
+        data: {'expected': 0},
+      );
+}
 
 /// Validates that the String is a valid URL. By it uses non-strict validation (like "example.com").
 ///
@@ -307,10 +310,10 @@ IValidator isBoolString({String? message}) =>
 /// });
 /// ```
 IValidator isDate({String? message}) => validator(
-  (value) => DateTime.tryParse(value) != null,
-  (value) => Expectation(
-      message: message ?? 'a valid DateTime formatted String',
-      value: value,
-      code: ExpectationCodes.valueFormatInvalid,
-      data: {'format': 'date_time'}),
+      (value) => DateTime.tryParse(value) != null,
+      (value) => Expectation(
+          message: message ?? 'a valid DateTime formatted String',
+          value: value,
+          code: ExpectationCodes.valueFormatInvalid,
+          data: {'format': 'date_time'}),
     );

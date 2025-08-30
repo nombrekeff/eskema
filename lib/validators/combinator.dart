@@ -102,7 +102,7 @@ IValidator all(List<IValidator> validators, {String? message}) {
       }
 
       if (resOr.isNotValid) return resOr; // early failure preserves transformed value so far
-      
+
       value = resOr.value; // adopt transformed value (if unchanged it's a no-op)
     }
 
