@@ -63,6 +63,7 @@ Future<Result> _anyAsync(
   if (message == null && first.expectations.isNotEmpty) {
     (expectations ??= <Expectation>[]).addAll(first.expectations);
   }
+
   for (var i = index + 1; i < validators.length; i++) {
     final result = await validators[i].validator(value);
     if (result.isValid) return result;
@@ -70,7 +71,9 @@ Future<Result> _anyAsync(
       (expectations ??= <Expectation>[]).addAll(result.expectations);
     }
   }
+
   if (message != null) return _failWithMsg(value, message);
+
   return Result.invalid(value, expectations: expectations ?? const <Expectation>[]);
 }
 
@@ -106,6 +109,7 @@ IValidator all(List<IValidator> validators, {String? message}) {
       if (res.isNotValid) return message != null ? _failWithMsg(res.value, message) : res;
       value = res.value;
     }
+
     return message != null ? _failWithMsg(value, message) : Result.valid(value);
   }
 
@@ -119,16 +123,28 @@ Future<Result> _allAsync(
   Future<Result> pending, {
   String? message,
 }) async {
-  var current = value;
-  final first = await pending;
-  if (first.isNotValid) return message != null ? _failWithMsg(first.value, message) : first;
-  current = first.value;
-  for (var i = index + 1; i < validators.length; i++) {
-    final res = await validators[i].validator(current);
-    if (res.isNotValid) return message != null ? _failWithMsg(res.value, message) : res;
-    current = res.value;
+  // NOTE: All validators before `index` have already been run synchronously
+  // (and their transformations threaded into `value`). `pending` represents
+  // the first async validator in the chain.
+
+  // Resolve the first async validator.
+  final firstAsync = await pending;
+  if (firstAsync.isNotValid) {
+    return message != null ? _failWithMsg(firstAsync.value, message) : firstAsync;
   }
-  return message != null ? _failWithMsg(current, message) : Result.valid(current);
+
+  var currentValue = firstAsync.value;
+
+  // Sequentially process the remaining validators (may be sync or async).
+  for (var i = index + 1; i < validators.length; i++) {
+    final result = await validators[i].validator(currentValue);
+    if (result.isNotValid) {
+      return message != null ? _failWithMsg(result.value, message) : result;
+    }
+    currentValue = result.value; // adopt transformed value
+  }
+
+  return message != null ? _failWithMsg(currentValue, message) : Result.valid(currentValue);
 }
 
 /// Passes the test if none of the validators pass
