@@ -55,8 +55,9 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">listLength</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="listLength-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span></li>
-</ol>)
+<span class="name ">listLength</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr><ol class="parameter-list"> <li><span class="parameter" id="listLength-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span>, {</span></li>
+<li><span class="parameter" id="listLength-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+</ol>})
 
         
 
@@ -70,7 +71,9 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator listLength&lt;T&gt;(List&lt;IValidator&gt; validators) =&gt; isList&lt;T&gt;() &amp; length(validators);</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator listLength&lt;T&gt;(List&lt;IValidator&gt; validators, {String? message}) {
+  return isList&lt;T&gt;() &amp; length(validators, message: message);
+}</code></pre>
 </section>
 
 

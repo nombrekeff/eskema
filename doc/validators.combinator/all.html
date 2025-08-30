@@ -55,8 +55,9 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">all</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="all-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span></span></li>
-</ol>)
+<span class="name ">all</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="all-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span>, {</span></li>
+<li><span class="parameter" id="all-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+</ol>})
 
         
 
@@ -87,18 +88,24 @@ final processedData = all([
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator all(List&lt;IValidator&gt; validators) {
+  <pre class="language-dart"><code class="language-dart">IValidator all(List&lt;IValidator&gt; validators, {String? message}) {
   FutureOr&lt;Result&gt; pipeline(dynamic value) {
     &#47;&#47; Thread potentially transformed values through the chain.
     for (var i = 0; i &lt; validators.length; i++) {
       final resOr = validators[i].validator(value);
+
       if (resOr is Future&lt;Result&gt;) {
         return _allAsync(value, validators, i, resOr);
       }
+
       if (resOr.isNotValid) return resOr; &#47;&#47; early failure preserves transformed value so far
+
       value = resOr.value; &#47;&#47; adopt transformed value (if unchanged it&#39;s a no-op)
     }
-    return Result.valid(value);
+
+    return message != null
+        ? Result.invalid(value, expectation: Expectation(message: message, value: value))
+        : Result.valid(value);
   }
 
   return Validator&lt;Result&gt;(pipeline);

@@ -55,8 +55,9 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">isGt</span>&lt;<wbr><span class="type-parameter">T extends num</span>&gt;(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="isGt-param-min"><span class="type-annotation">T</span> <span class="parameter-name">min</span></span></li>
-</ol>)
+<span class="name ">isGt</span>&lt;<wbr><span class="type-parameter">T extends num</span>&gt;(<wbr><ol class="parameter-list"> <li><span class="parameter" id="isGt-param-min"><span class="type-annotation">T</span> <span class="parameter-name">min</span>, {</span></li>
+<li><span class="parameter" id="isGt-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+</ol>})
 
         
 
@@ -70,12 +71,12 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator isGt&lt;T extends num&gt;(T min) =&gt;
+  <pre class="language-dart"><code class="language-dart">IValidator isGt&lt;T extends num&gt;(T min, {String? message}) =&gt;
     isType&lt;T&gt;() &amp;
     validator(
       (value) =&gt; value &gt; min,
       (value) =&gt; Expectation(
-        message: &#39;greater than $min&#39;,
+        message: message ?? &#39;greater than $min&#39;,
         value: value,
         code: &#39;value.range_out_of_bounds&#39;,
         data: {&#39;operator&#39;: &#39;&gt;&#39;, &#39;limit&#39;: min},

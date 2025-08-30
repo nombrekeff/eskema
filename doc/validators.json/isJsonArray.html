@@ -55,7 +55,8 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">isJsonArray</span>(<wbr>)
+<span class="name ">isJsonArray</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="isJsonArray-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+</ol>})
 
         
 
@@ -69,13 +70,13 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator isJsonArray() =&gt; Validator((value) {
+  <pre class="language-dart"><code class="language-dart">IValidator isJsonArray({String? message}) =&gt; Validator((value) {
       final ok = value is List;
       return Result(
         isValid: ok,
         value: value,
         expectation: Expectation(
-          message: &#39;a JSON array&#39;,
+          message: message ?? &#39;a JSON array&#39;,
           value: value,
           code: &#39;value.type_mismatch&#39;,
           data: {&#39;expected&#39;: &#39;List&#39;},

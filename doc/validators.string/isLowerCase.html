@@ -55,7 +55,8 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">isLowerCase</span>(<wbr>)
+<span class="name ">isLowerCase</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="isLowerCase-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+</ol>})
 
         
 
@@ -69,12 +70,12 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator isLowerCase() =&gt;
+  <pre class="language-dart"><code class="language-dart">IValidator isLowerCase({String? message}) =&gt;
     isString() &amp;
     validator(
       (value) =&gt; value.toLowerCase() == value,
       (value) =&gt; Expectation(
-        message: &#39;lowercase string&#39;,
+        message: message ?? &#39;lowercase string&#39;,
         code: ExpectationCodes.valueCaseMismatch,
         data: {&#39;expected_case&#39;: &#39;lower&#39;},
       ),

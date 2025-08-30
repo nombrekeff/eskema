@@ -55,8 +55,9 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">eskema</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="eskema-param-mapEskema"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">mapEskema</span></span></li>
-</ol>)
+<span class="name ">eskema</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="eskema-param-mapEskema"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">mapEskema</span>, {</span></li>
+<li><span class="parameter" id="eskema-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+</ol>})
 
         
 
@@ -85,7 +86,7 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator eskema(Map&lt;String, IValidator&gt; mapEskema) {
+  <pre class="language-dart"><code class="language-dart">IValidator eskema(Map&lt;String, IValidator&gt; mapEskema, {String? message}) {
   return isMap() &amp;
       Validator(
         (value) {
@@ -124,7 +125,7 @@
                 if (validator.isOptional) return loop(index + 1);
                 &#47;&#47; For required field missing: validate with exists: false so nullable validators fail.
                 final missingRes = validator.validate(null, exists: false);
-                _collectEskema(missingRes, errors, key);
+                _collectEskema(missingRes, errors, key, message);
                 return loop(index + 1);
               }
 
@@ -141,12 +142,12 @@
 
             if (res is Future&lt;Result&gt;) {
               return res.then((r) {
-                _collectEskema(r, errors, key);
+                _collectEskema(r, errors, key, message);
                 return loop(index + 1);
               });
             }
 
-            _collectEskema(res, errors, key);
+            _collectEskema(res, errors, key, message);
 
             return loop(index + 1);
           }

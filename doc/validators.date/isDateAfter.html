@@ -57,6 +57,7 @@
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
 <span class="name ">isDateAfter</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="isDateAfter-param-dt"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a></span> <span class="parameter-name">dt</span>, {</span></li>
 <li><span class="parameter" id="isDateAfter-param-inclusive"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">inclusive</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="isDateAfter-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
 
         
@@ -71,12 +72,13 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator isDateAfter(DateTime dt, {bool inclusive = false}) =&gt; Validator((value) {
+  <pre class="language-dart"><code class="language-dart">IValidator isDateAfter(DateTime dt, {bool inclusive = false, String? message}) =&gt; Validator((value) {
       final ok = value is DateTime &amp;&amp; (inclusive ? !value.isBefore(dt) : value.isAfter(dt));
       return Result(
         isValid: ok,
         expectation: Expectation(
-          message: &#39;a DateTime after${inclusive ? &#39; or equal to&#39; : &#39;&#39;} ${dt.toIso8601String()}&#39;,
+          message: message ??
+              &#39;a DateTime after${inclusive ? &#39; or equal to&#39; : &#39;&#39;} ${dt.toIso8601String()}&#39;,
           value: value,
           code: ExpectationCodes.valueDateOutOfRange,
           data: {

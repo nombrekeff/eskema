@@ -55,8 +55,9 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">toBool</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="toBool-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span></li>
-</ol>)
+<span class="name ">toBool</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="toBool-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span></li>
+<li><span class="parameter" id="toBool-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+</ol>})
 
         
 
@@ -85,16 +86,18 @@ literal <code>true</code>/<code>false</code> (and bools) and want to reject 1/0 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator toBool(IValidator child) {
-  return (($isBool | isOneOf([0, 1]) | toLowerCase(isString() &amp; isOneOf([&#39;true&#39;, &#39;false&#39;])))) &amp;
-      core.transform((v) {
-        return switch (v) {
-          final bool b =&gt; b,
-          final int i =&gt; i == 1,
-          final String s =&gt; s.toLowerCase().trim() == &#39;true&#39;,
-          _ =&gt; null,
-        };
-      }, child);
+  <pre class="language-dart"><code class="language-dart">IValidator toBool(IValidator child, {String? message}) {
+  final base =
+      (($isBool | isOneOf([0, 1]) | toLowerCase(isString() &amp; isOneOf([&#39;true&#39;, &#39;false&#39;])))) &amp;
+          core.transform((v) {
+            return switch (v) {
+              final bool b =&gt; b,
+              final int i =&gt; i == 1,
+              final String s =&gt; s.toLowerCase().trim() == &#39;true&#39;,
+              _ =&gt; null,
+            };
+          }, child);
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
 }</code></pre>
 </section>
 

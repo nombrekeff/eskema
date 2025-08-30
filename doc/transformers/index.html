@@ -88,8 +88,9 @@ final userAge = getField('age', toInt(isGte(18)));</li>
 </ul>
 <p>Expectations:</p>
 <ul>
-<li>Each helper appends (via <code>&gt; 'a valid DateTime formatted String'</code> etc.)
-a human readable expectation for clearer error messages.</li>
+<li>If you supply a <code>message</code> parameter to a transformer factory, an overriding
+expectation is attached. Omitting <code>message</code> preserves the underlying validators'
+original expectations (backward compatible behavior).</li>
 </ul>
 <p>NOTE: These are “inline transformers” — they do not mutate external data,
 only the value flowing through the validator pipeline.</p>
@@ -107,7 +108,7 @@ only the value flowing through the validator pipeline.</p>
       <h2>Functions</h2>
       <dl class="callables">
           <dt id="collapseWhitespace" class="callable">
-  <span class="name"><a href="../transformers.string/collapseWhitespace.html">collapseWhitespace</a></span><span class="signature">(<wbr><span class="parameter" id="collapseWhitespace-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.string/collapseWhitespace.html">collapseWhitespace</a></span><span class="signature">(<wbr><span class="parameter" id="collapseWhitespace-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="collapseWhitespace-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -120,7 +121,7 @@ only the value flowing through the validator pipeline.</p>
 </dd>
 
           <dt id="defaultTo" class="callable">
-  <span class="name"><a href="../transformers.utility/defaultTo.html">defaultTo</a></span><span class="signature">(<wbr><span class="parameter" id="defaultTo-param-defaultValue"><span class="type-annotation">dynamic</span> <span class="parameter-name">defaultValue</span>, </span><span class="parameter" id="defaultTo-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.utility/defaultTo.html">defaultTo</a></span><span class="signature">(<wbr><span class="parameter" id="defaultTo-param-defaultValue"><span class="type-annotation">dynamic</span> <span class="parameter-name">defaultValue</span>, </span><span class="parameter" id="defaultTo-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="defaultTo-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -147,7 +148,7 @@ only the value flowing through the validator pipeline.</p>
 </dd>
 
           <dt id="flattenMapKeys" class="callable">
-  <span class="name"><a href="../transformers.map/flattenMapKeys.html">flattenMapKeys</a></span><span class="signature">(<wbr><span class="parameter" id="flattenMapKeys-param-delimiter"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">delimiter</span>, </span><span class="parameter" id="flattenMapKeys-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.map/flattenMapKeys.html">flattenMapKeys</a></span><span class="signature">(<wbr><span class="parameter" id="flattenMapKeys-param-delimiter"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">delimiter</span>, </span><span class="parameter" id="flattenMapKeys-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="flattenMapKeys-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -174,7 +175,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="pickKeys" class="callable">
-  <span class="name"><a href="../transformers.map/pickKeys.html">pickKeys</a></span><span class="signature">(<wbr><span class="parameter" id="pickKeys-param-keys"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span> <span class="parameter-name">keys</span>, </span><span class="parameter" id="pickKeys-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.map/pickKeys.html">pickKeys</a></span><span class="signature">(<wbr><span class="parameter" id="pickKeys-param-keys"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span> <span class="parameter-name">keys</span>, </span><span class="parameter" id="pickKeys-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="pickKeys-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -201,7 +202,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="pluckKey" class="callable">
-  <span class="name"><a href="../transformers.map/pluckKey.html">pluckKey</a></span><span class="signature">(<wbr><span class="parameter" id="pluckKey-param-key"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">key</span>, </span><span class="parameter" id="pluckKey-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.map/pluckKey.html">pluckKey</a></span><span class="signature">(<wbr><span class="parameter" id="pluckKey-param-key"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">key</span>, </span><span class="parameter" id="pluckKey-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="pluckKey-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -214,7 +215,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="split" class="callable">
-  <span class="name"><a href="../transformers.string/split.html">split</a></span><span class="signature">(<wbr><span class="parameter" id="split-param-separator"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">separator</span>, </span><span class="parameter" id="split-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.string/split.html">split</a></span><span class="signature">(<wbr><span class="parameter" id="split-param-separator"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">separator</span>, </span><span class="parameter" id="split-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="split-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -227,7 +228,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="toBigInt" class="callable">
-  <span class="name"><a href="../transformers.number/toBigInt.html">toBigInt</a></span><span class="signature">(<wbr><span class="parameter" id="toBigInt-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.number/toBigInt.html">toBigInt</a></span><span class="signature">(<wbr><span class="parameter" id="toBigInt-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="toBigInt-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -240,7 +241,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="toBool" class="callable">
-  <span class="name"><a href="../transformers.boolean/toBool.html">toBool</a></span><span class="signature">(<wbr><span class="parameter" id="toBool-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.boolean/toBool.html">toBool</a></span><span class="signature">(<wbr><span class="parameter" id="toBool-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="toBool-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -253,7 +254,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="toBoolLenient" class="callable">
-  <span class="name"><a href="../transformers.boolean/toBoolLenient.html">toBoolLenient</a></span><span class="signature">(<wbr><span class="parameter" id="toBoolLenient-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.boolean/toBoolLenient.html">toBoolLenient</a></span><span class="signature">(<wbr><span class="parameter" id="toBoolLenient-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="toBoolLenient-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -266,7 +267,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="toBoolStrict" class="callable">
-  <span class="name"><a href="../transformers.boolean/toBoolStrict.html">toBoolStrict</a></span><span class="signature">(<wbr><span class="parameter" id="toBoolStrict-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.boolean/toBoolStrict.html">toBoolStrict</a></span><span class="signature">(<wbr><span class="parameter" id="toBoolStrict-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="toBoolStrict-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -279,7 +280,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="toDateOnly" class="callable">
-  <span class="name"><a href="../transformers.datetime/toDateOnly.html">toDateOnly</a></span><span class="signature">(<wbr><span class="parameter" id="toDateOnly-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.datetime/toDateOnly.html">toDateOnly</a></span><span class="signature">(<wbr><span class="parameter" id="toDateOnly-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="toDateOnly-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -292,7 +293,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="toDateTime" class="callable">
-  <span class="name"><a href="../transformers.datetime/toDateTime.html">toDateTime</a></span><span class="signature">(<wbr><span class="parameter" id="toDateTime-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.datetime/toDateTime.html">toDateTime</a></span><span class="signature">(<wbr><span class="parameter" id="toDateTime-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="toDateTime-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -305,7 +306,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="toDouble" class="callable">
-  <span class="name"><a href="../transformers.number/toDouble.html">toDouble</a></span><span class="signature">(<wbr><span class="parameter" id="toDouble-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.number/toDouble.html">toDouble</a></span><span class="signature">(<wbr><span class="parameter" id="toDouble-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="toDouble-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -318,7 +319,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="toInt" class="callable">
-  <span class="name"><a href="../transformers.number/toInt.html">toInt</a></span><span class="signature">(<wbr><span class="parameter" id="toInt-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.number/toInt.html">toInt</a></span><span class="signature">(<wbr><span class="parameter" id="toInt-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="toInt-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -331,7 +332,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="toIntSafe" class="callable">
-  <span class="name"><a href="../transformers.number/toIntSafe.html">toIntSafe</a></span><span class="signature">(<wbr><span class="parameter" id="toIntSafe-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.number/toIntSafe.html">toIntSafe</a></span><span class="signature">(<wbr><span class="parameter" id="toIntSafe-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="toIntSafe-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -344,7 +345,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="toIntStrict" class="callable">
-  <span class="name"><a href="../transformers.number/toIntStrict.html">toIntStrict</a></span><span class="signature">(<wbr><span class="parameter" id="toIntStrict-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.number/toIntStrict.html">toIntStrict</a></span><span class="signature">(<wbr><span class="parameter" id="toIntStrict-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="toIntStrict-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -357,7 +358,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="toJsonDecoded" class="callable">
-  <span class="name"><a href="../transformers.json/toJsonDecoded.html">toJsonDecoded</a></span><span class="signature">(<wbr><span class="parameter" id="toJsonDecoded-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.json/toJsonDecoded.html">toJsonDecoded</a></span><span class="signature">(<wbr><span class="parameter" id="toJsonDecoded-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="toJsonDecoded-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -370,7 +371,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="toLowerCase" class="callable">
-  <span class="name"><a href="../transformers.string/toLowerCase.html">toLowerCase</a></span><span class="signature">(<wbr><span class="parameter" id="toLowerCase-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.string/toLowerCase.html">toLowerCase</a></span><span class="signature">(<wbr><span class="parameter" id="toLowerCase-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="toLowerCase-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -383,7 +384,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="toLowerCaseString" class="callable">
-  <span class="name"><a href="../transformers.string/toLowerCaseString.html">toLowerCaseString</a></span><span class="signature">(<wbr><span class="parameter" id="toLowerCaseString-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.string/toLowerCaseString.html">toLowerCaseString</a></span><span class="signature">(<wbr><span class="parameter" id="toLowerCaseString-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="toLowerCaseString-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -396,7 +397,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="toNum" class="callable">
-  <span class="name"><a href="../transformers.number/toNum.html">toNum</a></span><span class="signature">(<wbr><span class="parameter" id="toNum-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.number/toNum.html">toNum</a></span><span class="signature">(<wbr><span class="parameter" id="toNum-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="toNum-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -409,7 +410,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="toString" class="callable">
-  <span class="name"><a href="../transformers.string/toString.html">toString</a></span><span class="signature">(<wbr><span class="parameter" id="toString-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.string/toString.html">toString</a></span><span class="signature">(<wbr><span class="parameter" id="toString-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="toString-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -422,7 +423,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="toUpperCase" class="callable">
-  <span class="name"><a href="../transformers.string/toUpperCase.html">toUpperCase</a></span><span class="signature">(<wbr><span class="parameter" id="toUpperCase-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.string/toUpperCase.html">toUpperCase</a></span><span class="signature">(<wbr><span class="parameter" id="toUpperCase-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="toUpperCase-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -435,7 +436,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="toUpperCaseString" class="callable">
-  <span class="name"><a href="../transformers.string/toUpperCaseString.html">toUpperCaseString</a></span><span class="signature">(<wbr><span class="parameter" id="toUpperCaseString-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.string/toUpperCaseString.html">toUpperCaseString</a></span><span class="signature">(<wbr><span class="parameter" id="toUpperCaseString-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="toUpperCaseString-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -461,7 +462,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="trim" class="callable">
-  <span class="name"><a href="../transformers.string/trim.html">trim</a></span><span class="signature">(<wbr><span class="parameter" id="trim-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.string/trim.html">trim</a></span><span class="signature">(<wbr><span class="parameter" id="trim-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="trim-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -474,7 +475,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 </dd>
 
           <dt id="trimString" class="callable">
-  <span class="name"><a href="../transformers.string/trimString.html">trimString</a></span><span class="signature">(<wbr><span class="parameter" id="trimString-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)
+  <span class="name"><a href="../transformers.string/trimString.html">trimString</a></span><span class="signature">(<wbr><span class="parameter" id="trimString-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="trimString-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
   </span>
   

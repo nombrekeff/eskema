@@ -55,8 +55,9 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">toIntSafe</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="toIntSafe-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span></li>
-</ol>)
+<span class="name ">toIntSafe</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="toIntSafe-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span></li>
+<li><span class="parameter" id="toIntSafe-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+</ol>})
 
         
 
@@ -67,15 +68,27 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator toIntSafe(IValidator child) =&gt; toIntStrict(Validator((value) {
-      if (value is int &amp;&amp; value &lt;= _kMaxSafeInt &amp;&amp; value &gt;= _kMinSafeInt) {
-        return child.validate(value);
-      }
-      return Result.invalid(value,
-          expectation: Expectation(
-              message: &#39;a value strictly convertible to an int within safe 53-bit range&#39;,
-              value: value));
-    }));</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator toIntSafe(IValidator child, {String? message}) {
+  final strict = toIntStrict(Validator((value) {
+    if (value is int &amp;&amp; value &lt;= _kMaxSafeInt &amp;&amp; value &gt;= _kMinSafeInt) {
+      return child.validate(value);
+    }
+
+    return Result.invalid(
+      value,
+      expectation: Expectation(
+        message: &#39;a value strictly convertible to an int within safe 53-bit range&#39;,
+        value: value,
+      ),
+    );
+  }));
+
+  if (message != null) {
+    return core.expectPreserveValue(strict, Expectation(message: message));
+  }
+
+  return strict;
+}</code></pre>
 </section>
 
 

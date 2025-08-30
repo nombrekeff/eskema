@@ -109,12 +109,12 @@ isValidList([1, "2"]).isValid;   // false
 
           if (res is Future&lt;Result&gt;) {
             return res.then((r) {
-              _collectListIndex(r, errors, index);
+              _collectListIndex(r, errors, index, null);
               return loop(index + 1);
             });
           }
 
-          _collectListIndex(res, errors, index);
+          _collectListIndex(res, errors, index, null);
 
           return loop(index + 1);
         }

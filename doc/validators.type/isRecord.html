@@ -55,7 +55,8 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">isRecord</span>(<wbr>)
+<span class="name ">isRecord</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="isRecord-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+</ol>})
 
         
 
@@ -69,7 +70,7 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator isRecord() =&gt; isType&lt;Record&gt;();</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator isRecord({String? message}) =&gt; isType&lt;Record&gt;(message: message);</code></pre>
 </section>
 
 

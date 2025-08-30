@@ -55,7 +55,8 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">isNumber</span>(<wbr>)
+<span class="name ">isNumber</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="isNumber-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+</ol>})
 
         
 
@@ -70,7 +71,7 @@ For better performance and readability, use the <a href="../eskema/$isNumber.htm
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator isNumber() =&gt; isType&lt;num&gt;();</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator isNumber({String? message}) =&gt; isType&lt;num&gt;(message: message);</code></pre>
 </section>
 
 

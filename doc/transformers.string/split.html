@@ -55,9 +55,10 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">split</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="split-param-separator"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">separator</span>, </span></li>
-<li><span class="parameter" id="split-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span></li>
-</ol>)
+<span class="name ">split</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="split-param-separator"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">separator</span>, </span></li>
+<li><span class="parameter" id="split-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span></li>
+<li><span class="parameter" id="split-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+</ol>})
 
         
 
@@ -75,8 +76,10 @@ Passes the resulting list of strings to the <code>child</code> validator.</p>
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator split(String separator, IValidator child) {
-  return isString() &amp; core.transform((v) =&gt; v.split(separator), child);
+  <pre class="language-dart"><code class="language-dart">IValidator split(String separator, IValidator child, {String? message}) {
+  final base = isString() &amp; core.transform((v) =&gt; v.split(separator), child);
+
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
 }</code></pre>
 </section>
 

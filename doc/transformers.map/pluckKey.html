@@ -55,9 +55,10 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">pluckKey</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="pluckKey-param-key"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">key</span>, </span></li>
-<li><span class="parameter" id="pluckKey-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span></li>
-</ol>)
+<span class="name ">pluckKey</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="pluckKey-param-key"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">key</span>, </span></li>
+<li><span class="parameter" id="pluckKey-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span></li>
+<li><span class="parameter" id="pluckKey-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+</ol>})
 
         
 
@@ -71,13 +72,14 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator pluckKey(String key, IValidator child) =&gt; core.pivotValue(
+  <pre class="language-dart"><code class="language-dart">IValidator pluckKey(String key, IValidator child, {String? message}) =&gt; core.pivotValue(
       (value) {
         if (value is! Map || !value.containsKey(key)) return null;
+
         return value[key];
       },
       child: child,
-      errorMessage: &#39;a Map containing key: $key&#39;,
+      errorMessage: message ?? &#39;a Map containing key: $key&#39;,
     );</code></pre>
 </section>
 

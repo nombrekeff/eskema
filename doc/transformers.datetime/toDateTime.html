@@ -55,8 +55,9 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">toDateTime</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="toDateTime-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span></li>
-</ol>)
+<span class="name ">toDateTime</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="toDateTime-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span></li>
+<li><span class="parameter" id="toDateTime-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+</ol>})
 
         
 
@@ -73,15 +74,17 @@ Passes the resulting <code>DateTime</code> to the <code>child</code> validator.<
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator toDateTime(IValidator child) =&gt;
-    core.transform((value) {
-      return switch (value) {
-        final DateTime d =&gt; d,
-        final String s =&gt; DateTime.tryParse(s.trim()),
-        _ =&gt; null,
-      };
-    }, child) &gt;
-    Expectation(message: &#39;a valid DateTime formatted String&#39;);</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator toDateTime(IValidator child, {String? message}) {
+  final base = core.transform((value) {
+    return switch (value) {
+      final DateTime d =&gt; d,
+      final String s =&gt; DateTime.tryParse(s.trim()),
+      _ =&gt; null,
+    };
+  }, child);
+
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
+}</code></pre>
 </section>
 
 

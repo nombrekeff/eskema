@@ -55,8 +55,9 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">isLt</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="isLt-param-max"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">max</span></span></li>
-</ol>)
+<span class="name ">isLt</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="isLt-param-max"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">max</span>, {</span></li>
+<li><span class="parameter" id="isLt-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+</ol>})
 
         
 
@@ -70,12 +71,12 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator isLt(num max) =&gt;
+  <pre class="language-dart"><code class="language-dart">IValidator isLt(num max, {String? message}) =&gt;
     isType&lt;num&gt;() &amp;
     validator(
       (value) =&gt; value &lt; max,
       (value) =&gt; Expectation(
-        message: &#39;less than $max&#39;,
+        message: message ?? &#39;less than $max&#39;,
         value: value,
         code: &#39;value.range_out_of_bounds&#39;,
         data: {&#39;operator&#39;: &#39;&lt;&#39;, &#39;limit&#39;: max},

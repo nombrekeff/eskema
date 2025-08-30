@@ -55,8 +55,9 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">toDateOnly</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="toDateOnly-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span></li>
-</ol>)
+<span class="name ">toDateOnly</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="toDateOnly-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span></li>
+<li><span class="parameter" id="toDateOnly-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+</ol>})
 
         
 
@@ -70,33 +71,36 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator toDateOnly(IValidator child) =&gt;
-    (isType&lt;DateTime&gt;() | $isString) &amp;
-    core.transform((v) {
-      final DateTime? dt = switch (v) {
-        final DateTime d =&gt; d,
-        final String s =&gt; DateTime.tryParse(s.trim()),
-        _ =&gt; null,
-      };
-      if (dt == null) return null;
-      &#47;&#47; If original was a string with potential rollover (e.g. 2024-02-30 becomes 2024-03-01)
-      &#47;&#47; detect mismatch and treat as invalid.
-      if (v is String) {
-        final trimmed = v.trim();
-        final expected =
-            &#39;${dt.year.toString().padLeft(4, &#39;0&#39;)}-${dt.month.toString().padLeft(2, &#39;0&#39;)}-${dt.day.toString().padLeft(2, &#39;0&#39;)}&#39;;
-        if (trimmed.length == 10 &amp;&amp; trimmed.contains(&#39;-&#39;) &amp;&amp; trimmed != expected) {
-          return null; &#47;&#47; trigger failure path
+  <pre class="language-dart"><code class="language-dart">IValidator toDateOnly(IValidator child, {String? message}) {
+  final base = (isType&lt;DateTime&gt;() | $isString) &amp;
+      core.transform((v) {
+        final DateTime? dt = switch (v) {
+          final DateTime d =&gt; d,
+          final String s =&gt; DateTime.tryParse(s.trim()),
+          _ =&gt; null,
+        };
+        if (dt == null) return null;
+        if (v is String) {
+          final trimmed = v.trim();
+          final expected =
+              &#39;${dt.year.toString().padLeft(4, &#39;0&#39;)}-${dt.month.toString().padLeft(2, &#39;0&#39;)}-${dt.day.toString().padLeft(2, &#39;0&#39;)}&#39;;
+          if (trimmed.length == 10 &amp;&amp; trimmed.contains(&#39;-&#39;) &amp;&amp; trimmed != expected) {
+            return null;
+          }
         }
-      }
-      return DateTime(dt.year, dt.month, dt.day);
-    }, Validator((val) {
-      if (val is DateTime) return Result.valid(val);
-      return Result.invalid(val,
-          expectation:
-              Expectation(message: &#39;a value convertible to a Date (midnight)&#39;, value: val));
-    })) &amp;
-    child;</code></pre>
+
+        return DateTime(dt.year, dt.month, dt.day);
+      }, Validator((val) {
+        if (val is DateTime) return Result.valid(val);
+
+        return Result.invalid(val,
+            expectation:
+                Expectation(message: &#39;a value convertible to a Date (midnight)&#39;, value: val));
+      })) &amp;
+      child;
+
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
+}</code></pre>
 </section>
 
 

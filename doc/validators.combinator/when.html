@@ -58,6 +58,7 @@
 <span class="name ">when</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="when-param-condition"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">condition</span>, {</span></li>
 <li><span class="parameter" id="when-param-then"><span>required</span> <span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">then</span>, </span></li>
 <li><span class="parameter" id="when-param-otherwise"><span>required</span> <span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">otherwise</span>, </span></li>
+<li><span class="parameter" id="when-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
 
         
@@ -112,8 +113,12 @@ final paymentValidator = eskema({
   IValidator condition, {
   required IValidator then,
   required IValidator otherwise,
+  String? message,
 }) {
-  return WhenValidator(condition, then, otherwise);
+  final base = WhenValidator(condition, then, otherwise);
+  if (message == null) return base;
+  &#47;&#47; Wrap with a proxy that intercepts misuse (validate()) and parent usage (validateWithParent)
+  return _WhenWithMessage(base, message);
 }</code></pre>
 </section>
 

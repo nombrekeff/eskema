@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the isDoubleString function from the validators.string library, for the Dart programming language.">
-  <title>isDoubleString function - validators.string library - Dart API</title>
+  <meta name="description" content="API docs for the $isStringEmpty property from the eskema library, for the Dart programming language.">
+  <title>$isStringEmpty property - eskema library - Dart API</title>
 
 
   
@@ -25,10 +25,10 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">eskema</a></li>
-    <li><a href="../validators.string/">validators&#47;string.dart</a></li>
-    <li class="self-crumb">isDoubleString function</li>
+    <li><a href="../eskema/">eskema.dart</a></li>
+    <li class="self-crumb">$isStringEmpty property</li>
   </ol>
-  <div class="self-name">isDoubleString</div>
+  <div class="self-name">$isStringEmpty</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -45,52 +45,32 @@
   <div
       id="dartdoc-main-content"
       class="main-content"
-      data-above-sidebar="validators.string&#47;validators.string-library-sidebar.html"
+      data-above-sidebar="eskema&#47;eskema-library-sidebar.html"
       data-below-sidebar="">
       <div>
-<h1><span class="kind-function">isDoubleString</span> function 
+<h1><span class="kind-top-level-property">$isStringEmpty</span> top-level property 
  
 </h1></div>
 
-    <section class="multi-line-signature">
-        
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">isDoubleString</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="isDoubleString-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
-</ol>})
+        <section class="multi-line-signature">
+          
+          <a href="../validator/IValidator-class.html">IValidator</a>
+          <span class="name ">$isStringEmpty</span>
+          <div class="features"><span class="feature">final</span></div>
 
+        </section>
         
-
-    </section>
-    
 <section class="desc markdown">
-  <p>Validates that the String can be parsed as a <code>double</code> (e.g. '123.45', '-1e3')</p>
-<p><strong>Usage Examples:</strong></p>
-<pre class="language-dart"><code class="language-dart">final doubleStringValidator = isDoubleString();
-doubleStringValidator.validate("123.45");     // Valid
-doubleStringValidator.validate("-1e3");        // Valid
-doubleStringValidator.validate("12");          // Valid (int is also double)
-doubleStringValidator.validate("not-a-number"); // Invalid
-
-// For strict double-only validation
-final strictDouble = all([$isString, isDoubleString(), not(isIntString())]);
-</code></pre>
+  <p>Cached instance of <a href="../validators.string/isStringEmpty.html">isStringEmpty</a>.
+Validates that the value is empty (string, list, map, etc.).</p>
 </section>
 
-
-    
+        
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator isDoubleString({String? message}) =&gt;
-    isType&lt;String&gt;() &amp;
-    validator(
-      (value) =&gt; double.tryParse(value.trim()) != null,
-      (value) =&gt; Expectation(
-          message: message ?? &#39;a valid formatted double String&#39;,
-          value: value,
-          code: ExpectationCodes.valueFormatInvalid,
-          data: {&#39;format&#39;: &#39;double&#39;}),
-    );</code></pre>
+  <pre class="language-dart"><code class="language-dart">final IValidator $isStringEmpty = isStringEmpty();</code></pre>
 </section>
+
 
 
   </div> <!-- /.main-content -->
@@ -103,11 +83,11 @@ final strictDouble = all([$isString, isDoubleString(), not(isIntString())]);
 </header>
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../index.html">eskema</a></li>
-    <li><a href="../validators.string/">validators.string</a></li>
-    <li class="self-crumb">isDoubleString function</li>
+    <li><a href="../eskema/">eskema</a></li>
+    <li class="self-crumb">$isStringEmpty property</li>
 </ol>
 
-    <h5>validators.string library</h5>
+    <h5>eskema library</h5>
     <div id="dartdoc-sidebar-left-content"></div>
   </div><!--/.sidebar-offcanvas-left-->
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">

@@ -55,8 +55,9 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">toString</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="toString-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span></li>
-</ol>)
+<span class="name ">toString</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="toString-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span></li>
+<li><span class="parameter" id="toString-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+</ol>})
 
         
 
@@ -70,10 +71,15 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator toString(IValidator child) =&gt;
-    ($isString | $isNumber | $isBool | isType&lt;DateTime&gt;()) &amp;
-        core.transform((v) =&gt; v.toString(), child) &gt;
-    Expectation(message: &#39;a value convertible to a String&#39;);</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator toString(IValidator child, {String? message}) {
+  final base = ($isString | $isNumber | $isBool | isType&lt;DateTime&gt;()) &amp;
+      core.transform((v) =&gt; v.toString(), child);
+  if (message != null) {
+    return core.expectPreserveValue(base, Expectation(message: message));
+  }
+
+  return base; &#47;&#47; preserve original expectations &#47; chaining semantics
+}</code></pre>
 </section>
 
 

@@ -55,8 +55,9 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">toIntStrict</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="toIntStrict-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span></li>
-</ol>)
+<span class="name ">toIntStrict</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="toIntStrict-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span></li>
+<li><span class="parameter" id="toIntStrict-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+</ol>})
 
         
 
@@ -85,17 +86,18 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator toIntStrict(IValidator child) =&gt; core.expectPreserveValue(
-    ($isInt | $isIntString) &amp;
-        core.transform((v) {
-          final converted = switch (v) {
-            final int n =&gt; n,
-            final String s =&gt; int.tryParse(s.trim()),
-            _ =&gt; null,
-          };
-          return converted;
-        }, child),
-    Expectation(message: &#39;a value strictly convertible to an int&#39;));</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator toIntStrict(IValidator child, {String? message}) {
+  final base = ($isInt | $isIntString) &amp;
+      core.transform((v) {
+        final converted = switch (v) {
+          final int n =&gt; n,
+          final String s =&gt; int.tryParse(s.trim()),
+          _ =&gt; null,
+        };
+        return converted;
+      }, child);
+  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
+}</code></pre>
 </section>
 
 
