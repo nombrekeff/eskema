@@ -149,12 +149,6 @@ void main() {
       expect(validator.validate('notint').isValid, false);
     });
 
-    test('toDateOnly normalizes time', () {
-      final validator = v().string().toDateOnly().build();
-      expect(validator.validate(DateTime.now().toIso8601String()).isValid, true);
-      expect(validator.validate('2024-02-30').isValid, false); // invalid date
-    });
-
     test('toJsonDecoded decodes JSON strings', () {
       final validator = v().string().toJson().build();
       expect(validator.validate('{"a":1}').isValid, true);

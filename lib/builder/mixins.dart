@@ -87,12 +87,6 @@ mixin TransformerMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
     return NumberBuilder(chain: chain);
   }
 
-  /// Transform the value to a DateTime truncated to midnight (date only).
-  GenericBuilder<DateTime> toDateOnly() {
-    chain.setTransform(CoercionKind.string_, (child) => tr.toDateOnly(child));
-    return GenericBuilder<DateTime>(chain: chain);
-  }
-
   /// Transform JSON string to decoded object (Map/List).
   JsonDecodedBuilder toJson() {
     if (chain.coercedToJson) return JsonDecodedBuilder(chain: chain);

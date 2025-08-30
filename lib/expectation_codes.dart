@@ -36,4 +36,6 @@ class ExpectationCodes {
   static const logicNotExpected = 'logic.not_expected';
 
   static var typeMismatch = 'value.type_mismatch';
+
+  static var valueRangeOutOfBounds = 'value.range_out_of_bounds';
 }

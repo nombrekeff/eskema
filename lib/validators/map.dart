@@ -5,6 +5,7 @@
 library validators.map;
 
 import 'package:eskema/eskema.dart';
+import 'package:eskema/expectation_codes.dart';
 import 'package:eskema/src/util.dart';
 
 /// Validator that checks if a map contains a specific key.
@@ -17,7 +18,7 @@ IValidator containsKey(String key, {String? message}) =>
         expectation: Expectation(
           message: message ?? 'contains key "$key"',
           value: value,
-          code: 'value.contains_missing',
+          code: ExpectationCodes.valueContainsMissing,
         ),
       );
     });
@@ -33,7 +34,7 @@ IValidator containsKeys(Iterable<String> keys, {String? message}) =>
         expectation: Expectation(
           message: message ?? 'contains keys: ${prettifyValue(keys)}',
           value: value,
-          code: 'value.contains_missing',
+          code: ExpectationCodes.valueContainsMissing,
         ),
         value: value,
       );
@@ -50,7 +51,7 @@ IValidator containsValues(Iterable<dynamic> values, {String? message}) =>
         expectation: Expectation(
           message: message ?? 'contains values: ${prettifyValue(values)}',
           value: value,
-          code: 'value.contains_missing',
+          code: ExpectationCodes.valueContainsMissing,
         ),
         value: value,
       );

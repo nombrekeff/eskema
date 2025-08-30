@@ -152,11 +152,6 @@ void main() {
           'toBool', () => toBool(isType<bool>(), message: 'bool msg'), 'abc', 'bool msg'),
       _ValidatorCase('toDateTime', () => toDateTime(isDateInFuture(), message: 'datetime msg'),
           'not-date', 'datetime msg'),
-      _ValidatorCase(
-          'toDateOnly',
-          () => toDateOnly(isType<DateTime>(), message: 'dateonly msg'),
-          'not-date',
-          'dateonly msg'),
       _ValidatorCase('pickKeys',
           () => pickKeys(['a', 'b'], containsKey('a'), message: 'pick msg'), 5, 'pick msg'),
       _ValidatorCase('pluckKey', () => pluckKey('a', isInt(), message: 'pluck msg'), {'x': 1},

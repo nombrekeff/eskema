@@ -23,35 +23,3 @@ IValidator toDateTime(IValidator child, {String? message}) {
 
   return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
 }
-
-/// Coerces value to a DateTime at midnight (date-only).
-IValidator toDateOnly(IValidator child, {String? message}) {
-  final base = (isType<DateTime>() | $isString) &
-      core.transform((v) {
-        final DateTime? dt = switch (v) {
-          final DateTime d => d,
-          final String s => DateTime.tryParse(s.trim()),
-          _ => null,
-        };
-        if (dt == null) return null;
-        if (v is String) {
-          final trimmed = v.trim();
-          final expected =
-              '${dt.year.toString().padLeft(4, '0')}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}';
-          if (trimmed.length == 10 && trimmed.contains('-') && trimmed != expected) {
-            return null;
-          }
-        }
-
-        return DateTime(dt.year, dt.month, dt.day);
-      }, Validator((val) {
-        if (val is DateTime) return Result.valid(val);
-
-        return Result.invalid(val,
-            expectation:
-                Expectation(message: 'a value convertible to a Date (midnight)', value: val));
-      })) &
-      child;
-
-  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
-}

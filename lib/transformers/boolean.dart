@@ -23,7 +23,7 @@ import 'core.dart' as core;
 ///  * [toBoolStrict] – strict literal parsing only
 ///  * [toBoolLenient] – permissive parsing of many textual toggles
 IValidator toBool(IValidator child, {String? message}) {
-  final base =
+  final validator =
       (($isBool | isOneOf([0, 1]) | toLowerCase(isString() & isOneOf(['true', 'false'])))) &
           core.transform((v) {
             return switch (v) {
@@ -33,7 +33,10 @@ IValidator toBool(IValidator child, {String? message}) {
               _ => null,
             };
           }, child);
-  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
+
+  return message != null
+      ? core.expectPreserveValue(validator, Expectation(message: message))
+      : validator;
 }
 
 /// Strict bool coercion.
@@ -49,7 +52,7 @@ IValidator toBool(IValidator child, {String? message}) {
 ///  * [toBool] – standard (bool + 1/0 + 'true'/'false')
 ///  * [toBoolLenient] – very permissive variants
 IValidator toBoolStrict(IValidator child, {String? message}) {
-  final base = (($isBool | toLowerCase(isString() & isOneOf(['true', 'false'])))) &
+  final validator = (($isBool | toLowerCase(isString() & isOneOf(['true', 'false'])))) &
       core.transform((v) {
         return switch (v) {
           final bool b => b,
@@ -57,7 +60,10 @@ IValidator toBoolStrict(IValidator child, {String? message}) {
           _ => null,
         };
       }, child);
-  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
+
+  return message != null
+      ? core.expectPreserveValue(validator, Expectation(message: message))
+      : validator;
 }
 
 /// Lenient / permissive bool coercion.
@@ -80,25 +86,33 @@ IValidator toBoolStrict(IValidator child, {String? message}) {
 IValidator toBoolLenient(IValidator child, {String? message}) {
   const trueSet = {'true', 't', 'yes', 'y', 'on', '1'};
   const falseSet = {'false', 'f', 'no', 'n', 'off', '0'};
-  final base = (($isBool |
-          isOneOf([0, 1]) |
-          toLowerCase(
-            isString() &
-                isOneOf(
-                    ['true', 'false', 't', 'f', 'yes', 'no', 'y', 'n', 'on', 'off', '1', '0']),
-          ))) &
-      core.transform((v) {
-        return switch (v) {
-          final bool b => b,
-          final int i => i == 1,
-          final String s => () {
-              final lower = s.toLowerCase().trim();
-              if (trueSet.contains(lower)) return true;
-              if (falseSet.contains(lower)) return false;
-              return null;
-            }(),
-          _ => null,
-        };
-      }, child);
-  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
+  final stringBoolMatcher = ($isBool |
+      isOneOf([0, 1]) |
+      toLowerCase(
+        isString() &
+            isOneOf(['true', 'false', 't', 'f', 'yes', 'no', 'y', 'n', 'on', 'off', '1', '0']),
+      ));
+
+  final validator = (stringBoolMatcher) &
+      // Coherce value to bool
+      core.transform(
+        (v) {
+          return switch (v) {
+            final bool b => b,
+            final int i => i == 1,
+            final String s => () {
+                final lower = s.toLowerCase().trim();
+                if (trueSet.contains(lower)) return true;
+                if (falseSet.contains(lower)) return false;
+                return null;
+              }(),
+            _ => null,
+          };
+        },
+        child,
+      );
+
+  return message != null
+      ? core.expectPreserveValue(validator, Expectation(message: message))
+      : validator;
 }

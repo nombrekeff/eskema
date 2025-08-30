@@ -4,6 +4,7 @@
 library validators.number;
 
 import 'package:eskema/expectation.dart';
+import 'package:eskema/expectation_codes.dart';
 import 'package:eskema/extensions.dart';
 import 'package:eskema/validator.dart';
 import 'package:eskema/validators.dart';
@@ -17,7 +18,7 @@ IValidator isLt(num max, {String? message}) {
         (value) => Expectation(
           message: message ?? 'less than $max',
           value: value,
-          code: 'value.range_out_of_bounds',
+          code: ExpectationCodes.valueRangeOutOfBounds,
           data: {'operator': '<', 'limit': max},
         ),
       );
@@ -29,7 +30,7 @@ IValidator isLte(num max, {String? message}) {
   return (isType<num>() & (isLt(max) | isEq(max))) >
       Expectation(
           message: message ?? 'less than or equal to $max',
-          code: 'value.range_out_of_bounds',
+          code: ExpectationCodes.valueRangeOutOfBounds,
           data: {'operator': '<=', 'limit': max});
 }
 
@@ -42,7 +43,7 @@ IValidator isGt<T extends num>(T min, {String? message}) {
         (value) => Expectation(
           message: message ?? 'greater than $min',
           value: value,
-          code: 'value.range_out_of_bounds',
+          code: ExpectationCodes.valueRangeOutOfBounds,
           data: {'operator': '>', 'limit': min},
         ),
       );
@@ -54,7 +55,7 @@ IValidator isGte(num min, {String? message}) {
   return (isType<num>() & (isGt(min) | isEq(min))) >
       Expectation(
         message: message ?? 'greater than or equal to $min',
-        code: 'value.range_out_of_bounds',
+        code: ExpectationCodes.valueRangeOutOfBounds,
         data: {'operator': '>=', 'limit': min},
       );
 }
@@ -65,7 +66,8 @@ IValidator isInRange(num min, num max, {String? message}) {
   assert(min <= max, 'min must be <= max');
   return (isNumber() & isGte(min) & isLte(max)) >
       Expectation(
-          message: message ?? 'between $min and $max inclusive',
-          code: 'value.range_out_of_bounds',
-          data: {'operator': 'between_inclusive', 'min': min, 'max': max});
+        message: message ?? 'between $min and $max inclusive',
+        code: ExpectationCodes.valueRangeOutOfBounds,
+        data: {'operator': 'between_inclusive', 'min': min, 'max': max},
+      );
 }
