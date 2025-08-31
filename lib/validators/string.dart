@@ -168,13 +168,17 @@ IValidator isStringEmpty({String? message}) {
 IValidator isUrl({bool strict = false, String? message}) {
   return isString() &
       validator(
-        (value) =>
-            strict ? Uri.tryParse(value)?.isAbsolute ?? false : Uri.tryParse(value) != null,
+        (value) {
+          return strict
+              ? Uri.tryParse(value)?.isAbsolute ?? false
+              : Uri.tryParse(value) != null;
+        },
         (value) => Expectation(
-            message: message ?? 'a valid URL',
-            value: value,
-            code: ExpectationCodes.valueFormatInvalid,
-            data: {'format': 'url'}),
+          message: message ?? 'a valid URL',
+          value: value,
+          code: ExpectationCodes.valueFormatInvalid,
+          data: {'format': 'url'},
+        ),
       );
 }
 
@@ -220,10 +224,11 @@ IValidator isIntString({String? message}) =>
     validator(
       (value) => int.tryParse(value.trim()) != null,
       (value) => Expectation(
-          message: message ?? 'a valid formatted int String',
-          value: value,
-          code: ExpectationCodes.valueFormatInvalid,
-          data: {'format': 'int'}),
+        message: message ?? 'a valid formatted int String',
+        value: value,
+        code: ExpectationCodes.valueFormatInvalid,
+        data: {'format': 'int'},
+      ),
     );
 
 /// Validates that the String can be parsed as a `double` (e.g. '123.45', '-1e3')
@@ -244,10 +249,11 @@ IValidator isDoubleString({String? message}) =>
     validator(
       (value) => double.tryParse(value.trim()) != null,
       (value) => Expectation(
-          message: message ?? 'a valid formatted double String',
-          value: value,
-          code: ExpectationCodes.valueFormatInvalid,
-          data: {'format': 'double'}),
+        message: message ?? 'a valid formatted double String',
+        value: value,
+        code: ExpectationCodes.valueFormatInvalid,
+        data: {'format': 'double'},
+      ),
     );
 
 /// Validates that the String can be parsed as a `num` (int or double)
@@ -256,10 +262,11 @@ IValidator isNumString({String? message}) =>
     validator(
       (value) => num.tryParse(value.trim()) != null,
       (value) => Expectation(
-          message: message ?? 'a valid formatted number String',
-          value: value,
-          code: ExpectationCodes.valueFormatInvalid,
-          data: {'format': 'num'}),
+        message: message ?? 'a valid formatted number String',
+        value: value,
+        code: ExpectationCodes.valueFormatInvalid,
+        data: {'format': 'num'},
+      ),
     );
 
 /// Validates that the String can be parsed as a `bool` ('true' or 'false', case insensitive)
@@ -287,10 +294,11 @@ IValidator isBoolString({String? message}) =>
         return lower == 'true' || lower == 'false';
       },
       (value) => Expectation(
-          message: message ?? 'a valid formatted boolean String',
-          value: value,
-          code: ExpectationCodes.valueFormatInvalid,
-          data: {'format': 'bool'}),
+        message: message ?? 'a valid formatted boolean String',
+        value: value,
+        code: ExpectationCodes.valueFormatInvalid,
+        data: {'format': 'bool'},
+      ),
     );
 
 /// Checks whether the given value is a valid DateTime formatted String
@@ -313,8 +321,9 @@ IValidator isBoolString({String? message}) =>
 IValidator isDate({String? message}) => validator(
       (value) => DateTime.tryParse(value) != null,
       (value) => Expectation(
-          message: message ?? 'a valid DateTime formatted String',
-          value: value,
-          code: ExpectationCodes.valueFormatInvalid,
-          data: {'format': 'date_time'}),
+        message: message ?? 'a valid DateTime formatted String',
+        value: value,
+        code: ExpectationCodes.valueFormatInvalid,
+        data: {'format': 'date_time'},
+      ),
     );

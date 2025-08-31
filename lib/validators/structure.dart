@@ -27,74 +27,73 @@ import 'package:eskema/expectation_codes.dart';
 /// ]);
 /// ```
 IValidator eskema(Map<String, IValidator> mapEskema, {String? message}) {
-  return isMap() &
-      Validator(
-        (value) {
-          final errors = <Expectation>[];
-          final entries = mapEskema.entries.toList();
-          // We intentionally implement `loop` returning `FutureOr<Result>`:
-          // - Each validator may return a Result synchronously or a Future<Result>.
-          // - If all validators are synchronous we want to return a plain Result
-          //   so callers keep getting synchronous behavior (short-circuits and
-          //   cheaper execution).
-          // - If any validator is asynchronous we return a Future that chains the
-          //   remaining validation steps. Using async/await would always return
-          //   a Future<Result> and change the observable behavior.
-          //
-          // The recursive loop lets us process entries one-by-one and only
-          // escalate to a Future when a validator actually returns one.
-          FutureOr<Result> loop(int index) {
-            if (index >= entries.length) {
-              return errors.isEmpty
-                  ? Result.valid(value)
-                  : Result.invalid(value, expectations: errors);
-            }
+  FutureOr<Result> eskemaPredicate(value) {
+    final errors = <Expectation>[];
+    final entries = mapEskema.entries.toList();
+    // We intentionally implement `loop` returning `FutureOr<Result>`:
+    // - Each validator may return a Result synchronously or a Future<Result>.
+    // - If all validators are synchronous we want to return a plain Result
+    //   so callers keep getting synchronous behavior (short-circuits and
+    //   cheaper execution).
+    // - If any validator is asynchronous we return a Future that chains the
+    //   remaining validation steps. Using async/await would always return
+    //   a Future<Result> and change the observable behavior.
+    //
+    // The recursive loop lets us process entries one-by-one and only
+    // escalate to a Future when a validator actually returns one.
+    FutureOr<Result> loop(int index) {
+      if (index >= entries.length) {
+        return errors.isEmpty
+            ? Result.valid(value)
+            : Result.invalid(value, expectations: errors);
+      }
 
-            final entry = entries[index];
-            final key = entry.key;
-            final validator = entry.value;
-            final fieldValue = value[key];
-            final exists = value.containsKey(key);
+      final entry = entries[index];
+      final key = entry.key;
+      final validator = entry.value;
+      final fieldValue = value[key];
+      final exists = value.containsKey(key);
 
-            FutureOr<Result> res;
-            if (validator is IWhenValidator) {
-              res = validator.validateWithParent(fieldValue, value, exists: exists);
-            } else {
-              // Reproduce nullable/optional short-circuit semantics that validate() provided.
-              if (!exists) {
-                if (validator.isOptional) return loop(index + 1);
-                // For required field missing: validate with exists: false so nullable validators fail.
-                final missingRes = validator.validate(null, exists: false);
-                _collectEskema(missingRes, errors, key, message);
-                return loop(index + 1);
-              }
+      FutureOr<Result> res;
+      if (validator is IWhenValidator) {
+        res = validator.validateWithParent(fieldValue, value, exists: exists);
+      } else {
+        // Reproduce nullable/optional short-circuit semantics that validate() provided.
+        if (!exists) {
+          if (validator.isOptional) return loop(index + 1);
+          // For required field missing: validate with exists: false so nullable validators fail.
+          final missingRes = validator.validate(null, exists: false);
+          _collectEskema(missingRes, errors, key, message);
+          return loop(index + 1);
+        }
 
-              if (!exists && validator.isOptional) {
-                return loop(index + 1);
-              }
+        if (!exists && validator.isOptional) {
+          return loop(index + 1);
+        }
 
-              if (exists && fieldValue == null && validator.isNullable) {
-                return loop(index + 1);
-              }
+        if (exists && fieldValue == null && validator.isNullable) {
+          return loop(index + 1);
+        }
 
-              res = validator.validator(fieldValue);
-            }
+        res = validator.validator(fieldValue);
+      }
 
-            if (res is Future<Result>) {
-              return res.then((r) {
-                _collectEskema(r, errors, key, message);
-                return loop(index + 1);
-              });
-            }
+      if (res is Future<Result>) {
+        return res.then((r) {
+          _collectEskema(r, errors, key, message);
+          return loop(index + 1);
+        });
+      }
 
-            _collectEskema(res, errors, key, message);
+      _collectEskema(res, errors, key, message);
 
-            return loop(index + 1);
-          }
+      return loop(index + 1);
+    }
 
-          return loop(0);
-        },
-      );
+    return loop(0);
+  }
+
+  return isMap() & Validator(eskemaPredicate);
 }
 
 void _collectEskema(Result result, List<Expectation> errors, String key, [String? message]) {
@@ -122,27 +121,28 @@ void _collectEskema(Result result, List<Expectation> errors, String key, [String
 /// validator.validate({ 'name': 'test', 'age': 25 }); // invalid
 /// ```
 IValidator eskemaStrict(Map<String, IValidator> schema, {String? message}) {
-  return eskema(schema) &
-      Validator((value) {
-        final map = value as Map<String, dynamic>;
-        final unknownKeys = map.keys.where((key) => !schema.containsKey(key)).toList();
+  FutureOr<Result> strictEskemaPredicate(value) {
+    final map = value as Map<String, dynamic>;
+    final unknownKeys = map.keys.where((key) => !schema.containsKey(key)).toList();
 
-        if (unknownKeys.isEmpty) {
-          return Result.valid(value);
-        }
+    if (unknownKeys.isEmpty) {
+      return Result.valid(value);
+    }
 
-        return Result.invalid(
-          value,
-          expectations: [
-            Expectation(
-              message: message ?? 'has unknown keys: ${unknownKeys.join(', ')}',
-              value: value,
-              code: ExpectationCodes.structureUnknownKey,
-              data: {'keys': unknownKeys},
-            ),
-          ],
-        );
-      });
+    return Result.invalid(
+      value,
+      expectations: [
+        Expectation(
+          message: message ?? 'has unknown keys: ${unknownKeys.join(', ')}',
+          value: value,
+          code: ExpectationCodes.structureUnknownKey,
+          data: {'keys': unknownKeys},
+        ),
+      ],
+    );
+  }
+
+  return eskema(schema) & Validator(strictEskemaPredicate);
 }
 
 /// Returns a Validator that checks a value against the eskema provided,
@@ -163,80 +163,82 @@ IValidator eskemaStrict(Map<String, IValidator> schema, {String? message}) {
 ///
 /// This validator also checks that the value is a list
 IValidator eskemaList<T>(List<IValidator> eskema) {
-  return isType<List>() &
-      listIsOfLength(eskema.length) &
-      Validator((value) {
-        final errors = <Expectation>[];
+  FutureOr<Result> listPredicate(value) {
+    final errors = <Expectation>[];
 
-        FutureOr<Result> loop(int index) {
-          if (index >= value.length) {
-            return errors.isEmpty
-                ? Result.valid(value)
-                : Result.invalid(value, expectations: errors);
-          }
+    FutureOr<Result> loop(int index) {
+      if (index >= value.length) {
+        return errors.isEmpty
+            ? Result.valid(value)
+            : Result.invalid(value, expectations: errors);
+      }
 
-          final item = value[index];
-          final effectiveValidator = eskema[index];
+      final item = value[index];
+      final effectiveValidator = eskema[index];
 
-          // Nullable short-circuit
-          if (item == null && effectiveValidator.isNullable) {
-            return loop(index + 1);
-          }
+      // Nullable short-circuit
+      if (item == null && effectiveValidator.isNullable) {
+        return loop(index + 1);
+      }
 
-          final res = effectiveValidator.validator(item);
+      final res = effectiveValidator.validator(item);
 
-          if (res is Future<Result>) {
-            return res.then((r) {
-              _collectListIndex(r, errors, index, null);
-              return loop(index + 1);
-            });
-          }
-
-          _collectListIndex(res, errors, index, null);
-
+      if (res is Future<Result>) {
+        return res.then((r) {
+          _collectListIndex(r, errors, index, null);
           return loop(index + 1);
-        }
+        });
+      }
 
-        return loop(0);
-      });
+      _collectListIndex(res, errors, index, null);
+
+      return loop(index + 1);
+    }
+
+    return loop(0);
+  }
+
+  return isType<List>() & listIsOfLength(eskema.length) & Validator(listPredicate);
 }
 
 /// Returns a Validator that runs [itemValidator] for each item in the list
 ///
 /// This validator also checks that the value is a list
 IValidator listEach(IValidator itemValidator, {String? message}) {
-  return $isList &
-      Validator((value) {
-        final errors = <Expectation>[];
-        FutureOr<Result> loop(int index) {
-          if (index >= value.length) {
-            return errors.isEmpty
-                ? Result.valid(value)
-                : Result.invalid(value, expectations: errors);
-          }
+  FutureOr<Result> listEachPredicate(value) {
+    final errors = <Expectation>[];
 
-          final item = value[index];
+    FutureOr<Result> loop(int index) {
+      if (index >= value.length) {
+        return errors.isEmpty
+            ? Result.valid(value)
+            : Result.invalid(value, expectations: errors);
+      }
 
-          if (item == null && itemValidator.isNullable) {
-            return loop(index + 1);
-          }
+      final item = value[index];
 
-          final res = itemValidator.validator(item);
+      if (item == null && itemValidator.isNullable) {
+        return loop(index + 1);
+      }
 
-          if (res is Future<Result>) {
-            return res.then((r) {
-              _collectListIndex(r, errors, index, message);
-              return loop(index + 1);
-            });
-          }
+      final res = itemValidator.validator(item);
 
-          _collectListIndex(res, errors, index, message);
-
+      if (res is Future<Result>) {
+        return res.then((r) {
+          _collectListIndex(r, errors, index, message);
           return loop(index + 1);
-        }
+        });
+      }
 
-        return loop(0);
-      });
+      _collectListIndex(res, errors, index, message);
+
+      return loop(index + 1);
+    }
+
+    return loop(0);
+  }
+
+  return $isList & Validator(listEachPredicate);
 }
 
 void _collectListIndex(Result result, List<Expectation> errors, int index, [String? message]) {
