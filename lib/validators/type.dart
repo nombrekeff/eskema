@@ -7,17 +7,20 @@ library validators.type;
 import 'package:eskema/eskema.dart';
 
 /// Returns a [Validator] that checks if the given value is the correct type
-IValidator isType<T>({String? message}) => validator(
-      (value) => value is T,
-      (value) => Expectation(
-          message: message ?? T.toString(),
-          value: value,
-          code: 'type.mismatch',
-          data: {
-            'expected': T.toString(),
-            'found': value.runtimeType.toString(),
-          }),
-    );
+IValidator isType<T>({String? message}) {
+  return validator(
+    (value) => value is T,
+    (value) => Expectation(
+      message: message ?? T.toString(),
+      value: value,
+      code: 'type.mismatch',
+      data: {
+        'expected': T.toString(),
+        'found': value.runtimeType.toString(),
+      },
+    ),
+  );
+}
 
 /// Returns a [Validator] that checks if the given value is the correct type
 IValidator isTypeOrNull<T>({String? message}) => isType<T>(message: message).nullable();

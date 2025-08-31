@@ -34,9 +34,7 @@ IValidator toBool(IValidator child, {String? message}) {
             };
           }, child);
 
-  return message != null
-      ? core.expectPreserveValue(validator, Expectation(message: message))
-      : validator;
+  return _handleReturn(validator, message);
 }
 
 /// Strict bool coercion.
@@ -61,9 +59,7 @@ IValidator toBoolStrict(IValidator child, {String? message}) {
         };
       }, child);
 
-  return message != null
-      ? core.expectPreserveValue(validator, Expectation(message: message))
-      : validator;
+  return _handleReturn(validator, message);
 }
 
 /// Lenient / permissive bool coercion.
@@ -86,32 +82,35 @@ IValidator toBoolStrict(IValidator child, {String? message}) {
 IValidator toBoolLenient(IValidator child, {String? message}) {
   const trueSet = {'true', 't', 'yes', 'y', 'on', '1'};
   const falseSet = {'false', 'f', 'no', 'n', 'off', '0'};
-  final stringBoolMatcher = ($isBool |
+  final $stringBoolMatcher = ($isBool |
       isOneOf([0, 1]) |
       toLowerCase(
         isString() &
             isOneOf(['true', 'false', 't', 'f', 'yes', 'no', 'y', 'n', 'on', 'off', '1', '0']),
       ));
+  final transformToBool = core.transform(
+    (v) {
+      return switch (v) {
+        final bool b => b,
+        final int i => i == 1,
+        final String s => () {
+            final lower = s.toLowerCase().trim();
+            if (trueSet.contains(lower)) return true;
+            if (falseSet.contains(lower)) return false;
+            return null;
+          }(),
+        _ => null,
+      };
+    },
+    child,
+  );
 
-  final validator = (stringBoolMatcher) &
-      // Coherce value to bool
-      core.transform(
-        (v) {
-          return switch (v) {
-            final bool b => b,
-            final int i => i == 1,
-            final String s => () {
-                final lower = s.toLowerCase().trim();
-                if (trueSet.contains(lower)) return true;
-                if (falseSet.contains(lower)) return false;
-                return null;
-              }(),
-            _ => null,
-          };
-        },
-        child,
-      );
+  final validator = $stringBoolMatcher & transformToBool;
 
+  return _handleReturn(validator, message);
+}
+
+IValidator _handleReturn(IValidator validator, String? message) {
   return message != null
       ? core.expectPreserveValue(validator, Expectation(message: message))
       : validator;
