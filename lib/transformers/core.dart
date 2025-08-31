@@ -6,6 +6,13 @@ library transformers.core;
 
 import 'package:eskema/eskema.dart';
 
+IValidator handleReturnPreserveValue(IValidator validator, String? message) {
+  return message != null
+      ? expectPreserveValue(validator, Expectation(message: message))
+      : validator;
+}
+
+
 /// Transforms a value using a provided function.
 ///
 /// The [fn] function is applied to the input value, and the result is then
@@ -37,10 +44,7 @@ IValidator pivotValue(
     final transformed = transformFn(value);
 
     if (transformed == null) {
-      return Result.invalid(
-        value,
-        expectation: Expectation(message: errorMessage, value: value),
-      );
+      return Expectation(message: errorMessage, value: value).toInvalidResult();
     }
 
     final childResult = child.validate(transformed);
@@ -52,12 +56,16 @@ IValidator pivotValue(
 
 /// Adds an expectation message while preserving the child's resulting value
 /// (useful for coercions where later constraints rely on the coerced type even on failure).
-IValidator expectPreserveValue(IValidator validator, Expectation expectation) =>
-    Validator((value) {
-      final innerResult = validator.validate(value);
-      if (innerResult.isValid) return Result.valid(innerResult.value);
+IValidator expectPreserveValue(IValidator validator, Expectation expectation) {
+  return Validator((value) {
+    final innerResult = validator.validate(value);
+    if (innerResult.isValid) return Result.valid(innerResult.value);
 
-      return Result.invalid(innerResult.value, expectations: [
-        expectation.copyWith(code: innerResult.firstExpectation.code, value: innerResult.value)
-      ]);
-    });
+    return Result.invalid(innerResult.value, expectations: [
+      expectation.copyWith(
+        code: innerResult.firstExpectation.code,
+        value: innerResult.value,
+      )
+    ]);
+  });
+}

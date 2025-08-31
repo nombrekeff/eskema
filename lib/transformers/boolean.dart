@@ -34,7 +34,7 @@ IValidator toBool(IValidator child, {String? message}) {
             };
           }, child);
 
-  return _handleReturn(validator, message);
+  return handleReturnPreserveValue(validator, message);
 }
 
 /// Strict bool coercion.
@@ -59,7 +59,7 @@ IValidator toBoolStrict(IValidator child, {String? message}) {
         };
       }, child);
 
-  return _handleReturn(validator, message);
+  return handleReturnPreserveValue(validator, message);
 }
 
 /// Lenient / permissive bool coercion.
@@ -107,11 +107,5 @@ IValidator toBoolLenient(IValidator child, {String? message}) {
 
   final validator = $stringBoolMatcher & transformToBool;
 
-  return _handleReturn(validator, message);
-}
-
-IValidator _handleReturn(IValidator validator, String? message) {
-  return message != null
-      ? core.expectPreserveValue(validator, Expectation(message: message))
-      : validator;
+  return handleReturnPreserveValue(validator, message);
 }

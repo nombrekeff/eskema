@@ -14,7 +14,5 @@ import 'core.dart' as core;
 /// Passes the resulting value to the [child] validator.
 IValidator defaultTo(dynamic defaultValue, IValidator child, {String? message}) {
   final base = core.transform((v) => v ?? defaultValue, child);
-  return message != null
-      ? core.expectPreserveValue(base, Expectation(message: message))
-      : base;
+  return core.handleReturnPreserveValue(base, message);
 }

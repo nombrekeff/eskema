@@ -21,5 +21,5 @@ IValidator toDateTime(IValidator child, {String? message}) {
     };
   }, child);
 
-  return message != null ? core.expectPreserveValue(base, Expectation(message: message)) : base;
+  return handleReturnPreserveValue(base, message);
 }
