@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
 <span class="name ">contains</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr><ol class="parameter-list"> <li><span class="parameter" id="contains-param-item"><span class="type-annotation">T</span> <span class="parameter-name">item</span>, {</span></li>
 <li><span class="parameter" id="contains-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
@@ -72,26 +72,28 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator contains&lt;T&gt;(T item, {String? message}) =&gt; Validator((value) {
-      if (hasContainsProperty(value)) {
-        return Result(
-          isValid: value.contains(item),
-          expectation: Expectation(
-            message: message ?? &#39;contains ${prettifyValue(item)}&#39;,
-            value: value,
-            code: ExpectationCodes.valueContainsMissing,
-            data: {&#39;needle&#39;: prettifyValue(item)},
-          ),
-          value: value,
-        );
-      } else {
-        return Expectation(
-          message: &#39;${value.runtimeType} does not have a contains property&#39;,
+  <pre class="language-dart"><code class="language-dart">IValidator contains&lt;T&gt;(T item, {String? message}) {
+  return Validator((value) {
+    if (hasContainsProperty(value)) {
+      return Result(
+        isValid: value.contains(item),
+        expectation: Expectation(
+          message: message ?? &#39;contains ${prettifyValue(item)}&#39;,
           value: value,
           code: ExpectationCodes.valueContainsMissing,
-        ).toInvalidResult();
-      }
-    });</code></pre>
+          data: {&#39;needle&#39;: prettifyValue(item)},
+        ),
+        value: value,
+      );
+    }
+
+    return Expectation(
+      message: &#39;${value.runtimeType} does not have a contains property&#39;,
+      value: value,
+      code: ExpectationCodes.valueContainsMissing,
+    ).toInvalidResult();
+  });
+}</code></pre>
 </section>
 
 

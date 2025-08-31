@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">none</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="none-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span>, {</span></li>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
+<span class="name ">none</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="none-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator.base/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span>, {</span></li>
 <li><span class="parameter" id="none-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
 
@@ -88,32 +88,31 @@ final notForbidden = none([
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator none(List&lt;IValidator&gt; validators, {String? message}) =&gt; Validator&lt;Result&gt;(
-      (value) {
-        final expectations = &lt;Expectation&gt;[];
+  <pre class="language-dart"><code class="language-dart">IValidator none(List&lt;IValidator&gt; validators, {String? message}) =&gt; Validator&lt;Result&gt;((value) {
+      List&lt;Expectation&gt;? expectations;
 
-        for (var i = 0; i &lt; validators.length; i++) {
-          final resOr = not(validators[i]).validator(value);
+      for (var i = 0; i &lt; validators.length; i++) {
+        final result = not(validators[i]).validator(value);
 
-          if (resOr is Future&lt;Result&gt;) {
-            return _noneAsync(value, validators, expectations, i, resOr);
-          }
-
-          if (resOr.isNotValid) expectations.addAll(resOr.expectations);
+        if (result is Future&lt;Result&gt;) {
+          return _noneAsync(value, validators, expectations, i, result, message: message);
         }
 
-        if (expectations.isNotEmpty) {
-          if (message != null) {
-            return Result.invalid(value,
-                expectation: Expectation(message: message, value: value));
+        if (result.isNotValid) {
+          if (message == null &amp;&amp; result.expectations.isNotEmpty) {
+            (expectations ??= &lt;Expectation&gt;[]).addAll(result.expectations);
+          } else if (message != null) {
+            return _failWithMsg(value, message);
           }
-          return Result.invalid(value, expectations: expectations);
         }
-        return message != null
-            ? Result.invalid(value, expectation: Expectation(message: message, value: value))
-            : Result.valid(value);
-      },
-    );</code></pre>
+      }
+
+      if (message != null) return Result.valid(value);
+
+      return (expectations != null &amp;&amp; expectations.isNotEmpty)
+          ? Result.invalid(value, expectations: expectations)
+          : Result.valid(value);
+    });</code></pre>
 </section>
 
 

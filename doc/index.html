@@ -413,7 +413,6 @@ validator.validate({}); // Valid
 
 </dt>
 <dd>Builder library
-Provides a fluent interface for building and validating data structures.
 </dd>
 
           <dt id="builder.core">
@@ -435,6 +434,13 @@ Provides a fluent interface for building and validating data structures.
 
 </dt>
 <dd>Type-specific builder classes for the fluent validation API.
+</dd>
+
+          <dt id="error_format">
+  <span class="name"><a href="error_format/">error_format</a></span> 
+
+</dt>
+<dd>Utilities for formatting validation / exception messages in a consistent, descriptive way.
 </dd>
 
           <dt id="eskema">
@@ -540,7 +546,28 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
   <span class="name"><a href="validator/">validator</a></span> 
 
 </dt>
-<dd>Validator library
+<dd>Backward-compatible export barrel for validator classes.
+</dd>
+
+          <dt id="validator.base">
+  <span class="name"><a href="validator.base/">validator/base_validator</a></span> 
+
+</dt>
+<dd>Core validator abstractions and base implementations.
+</dd>
+
+          <dt id="validator.combinators">
+  <span class="name"><a href="validator.combinators/">validator/combinator_validators</a></span> 
+
+</dt>
+<dd>Validators that combine or branch logic (WhenValidator, Field).
+</dd>
+
+          <dt id="validator.map">
+  <span class="name"><a href="validator.map/">validator/map_validators</a></span> 
+
+</dt>
+<dd>Map-oriented validators (schema / object validation helpers).
 </dd>
 
           <dt id="validators">
@@ -655,6 +682,7 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
       <li><a href="builder.core/">builder/core</a></li>
       <li><a href="builder.mixins/">builder/mixins</a></li>
       <li><a href="builder.type_builders/">builder/type_builders</a></li>
+      <li><a href="error_format/">error_format</a></li>
       <li><a href="eskema/">eskema</a></li>
       <li><a href="expectation/">expectation</a></li>
       <li><a href="expectation_codes/">expectation_codes</a></li>
@@ -670,6 +698,9 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
       <li><a href="transformers.string/">transformers/string</a></li>
       <li><a href="transformers.utility/">transformers/utility</a></li>
       <li><a href="validator/">validator</a></li>
+      <li><a href="validator.base/">validator/base_validator</a></li>
+      <li><a href="validator.combinators/">validator/combinator_validators</a></li>
+      <li><a href="validator.map/">validator/map_validators</a></li>
       <li><a href="validators/">validators</a></li>
       <li><a href="validators.cached/">validators/cached</a></li>
       <li><a href="validators.combinator/">validators/combinator</a></li>

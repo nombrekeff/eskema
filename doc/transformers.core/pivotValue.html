@@ -54,10 +54,10 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
 <span class="name ">pivotValue</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="pivotValue-param-transformFn"><span class="type-annotation">dynamic</span> <span class="parameter-name">transformFn</span>(<ol class="parameter-list single-line"> <li><span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span></li>
 </ol>), {</span></li>
-<li><span class="parameter" id="pivotValue-param-child"><span>required</span> <span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, </span></li>
+<li><span class="parameter" id="pivotValue-param-child"><span>required</span> <span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, </span></li>
 <li><span class="parameter" id="pivotValue-param-errorMessage"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">errorMessage</span>, </span></li>
 </ol>})
 
@@ -91,13 +91,15 @@ code duplication.</p>
 }) {
   return Validator((value) {
     final transformed = transformFn(value);
+
     if (transformed == null) {
-      return Result.invalid(value,
-          expectation: Expectation(message: errorMessage, value: value));
+      return Expectation(message: errorMessage, value: value).toInvalidResult();
     }
-    final r = child.validate(transformed);
-    if (r.isValid) return Result.valid(transformed);
-    return r;
+
+    final childResult = child.validate(transformed);
+    if (childResult.isValid) return Result.valid(transformed);
+
+    return childResult;
   });
 }</code></pre>
 </section>

@@ -206,7 +206,7 @@ pluckValue("user")           // -&gt; {"name": "Alice", "age": "25"}
     <h2>Methods</h2>
     <dl class="callables">
         <dt id="add" class="callable">
-  <span class="name"><a href="../builder.core/Chain/add.html">add</a></span><span class="signature">(<wbr><span class="parameter" id="add-param-v"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">v</span></span>)
+  <span class="name"><a href="../builder.core/Chain/add.html">add</a></span><span class="signature">(<wbr><span class="parameter" id="add-param-v"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">v</span></span>)
     <span class="returntype parameter">&#8594; void</span>
   </span>
   
@@ -220,7 +220,7 @@ Pre-coercion validators go before coercion, post-coercion validators go after.
 </dd>
 
         <dt id="addPrefix" class="callable">
-  <span class="name"><a href="../builder.core/Chain/addPrefix.html">addPrefix</a></span><span class="signature">(<wbr><span class="parameter" id="addPrefix-param-prefix"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">prefix</span>(<span class="parameter" id="param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)</span>)
+  <span class="name"><a href="../builder.core/Chain/addPrefix.html">addPrefix</a></span><span class="signature">(<wbr><span class="parameter" id="addPrefix-param-prefix"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">prefix</span>(<span class="parameter" id="param-child"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>)</span>)
     <span class="returntype parameter">&#8594; void</span>
   </span>
   
@@ -235,7 +235,7 @@ Used for operations like pluckValue that extract values from containers.
 
         <dt id="build" class="callable">
   <span class="name"><a href="../builder.core/Chain/build.html">build</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -260,7 +260,7 @@ Used for operations like pluckValue that extract values from containers.
 </dd>
 
         <dt id="setTransform" class="callable">
-  <span class="name"><a href="../builder.core/Chain/setTransform.html">setTransform</a></span><span class="signature">(<wbr><span class="parameter" id="setTransform-param-kind"><span class="type-annotation"><a href="../builder.core/CoercionKind.html">CoercionKind</a></span> <span class="parameter-name">kind</span>, </span><span class="parameter" id="setTransform-param-transformer"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">transformer</span>(<span class="parameter" id="param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>), {</span><span class="parameter" id="setTransform-param-dropPre"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">dropPre</span> = <span class="default-value">true</span></span>})
+  <span class="name"><a href="../builder.core/Chain/setTransform.html">setTransform</a></span><span class="signature">(<wbr><span class="parameter" id="setTransform-param-kind"><span class="type-annotation"><a href="../builder.core/CoercionKind.html">CoercionKind</a></span> <span class="parameter-name">kind</span>, </span><span class="parameter" id="setTransform-param-transformer"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">transformer</span>(<span class="parameter" id="param-child"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span>), {</span><span class="parameter" id="setTransform-param-dropPre"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">dropPre</span> = <span class="default-value">true</span></span>})
     <span class="returntype parameter">&#8594; void</span>
   </span>
   
@@ -286,7 +286,7 @@ Used for operations like pluckValue that extract values from containers.
 </dd>
 
         <dt id="wrap" class="callable">
-  <span class="name"><a href="../builder.core/Chain/wrap.html">wrap</a></span><span class="signature">(<wbr><span class="parameter" id="wrap-param-fn"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">fn</span>(<span class="parameter" id="param-current"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">current</span></span>)</span>)
+  <span class="name"><a href="../builder.core/Chain/wrap.html">wrap</a></span><span class="signature">(<wbr><span class="parameter" id="wrap-param-fn"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">fn</span>(<span class="parameter" id="param-current"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">current</span></span>)</span>)
     <span class="returntype parameter">&#8594; void</span>
   </span>
   

@@ -84,8 +84,9 @@
 }) {
   assert(!end.isBefore(start), &#39;end must be &gt;= start&#39;);
   return add(
-      isDateBetween(start, end, inclusiveStart: inclusiveStart, inclusiveEnd: inclusiveEnd),
-      message: message);
+    isDateBetween(start, end, inclusiveStart: inclusiveStart, inclusiveEnd: inclusiveEnd),
+    message: message,
+  );
 }</code></pre>
 </section>
 

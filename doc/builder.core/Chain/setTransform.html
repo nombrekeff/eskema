@@ -56,7 +56,7 @@
       
 <span class="returntype">void</span>
 <span class="name ">setTransform</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="setTransform-param-kind"><span class="type-annotation"><a href="../../builder.core/CoercionKind.html">CoercionKind</a></span> <span class="parameter-name">kind</span>, </span></li>
-<li><span class="parameter" id="setTransform-param-transformer"><span class="type-annotation"><a href="../../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">transformer</span>(<ol class="parameter-list single-line"> <li><span class="parameter" id="param-child"><span class="type-annotation"><a href="../../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span></li>
+<li><span class="parameter" id="setTransform-param-transformer"><span class="type-annotation"><a href="../../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">transformer</span>(<ol class="parameter-list single-line"> <li><span class="parameter" id="param-child"><span class="type-annotation"><a href="../../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span></li>
 </ol>), {</span></li>
 <li><span class="parameter" id="setTransform-param-dropPre"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">dropPre</span> = <span class="default-value">true</span>, </span></li>
 </ol>})
@@ -78,8 +78,11 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">void setTransform(CoercionKind kind, IValidator Function(IValidator child) transformer,
-    {bool dropPre = true}) {
+  <pre class="language-dart"><code class="language-dart">void setTransform(
+  CoercionKind kind,
+  IValidator Function(IValidator child) transformer, {
+  bool dropPre = true,
+}) {
   if (_coercionKind == null) {
     &#47;&#47; First pivot: drop pre validators (they targeted old domain)
     _coercionKind = kind;

@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
 <span class="name ">stringContains</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="stringContains-param-str"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">str</span>, {</span></li>
 <li><span class="parameter" id="stringContains-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
@@ -85,11 +85,11 @@ isImage.validate("document.pdf");          // Invalid
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IValidator stringContains(String str, {String? message}) {
-  return ($isString &amp;
+  return $isString &amp;
       contains(
         str,
         message: message ?? &#39;String to contain ${prettifyValue(str)}&#39;,
-      ));
+      );
 }</code></pre>
 </section>
 

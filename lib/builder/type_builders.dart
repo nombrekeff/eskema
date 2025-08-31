@@ -389,3 +389,5 @@ class RootBuilder {
 /// and how the returned builder will be invoked by the build infrastructure.
 /// Public entry function.
 RootBuilder v() => RootBuilder();
+
+/// Pre-built builders for common types.

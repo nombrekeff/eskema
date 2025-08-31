@@ -54,9 +54,9 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
 <span class="name ">flattenMapKeys</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="flattenMapKeys-param-delimiter"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">delimiter</span>, </span></li>
-<li><span class="parameter" id="flattenMapKeys-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span></li>
+<li><span class="parameter" id="flattenMapKeys-param-child"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span></li>
 <li><span class="parameter" id="flattenMapKeys-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
 
@@ -73,34 +73,36 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator flattenMapKeys(String delimiter, IValidator child, {String? message}) =&gt;
-    core.pivotValue(
-      (value) {
-        if (value is! Map) return null;
+  <pre class="language-dart"><code class="language-dart">IValidator flattenMapKeys(String delimiter, IValidator child, {String? message}) {
+  return core.pivotValue(
+    (value) {
+      if (value is! Map) return null;
 
-        final Map&lt;String, dynamic&gt; flat = {};
-        void walk(dynamic node, String prefix) {
-          if (node is Map) {
-            node.forEach((k, val) {
-              final newPrefix = prefix.isEmpty ? &#39;$k&#39; : &#39;$prefix$delimiter$k&#39;;
-              if (val is Map) {
-                walk(val, newPrefix);
-              } else {
-                flat[newPrefix] = val;
-              }
-            });
-          } else {
-            if (prefix.isNotEmpty) flat[prefix] = node;
-          }
+      final Map&lt;String, dynamic&gt; flat = {};
+
+      void walk(dynamic node, String prefix) {
+        if (node is Map) {
+          node.forEach((k, val) {
+            final newPrefix = prefix.isEmpty ? &#39;$k&#39; : &#39;$prefix$delimiter$k&#39;;
+            if (val is Map) {
+              walk(val, newPrefix);
+            } else {
+              flat[newPrefix] = val;
+            }
+          });
+        } else {
+          if (prefix.isNotEmpty) flat[prefix] = node;
         }
+      }
 
-        walk(value, &#39;&#39;);
+      walk(value, &#39;&#39;);
 
-        return flat;
-      },
-      child: child,
-      errorMessage: message ?? &#39;a Map flattable by keys&#39;,
-    );</code></pre>
+      return flat;
+    },
+    child: child,
+    errorMessage: message ?? &#39;a Map flattable by keys&#39;,
+  );
+}</code></pre>
 </section>
 
 

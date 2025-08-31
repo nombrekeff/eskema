@@ -56,7 +56,7 @@
       
       <span class="name ">Result&lt;<wbr><span class="type-parameter">T</span>&gt;</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="-param-isValid"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">isValid</span>, </span></li>
 <li><span class="parameter" id="-param-value"><span>required</span> <span class="type-annotation">T</span> <span class="parameter-name">value</span>, </span></li>
-<li><span class="parameter" id="-param-expectations"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../expectation/Expectation-class.html">Expectation</a></span>&gt;</span>?</span> <span class="parameter-name">expectations</span>, </span></li>
+<li><span class="parameter" id="-param-expectations"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../expectation/Expectation-class.html">Expectation</a></span>&gt;</span>?</span> <span class="parameter-name">expectations</span>, </span></li>
 <li><span class="parameter" id="-param-expectation"><span class="type-annotation"><a href="../../expectation/Expectation-class.html">Expectation</a>?</span> <span class="parameter-name">expectation</span>, </span></li>
 </ol>})
     </section>
@@ -69,11 +69,10 @@
   <pre class="language-dart"><code class="language-dart">Result({
   required this.isValid,
   required this.value,
-  List&lt;Expectation&gt;? expectations,
+  Iterable&lt;Expectation&gt;? expectations,
   Expectation? expectation,
-}) : expectations = List.unmodifiable(
-        expectations ?? (expectation == null ? _emptyExpectations : [expectation]),
-      );</code></pre>
+}) : expectations =
+          expectations ?? (expectation == null ? _emptyExpectations : [expectation]);</code></pre>
 </section>
 
 

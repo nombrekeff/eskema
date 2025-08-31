@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">not</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="not-param-validator"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span>, {</span></li>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
+<span class="name ">not</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="not-param-validator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span>, {</span></li>
 <li><span class="parameter" id="not-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
 
@@ -87,30 +87,21 @@ final fieldNotPresent = not(exists());
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator not(IValidator validator, {String? message}) =&gt; Validator&lt;Result&gt;(
-      (value) {
-        final resOr = validator.validator(value);
-        if (resOr is Future&lt;Result&gt;) return _notAsync(value, resOr, message: message);
+  <pre class="language-dart"><code class="language-dart">IValidator not(IValidator validator, {String? message}) =&gt; Validator&lt;Result&gt;((value) {
+      final result = validator.validator(value);
 
-        if (message != null) {
-          return Result.invalid(
-            value,
-            expectation: Expectation(message: message, value: value),
-          );
-        }
+      if (result is Future&lt;Result&gt;) return _notAsync(value, result, message: message);
+      if (message != null &amp;&amp; result.isValid) return _failWithMsg(value, message);
 
-        final expectations = resOr.expectations
-            .map(
-              (error) =&gt; error.copyWith(
-                message: &#39;not ${error.message}&#39;,
-                code: error.code ?? &#39;logic.not_expected&#39;,
-              ),
-            )
-            .toList();
+      final mapped = result.expectations.map(
+        (e) =&gt; e.copyWith(
+          message: &#39;not ${e.message}&#39;,
+          code: e.code ?? &#39;logic.not_expected&#39;,
+        ),
+      );
 
-        return Result(isValid: resOr.isNotValid, expectations: expectations, value: value);
-      },
-    );</code></pre>
+      return Result(isValid: result.isNotValid, expectations: mapped, value: value);
+    });</code></pre>
 </section>
 
 

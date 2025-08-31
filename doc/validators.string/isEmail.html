@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
 <span class="name ">isEmail</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="isEmail-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
 
@@ -81,7 +81,7 @@ final strictEmail = all([$isString, isEmail()]);
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IValidator isEmail({String? message}) {
   return isString() &amp;
-      stringMatchesPattern(emailRegex, error: message ?? &#39;a valid email address&#39;);
+      stringMatchesPattern(emailRegex, message: message ?? &#39;a valid email address&#39;);
 }</code></pre>
 </section>
 

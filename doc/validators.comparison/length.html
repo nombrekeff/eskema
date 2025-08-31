@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">length</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="length-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span>, {</span></li>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
+<span class="name ">length</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="length-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator.base/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span>, {</span></li>
 <li><span class="parameter" id="length-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
 
@@ -72,30 +72,31 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IValidator length(List&lt;IValidator&gt; validators, {String? message}) {
-  FutureOr&lt;Result&gt; pipeline(value) {
+  return Validator((value) {
     if (hasLengthProperty(value)) {
       final len = (value as dynamic).length;
       final result = all(validators).validate(len);
+
       if (result.isValid) return Result.valid(value);
+
       &#47;&#47; Re-wrap child expectations into a single consolidated expectation for clarity.
       &#47;&#47; Child messages (e.g. &#39;equal to 2&#39;) are wrapped in square brackets like prior behavior.
       final joined = result.expectations.map((e) =&gt; e.message).join(&#39; &amp; &#39;);
-      return Result.invalid(value, expectations: [
-        Expectation(
-          message: message ?? &#39;length [$joined]&#39;,
-          value: value,
-          code: ExpectationCodes.valueLengthOutOfRange,
-          data: {&#39;length&#39;: len},
-        )
-      ]);
-    } else {
-      return expectation(message ?? &#39;${value.runtimeType} does not have a length property&#39;,
-              value, null, &#39;logic.predicate_failed&#39;)
-          .toInvalidResult();
-    }
-  }
 
-  return Validator(pipeline);
+      return Expectation(
+        message: message ?? &#39;length [$joined]&#39;,
+        value: value,
+        code: ExpectationCodes.valueLengthOutOfRange,
+        data: {&#39;length&#39;: len},
+      ).toInvalidResult();
+    }
+
+    return Expectation(
+      message: message ?? &#39;${value.runtimeType} does not have a length property&#39;,
+      value: value,
+      code: ExpectationCodes.logicPredicateFailed,
+    ).toInvalidResult();
+  });
 }</code></pre>
 </section>
 

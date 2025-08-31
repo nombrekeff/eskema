@@ -38,18 +38,22 @@ String buildValidationFailureMessage(
   buffer.writeln(valueRepr);
 
   final toShow = result.expectations.take(maxErrorsToList).toList(growable: false);
+  
   for (var i = 0; i < toShow.length; i++) {
     final e = toShow[i];
     buffer.write('  ${i + 1}) ');
     buffer.write(e.description);
+
     if (e.code != null) buffer.write(' [code=${e.code}]');
     if (e.data != null && e.data!.isNotEmpty) buffer.write(' {data=${e.data}}');
     buffer.writeln();
   }
+
   final remaining = result.expectationCount - toShow.length;
   if (remaining > 0) {
     buffer.writeln('  … ($remaining more not shown)');
   }
+
   return buffer.toString().trimRight();
 }
 

@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
 <span class="name ">jsonHasKeys</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="jsonHasKeys-param-keys"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span> <span class="parameter-name">keys</span>, {</span></li>
 <li><span class="parameter" id="jsonHasKeys-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
@@ -71,15 +71,17 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator jsonHasKeys(Iterable&lt;String&gt; keys, {String? message}) =&gt; Validator((value) {
-      final ok = value is Map &amp;&amp; keys.every((k) =&gt; value.containsKey(k));
+  <pre class="language-dart"><code class="language-dart">IValidator jsonHasKeys(Iterable&lt;String&gt; keys, {String? message}) =&gt;
+    $isMap &amp;
+    Validator((value) {
+      final ok = keys.every((k) =&gt; value.containsKey(k));
       return Result(
         isValid: ok,
         value: value,
         expectation: Expectation(
           message: message ?? &#39;JSON object has keys: ${keys.join(&#39;, &#39;)}&#39;,
           value: value,
-          code: &#39;value.contains_missing&#39;,
+          code: ExpectationCodes.typeMismatch,
           data: {&#39;keys&#39;: keys.toList()},
         ),
       );

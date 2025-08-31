@@ -54,9 +54,9 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
 <span class="name ">stringMatchesPattern</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="stringMatchesPattern-param-pattern"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Pattern-class.html">Pattern</a></span> <span class="parameter-name">pattern</span>, {</span></li>
-<li><span class="parameter" id="stringMatchesPattern-param-error"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">error</span>, </span></li>
+<li><span class="parameter" id="stringMatchesPattern-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
 
         
@@ -80,7 +80,7 @@ hexColor.validate("#GGG");                 // Invalid
 
 // Custom error message
 final customPattern = stringMatchesPattern(r'^\d{4}-\d{2}-\d{2}$',
-  error: 'Date must be in YYYY-MM-DD format');
+  message: 'Date must be in YYYY-MM-DD format');
 </code></pre>
 </section>
 
@@ -88,12 +88,12 @@ final customPattern = stringMatchesPattern(r'^\d{4}-\d{2}-\d{2}$',
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator stringMatchesPattern(Pattern pattern, {String? error}) {
+  <pre class="language-dart"><code class="language-dart">IValidator stringMatchesPattern(Pattern pattern, {String? message}) {
   return isType&lt;String&gt;() &amp;
       validator(
         (value) =&gt; pattern.allMatches(value).isNotEmpty,
         (value) =&gt; Expectation(
-          message: error ?? &#39;String to match &quot;$pattern&quot;&#39;,
+          message: message ?? &#39;String to match &quot;$pattern&quot;&#39;,
           value: value,
           code: ExpectationCodes.valuePatternMismatch,
           data: {&#39;pattern&#39;: pattern.toString()},

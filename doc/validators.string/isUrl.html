@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
 <span class="name ">isUrl</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="isUrl-param-strict"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">strict</span> = <span class="default-value">false</span>, </span></li>
 <li><span class="parameter" id="isUrl-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
@@ -89,13 +89,17 @@ final strictUrl2 = isStrictUrl();
   <pre class="language-dart"><code class="language-dart">IValidator isUrl({bool strict = false, String? message}) {
   return isString() &amp;
       validator(
-        (value) =&gt;
-            strict ? Uri.tryParse(value)?.isAbsolute ?? false : Uri.tryParse(value) != null,
+        (value) {
+          return strict
+              ? Uri.tryParse(value)?.isAbsolute ?? false
+              : Uri.tryParse(value) != null;
+        },
         (value) =&gt; Expectation(
-            message: message ?? &#39;a valid URL&#39;,
-            value: value,
-            code: ExpectationCodes.valueFormatInvalid,
-            data: {&#39;format&#39;: &#39;url&#39;}),
+          message: message ?? &#39;a valid URL&#39;,
+          value: value,
+          code: ExpectationCodes.valueFormatInvalid,
+          data: {&#39;format&#39;: &#39;url&#39;},
+        ),
       );
 }</code></pre>
 </section>

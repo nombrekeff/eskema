@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
 <span class="name ">isDateInFuture</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="isDateInFuture-param-allowNow"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">allowNow</span> = <span class="default-value">true</span>, </span></li>
 <li><span class="parameter" id="isDateInFuture-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
@@ -73,19 +73,14 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IValidator isDateInFuture({bool allowNow = true, String? message}) {
   final now = DateTime.now();
-  return Validator((value) {
-    final ok = value is DateTime &amp;&amp; (allowNow ? !value.isBefore(now) : value.isAfter(now));
-    return Result(
-      isValid: ok,
-      expectation: Expectation(
-        message: message ?? &#39;a DateTime in the future${allowNow ? &#39; or now&#39; : &#39;&#39;}&#39;,
-        value: value,
-        code: ExpectationCodes.valueDateNotFuture,
-        data: {&#39;now&#39;: now.toIso8601String(), &#39;allowNow&#39;: allowNow},
-      ),
-      value: value,
-    );
-  });
+
+  return _datePredicate(
+    defaultMessage: &#39;a DateTime in the future${allowNow ? &#39; or now&#39; : &#39;&#39;}&#39;,
+    test: (v) =&gt; allowNow ? !v.isBefore(now) : v.isAfter(now),
+    code: ExpectationCodes.valueDateNotFuture,
+    dataBuilder: () =&gt; {&#39;now&#39;: now.toIso8601String(), &#39;allowNow&#39;: allowNow},
+    message: message,
+  );
 }</code></pre>
 </section>
 

@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">any</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="any-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span>, {</span></li>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
+<span class="name ">any</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="any-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator.base/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span>, {</span></li>
 <li><span class="parameter" id="any-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
 
@@ -64,7 +64,7 @@
     </section>
     
 <section class="desc markdown">
-  <p>Passes the test if any of the <a href="../validator/Validator-class.html">Validator</a>s are valid, and fails if any are invalid</p>
+  <p>Passes the test if any of the <a href="../validator.base/Validator-class.html">Validator</a>s are valid, and fails if any are invalid</p>
 <p><strong>Usage Examples:</strong></p>
 <pre class="language-dart"><code class="language-dart">// Accept either a string or a number
 final stringOrNumber = any([$isString, $isNumber]);
@@ -84,28 +84,30 @@ final emailValidator = any([
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator any(List&lt;IValidator&gt; validators, {String? message}) =&gt; Validator&lt;Result&gt;(
-      (value) {
-        final collected = &lt;Result&gt;[];
+  <pre class="language-dart"><code class="language-dart">IValidator any(List&lt;IValidator&gt; validators, {String? message}) {
+  return Validator&lt;Result&gt;((value) {
+    List&lt;Expectation&gt;? expectations; &#47;&#47; lazily allocate only when needed
 
-        for (var i = 0; i &lt; validators.length; i++) {
-          final resOr = validators[i].validator(value);
-          if (resOr is Future&lt;Result&gt;) {
-            return _anyAsync(value, validators, collected, i, resOr);
-          }
-          final res = resOr;
-          collected.add(res);
-          if (res.isValid) return res;
-        }
+    for (var i = 0; i &lt; validators.length; i++) {
+      final result = validators[i].validator(value);
 
-        final expectations = collected.expand((r) =&gt; r.expectations).toList();
-        if (message != null) {
-          return Result.invalid(value,
-              expectation: Expectation(message: message, value: value));
-        }
-        return Result.invalid(value, expectations: expectations);
-      },
-    );</code></pre>
+      if (result is Future&lt;Result&gt;) {
+        return _anyAsync(value, validators, expectations, i, result, message: message);
+      }
+
+      &#47;&#47; Whenever a validator is valid, we return its result directly.
+      if (result.isValid) return result;
+
+      if (message == null &amp;&amp; result.expectations.isNotEmpty) {
+        (expectations ??= &lt;Expectation&gt;[]).addAll(result.expectations);
+      }
+    }
+
+    if (message != null) return _failWithMsg(value, message);
+
+    return Result.invalid(value, expectations: expectations ?? const &lt;Expectation&gt;[]);
+  });
+}</code></pre>
 </section>
 
 

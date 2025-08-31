@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
 <span class="name ">isDateSameDay</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="isDateSameDay-param-dt"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a></span> <span class="parameter-name">dt</span>, {</span></li>
 <li><span class="parameter" id="isDateSameDay-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
@@ -71,23 +71,15 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator isDateSameDay(DateTime dt, {String? message}) =&gt; Validator((value) {
-      final ok = value is DateTime &amp;&amp;
-          value.year == dt.year &amp;&amp;
-          value.month == dt.month &amp;&amp;
-          value.day == dt.day;
-      return Result(
-        isValid: ok,
-        expectation: Expectation(
-          message: message ??
-              &#39;a DateTime on the same day as ${dt.toIso8601String().substring(0, 10)}&#39;,
-          value: value,
-          code: ExpectationCodes.valueDateMismatch,
-          data: {&#39;targetDay&#39;: dt.toIso8601String().substring(0, 10)},
-        ),
-        value: value,
-      );
-    });</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator isDateSameDay(DateTime dt, {String? message}) {
+  return _datePredicate(
+    defaultMessage: &#39;a DateTime on the same day as ${dt.toIso8601String().substring(0, 10)}&#39;,
+    test: (v) =&gt; v.year == dt.year &amp;&amp; v.month == dt.month &amp;&amp; v.day == dt.day,
+    code: ExpectationCodes.valueDateMismatch,
+    dataBuilder: () =&gt; {&#39;targetDay&#39;: dt.toIso8601String().substring(0, 10)},
+    message: message,
+  );
+}</code></pre>
 </section>
 
 

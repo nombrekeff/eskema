@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">expectPreserveValue</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="expectPreserveValue-param-validator"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span>, </span></li>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
+<span class="name ">expectPreserveValue</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="expectPreserveValue-param-validator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span>, </span></li>
 <li><span class="parameter" id="expectPreserveValue-param-expectation"><span class="type-annotation"><a href="../expectation/Expectation-class.html">Expectation</a></span> <span class="parameter-name">expectation</span></span></li>
 </ol>)
 
@@ -72,13 +72,19 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator expectPreserveValue(IValidator validator, Expectation expectation) =&gt;
-    Validator((value) {
-      final r = validator.validate(value);
-      if (r.isValid) return Result.valid(r.value);
-      return Result.invalid(r.value,
-          expectations: [expectation.copyWith(code: r.firstExpectation.code, value: r.value)]);
-    });</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator expectPreserveValue(IValidator validator, Expectation expectation) {
+  return Validator((value) {
+    final innerResult = validator.validate(value);
+    if (innerResult.isValid) return Result.valid(innerResult.value);
+
+    return Result.invalid(innerResult.value, expectations: [
+      expectation.copyWith(
+        code: innerResult.firstExpectation.code,
+        value: innerResult.value,
+      )
+    ]);
+  });
+}</code></pre>
 </section>
 
 

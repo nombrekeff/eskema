@@ -85,6 +85,8 @@ mainly for debugging or logging.</p>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 String toString() {
+  &#47;&#47; Keep valid results concise; invalid use joined expectation descriptions (legacy behavior).
+  &#47;&#47; Callers needing structured formatting should use error_format.dart helpers.
   return description;
 }</code></pre>
 </section>

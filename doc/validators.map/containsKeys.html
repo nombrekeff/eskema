@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
 <span class="name ">containsKeys</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="containsKeys-param-keys"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span> <span class="parameter-name">keys</span>, {</span></li>
 <li><span class="parameter" id="containsKeys-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
@@ -71,21 +71,11 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator containsKeys(Iterable&lt;String&gt; keys, {String? message}) =&gt;
-    isMap() &amp;
-    Validator((value) {
-      final missingKeys = keys.any((key) =&gt; !value.containsKey(key));
-
-      return Result(
-        isValid: !missingKeys,
-        expectation: Expectation(
-          message: message ?? &#39;contains keys: ${prettifyValue(keys)}&#39;,
-          value: value,
-          code: &#39;value.contains_missing&#39;,
-        ),
-        value: value,
-      );
-    });</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator containsKeys(Iterable&lt;String&gt; keys, {String? message}) =&gt; _mapPredicateValidator(
+      message: message ?? &#39;contains keys: ${prettifyValue(keys)}&#39;,
+      test: (m) =&gt; !keys.any((key) =&gt; !m.containsKey(key)),
+      code: ExpectationCodes.valueContainsMissing,
+    );</code></pre>
 </section>
 
 

@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
 <span class="name ">containsKey</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="containsKey-param-key"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">key</span>, {</span></li>
 <li><span class="parameter" id="containsKey-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
@@ -71,19 +71,11 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator containsKey(String key, {String? message}) =&gt;
-    isMap() &amp;
-    Validator((value) {
-      return Result(
-        isValid: value.containsKey(key),
-        value: value,
-        expectation: Expectation(
-          message: message ?? &#39;contains key &quot;$key&quot;&#39;,
-          value: value,
-          code: &#39;value.contains_missing&#39;,
-        ),
-      );
-    });</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator containsKey(String key, {String? message}) =&gt; _mapPredicateValidator(
+      test: (m) =&gt; m.containsKey(key),
+      code: ExpectationCodes.valueContainsMissing,
+      message: message ?? &#39;contains key &quot;$key&quot;&#39;,
+    );</code></pre>
 </section>
 
 

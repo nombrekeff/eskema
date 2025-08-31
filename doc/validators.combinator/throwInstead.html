@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">throwInstead</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="throwInstead-param-validator"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span></span></li>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
+<span class="name ">throwInstead</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="throwInstead-param-validator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span></span></li>
 </ol>)
 
         
@@ -63,7 +63,7 @@
     </section>
     
 <section class="desc markdown">
-  <p>Returns a <a href="../validator/Validator-class.html">Validator</a> that throws a <a href="../validator/ValidatorFailedException-class.html">ValidatorFailedException</a> instead of returning a result</p>
+  <p>Returns a <a href="../validator.base/Validator-class.html">Validator</a> that throws a <a href="../validator.base/ValidatorFailedException-class.html">ValidatorFailedException</a> instead of returning a result</p>
 <p><strong>Usage Examples:</strong></p>
 <pre class="language-dart"><code class="language-dart">// API endpoint validation that throws on invalid input
 final strictEmail = throwInstead($isEmail);
@@ -87,8 +87,10 @@ final formValidator = throwInstead(all([
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IValidator throwInstead(IValidator validator) =&gt; Validator&lt;Result&gt;((value) {
       final resOr = validator.validator(value);
+
       if (resOr is Future&lt;Result&gt;) return _throwInsteadAsync(resOr);
       if (resOr.isNotValid) throw ValidatorFailedException(resOr);
+
       return Result.valid(value);
     });</code></pre>
 </section>

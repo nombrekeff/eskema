@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">withExpectation</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="withExpectation-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, </span></li>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
+<span class="name ">withExpectation</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="withExpectation-param-child"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, </span></li>
 <li><span class="parameter" id="withExpectation-param-error"><span class="type-annotation"><a href="../expectation/Expectation-class.html">Expectation</a></span> <span class="parameter-name">error</span>, {</span></li>
 <li><span class="parameter" id="withExpectation-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
@@ -65,7 +65,7 @@
     </section>
     
 <section class="desc markdown">
-  <p>Returns a <a href="../validator/IValidator-class.html">IValidator</a> that wraps the given <code>child</code> validator and adds the
+  <p>Returns a <a href="../validator.base/IValidator-class.html">IValidator</a> that wraps the given <code>child</code> validator and adds the
 provided <code>error</code> message to the result if the validation fails.
 Preserves the underlying child's <code>code</code> and <code>data</code> (if the child failed).
 See docs/expectation_codes.md.</p>
@@ -96,27 +96,22 @@ final emailValidator = withExpectation(
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IValidator withExpectation(IValidator child, Expectation error, {String? message}) =&gt;
     Validator&lt;Result&gt;((value) {
-      final resOr = child.validator(value);
+      final result = child.validator(value);
 
-      if (resOr is Future&lt;Result&gt;) {
-        return resOr.then((r) =&gt; Result(
-              isValid: r.isValid,
-              expectations: [
-                (message != null ? error.copyWith(message: message) : error)
-                    .copyWith(value: value, code: r.isValid ? null : r.firstExpectation.code)
-              ],
-              value: value,
-            ));
+      Expectation build(Result r) =&gt; _applyOverride(
+            error,
+            message,
+            value,
+            code: r.isValid ? null : r.firstExpectation.code,
+          );
+
+      if (result is Future&lt;Result&gt;) {
+        return result.then(
+          (r) =&gt; Result(isValid: r.isValid, expectation: build(r), value: value),
+        );
       }
 
-      return Result(
-        isValid: resOr.isValid,
-        expectations: [
-          (message != null ? error.copyWith(message: message) : error)
-              .copyWith(value: value, code: resOr.isValid ? null : resOr.firstExpectation.code)
-        ],
-        value: value,
-      );
+      return Result(isValid: result.isValid, expectation: build(result), value: value);
     });</code></pre>
 </section>
 

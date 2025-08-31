@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">eskema</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="eskema-param-mapEskema"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">mapEskema</span>, {</span></li>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
+<span class="name ">eskema</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="eskema-param-mapEskema"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter"><a href="../validator.base/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">mapEskema</span>, {</span></li>
 <li><span class="parameter" id="eskema-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
 
@@ -87,74 +87,73 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IValidator eskema(Map&lt;String, IValidator&gt; mapEskema, {String? message}) {
-  return isMap() &amp;
-      Validator(
-        (value) {
-          final errors = &lt;Expectation&gt;[];
-          final entries = mapEskema.entries.toList();
-          &#47;&#47; We intentionally implement `loop` returning `FutureOr&lt;Result&gt;`:
-          &#47;&#47; - Each validator may return a Result synchronously or a Future&lt;Result&gt;.
-          &#47;&#47; - If all validators are synchronous we want to return a plain Result
-          &#47;&#47;   so callers keep getting synchronous behavior (short-circuits and
-          &#47;&#47;   cheaper execution).
-          &#47;&#47; - If any validator is asynchronous we return a Future that chains the
-          &#47;&#47;   remaining validation steps. Using async&#47;await would always return
-          &#47;&#47;   a Future&lt;Result&gt; and change the observable behavior.
-          &#47;&#47;
-          &#47;&#47; The recursive loop lets us process entries one-by-one and only
-          &#47;&#47; escalate to a Future when a validator actually returns one.
-          FutureOr&lt;Result&gt; loop(int index) {
-            if (index &gt;= entries.length) {
-              return errors.isEmpty
-                  ? Result.valid(value)
-                  : Result.invalid(value, expectations: errors);
-            }
+  FutureOr&lt;Result&gt; eskemaPredicate(value) {
+    final errors = &lt;Expectation&gt;[];
+    final entries = mapEskema.entries.toList();
+    &#47;&#47; We intentionally implement `loop` returning `FutureOr&lt;Result&gt;`:
+    &#47;&#47; - Each validator may return a Result synchronously or a Future&lt;Result&gt;.
+    &#47;&#47; - If all validators are synchronous we want to return a plain Result
+    &#47;&#47;   so callers keep getting synchronous behavior (short-circuits and
+    &#47;&#47;   cheaper execution).
+    &#47;&#47; - If any validator is asynchronous we return a Future that chains the
+    &#47;&#47;   remaining validation steps. Using async&#47;await would always return
+    &#47;&#47;   a Future&lt;Result&gt; and change the observable behavior.
+    &#47;&#47;
+    &#47;&#47; The recursive loop lets us process entries one-by-one and only
+    &#47;&#47; escalate to a Future when a validator actually returns one.
+    FutureOr&lt;Result&gt; loop(int index) {
+      if (index &gt;= entries.length) {
+        return errors.isEmpty
+            ? Result.valid(value)
+            : Result.invalid(value, expectations: errors);
+      }
 
-            final entry = entries[index];
-            final key = entry.key;
-            final validator = entry.value;
-            final fieldValue = value[key];
-            final exists = value.containsKey(key);
+      final entry = entries[index];
+      final key = entry.key;
+      final validator = entry.value;
+      final fieldValue = value[key];
+      final exists = value.containsKey(key);
 
-            FutureOr&lt;Result&gt; res;
-            if (validator is IWhenValidator) {
-              res = validator.validateWithParent(fieldValue, value, exists: exists);
-            } else {
-              &#47;&#47; Reproduce nullable&#47;optional short-circuit semantics that validate() provided.
-              if (!exists) {
-                if (validator.isOptional) return loop(index + 1);
-                &#47;&#47; For required field missing: validate with exists: false so nullable validators fail.
-                final missingRes = validator.validate(null, exists: false);
-                _collectEskema(missingRes, errors, key, message);
-                return loop(index + 1);
-              }
+      FutureOr&lt;Result&gt; res;
+      if (validator is IWhenValidator) {
+        res = validator.validateWithParent(fieldValue, value, exists: exists);
+      } else {
+        &#47;&#47; Reproduce nullable&#47;optional short-circuit semantics that validate() provided.
+        if (!exists) {
+          if (validator.isOptional) return loop(index + 1);
+          &#47;&#47; For required field missing: validate with exists: false so nullable validators fail.
+          final missingRes = validator.validate(null, exists: false);
+          _collectEskema(missingRes, errors, key, message);
+          return loop(index + 1);
+        }
 
-              if (!exists &amp;&amp; validator.isOptional) {
-                return loop(index + 1);
-              }
+        if (!exists &amp;&amp; validator.isOptional) {
+          return loop(index + 1);
+        }
 
-              if (exists &amp;&amp; fieldValue == null &amp;&amp; validator.isNullable) {
-                return loop(index + 1);
-              }
+        if (exists &amp;&amp; fieldValue == null &amp;&amp; validator.isNullable) {
+          return loop(index + 1);
+        }
 
-              res = validator.validator(fieldValue);
-            }
+        res = validator.validator(fieldValue);
+      }
 
-            if (res is Future&lt;Result&gt;) {
-              return res.then((r) {
-                _collectEskema(r, errors, key, message);
-                return loop(index + 1);
-              });
-            }
+      if (res is Future&lt;Result&gt;) {
+        return res.then((r) {
+          _collectEskema(r, errors, key, message);
+          return loop(index + 1);
+        });
+      }
 
-            _collectEskema(res, errors, key, message);
+      _collectEskema(res, errors, key, message);
 
-            return loop(index + 1);
-          }
+      return loop(index + 1);
+    }
 
-          return loop(0);
-        },
-      );
+    return loop(0);
+  }
+
+  return isMap() &amp; Validator(eskemaPredicate);
 }</code></pre>
 </section>
 

@@ -198,21 +198,21 @@ final numbersValidator = v().set()
     <h2>Methods</h2>
     <dl class="callables">
         <dt id="add" class="callable inherited">
-  <span class="name"><a href="../builder.core/BaseBuilder/add.html">add</a></span><span class="signature">(<wbr><span class="parameter" id="add-param-validator"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span>, {</span><span class="parameter" id="add-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+  <span class="name"><a href="../builder.core/BaseBuilder/add.html">add</a></span><span class="signature">(<wbr><span class="parameter" id="add-param-validator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span>, {</span><span class="parameter" id="add-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../builder.type_builders/IterableBuilder-class.html">IterableBuilder</a></span>
   </span>
   
 
 </dt>
 <dd class="inherited">
-  
+  Add a validator to the chain.
   <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
 
         <dt id="build" class="callable inherited">
   <span class="name"><a href="../builder.core/BaseBuilder/build.html">build</a></span><span class="signature">(<wbr>)
-    <span class="returntype parameter">&#8594; <a href="../validator/IValidator-class.html">IValidator</a></span>
+    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
   </span>
   
 
@@ -244,13 +244,13 @@ final numbersValidator = v().set()
 
 </dt>
 <dd class="inherited">
-  
+  Require the value to be deeply equal to the specified value.
   <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
 
         <dt id="each" class="callable inherited">
-  <span class="name"><a href="../builder.mixins/IterableMixin/each.html">each</a></span><span class="signature">(<wbr><span class="parameter" id="each-param-elementValidator"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">elementValidator</span></span>)
+  <span class="name"><a href="../builder.mixins/IterableMixin/each.html">each</a></span><span class="signature">(<wbr><span class="parameter" id="each-param-elementValidator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">elementValidator</span></span>)
     <span class="returntype parameter">&#8594; <a href="../builder.type_builders/IterableBuilder-class.html">IterableBuilder</a></span>
   </span>
   
@@ -283,7 +283,7 @@ final numbersValidator = v().set()
 
 </dt>
 <dd class="inherited">
-  
+  Require the value to be equal to the specified value.
   <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
@@ -302,7 +302,7 @@ final numbersValidator = v().set()
 </dd>
 
         <dt id="length" class="callable inherited">
-  <span class="name"><a href="../builder.mixins/LengthMixin/length.html">length</a></span><span class="signature">(<wbr><span class="parameter" id="length-param-lengthValidators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">lengthValidators</span>, {</span><span class="parameter" id="length-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+  <span class="name"><a href="../builder.mixins/LengthMixin/length.html">length</a></span><span class="signature">(<wbr><span class="parameter" id="length-param-lengthValidators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator.base/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">lengthValidators</span>, {</span><span class="parameter" id="length-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../builder.type_builders/IterableBuilder-class.html">IterableBuilder</a></span>
   </span>
   
@@ -387,7 +387,7 @@ final numbersValidator = v().set()
 
 </dt>
 <dd class="inherited">
-  
+  Require the value to be one of the specified options.
   <div class="features"><span class="feature">inherited</span></div>
 
 </dd>
@@ -445,14 +445,14 @@ final numbersValidator = v().set()
 </dd>
 
         <dt id="wrap" class="callable inherited">
-  <span class="name"><a href="../builder.core/BaseBuilder/wrap.html">wrap</a></span><span class="signature">(<wbr><span class="parameter" id="wrap-param-fn"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">fn</span>(<span class="parameter" id="param-"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span></span>), {</span><span class="parameter" id="wrap-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+  <span class="name"><a href="../builder.core/BaseBuilder/wrap.html">wrap</a></span><span class="signature">(<wbr><span class="parameter" id="wrap-param-fn"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">fn</span>(<span class="parameter" id="param-"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span></span>), {</span><span class="parameter" id="wrap-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../builder.type_builders/IterableBuilder-class.html">IterableBuilder</a></span>
   </span>
   
 
 </dt>
 <dd class="inherited">
-  
+  Wrap the current chain with a custom function.
   <div class="features"><span class="feature">inherited</span></div>
 
 </dd>

@@ -233,16 +233,19 @@ class BaseBuilder<B extends BaseBuilder<B, T>, T> {
   }
 
   /// Mark current chain optional (skipped when key absent).
+  ///
+  /// Make sure to add to the end of the chain to afect the final validator.
+  /// Otherwise, it may not be applied correctly.
   B optional({String? message}) {
     return wrap((c) => c.optional(), message: message);
   }
 
   /// Mark current chain nullable (null accepted as valid).
+  ///
+  /// Make sure to add to the end of the chain to afect the final validator.
+  /// Otherwise, it may not be applied correctly.
   B nullable({String? message}) {
-    return wrap(
-      (c) => c.nullable(),
-      message: message,
-    );
+    return wrap((c) => c.nullable(), message: message);
   }
 
   /// Override final error message (retains codes).

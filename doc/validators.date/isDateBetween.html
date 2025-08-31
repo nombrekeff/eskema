@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
 <span class="name ">isDateBetween</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="isDateBetween-param-start"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a></span> <span class="parameter-name">start</span>, </span></li>
 <li><span class="parameter" id="isDateBetween-param-end"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a></span> <span class="parameter-name">end</span>, {</span></li>
 <li><span class="parameter" id="isDateBetween-param-inclusiveStart"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">inclusiveStart</span> = <span class="default-value">true</span>, </span></li>
@@ -74,29 +74,29 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator isDateBetween(DateTime start, DateTime end,
-        {bool inclusiveStart = true, bool inclusiveEnd = true, String? message}) =&gt;
-    Validator((value) {
-      final ok = value is DateTime &amp;&amp;
-          (inclusiveStart ? !value.isBefore(start) : value.isAfter(start)) &amp;&amp;
-          (inclusiveEnd ? !value.isAfter(end) : value.isBefore(end));
-      return Result(
-        isValid: ok,
-        expectation: Expectation(
-          message: message ??
-              &#39;a DateTime between ${start.toIso8601String()} and ${end.toIso8601String()} (${inclusiveStart ? &#39;[&#39; : &#39;(&#39;}${inclusiveEnd ? &#39;]&#39; : &#39;)&#39;})&#39;,
-          value: value,
-          code: ExpectationCodes.valueDateOutOfRange,
-          data: {
-            &#39;start&#39;: start.toIso8601String(),
-            &#39;end&#39;: end.toIso8601String(),
-            &#39;inclusiveStart&#39;: inclusiveStart,
-            &#39;inclusiveEnd&#39;: inclusiveEnd,
-          },
-        ),
-        value: value,
-      );
-    });</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator isDateBetween(
+  DateTime start,
+  DateTime end, {
+  bool inclusiveStart = true,
+  bool inclusiveEnd = true,
+  String? message,
+}) {
+  return _datePredicate(
+    defaultMessage:
+        &#39;a DateTime between ${start.toIso8601String()} and ${end.toIso8601String()} (${inclusiveStart ? &#39;[&#39; : &#39;(&#39;}${inclusiveEnd ? &#39;]&#39; : &#39;)&#39;})&#39;,
+    test: (v) =&gt;
+        (inclusiveStart ? !v.isBefore(start) : v.isAfter(start)) &amp;&amp;
+        (inclusiveEnd ? !v.isAfter(end) : v.isBefore(end)),
+    code: ExpectationCodes.valueDateOutOfRange,
+    dataBuilder: () =&gt; {
+      &#39;start&#39;: start.toIso8601String(),
+      &#39;end&#39;: end.toIso8601String(),
+      &#39;inclusiveStart&#39;: inclusiveStart,
+      &#39;inclusiveEnd&#39;: inclusiveEnd,
+    },
+    message: message,
+  );
+}</code></pre>
 </section>
 
 

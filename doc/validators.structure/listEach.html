@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">listEach</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="listEach-param-itemValidator"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">itemValidator</span>, {</span></li>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
+<span class="name ">listEach</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="listEach-param-itemValidator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">itemValidator</span>, {</span></li>
 <li><span class="parameter" id="listEach-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
 
@@ -73,38 +73,40 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IValidator listEach(IValidator itemValidator, {String? message}) {
-  return $isList &amp;
-      Validator((value) {
-        final errors = &lt;Expectation&gt;[];
-        FutureOr&lt;Result&gt; loop(int index) {
-          if (index &gt;= value.length) {
-            return errors.isEmpty
-                ? Result.valid(value)
-                : Result.invalid(value, expectations: errors);
-          }
+  FutureOr&lt;Result&gt; listEachPredicate(value) {
+    final errors = &lt;Expectation&gt;[];
 
-          final item = value[index];
+    FutureOr&lt;Result&gt; loop(int index) {
+      if (index &gt;= value.length) {
+        return errors.isEmpty
+            ? Result.valid(value)
+            : Result.invalid(value, expectations: errors);
+      }
 
-          if (item == null &amp;&amp; itemValidator.isNullable) {
-            return loop(index + 1);
-          }
+      final item = value[index];
 
-          final res = itemValidator.validator(item);
+      if (item == null &amp;&amp; itemValidator.isNullable) {
+        return loop(index + 1);
+      }
 
-          if (res is Future&lt;Result&gt;) {
-            return res.then((r) {
-              _collectListIndex(r, errors, index, message);
-              return loop(index + 1);
-            });
-          }
+      final res = itemValidator.validator(item);
 
-          _collectListIndex(res, errors, index, message);
-
+      if (res is Future&lt;Result&gt;) {
+        return res.then((r) {
+          _collectListIndex(r, errors, index, message);
           return loop(index + 1);
-        }
+        });
+      }
 
-        return loop(0);
-      });
+      _collectListIndex(res, errors, index, message);
+
+      return loop(index + 1);
+    }
+
+    return loop(0);
+  }
+
+  return $isList &amp; Validator(listEachPredicate);
 }</code></pre>
 </section>
 

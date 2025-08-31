@@ -60,8 +60,88 @@
 
     
 <section class="desc markdown">
-  <p>Builder library
-Provides a fluent interface for building and validating data structures.</p>
+  <p>Builder library</p>
+<p>High-level fluent API for assembling complex validation pipelines / schemas
+in a readable, strongly-typed, incremental fashion. The builder pattern
+helps you express intent (shape + constraints + transformations) without
+manually wiring individual <code>Validator</code> instances or combinators.</p>
+<h1 id="goals">Goals</h1>
+<ul>
+<li>Reduce boilerplate when composing many field validators.</li>
+<li>Provide progressive discovery via chained methods &amp; IDE completion.</li>
+<li>Allow late binding of optional / conditional structure.</li>
+<li>Support both sync &amp; async validators seamlessly.</li>
+<li>Make customization (messages, expectations, transformations) explicit.</li>
+</ul>
+<h1 id="core-concepts">Core Concepts</h1>
+<ul>
+<li>A concrete <code>SchemaBuilder</code> (see <code>core.dart</code>) accumulates field specs.</li>
+<li>Field specs wrap a validator chain plus metadata (name, optionality, etc.).</li>
+<li>Terminal build step produces an executable validator (or set of them)
+that returns a structured <code>Result</code>.</li>
+<li>Mixins (in <code>mixins.dart</code>) add focused capability surfaces (numbers, lists, …).</li>
+<li>Type builders (in <code>type_builders.dart</code>) expose ergonomic helpers for common
+primitive &amp; composite types.</li>
+</ul>
+<h1 id="quick-start">Quick Start</h1>
+<pre class="language-dart"><code class="language-dart">import 'package:eskema/eskema.dart';
+
+final userSchema = schema((s) =&gt; s
+  .string('id').nonEmpty().withMessage('user id required')
+  .string('email').email()
+  .int('age').gte(18).withMessage('must be 18+')
+  .optional.string('nickname').maxLength(30)
+  .build()
+);
+
+final result = userSchema.validate({
+  'id': 'u_123',
+  'email': 'someone@example.com',
+  'age': 42,
+});
+
+if (result.isValid) {
+  print('Valid user');
+} else {
+  print(result.detailed()); // Rich formatted failure output
+}
+</code></pre>
+<h1 id="conditional-fields">Conditional Fields</h1>
+<p>Builders support conditionals by deferring evaluation:</p>
+<pre class="language-dart"><code class="language-dart">schema((s) =&gt; s
+  .string('type').oneOf(['A','B'])
+  .whenField('type', (value, branch) {
+     if (value == 'A') {
+       branch.int('aCount').gte(0);
+     } else {
+       branch.string('bCode').nonEmpty();
+     }
+  })
+  .build());
+</code></pre>
+<h1 id="custom-validation">Custom Validation</h1>
+<p>Use <code>.custom(...)</code> or <code>.withValidator(...)</code> to plug bespoke logic, and
+<code>.transform(...)</code> to normalize before further checks.</p>
+<h1 id="messages--expectations">Messages &amp; Expectations</h1>
+<p>Each chain step can override the default message. The final aggregated
+failure context merges individual <code>Expectation</code> objects for detailed
+debugging &amp; user feedback.</p>
+<h1 id="async">Async</h1>
+<p>Async validators (e.g. uniqueness checks) can be inserted; the built schema
+auto-upgrades to async mode when any async component exists.</p>
+<h1 id="performance-notes">Performance Notes</h1>
+<ul>
+<li>Builders aim to allocate minimally; chains flatten where possible.</li>
+<li>Cached common validators are reused (<code>cached.dart</code>).</li>
+<li>Only failed branches accumulate expectation lists.</li>
+</ul>
+<h1 id="extensibility-tips">Extensibility Tips</h1>
+<ul>
+<li>Create extension methods returning <code>IValidator</code> and expose them through
+mixins to integrate seamlessly with the fluent surface.</li>
+<li>Prefer small, composable helpers over monolithic custom validators.</li>
+</ul>
+<p>See individual exported files for the low-level implementations.</p>
 </section>
 
 
@@ -359,6 +439,7 @@ Provides a fluent interface for building and validating data structures.</p>
       <li><a href="../builder.core/">builder/core</a></li>
       <li><a href="../builder.mixins/">builder/mixins</a></li>
       <li><a href="../builder.type_builders/">builder/type_builders</a></li>
+      <li><a href="../error_format/">error_format</a></li>
       <li><a href="../eskema/">eskema</a></li>
       <li><a href="../expectation/">expectation</a></li>
       <li><a href="../expectation_codes/">expectation_codes</a></li>
@@ -374,6 +455,9 @@ Provides a fluent interface for building and validating data structures.</p>
       <li><a href="../transformers.string/">transformers/string</a></li>
       <li><a href="../transformers.utility/">transformers/utility</a></li>
       <li><a href="../validator/">validator</a></li>
+      <li><a href="../validator.base/">validator/base_validator</a></li>
+      <li><a href="../validator.combinators/">validator/combinator_validators</a></li>
+      <li><a href="../validator.map/">validator/map_validators</a></li>
       <li><a href="../validators/">validators</a></li>
       <li><a href="../validators.cached/">validators/cached</a></li>
       <li><a href="../validators.combinator/">validators/combinator</a></li>

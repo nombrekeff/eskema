@@ -26,7 +26,7 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">eskema</a></li>
     <li><a href="../validators.number/">validators&#47;number.dart</a></li>
-    <li class="self-crumb">isInRange function</li>
+    <li class="self-crumb">isInRange&lt;<wbr><span class="type-parameter">T extends num</span>&gt; function</li>
   </ol>
   <div class="self-name">isInRange</div>
   <form class="search navbar-right" role="search">
@@ -48,15 +48,15 @@
       data-above-sidebar="validators.number&#47;validators.number-library-sidebar.html"
       data-below-sidebar="">
       <div>
-<h1><span class="kind-function">isInRange</span> function 
+<h1><span class="kind-function">isInRange&lt;<wbr><span class="type-parameter">T extends num</span>&gt;</span> function 
  
 </h1></div>
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">isInRange</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="isInRange-param-min"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">min</span>, </span></li>
-<li><span class="parameter" id="isInRange-param-max"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">max</span>, {</span></li>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
+<span class="name ">isInRange</span>&lt;<wbr><span class="type-parameter">T extends num</span>&gt;(<wbr><ol class="parameter-list"> <li><span class="parameter" id="isInRange-param-min"><span class="type-annotation">T</span> <span class="parameter-name">min</span>, </span></li>
+<li><span class="parameter" id="isInRange-param-max"><span class="type-annotation">T</span> <span class="parameter-name">max</span>, {</span></li>
 <li><span class="parameter" id="isInRange-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
 
@@ -72,12 +72,16 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator isInRange(num min, num max, {String? message}) =&gt;
-    (isNumber() &amp; isGte(min) &amp; isLte(max)) &gt;
-    Expectation(
+  <pre class="language-dart"><code class="language-dart">IValidator isInRange&lt;T extends num&gt;(T min, T max, {String? message}) {
+  assert(!(min.isNaN) &amp;&amp; !(max.isNaN), &#39;min&#47;max must be valid numbers&#39;);
+  assert(min &lt;= max, &#39;min must be &lt;= max&#39;);
+  return (isNumber() &amp; isGte(min) &amp; isLte(max)) &gt;
+      Expectation(
         message: message ?? &#39;between $min and $max inclusive&#39;,
-        code: &#39;value.range_out_of_bounds&#39;,
-        data: {&#39;operator&#39;: &#39;between_inclusive&#39;, &#39;min&#39;: min, &#39;max&#39;: max});</code></pre>
+        code: ExpectationCodes.valueRangeOutOfBounds,
+        data: {&#39;operator&#39;: &#39;between_inclusive&#39;, &#39;min&#39;: min, &#39;max&#39;: max},
+      );
+}</code></pre>
 </section>
 
 
@@ -92,7 +96,7 @@
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../index.html">eskema</a></li>
     <li><a href="../validators.number/">validators.number</a></li>
-    <li class="self-crumb">isInRange function</li>
+    <li class="self-crumb">isInRange&lt;<wbr><span class="type-parameter">T extends num</span>&gt; function</li>
 </ol>
 
     <h5>validators.number library</h5>

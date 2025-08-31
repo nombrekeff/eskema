@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
 <span class="name ">isDateBefore</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="isDateBefore-param-dt"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/DateTime-class.html">DateTime</a></span> <span class="parameter-name">dt</span>, {</span></li>
 <li><span class="parameter" id="isDateBefore-param-inclusive"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">inclusive</span> = <span class="default-value">false</span>, </span></li>
 <li><span class="parameter" id="isDateBefore-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
@@ -72,24 +72,20 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator isDateBefore(DateTime dt, {bool inclusive = false, String? message}) =&gt; Validator((value) {
-      final ok = value is DateTime &amp;&amp; (inclusive ? !value.isAfter(dt) : value.isBefore(dt));
-      return Result(
-        isValid: ok,
-        expectation: Expectation(
-          message: message ??
-              &#39;a DateTime before${inclusive ? &#39; or equal to&#39; : &#39;&#39;} ${dt.toIso8601String()}&#39;,
-          value: value,
-          code: ExpectationCodes.valueDateOutOfRange,
-          data: {
-            &#39;bound&#39;: dt.toIso8601String(),
-            &#39;op&#39;: &#39;before&#39;,
-            &#39;inclusive&#39;: inclusive,
-          },
-        ),
-        value: value,
-      );
-    });</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator isDateBefore(DateTime dt, {bool inclusive = false, String? message}) {
+  return _datePredicate(
+    defaultMessage:
+        &#39;a DateTime before${inclusive ? &#39; or equal to&#39; : &#39;&#39;} ${dt.toIso8601String()}&#39;,
+    test: (v) =&gt; inclusive ? !v.isAfter(dt) : v.isBefore(dt),
+    code: ExpectationCodes.valueDateOutOfRange,
+    dataBuilder: () =&gt; {
+      &#39;bound&#39;: dt.toIso8601String(),
+      &#39;op&#39;: &#39;before&#39;,
+      &#39;inclusive&#39;: inclusive,
+    },
+    message: message,
+  );
+}</code></pre>
 </section>
 
 

@@ -54,7 +54,7 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
 <span class="name ">jsonArrayLength</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="jsonArrayLength-param-min"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span> <span class="parameter-name">min</span>, </span></li>
 <li><span class="parameter" id="jsonArrayLength-param-max"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a>?</span> <span class="parameter-name">max</span>, </span></li>
 <li><span class="parameter" id="jsonArrayLength-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
@@ -72,10 +72,10 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator jsonArrayLength({int? min, int? max, String? message}) =&gt; Validator((value) {
-      final ok = value is List &amp;&amp;
-          (min == null || value.length &gt;= min) &amp;&amp;
-          (max == null || value.length &lt;= max);
+  <pre class="language-dart"><code class="language-dart">IValidator jsonArrayLength({int? min, int? max, String? message}) =&gt;
+    $isList &amp;
+    Validator((value) {
+      final ok = (min == null || value.length &gt;= min) &amp;&amp; (max == null || value.length &lt;= max);
       return Result(
         isValid: ok,
         value: value,
@@ -83,7 +83,7 @@
           message: message ??
               &#39;array length${min != null ? &#39; &gt;= $min&#39; : &#39;&#39;}${max != null ? &#39; &lt;= $max&#39; : &#39;&#39;}&#39;,
           value: value,
-          code: &#39;value.length_out_of_range&#39;,
+          code: ExpectationCodes.valueLengthOutOfRange,
           data: {&#39;min&#39;: min, &#39;max&#39;: max, &#39;length&#39;: value is List ? value.length : null},
         ),
       );

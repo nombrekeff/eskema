@@ -54,10 +54,10 @@
 
     <section class="multi-line-signature">
         
-<span class="returntype"><a href="../validator/IValidator-class.html">IValidator</a></span>
+<span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
 <span class="name ">transform</span>&lt;<wbr><span class="type-parameter">T</span>&gt;(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="transform-param-fn"><span class="type-annotation">T</span> <span class="parameter-name">fn</span>(<ol class="parameter-list single-line"> <li><span class="parameter" id="param-"><span class="type-annotation">dynamic</span></span></li>
 </ol>), </span></li>
-<li><span class="parameter" id="transform-param-child"><span class="type-annotation"><a href="../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span></li>
+<li><span class="parameter" id="transform-param-child"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span></span></li>
 </ol>)
 
         
@@ -76,9 +76,7 @@ creating custom transformers.</p>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IValidator transform&lt;T&gt;(T Function(dynamic) fn, IValidator child) {
-  return Validator((value) {
-    return child.validate(fn(value));
-  });
+  return Validator((value) =&gt; child.validate(fn(value)));
 }</code></pre>
 </section>
 
