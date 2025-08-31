@@ -22,8 +22,9 @@ import 'package:eskema/src/util.dart';
 /// usernameLength.validate("user123456");     // Valid
 /// usernameLength.validate("user");           // Invalid
 /// ```
-IValidator stringLength(List<IValidator> validators, {String? message}) =>
-    ($isString & length(validators, message: message));
+IValidator stringLength(List<IValidator> validators, {String? message}) {
+  return ($isString & length(validators, message: message));
+}
 
 /// Validates that the String's length is the same as the provided [size]
 ///
@@ -51,11 +52,11 @@ IValidator stringIsOfLength(int size, {String? message}) {
 /// isImage.validate("document.pdf");          // Invalid
 /// ```
 IValidator stringContains(String str, {String? message}) {
-  return ($isString &
+  return $isString &
       contains(
         str,
         message: message ?? 'String to contain ${prettifyValue(str)}',
-      ));
+      );
 }
 
 /// Validates that the String matches the provided pattern
@@ -77,14 +78,14 @@ IValidator stringContains(String str, {String? message}) {
 ///
 /// // Custom error message
 /// final customPattern = stringMatchesPattern(r'^\d{4}-\d{2}-\d{2}$',
-///   error: 'Date must be in YYYY-MM-DD format');
+///   message: 'Date must be in YYYY-MM-DD format');
 /// ```
-IValidator stringMatchesPattern(Pattern pattern, {String? error}) {
+IValidator stringMatchesPattern(Pattern pattern, {String? message}) {
   return isType<String>() &
       validator(
         (value) => pattern.allMatches(value).isNotEmpty,
         (value) => Expectation(
-          message: error ?? 'String to match "$pattern"',
+          message: message ?? 'String to match "$pattern"',
           value: value,
           code: ExpectationCodes.valuePatternMismatch,
           data: {'pattern': pattern.toString()},
@@ -132,7 +133,7 @@ final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 /// ```
 IValidator isEmail({String? message}) {
   return isString() &
-      stringMatchesPattern(emailRegex, error: message ?? 'a valid email address');
+      stringMatchesPattern(emailRegex, message: message ?? 'a valid email address');
 }
 
 /// Checks whether the given string is empty
@@ -198,7 +199,7 @@ final uuidRegex = RegExp(
 /// });
 /// ```
 IValidator isUuidV4({String? message}) {
-  return isString() & stringMatchesPattern(uuidRegex, error: message ?? 'a valid UUID v4');
+  return isString() & stringMatchesPattern(uuidRegex, message: message ?? 'a valid UUID v4');
 }
 
 /// Validates that the String can be parsed as an `int` (e.g. '123', '-42')

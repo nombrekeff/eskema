@@ -38,4 +38,6 @@ class ExpectationCodes {
   static var typeMismatch = 'value.type_mismatch';
 
   static var valueRangeOutOfBounds = 'value.range_out_of_bounds';
+
+  static var logicPredicateFailed = 'logic.predicate_failed';
 }

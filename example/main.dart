@@ -8,7 +8,7 @@ final emailRegexp =
 void main() {
   final isEmail = stringMatchesPattern(
     emailRegexp,
-    error: 'a valid email address',
+    message: 'a valid email address',
   );
 
   final accountEskema = eskema({

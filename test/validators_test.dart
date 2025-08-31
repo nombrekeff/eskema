@@ -247,7 +247,7 @@ void main() {
     test('stringMatchesPattern works with custom message', () {
       final validator = stringMatchesPattern(
         RegExp(r'[\d]'),
-        error: 'Incorrect numerical string',
+        message: 'Incorrect numerical string',
       );
       expect(validator.validate('123').isValid, true);
       expect(validator.validate('55555').isValid, true);
