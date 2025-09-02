@@ -155,13 +155,13 @@ class DateTimeBuilder extends BaseBuilder<DateTimeBuilder, DateTime>
 ///   .lengthMax(10)
 ///   .build();
 /// ```
-class IterableBuilder extends BaseBuilder<IterableBuilder, Iterable>
+class IterableBuilder<T> extends BaseBuilder<IterableBuilder<T>, Iterable<T>>
     with
-        LengthMixin<IterableBuilder, Iterable>,
-        EmptyMixin<IterableBuilder, Iterable>,
-        ComparisonMixin<IterableBuilder, Iterable>,
-        IterableMixin<IterableBuilder, Iterable>,
-        ContainsMixin<IterableBuilder, Iterable> {
+        LengthMixin<IterableBuilder<T>, Iterable<T>>,
+        EmptyMixin<IterableBuilder<T>, Iterable<T>>,
+        ComparisonMixin<IterableBuilder<T>, Iterable<T>>,
+        IterableMixin<IterableBuilder<T>, Iterable<T>>,
+        ContainsMixin<IterableBuilder<T>, Iterable<T>> {
   IterableBuilder({super.chain});
 }
 
@@ -184,7 +184,7 @@ class IterableBuilder extends BaseBuilder<IterableBuilder, Iterable>
 ///   .lengthMin(1)
 ///   .build();
 /// ```
-class ListBuilder extends IterableBuilder {
+class ListBuilder<T> extends IterableBuilder<T> {
   ListBuilder({super.chain});
 }
 
@@ -206,7 +206,7 @@ class ListBuilder extends IterableBuilder {
 ///   .each(v().number().gte(1).lte(100).build())
 ///   .build();
 /// ```
-class SetBuilder extends IterableBuilder {
+class SetBuilder<T> extends IterableBuilder<T> {
   SetBuilder({super.chain});
 }
 
@@ -233,12 +233,12 @@ class SetBuilder extends IterableBuilder {
 ///   'zipCode': v().string().matches(r'^\d{5}$').build(),
 /// }).build();
 /// ```
-class MapBuilder extends BaseBuilder<MapBuilder, Map>
+class MapBuilder<T, K> extends BaseBuilder<MapBuilder<T, K>, Map<T, K>>
     with
-        TransformerMixin<MapBuilder, Map>,
-        MapMixin<MapBuilder, Map>,
-        EmptyMixin<MapBuilder, Map>,
-        ComparisonMixin<MapBuilder, Map> {
+        TransformerMixin<MapBuilder<T, K>, Map<T, K>>,
+        MapMixin<MapBuilder<T, K>, Map<T, K>>,
+        EmptyMixin<MapBuilder<T, K>, Map<T, K>>,
+        ComparisonMixin<MapBuilder<T, K>, Map<T, K>> {
   MapBuilder({super.chain});
 }
 
@@ -358,18 +358,23 @@ class RootBuilder {
   }
 
   /// Expect an Iterable; returns an IterableBuilder with collection methods.
-  IterableBuilder iterable({String? message}) {
-    return IterableBuilder()..add($isIterable, message: message);
+  IterableBuilder<T> iterable<T>({String? message}) {
+    return IterableBuilder<T>()..add(isIterable<T>(), message: message);
   }
 
   /// Expect a List; returns a ListBuilder with list-specific methods.
-  ListBuilder list({String? message}) {
-    return ListBuilder()..add($isList, message: message);
+  ListBuilder<T> list<T>({String? message}) {
+    return ListBuilder<T>()..add(isList<T>(), message: message);
+  }
+
+  /// Expect a Set; returns a SetBuilder with set-specific methods.
+  SetBuilder<T> set<T>({String? message}) {
+    return SetBuilder<T>()..add(isSet<T>(), message: message);
   }
 
   /// Expect a Map; returns a MapBuilder with map-specific methods.
-  MapBuilder map({String? message}) {
-    return MapBuilder()..add($isMap, message: message);
+  MapBuilder<K, V> map<K, V>({String? message}) {
+    return MapBuilder<K, V>()..add($isMap, message: message);
   }
 
   /// Expect a DateTime; returns a DateTimeBuilder with date/time methods.

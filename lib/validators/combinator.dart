@@ -6,17 +6,6 @@ library validators.combinator;
 import 'dart:async';
 import 'package:eskema/eskema.dart';
 
-// Internal micro-helpers to reduce duplication in combinators.
-@pragma('vm:prefer-inline')
-Result _failWithMsg(dynamic value, String message) =>
-    Result.invalid(value, expectation: Expectation(message: message, value: value));
-
-@pragma('vm:prefer-inline')
-Expectation _applyOverride(Expectation base, String? message, dynamic value, {String? code}) {
-  if (message == null) return base.copyWith(value: value, code: code ?? base.code);
-  return base.copyWith(message: message, value: value, code: code ?? base.code);
-}
-
 /// Passes the test if any of the [Validator]s are valid, and fails if any are invalid
 ///
 /// **Usage Examples:**
@@ -34,59 +23,7 @@ Expectation _applyOverride(Expectation base, String? message, dynamic value, {St
 /// ]);
 /// ```
 IValidator any(List<IValidator> validators, {String? message}) {
-  return Validator<Result>((value) {
-    List<Expectation>? expectations; // lazily allocate only when needed
-
-    for (var i = 0; i < validators.length; i++) {
-      final result = validators[i].validator(value);
-
-      if (result is Future<Result>) {
-        return _anyAsync(value, validators, expectations, i, result, message: message);
-      }
-
-      // Whenever a validator is valid, we return its result directly.
-      if (result.isValid) return result;
-
-      if (message == null && result.expectations.isNotEmpty) {
-        (expectations ??= <Expectation>[]).addAll(result.expectations);
-      }
-    }
-
-    if (message != null) return _failWithMsg(value, message);
-
-    return Result.invalid(value, expectations: expectations ?? const <Expectation>[]);
-  });
-}
-
-Future<Result> _anyAsync(
-  dynamic value,
-  List<IValidator> validators,
-  List<Expectation>? expectations,
-  int index,
-  Future<Result> pending, {
-  String? message,
-}) async {
-  final first = await pending;
-
-  if (first.isValid) return first;
-
-  if (message == null && first.expectations.isNotEmpty) {
-    (expectations ??= <Expectation>[]).addAll(first.expectations);
-  }
-
-  for (var i = index + 1; i < validators.length; i++) {
-    final result = await validators[i].validator(value);
-
-    if (result.isValid) return result;
-
-    if (message == null && result.expectations.isNotEmpty) {
-      (expectations ??= <Expectation>[]).addAll(result.expectations);
-    }
-  }
-
-  if (message != null) return _failWithMsg(value, message);
-
-  return Result.invalid(value, expectations: expectations ?? const <Expectation>[]);
+  return AnyValidator(validators, message: message);
 }
 
 /// Passes the test if all of the [Validator]s are valid, and fails if any of them are invalid
@@ -111,56 +48,7 @@ Future<Result> _anyAsync(
 /// ]);
 /// ```
 IValidator all(List<IValidator> validators, {String? message}) {
-  FutureOr<Result> pipeline(dynamic value) {
-    for (var i = 0; i < validators.length; i++) {
-      final result = validators[i].validator(value);
-
-      if (result is Future<Result>) {
-        return _allAsync(value, validators, i, result, message: message);
-      }
-
-      if (result.isNotValid) {
-        return message != null ? _failWithMsg(result.value, message) : result;
-      }
-
-      value = result.value;
-    }
-
-    return message != null ? _failWithMsg(value, message) : Result.valid(value);
-  }
-
-  return Validator<Result>(pipeline);
-}
-
-Future<Result> _allAsync(
-  dynamic value,
-  List<IValidator> validators,
-  int index,
-  Future<Result> pending, {
-  String? message,
-}) async {
-  // NOTE: All validators before `index` have already been run synchronously
-  // (and their transformations threaded into `value`). `pending` represents
-  // the first async validator in the chain.
-
-  // Resolve the first async validator.
-  final firstAsync = await pending;
-  if (firstAsync.isNotValid) {
-    return message != null ? _failWithMsg(firstAsync.value, message) : firstAsync;
-  }
-
-  var currentValue = firstAsync.value;
-
-  // Sequentially process the remaining validators (may be sync or async).
-  for (var i = index + 1; i < validators.length; i++) {
-    final result = await validators[i].validator(currentValue);
-    if (result.isNotValid) {
-      return message != null ? _failWithMsg(result.value, message) : result;
-    }
-    currentValue = result.value; // adopt transformed value
-  }
-
-  return message != null ? _failWithMsg(currentValue, message) : Result.valid(currentValue);
+  return AllValidator(validators, message: message);
 }
 
 /// Passes the test if none of the validators pass
@@ -183,64 +71,11 @@ Future<Result> _allAsync(
 ///   isInRange(50, 60),   // Not 50-60
 /// ]);
 /// ```
-IValidator none(List<IValidator> validators, {String? message}) => Validator<Result>((value) {
-      List<Expectation>? expectations;
-
-      for (var i = 0; i < validators.length; i++) {
-        final result = not(validators[i]).validator(value);
-
-        if (result is Future<Result>) {
-          return _noneAsync(value, validators, expectations, i, result, message: message);
-        }
-
-        if (result.isNotValid) {
-          if (message == null && result.expectations.isNotEmpty) {
-            (expectations ??= <Expectation>[]).addAll(result.expectations);
-          } else if (message != null) {
-            return _failWithMsg(value, message);
-          }
-        }
-      }
-
-      if (message != null) return Result.valid(value);
-
-      return (expectations != null && expectations.isNotEmpty)
-          ? Result.invalid(value, expectations: expectations)
-          : Result.valid(value);
-    });
-
-Future<Result> _noneAsync(
-  dynamic value,
-  List<IValidator> validators,
-  List<Expectation>? expectations,
-  int index,
-  Future<Result> pending, {
-  String? message,
-}) async {
-  final first = await pending;
-
-  if (first.isNotValid) {
-    if (message != null) return _failWithMsg(value, message);
-    (expectations ??= <Expectation>[]).addAll(first.expectations);
-  }
-
-  for (var i = index + 1; i < validators.length; i++) {
-    final res = await not(validators[i]).validator(value);
-
-    if (res.isNotValid) {
-      if (message != null) return _failWithMsg(value, message);
-      (expectations ??= <Expectation>[]).addAll(res.expectations);
-    }
-  }
-
-  if (message != null) return Result.valid(value);
-
-  return (expectations != null && expectations.isNotEmpty)
-      ? Result.invalid(value, expectations: expectations)
-      : Result.valid(value);
+IValidator none(List<IValidator> validators, {String? message}) {
+  return NoneValidator(validators, message: message);
 }
 
-/// Passes the test if the passed in validator is not valid
+/// Passes the test if the child validator is not valid
 ///
 /// When the inner validator succeeds, the failure will reuse its `code` if present,
 /// otherwise falls back to `logic.not_expected`. See docs/expectation_codes.md.
@@ -260,34 +95,8 @@ Future<Result> _noneAsync(
 /// // Validate that a field is NOT present (for optional fields)
 /// final fieldNotPresent = not(exists());
 /// ```
-IValidator not(IValidator validator, {String? message}) => Validator<Result>((value) {
-      final result = validator.validator(value);
-
-      if (result is Future<Result>) return _notAsync(value, result, message: message);
-      if (message != null && result.isValid) return _failWithMsg(value, message);
-
-      final mapped = result.expectations.map(
-        (e) => e.copyWith(
-          message: 'not ${e.message}',
-          code: e.code ?? 'logic.not_expected',
-        ),
-      );
-
-      return Result(isValid: result.isNotValid, expectations: mapped, value: value);
-    });
-
-Future<Result> _notAsync(dynamic value, Future<Result> pending, {String? message}) async {
-  final result = await pending;
-  if (message != null && result.isNotValid) return _failWithMsg(value, message);
-
-  final mapped = result.expectations.map(
-    (e) => e.copyWith(
-      message: 'not ${e.message}',
-      code: e.code ?? 'logic.not_expected',
-    ),
-  );
-
-  return Result(isValid: result.isNotValid, expectations: mapped, value: value);
+IValidator not(IValidator child, {String? message}) {
+  return NotValidator(child, message: message);
 }
 
 /// Returns a [Validator] that throws a [ValidatorFailedException] instead of returning a result
@@ -308,19 +117,8 @@ Future<Result> _notAsync(dynamic value, Future<Result> pending, {String? message
 ///   stringLength([isGte(5)]),
 /// ]));
 /// ```
-IValidator throwInstead(IValidator validator) => Validator<Result>((value) {
-      final resOr = validator.validator(value);
-
-      if (resOr is Future<Result>) return _throwInsteadAsync(resOr);
-      if (resOr.isNotValid) throw ValidatorFailedException(resOr);
-
-      return Result.valid(value);
-    });
-
-Future<Result> _throwInsteadAsync(Future<Result> pending) async {
-  final result = await pending;
-  if (result.isNotValid) throw ValidatorFailedException(result);
-  return Result.valid(result.value);
+IValidator throwInstead(IValidator validator) {
+  return ThrowInsteadValidator(validator);
 }
 
 /// Returns a [IValidator] that wraps the given [child] validator and adds the
@@ -412,42 +210,14 @@ IValidator when(
   required IValidator otherwise,
   String? message,
 }) {
-  final base = WhenValidator(condition, then, otherwise);
-  if (message == null) return base;
+  final base = WhenValidator(condition: condition, then: then, otherwise: otherwise);
+
   // Wrap with a proxy that intercepts misuse (validate()) and parent usage (validateWithParent)
-  return _WhenWithMessage(base, message);
+  return message == null ? base : WhenWithMessage(base, message);
 }
 
-class _WhenWithMessage extends IWhenValidator {
-  final WhenValidator inner;
-  final String message;
-  _WhenWithMessage(this.inner, this.message);
-
-  @override
-  FutureOr<Result> validateWithParent(
-    dynamic value,
-    Map<String, dynamic> map, {
-    bool exists = true,
-  }) async {
-    final res = await inner.validateWithParent(value, map, exists: exists);
-    if (res.isValid) return res;
-    return Result.invalid(value, expectation: Expectation(message: message, value: value));
-  }
-
-  @override
-  Result validate(dynamic value, {bool exists = true}) {
-    // misuse outside eskema
-    return Result.invalid(value, expectation: Expectation(message: message, value: value));
-  }
-
-  @override
-  IValidator copyWith({bool? nullable, bool? optional}) {
-    return _WhenWithMessage(
-      inner.copyWith(nullable: nullable, optional: optional) as WhenValidator,
-      message,
-    );
-  }
-
-  @override
-  FutureOr<Result> validator(value) => validate(value);
+@pragma('vm:prefer-inline')
+Expectation _applyOverride(Expectation base, String? message, dynamic value, {String? code}) {
+  if (message == null) return base.copyWith(value: value, code: code ?? base.code);
+  return base.copyWith(message: message, value: value, code: code ?? base.code);
 }

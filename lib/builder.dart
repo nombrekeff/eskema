@@ -4,19 +4,25 @@
 /// in a readable, strongly-typed, incremental fashion. The builder pattern lets you
 /// express shape, normalization, and constraints in a left-to-right chain.
 ///
+/// # Entrypoints
+///
+/// - `b()` or `builder()` — create a new root builder (see [RootBuilder]).
+/// - `$b`, `$builder` — pre-built root builder singletons (stateless, safe to reuse).
+/// - Type-specific helpers: `$string()`, `$int()`, `$double()`, `$number()`, `$bool()`, `$map()`, `$list()` — shortcut for `$b.string()`, etc.
+///
 /// # Usage
 ///
-/// - Entry point: `v()` returns a root builder. Choose a type: `.string()`, `.int_()`, `.map()`, `.list()`, etc.
+/// - Choose a type: `.string()`, `.int_()`, `.map()`, `.list()`, etc.
 /// - Chain transformers (e.g. `.trim()`, `.toIntStrict()`) and constraints (e.g. `.lengthMin(2)`, `.email()`, `.gt(0)`).
 /// - For maps/lists, use `.schema({...})` and `.each(...)` to nest.
 /// - Call `.build()` to get a reusable validator.
 ///
 /// ## Example
 /// ```dart
-/// final userValidator = v().map().schema({
-///   'id': v().string().trim().toIntStrict().gt(0).build(),
-///   'email': v().string().trim().toLowerCase().email().build(),
-///   'age': v().string().toIntStrict().gte(18).optional().build(),
+/// final userValidator = $map().schema({
+///   'id': $string().trim().toIntStrict().gt(0).build(),
+///   'email': $string().trim().toLowerCase().email().build(),
+///   'age': $string().toIntStrict().gte(18).optional().build(),
 /// }).build();
 ///
 /// final result = userValidator.validate({
@@ -51,7 +57,7 @@
 /// See exported files for low-level implementation details.
 library builder;
 
-import 'package:eskema/builder/type_builders.dart' show RootBuilder;
+import 'package:eskema/eskema.dart';
 
 export 'builder/core.dart';
 export 'builder/mixins.dart';
@@ -70,9 +76,21 @@ RootBuilder builder() => b();
 /// Pre-built builder instance. See [builder].
 ///
 /// Aliases: [b], [builder] — pre-built: [$b], [$builder]
-RootBuilder $b = RootBuilder();
+RootBuilder $b = b();
 
 /// Pre-built builder instance. See [builder].
 ///
 /// Aliases: [b], [builder] — pre-built: [$b], [$builder]
 RootBuilder $builder = $b;
+
+/// Type specific builders
+StringBuilder $string({String? message}) => $b.string(message: message);
+IntBuilder $int({String? message}) => $b.int_(message: message);
+DoubleBuilder $double({String? message}) => $b.double_(message: message);
+NumberBuilder $number({String? message}) => $b.number(message: message);
+BoolBuilder $bool({String? message}) => $b.bool(message: message);
+
+MapBuilder<K, V> $map<K, V>({String? message}) => $b.map<K, V>(message: message);
+IterableBuilder<T> $iterable<T>({String? message}) => $b.iterable<T>(message: message);
+ListBuilder<T> $list<T>({String? message}) => $b.list<T>(message: message);
+SetBuilder<T> $set<T>({String? message}) => $b.set<T>(message: message);

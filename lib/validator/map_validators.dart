@@ -23,13 +23,17 @@ abstract class MapValidator<T extends Map> extends IdValidator {
   Result _mapContinue(Result base, dynamic value) {
     if (base.isNotValid) return base;
     for (final field in fields) {
+
       final mapValue = value[field.id];
       if (mapValue == null && field.isNullable) continue;
+      
       final result = field.validate(mapValue);
       if (result.isValid) continue;
+
       final error = field is MapValidator
           ? '${field.id}.${result.description}'
           : '${field.id} to be ${result.description}';
+
       return Result(
         isValid: result.isValid,
         expectations: [Expectation(message: error, value: mapValue)],

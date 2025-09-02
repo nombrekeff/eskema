@@ -3,35 +3,10 @@ library validator.base;
 
 import 'dart:async';
 import 'package:eskema/result.dart';
-import 'package:eskema/error_format.dart';
+import 'package:eskema/validator/exception.dart';
 
 /// Type representing a validator function (may be sync or async).
 typedef ValidatorFunction<T extends Result> = FutureOr<T> Function(dynamic value);
-
-/// Thrown when a synchronous validate() call encounters an async validator chain.
-class AsyncValidatorException implements Exception {
-  final String message =
-      'Cannot call validate() on a validator chain that contains async operations. Use validateAsync() instead.';
-  @override
-  String toString() => message;
-}
-
-/// Thrown when a validation fails and validateOrThrow() is used.
-class ValidatorFailedException implements Exception {
-  final Result result;
-  final DateTime timestamp = DateTime.now();
-  ValidatorFailedException(this.result) : assert(result.isNotValid);
-
-  /// Primary human friendly message.
-  String get message => buildValidationFailureMessage(result);
-
-  /// Machine friendly summary (single line) for logs.
-  String get summary =>
-      'ValidatorFailed(errors=${result.expectationCount}, type=${result.value.runtimeType})';
-
-  @override
-  String toString() => message;
-}
 
 /// Immutable base class from which all validators inherit.
 abstract class IValidator {
@@ -108,7 +83,7 @@ class Validator<T extends Result> extends IValidator {
 
 /// Base class that adds an identifier to a validator (used by map/field validators).
 class IdValidator<T extends Result> extends Validator<T> {
-  final String id;
+  final String? id;
   IdValidator({required ValidatorFunction<T> validator, this.id = '', super.nullable, super.optional})
       : super(validator);
 }

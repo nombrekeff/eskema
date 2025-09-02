@@ -10,7 +10,7 @@ import 'package:eskema/expectation.dart';
 const _emptyExpectations = <Expectation>[];
 
 /// Represents the result of a validation.
-class Result<T> {
+class Result {
   Result({
     required this.isValid,
     required this.value,
@@ -33,7 +33,7 @@ class Result<T> {
   /// The list of expectations for the validation result.
   /// It will contain expectations independent of the validation result.
   final Iterable<Expectation> expectations;
-  final T value;
+  final dynamic value;
 
   bool get hasExpectations => expectations.isNotEmpty;
   bool get isNotValid => !isValid;
