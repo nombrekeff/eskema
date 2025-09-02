@@ -10,7 +10,7 @@ IValidator asyncGte(int min) => Validator((value) async {
 
 void main() {
   group('pluckValue async + missing key', () {
-    final validator = v().map().pluckValue('count').toIntStrict().build();
+    final validator = builder().map().pluckValue('count').toIntStrict().build();
 
     test('missing key async path invalid', () async {
       final r = await validator.validateAsync({'other': 1});
@@ -18,7 +18,7 @@ void main() {
     });
 
     test('present key async success', () async {
-      final v2 = v().map().pluckValue('count').toIntStrict().gte(2).build();
+      final v2 = builder().map().pluckValue('count').toIntStrict().gte(2).build();
       final ok = await v2.validateAsync({'count': '3'});
       expect(ok.isValid, true);
       final bad = await v2.validateAsync({'count': '1'});

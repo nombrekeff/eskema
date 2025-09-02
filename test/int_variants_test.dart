@@ -3,7 +3,7 @@ import 'package:eskema/eskema.dart';
 
 void main() {
   group('toIntStrict builder', () {
-    final strict = v().string().toIntStrict().gte(10).lt(20).build();
+    final strict = builder().string().toIntStrict().gte(10).lt(20).build();
 
     test('accepts pure int string', () {
       expect(strict.validate('12').isValid, true);
@@ -23,7 +23,7 @@ void main() {
   });
 
   group('toIntSafe builder', () {
-    final safe = v().string().toIntSafe().build();
+    final safe = builder().string().toIntSafe().build();
 
     test('accepts within safe range', () {
       expect(safe.validate('9007199254740991').isValid, true);

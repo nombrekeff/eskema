@@ -67,10 +67,10 @@ void main() {
   });
 
   group('builder wrappers', () {
-    final builder = v().map().pick(['id', 'meta']).flattenKeys('_').build();
+    final validator = b().map().pick(['id', 'meta']).flattenKeys('_').build();
 
     test('builder pick + flatten', () {
-      final res = builder.validate({
+      final res = validator.validate({
         'id': 1,
         'meta': {'inner': 2},
         'other': 3
@@ -82,14 +82,14 @@ void main() {
     });
 
     test('builder pluck + numeric constraint', () {
-      final b = v().map().pluckValue('id').toIntStrict().gte(1).build();
-      final ok = b.validate({'id': 2, 'x': 3});
+      final validator2 = builder().map().pluckValue('id').toIntStrict().gte(1).build();
+      final ok = validator2.validate({'id': 2, 'x': 3});
       expect(ok.value, 2);
       expect(ok.isValid, true);
-      final zero = b.validate({'id': '0'});
+      final zero = validator2.validate({'id': '0'});
       expect(zero.value, 0);
       expect(zero.isValid, false); // fails gte(1)
-      final missing = b.validate({'x': 3});
+      final missing = validator2.validate({'x': 3});
       expect(missing.isValid, false);
     });
   });

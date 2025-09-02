@@ -1,11 +1,11 @@
 import 'package:eskema/eskema.dart';
 
 void main() {
-  final userEskema = v().map().schema({
-    'id': v().string().not.empty().build(),
-    'email': v().string().email().build(),
-    'age': v().int_().gte(18).optional().build(),
-    'nickname': v().string().lengthMax(30).optional().build(),
+  final userEskema = builder().map().schema({
+    'id': builder().string().not.empty().build(),
+    'email': builder().string().email().build(),
+    'age': builder().int_().gte(18).optional().build(),
+    'nickname': builder().string().lengthMax(30).optional().build(),
   }).build();
 
   final input = {

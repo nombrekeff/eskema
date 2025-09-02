@@ -382,12 +382,3 @@ class RootBuilder {
     return GenericBuilder<T>()..add(isType<T>(), message: message);
   }
 }
-
-/// Creates and public entry point for the package's code-generation builders.
-///
-/// See [RootBuilder] for details on builder composition, configuration options,
-/// and how the returned builder will be invoked by the build infrastructure.
-/// Public entry function.
-RootBuilder v() => RootBuilder();
-
-/// Pre-built builders for common types.

@@ -3,8 +3,8 @@ import 'package:eskema/eskema.dart';
 
 void main() {
   group('toBoolStrict builder', () {
-    final strictTrue = v().string().toBoolStrict().eq(true).build();
-    final strictFalse = v().string().toBoolStrict().eq(false).build();
+    final strictTrue = builder().string().toBoolStrict().eq(true).build();
+    final strictFalse = builder().string().toBoolStrict().eq(false).build();
 
     test('accepts true/false strings', () {
       expect(strictTrue.validate('true').isValid, true);
@@ -28,8 +28,8 @@ void main() {
   });
 
   group('toBoolLenient builder', () {
-    final lenientTrue = v().string().toBoolLenient().eq(true).build();
-    final lenientFalse = v().string().toBoolLenient().eq(false).build();
+    final lenientTrue = builder().string().toBoolLenient().eq(true).build();
+    final lenientFalse = builder().string().toBoolLenient().eq(false).build();
 
     test('accepts true/false', () {
       expect(lenientTrue.validate('true').isValid, true);

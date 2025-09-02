@@ -5,12 +5,12 @@ Validator<Result> isValidName = Validator((value) async {
 });
 
 void main() async {
-  final nameValidator = v().string().lengthRange(3, 10).not.empty().add(isValidName).build();
+  final nameValidator = $b.string().lengthRange(3, 10).not.empty().add(isValidName).build();
 
   final nameRes = await nameValidator.validateAsync('123');
   print(nameRes.description);
 
-  final ageValidator = v().int_().eq(0).nullable().build();
+  final ageValidator = $b.int_().eq(0).nullable().build();
 
   final ageRes = ageValidator.validate(0);
   print(ageRes.description);
