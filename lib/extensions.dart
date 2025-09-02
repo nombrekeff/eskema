@@ -44,7 +44,24 @@ extension EskemaEskValidatorOperations on IValidator {
   /// Combines two validators with a logical AND, same as using [all]
   ///
   /// This is **Sugar**, it allows for more concise validator composition.
-  IValidator operator &(IValidator other) => all([this, other]);
+  AllValidator operator &(IValidator other) {
+    if (this is AllValidator && other is AllValidator) {
+      final mv1 = this as AllValidator;
+      return mv1.copyWith(validators: {...mv1.validators, ...other.validators});
+    }
+
+    if (this is AllValidator) {
+      final mv = this as AllValidator;
+      return mv.copyWith(validators: {...mv.validators, other});
+    }
+
+    if (other is AllValidator) {
+      final mv = other;
+      return mv.copyWith(validators: {...mv.validators, this});
+    }
+
+    return all([this, other]);
+  }
 
   /// Combines two validators with a logical OR, same as using [any]
   ///

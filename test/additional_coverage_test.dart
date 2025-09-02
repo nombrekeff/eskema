@@ -112,6 +112,20 @@ void main() {
       final r = await v.validateAsync('x');
       expect(r.isValid, true);
     });
+
+    test('all validator collects expectations from all failing child validators', () async {
+      // Use AllValidator with collecting=true for collecting all failures without value chaining
+      final v = AllValidator([
+        asyncFail('failure1'),
+        validator((v) => false, (v) => Expectation(message: 'failure2', value: v)),
+        asyncFail('failure3'),
+      ], collecting: true);
+      final r = await v.validateAsync('x');
+      expect(r.isValid, false);
+      // AllValidator with collecting=true should collect expectations from ALL failing validators
+      expect(r.expectationCount, 3);
+      expect(r.expectations.map((e) => e.message), containsAll(['failure1', 'failure2', 'failure3']));
+    });
   });
 
   group('WhenValidator async condition + branches', () {

@@ -13,9 +13,9 @@ Function _collectionEquals = const DeepCollectionEquality().equals;
 
 /// Checks whether the given value is equal to the [otherValue] value of type [T]
 ///
-/// Even though this function accepts any Type, note that it will not work with Collections. For that usecase prefer using [isDeepEq] instead.
+/// Even though this function accepts any Type, note that it will not work with Collections. 
+/// For that usecase prefer using [isDeepEq] instead.
 IValidator isEq<T>(T otherValue, {String? message}) =>
-    isType<T>() &
     validator(
       (value) => value == otherValue,
       (value) => Expectation(

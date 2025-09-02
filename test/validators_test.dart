@@ -173,7 +173,7 @@ void main() {
 
       final res3 = validator.validate('11');
       expect(res3.isValid, false);
-      expect(res3.description, 'int');
+      expect(res3.description, 'equal to 10');
     });
   });
 
@@ -388,7 +388,7 @@ void main() {
     test('isEq for "primitives"', () {
       final field = isEq<int>(2);
       expect(field.validate({}).isValid, false);
-      expect(field.validate({}).description, 'int');
+      expect(field.validate({}).description, 'equal to 2');
       expect(field.validate([]).isValid, false);
       expect(field.validate(1).description, 'equal to 2');
 
@@ -487,7 +487,7 @@ void main() {
 
       final res2 = validator.validate(11);
       expect(res2.isValid, false);
-      expect(res2.description, 'String');
+      expect(res2.description, 'equal to "10"');
 
       final res3 = validator.validate('11');
       expect(res3.isValid, false);
@@ -503,7 +503,7 @@ void main() {
 
       final res2 = validator.validate(11);
       expect(res2.isValid, false);
-      expect(res2.description, 'Map<dynamic, dynamic>');
+      expect(res2.description, 'equal to {"test":"aaa"}');
 
       final res3 = validator.validate({});
       expect(res3.isValid, false);

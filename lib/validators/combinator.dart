@@ -28,27 +28,33 @@ IValidator any(List<IValidator> validators, {String? message}) {
 
 /// Passes the test if all of the [Validator]s are valid, and fails if any of them are invalid
 ///
-/// In the case that a [Validator] fails, it's [Result] will be returned
+/// By default, validation stops at the first failure and chains transformed values.
+/// If [collecting] is true, all validators are run against the original input value
+/// and all failures are collected without value chaining.
 ///
 /// **Usage Examples:**
 /// ```dart
-/// // Validate a password with multiple requirements
+/// // Standard behavior: stop at first failure, chain values
 /// final passwordValidator = all([
-///   stringLength([isGte(8)]),           // At least 8 characters
-///   stringMatchesPattern(r'[A-Z]'),     // Contains uppercase
-///   stringMatchesPattern(r'[a-z]'),     // Contains lowercase
-///   stringMatchesPattern(r'[0-9]'),     // Contains number
+///   toString(),                         // Convert to string first
+///   stringLength([isGte(8)]),          // Then validate length (chained value)
+///   stringMatchesPattern(r'[A-Z]'),     // Must contain uppercase
 /// ]);
 ///
-/// // Chain transformations and validations
-/// final processedData = all([
-///   toString(),                         // Convert to string first
-///   stringLength([isGte(1)]),          // Then validate length
-///   stringMatchesPattern(r'^[A-Z]'),    // Must start with uppercase
-/// ]);
+/// // Collecting behavior: show all errors at once
+/// final formValidator = all([
+///   isType<String>(),                   // Must be a string
+///   stringLength([isGte(3)]),          // Must be at least 3 chars
+///   stringMatchesPattern(r'[A-Z]'),     // Must contain uppercase
+///   stringMatchesPattern(r'[0-9]'),     // Must contain number
+/// ], collecting: true);
+/// 
+/// // Will show ALL validation errors, not just the first one
+/// final result = formValidator.validate(123);
+/// // result.expectations will contain errors for type, length, uppercase, and number
 /// ```
-IValidator all(List<IValidator> validators, {String? message}) {
-  return AllValidator(validators, message: message);
+AllValidator all(List<IValidator> validators, {String? message, bool collecting = false}) {
+  return AllValidator(validators, message: message, collecting: collecting);
 }
 
 /// Passes the test if none of the validators pass
