@@ -71,6 +71,9 @@ void main() {
   //  - username: String to be not empty
   //  - age: greater than or equal to 0
   //  - status: one of: ["active", "inactive", "pending"]
+  //  - role: equal to "admin"
   //  - role: equal to "user"
+  // NOTE: Using the `|` operator internally leverages `any()`. When a value fails
+  // all OR branches, you get an expectation per branch (both shown above).
   print('-' * 20);
 }
