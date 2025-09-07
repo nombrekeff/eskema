@@ -44,31 +44,30 @@ IValidator pluckKey(String key, IValidator child, {String? message}) {
 /// Flattens a nested Map structure into a single-level Map using the provided [delimiter].
 /// Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left as-is.
 IValidator flattenMapKeys(String delimiter, IValidator child, {String? message}) {
-  return core.pivotValue(
-    (value) {
-      if (value is! Map) return null;
-
-      final Map<String, dynamic> flat = {};
-
-      void walk(dynamic node, String prefix) {
-        if (node is Map) {
-          node.forEach((k, val) {
-            final newPrefix = prefix.isEmpty ? '$k' : '$prefix$delimiter$k';
-            if (val is Map) {
-              walk(val, newPrefix);
-            } else {
-              flat[newPrefix] = val;
-            }
-          });
+  Map<String, dynamic> walk(Map<String, dynamic> flat, dynamic node, String prefix) {
+    if (node is Map) {
+      node.forEach((k, val) {
+        final newPrefix = prefix.isEmpty ? '$k' : '$prefix$delimiter$k';
+        if (val is Map) {
+          walk(flat, val, newPrefix);
         } else {
-          if (prefix.isNotEmpty) flat[prefix] = node;
+          flat[newPrefix] = val;
         }
-      }
+      });
+    } else {
+      if (prefix.isNotEmpty) flat[prefix] = node;
+    }
+    
+    return flat;
+  }
 
-      walk(value, '');
+  Map<String, dynamic>? transform(value) {
+    if (value is! Map) return null;
+    return walk({}, value, '');
+  }
 
-      return flat;
-    },
+  return core.pivotValue(
+    transform,
     child: child,
     errorMessage: message ?? 'a Map flattable by keys',
   );
@@ -88,14 +87,13 @@ IValidator getField(String key, IValidator inner) {
 
     return Result.invalid(
       value,
-      expectations: result.expectations
-          .map(
-            (e) => Expectation(
-              message: e.message,
-              value: e.value,
-              path: '$key${e.path != null ? '.${e.path}' : ''}',
-            ),
-          ),
+      expectations: result.expectations.map(
+        (e) => Expectation(
+          message: e.message,
+          value: e.value,
+          path: '$key${e.path != null ? '.${e.path}' : ''}',
+        ),
+      ),
     );
   }
 

@@ -28,72 +28,80 @@ import 'package:eskema/expectation_codes.dart';
 /// ```
 IValidator eskema(Map<String, IValidator> mapEskema, {String? message}) {
   FutureOr<Result> eskemaPredicate(value) {
-    final errors = <Expectation>[];
     final entries = mapEskema.entries.toList();
-    // We intentionally implement `loop` returning `FutureOr<Result>`:
-    // - Each validator may return a Result synchronously or a Future<Result>.
-    // - If all validators are synchronous we want to return a plain Result
-    //   so callers keep getting synchronous behavior (short-circuits and
-    //   cheaper execution).
-    // - If any validator is asynchronous we return a Future that chains the
-    //   remaining validation steps. Using async/await would always return
-    //   a Future<Result> and change the observable behavior.
-    //
-    // The recursive loop lets us process entries one-by-one and only
-    // escalate to a Future when a validator actually returns one.
-    FutureOr<Result> loop(int index) {
-      if (index >= entries.length) {
-        return errors.isEmpty
-            ? Result.valid(value)
-            : Result.invalid(value, expectations: errors);
-      }
-
-      final entry = entries[index];
-      final key = entry.key;
-      final validator = entry.value;
-      final fieldValue = value[key];
-      final exists = value.containsKey(key);
-
-      FutureOr<Result> res;
-      if (validator is IWhenValidator) {
-        res = validator.validateWithParent(fieldValue, value, exists: exists);
-      } else {
-        // Reproduce nullable/optional short-circuit semantics that validate() provided.
-        if (!exists) {
-          if (validator.isOptional) return loop(index + 1);
-          // For required field missing: validate with exists: false so nullable validators fail.
-          final missingRes = validator.validate(null, exists: false);
-          _collectEskema(missingRes, errors, key, message);
-          return loop(index + 1);
-        }
-
-        if (!exists && validator.isOptional) {
-          return loop(index + 1);
-        }
-
-        if (exists && fieldValue == null && validator.isNullable) {
-          return loop(index + 1);
-        }
-
-        res = validator.validator(fieldValue);
-      }
-
-      if (res is Future<Result>) {
-        return res.then((r) {
-          _collectEskema(r, errors, key, message);
-          return loop(index + 1);
-        });
-      }
-
-      _collectEskema(res, errors, key, message);
-
-      return loop(index + 1);
-    }
-
-    return loop(0);
+    return _loop(entries: entries, errors: [], value: value, index: 0, message: message);
   }
 
   return isMap() & Validator(eskemaPredicate);
+}
+
+// We intentionally implement `loop` returning `FutureOr<Result>`:
+// - Each validator may return a Result synchronously or a Future<Result>.
+// - If all validators are synchronous we want to return a plain Result
+//   so callers keep getting synchronous behavior (short-circuits and
+//   cheaper execution).
+// - If any validator is asynchronous we return a Future that chains the
+//   remaining validation steps. Using async/await would always return
+//   a Future<Result> and change the observable behavior.
+//
+// The recursive loop lets us process entries one-by-one and only
+// escalate to a Future when a validator actually returns one.
+FutureOr<Result> _loop({
+  required List<MapEntry<String, IValidator>> entries,
+  required List<Expectation> errors,
+  required dynamic value,
+  required int index,
+  required String? message,
+}) {
+  if (index >= entries.length) {
+    return errors.isEmpty ? Result.valid(value) : Result.invalid(value, expectations: errors);
+  }
+
+  final entry = entries[index];
+  final key = entry.key;
+  final validator = entry.value;
+  final fieldValue = value[key];
+  final exists = value.containsKey(key);
+
+  FutureOr<Result> next() =>
+      _loop(entries: entries, errors: errors, value: value, index: index + 1, message: message);
+
+  FutureOr<Result> res;
+  if (validator is IWhenValidator) {
+    res = validator.validateWithParent(fieldValue, value, exists: exists);
+  } else {
+    // Reproduce nullable/optional short-circuit semantics that validate() provided.
+    if (!exists) {
+      if (validator.isOptional) {
+        return next();
+      }
+      // For required field missing: validate with exists: false so nullable validators fail.
+      final missingRes = validator.validate(null, exists: false);
+      _collectEskema(missingRes, errors, key, message);
+      return next();
+    }
+
+    if (!exists && validator.isOptional) {
+      return next();
+    }
+
+    if (exists && fieldValue == null && validator.isNullable) {
+      return next();
+    }
+
+    res = validator.validator(fieldValue);
+  }
+
+  if (res is Future<Result>) {
+    return res.then((r) {
+      _collectEskema(r, errors, key, message);
+      return next();
+    });
+  }
+
+  _collectEskema(res, errors, key, message);
+
+  return next();
 }
 
 void _collectEskema(Result result, List<Expectation> errors, String key, [String? message]) {

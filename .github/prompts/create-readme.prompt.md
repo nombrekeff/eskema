@@ -18,11 +18,12 @@ You're a senior software engineer with extensive experience in open source proje
    - **Where users can get help**: Support resources and documentation links
 
 ## Guidelines
-* Keep example code to a minimum. Use code from example/readme_example.dart for the main code example. 
+* Ignore current readme content
+* Use code from example/readme_example.dart for the main code example. 
 * Avoid generic templates. Tailor the README to this specific project.
 * Link to docs at "https://nombrekeff.github.io/eskema/" for more detailed information.
 * Use a friendly, welcoming tone to encourage contributions.
-* Redirect userst to wiki, don't spend much time on detailed documentation here.
+* Redirect users to wiki for a more comprehensive guide.
 
 ### Content and Structure
 
