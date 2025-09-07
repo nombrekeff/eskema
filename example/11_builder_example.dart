@@ -6,7 +6,6 @@ Validator<Result> isValidName = Validator((value) async {
 
 void main() async {
   final nameValidator = $string().lengthRange(3, 10).not.empty().add(isValidName);
-  final alla = all([nameValidator]);
 
   final nameRes = await nameValidator.validateAsync('123');
   print(nameRes.description);

@@ -1,8 +1,6 @@
 import 'dart:math';
 import 'package:test/test.dart';
 import 'package:eskema/eskema.dart';
-import 'package:eskema/validator/exception.dart';
-import 'package:eskema/result.dart';
 
 /// Simple monkey / fuzz style tests intended to stress eskema validators.
 /// Goals:
