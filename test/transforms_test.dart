@@ -131,7 +131,7 @@ void main() {
 
     test('getField with invalid type', () {
       expect(ageValidator.validate(123).isValid, false);
-      expect(ageValidator.validate(123).shortDescription, 'Map<dynamic, dynamic>');
+      expect(ageValidator.validate(123).description, 'Map<dynamic, dynamic>');
     });
   });
 
@@ -156,7 +156,7 @@ void main() {
         'user': {'age': '120'}
       });
       expect(res.isValid, false);
-      expect(res.shortDescription, 'user.age: less than or equal to 99');
+      expect(res.description, 'user.age: less than or equal to 99');
     });
 
     test('missing nested key fails', () {
@@ -218,7 +218,7 @@ void main() {
   });
 
   group('defaultTo transformer', () {
-    final validator = defaultTo('default', v.isString() & v.isNotEmpty());
+    final validator = defaultTo('default', v.isString() & v.not(v.$isStringEmpty));
 
     test('should use default value for null', () {
       expect(validator.validate(null).isValid, isTrue);
@@ -229,7 +229,7 @@ void main() {
     });
 
     test('should fail if value after default is invalid', () {
-      final failingValidator = defaultTo('', v.isString() & v.isNotEmpty());
+      final failingValidator = defaultTo('', v.isString() & v.not(v.$isStringEmpty));
       expect(failingValidator.validate(null).isValid, isFalse);
     });
   });

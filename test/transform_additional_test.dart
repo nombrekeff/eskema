@@ -16,7 +16,7 @@ void main() {
     test('invalid string fails', () {
       final res = v.validate('pi');
       expect(res.isValid, false);
-      expect(res.shortDescription, 'int, num, a valid formatted int String');
+      expect(res.description, 'int, num, a valid formatted int String');
     });
   });
 
@@ -33,7 +33,7 @@ void main() {
     test('invalid string fails', () {
       final res = v.validate('pi');
       expect(res.isValid, false);
-      expect(res.shortDescription, 'double, num, a valid formatted double String');
+      expect(res.description, 'double, num, a valid formatted double String');
     });
   });
 
@@ -46,7 +46,7 @@ void main() {
     test(
         'invalid string fails',
         () => expect(
-            v.validate('NaN!').shortDescription, 'num, a valid formatted number String'));
+            v.validate('NaN!').description, 'num, a valid formatted number String'));
   });
 
   group('trim transformer', () {
@@ -59,12 +59,12 @@ void main() {
     });
     test('non string fails', () {
       expect(v.validate(123).isValid, false);
-      expect(v.validate(123).shortDescription, 'String');
+      expect(v.validate(123).description, 'String');
     });
   });
 
   group('toDateTime', () {
-    final v = toDateTime($isDateTime); // inner isDate ensures final value parses
+    final v = toDateTime($isDateTime, message: 'a valid DateTime formatted String'); // explicit message to preserve previous expectation
 
     test('parses ISO string', () {
       expect(v.validate('2024-01-02T03:04:05Z').isValid, true);
@@ -72,7 +72,7 @@ void main() {
 
     test('rejects invalid string', () {
       expect(v.validate('not-a-date').isValid, false);
-      expect(v.validate('not-a-date').shortDescription, 'a valid DateTime formatted String');
+      expect(v.validate('not-a-date').description, 'a valid DateTime formatted String');
     });
 
     test('accepts DateTime object', () {

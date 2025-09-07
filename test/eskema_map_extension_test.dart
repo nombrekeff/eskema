@@ -7,16 +7,15 @@ void main() {
     final testEskema = eskema({
       'name': all([isType<String>()]),
       'vat': all([
-        isTypeOrNull<double>(),
-      ]),
+        isType<double>(),
+      ]).nullable(),
       'age': all([
         isType<int>(),
         isGte(0),
       ]),
     });
 
-    final result =
-        {'name': 'test', 'age': 12, 'vat': null}.validate(testEskema);
+    final result = {'name': 'test', 'age': 12, 'vat': null}.validate(testEskema);
     expect(result.isValid, true);
   });
 
@@ -24,8 +23,8 @@ void main() {
     final testEskema = eskema({
       'name': all([isType<String>()]),
       'vat': all([
-        isTypeOrNull<double>(),
-      ]),
+        isType<double>(),
+      ]).nullable(),
       'age': all([
         isType<int>(),
         isGte(0),

@@ -42,11 +42,11 @@ void main() {
       expect(() => v.validate('x'), throwsA(isA<AsyncValidatorException>()));
       final result = await v.validateAsync('x');
       expect(result.isValid, false);
-      expect(result.shortDescription.contains('nope'), true);
+      expect(result.description.contains('nope'), true);
     });
 
     test('pure sync chain still works with validate()', () {
-      final v = all([isString(), isNotEmpty()]);
+      final v = all([isString(), not($isStringEmpty)]);
       final ok = v.validate('hi');
       expect(ok.isValid, true);
       final bad = v.validate('');

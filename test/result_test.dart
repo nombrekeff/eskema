@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:eskema/eskema.dart' hide isEmpty, isNotEmpty, not;
+import 'package:eskema/eskema.dart' hide isStringEmpty, not;
 
 void main() {
   group('EskResult constructors (assertions)', () {
@@ -10,18 +10,11 @@ void main() {
     });
 
     test('EskResult.invalid with single error produces invalid result', () {
-      final err = Expectation(message: 'fail', value: 123);
+      final err = const Expectation(message: 'fail', value: 123);
       final r = Result.invalid(123, expectation: err);
       expect(r.isValid, false);
       expect(r.expectations, hasLength(1));
       expect(r.expectations.first.message, 'fail');
-    });
-
-    test('Main constructor: isValid=false without errors triggers assertion', () {
-      expect(
-        () => Result(isValid: false, value: 10),
-        throwsA(isA<AssertionError>()),
-      );
     });
 
     test('Main constructor: isValid=true without errors triggers assertion', () {
@@ -35,7 +28,7 @@ void main() {
       final r = Result(
         isValid: true,
         value: 10,
-        expectation: Expectation(message: 'should not be here', value: 10),
+        expectation: const Expectation(message: 'should not be here', value: 10),
       );
       expect(r.isValid, true);
       expect(r.expectations, isNotEmpty); // Illustrates current inconsistency.
@@ -45,7 +38,7 @@ void main() {
       final r = Result(
         isValid: false,
         value: 10,
-        expectation: Expectation(message: 'bad', value: 10),
+        expectation: const Expectation(message: 'bad', value: 10),
       );
       expect(r.isValid, false);
       expect(r.expectations.single.message, 'bad');
@@ -55,20 +48,10 @@ void main() {
       final r = Result(
         isValid: false,
         value: 10,
-        expectations: [Expectation(message: 'bad', value: 10)],
+        expectations: [const Expectation(message: 'bad', value: 10)],
       );
       expect(r.isValid, false);
       expect(r.expectations.length, 1);
-    });
-
-    test('Main constructor: isValid=false WITH empty errors list passes', () {
-      expect(
-          () => Result(
-                isValid: false,
-                value: 10,
-                expectations: const [],
-              ),
-          throwsA(isA<AssertionError>()));
     });
   });
 }

@@ -20,6 +20,6 @@ void main() {
     ].validate(testEskema);
 
     expect(result2.isValid, false);
-    expect(result2.shortDescription, '[0].street: String');
+    expect(result2.description, '[0].street: String');
   });
 }

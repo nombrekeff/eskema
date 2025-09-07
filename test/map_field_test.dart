@@ -19,20 +19,20 @@ void main() {
 
     final invalidRes1 = mapField.validate({});
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.description, '.name: String, .age: int (value: {})');
+    expect(invalidRes1.description, '.name: String, .age: int');
 
     final invalidRes2 = mapField.validate({'name': 'test'});
     expect(invalidRes2.isValid, false);
-    expect(invalidRes2.description, '.age: int (value: {"name":"test"})');
+    expect(invalidRes2.description, '.age: int');
 
     final invalidRes3 = mapField.validate({'name': 'test', 'age': -12});
     expect(invalidRes3.isValid, false);
     expect(invalidRes3.description,
-        '.age: greater than or equal to 0 (value: {"name":"test","age":-12})');
+        '.age: greater than or equal to 0');
 
     final invalidRes4 = mapField.validate(null);
     expect(invalidRes4.isValid, false);
-    expect(invalidRes4.description, 'Map<dynamic, dynamic> (value: null)');
+    expect(invalidRes4.description, 'Map<dynamic, dynamic>');
 
     final validRes1 = mapField.validate({'name': 'test', 'age': 12, 'vat': null});
     expect(validRes1.isValid, true);
@@ -63,7 +63,7 @@ void main() {
       },
     });
     expect(invalidRes4.isValid, false);
-    expect(invalidRes4.shortDescription,
+    expect(invalidRes4.description,
         '.address.street: String, .address.additional: Map<dynamic, dynamic>');
 
     final invalidRes5 = isValidMap.validate({
@@ -75,7 +75,7 @@ void main() {
       },
     });
     expect(invalidRes5.isValid, false);
-    expect(invalidRes5.shortDescription, '.address.additional.doorbel_number: int');
+    expect(invalidRes5.description, '.address.additional.doorbel_number: int');
 
     final validRes1 = isValidMap.validate({
       'address': {
@@ -113,7 +113,7 @@ void main() {
       'books': [{}]
     });
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.shortDescription, '.books[0].name: String');
+    expect(invalidRes1.description, '.books[0].name: String');
   });
 
   test('optional works', () {
@@ -152,7 +152,7 @@ void main() {
     expect(validListField.validate({'nullable': null}).isValid, true);
 
     expect(validListField.validate({}).isValid, false);
-    expect(validListField.validate({}).description, '.nullable: String (value: {})');
+    expect(validListField.validate({}).description, '.nullable: String');
     expect(validListField.validate({'nullable': 123}).isValid, false);
   });
 
@@ -194,7 +194,7 @@ void main() {
       final map = {'name': 'John', 'age': '30'};
       final result = validator.validate(map);
       expect(result.isValid, isFalse);
-      expect(result.shortDescription, '.age: int');
+      expect(result.description, '.age: int');
     });
   });
 }

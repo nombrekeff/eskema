@@ -15,8 +15,8 @@ void main() {
       'country': isOneOf(['USA', 'Canada']),
       'postal': when(
         asyncPassBool(true),
-        then: stringIsOfLength(5) > Expectation(message: 'len5'),
-        otherwise: stringIsOfLength(6) > Expectation(message: 'len6'),
+        then: stringIsOfLength(5) > const Expectation(message: 'len5'),
+        otherwise: stringIsOfLength(6) > const Expectation(message: 'len6'),
       ),
     });
 
@@ -28,7 +28,7 @@ void main() {
     test('then branch async condition fail length', () async {
       final r = await schema.validateAsync({'country': 'USA', 'postal': '1234'});
       expect(r.isValid, false);
-      expect(r.shortDescription.contains('len5'), true);
+      expect(r.description.contains('len5'), true);
     });
   });
 }

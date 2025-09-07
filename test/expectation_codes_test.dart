@@ -19,11 +19,11 @@ void main() {
       expect(r.firstExpectation.code, 'value.format_invalid');
     });
 
-  test('value_not_in_set via isOneOf', () {
+  test('value.membership_mismatch via isOneOf', () {
       final r = isOneOf<int>([1, 2, 3]).validate(4);
       expect(r.isValid, false);
       final e = r.firstExpectation;
-      expect(e.code, 'value_not_in_set');
+      expect(e.code, 'value.membership_mismatch');
       expect(e.data?['options'], isA<List>());
     });
 
@@ -56,7 +56,7 @@ void main() {
     });
 
     test('copyWith preserves and overrides code/data', () {
-      final e = Expectation(message: 'm', value: 1, code: 'c1', data: {'a': 1});
+      final e = const Expectation(message: 'm', value: 1, code: 'c1', data: {'a': 1});
       final e2 = e.copyWith(message: 'm2', code: 'c2');
       expect(e2.message, 'm2');
       expect(e2.code, 'c2');
@@ -64,7 +64,7 @@ void main() {
     });
 
     test('toJson includes code, path, data', () {
-      final e = Expectation(message: 'm', value: 5, code: 'x', data: {'k': 'v'}, path: 'p');
+      final e = const Expectation(message: 'm', value: 5, code: 'x', data: {'k': 'v'}, path: 'p');
       final j = e.toJson();
       expect(j['code'], 'x');
       expect(j['path'], 'p');

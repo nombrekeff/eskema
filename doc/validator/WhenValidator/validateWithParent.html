@@ -78,7 +78,8 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
-FutureOr&lt;Result&gt; validateWithParent(dynamic value, Map&lt;String, dynamic&gt; map, {bool exists = true}) {
+FutureOr&lt;Result&gt; validateWithParent(dynamic value, Map&lt;String, dynamic&gt; map,
+    {bool exists = true}) {
   final cond = condition.validator(map);
   if (cond is Future&lt;Result&gt;) {
     return cond.then((cr) =&gt; _evalBranch(cr, value));

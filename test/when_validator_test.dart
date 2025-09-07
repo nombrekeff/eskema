@@ -5,12 +5,12 @@ import 'package:test/test.dart';
 void main() {
   group('when validator', () {
     final addressValidator = eskema({
-      'street': v.isString() & v.isNotEmpty(),
+      'street': v.isString() & v.not(v.$isStringEmpty),
       'country': v.isOneOf(['USA', 'Canada']),
       'postal_code': when(
         getField('country', v.isEq('USA')),
-        then: v.stringIsOfLength(5) > Expectation(message: 'a 5-digit US zip code'),
-        otherwise: v.stringIsOfLength(6) > Expectation(message: 'a 6-character Canadian postal code'),
+        then: v.stringIsOfLength(5, message: 'a 5-digit US zip code'),
+        otherwise: v.stringIsOfLength(6, message: 'a 6-character Canadian postal code'),
       ),
     });
 
@@ -54,7 +54,7 @@ void main() {
       };
       final result = addressValidator.validate(address);
       expect(result.isValid, isFalse);
-      expect(result.shortDescription, '.postal_code: a 6-character Canadian postal code');
+      expect(result.description, '.postal_code: a 6-character Canadian postal code');
     });
 
     test('should fail if when is used outside of an eskema map validator', () {
@@ -65,7 +65,7 @@ void main() {
       );
       final result = validator.validate('some value');
       expect(result.isValid, isFalse);
-      expect(result.shortDescription,
+      expect(result.description,
           '`when` validator can only be used inside an `eskema` map validator');
     });
   });
