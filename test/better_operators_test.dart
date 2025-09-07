@@ -5,10 +5,10 @@ void main() {
   group('Operators', () {
     test('& adds validators to single all validator', () {
       final r = (isType<String>() & isType<int>());
-      expect(r.validators.length, 2);
+      expect((r as AllValidator).validators.length, 2);
 
       final r2 = r & isType<double>();
-      expect(r2.validators.length, 3);
+      expect((r2 as AllValidator).validators.length, 3);
     });
 
     group('& operator combines children correctly', () {
@@ -18,9 +18,9 @@ void main() {
         final combined = validator1 & validator2;
 
         expect(combined, isA<AllValidator>());
-        expect(combined.validators.length, 2);
-        expect(combined.validators.elementAt(0), equals(validator1));
-        expect(combined.validators.elementAt(1), equals(validator2));
+        expect((combined as AllValidator).validators.length, 2);
+        expect((combined).validators.elementAt(0), equals(validator1));
+        expect((combined).validators.elementAt(1), equals(validator2));
       });
 
       test('combines AllValidator with simple validator', () {
@@ -32,7 +32,7 @@ void main() {
         final finalCombined = firstCombined & validator3;
 
         expect(finalCombined, isA<AllValidator>());
-        expect(finalCombined.validators.length, 3);
+        expect((finalCombined as AllValidator).validators.length, 3);
         expect(finalCombined.validators.elementAt(0), equals(validator1));
         expect(finalCombined.validators.elementAt(1), equals(validator2));
         expect(finalCombined.validators.elementAt(2), equals(validator3));
@@ -47,7 +47,7 @@ void main() {
         final finalCombined = validator1 & allValidator;
 
         expect(finalCombined, isA<AllValidator>());
-        expect(finalCombined.validators.length, 3);
+        expect((finalCombined as AllValidator).validators.length, 3);
         expect(finalCombined.validators.elementAt(0), equals(validator2));
         expect(finalCombined.validators.elementAt(1), equals(validator3));
         expect(finalCombined.validators.elementAt(2), equals(validator1));
@@ -64,7 +64,7 @@ void main() {
         final finalCombined = allValidator1 & allValidator2;
 
         expect(finalCombined, isA<AllValidator>());
-        expect(finalCombined.validators.length, 4);
+        expect((finalCombined as AllValidator).validators.length, 4);
         expect(finalCombined.validators.elementAt(0), equals(validator1));
         expect(finalCombined.validators.elementAt(1), equals(validator2));
         expect(finalCombined.validators.elementAt(2), equals(validator3));
@@ -101,8 +101,8 @@ void main() {
       test('combined validator with collecting mode', () {
         final combined = isType<String>() & isGte(10) & isLte(5); // Impossible: gte 10 and lte 5
         // Convert to collecting mode
-        final collecting = AllValidator(combined.validators, collecting: true);
-        
+        final collecting = AllValidator((combined as AllValidator).validators, collecting: true);
+
         final result = collecting.validate('hello'); // String, length 5
         expect(result.isValid, false);
         // Should collect failures from both numeric validators since string 'hello' can't be >= 10
@@ -115,7 +115,7 @@ void main() {
         final combined = validator1 & validator2;
 
         expect(combined, isA<AllValidator>());
-        expect(combined.validators.length, 2);
+        expect((combined as AllValidator).validators.length, 2);
         expect(combined.validators.elementAt(0), equals(validator1));
         expect(combined.validators.elementAt(1), equals(validator2));
       });
@@ -127,7 +127,7 @@ void main() {
             & isEq(50);
 
         expect(validator, isA<AllValidator>());
-        expect(validator.validators.length, 4);
+        expect((validator as AllValidator).validators.length, 4);
         
         final result = validator.validate(50);
         expect(result.isValid, true);
@@ -165,8 +165,8 @@ void main() {
         final combined = isType<String>() & complexValidator;
         
         expect(combined, isA<AllValidator>());
-        expect(combined.validators.length, 2);
-        
+        expect((combined as AllValidator).validators.length, 2);
+
         final result1 = combined.validate('hello test world');
         expect(result1.isValid, true);
         
@@ -186,9 +186,9 @@ void main() {
         final v3 = validator((v) => v == 'third', (v) => Expectation(message: 'third', value: v));
         
         final combined = v1 & v2 & v3;
-        
-        expect(combined.validators.length, 3);
-        
+
+        expect((combined as AllValidator).validators.length, 3);
+
         // Test that validators are called in order by checking short-circuit behavior
         final result = combined.validate('test');
         expect(result.isValid, false);
