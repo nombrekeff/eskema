@@ -202,17 +202,21 @@ class CustomPivot {
 /// final optionalField = v().string().optional().lengthMin(2).build();
 /// ```
 class BaseBuilder<B extends BaseBuilder<B, T>, T> {
+  BaseBuilder({bool negated = false, Chain? chain})
+      : chain = chain ?? Chain(),
+        _negated = negated,
+        _optional = false,
+        _nullable = false;
+
   final Chain chain;
   bool _negated;
+  bool _optional;
+  bool _nullable;
 
   bool get negated => _negated;
   set negated(val) {
     _negated = val;
   }
-
-  BaseBuilder({bool negated = false, Chain? chain})
-      : chain = chain ?? Chain(),
-        _negated = negated;
 
   B get self => this as B;
 
@@ -233,19 +237,15 @@ class BaseBuilder<B extends BaseBuilder<B, T>, T> {
   }
 
   /// Mark current chain optional (skipped when key absent).
-  ///
-  /// Make sure to add to the end of the chain to afect the final validator.
-  /// Otherwise, it may not be applied correctly.
   B optional({String? message}) {
-    return wrap((c) => c.optional(), message: message);
+    this._optional = true;
+    return self;
   }
 
   /// Mark current chain nullable (null accepted as valid).
-  ///
-  /// Make sure to add to the end of the chain to afect the final validator.
-  /// Otherwise, it may not be applied correctly.
   B nullable({String? message}) {
-    return wrap((c) => c.nullable(), message: message);
+    this._nullable = true;
+    return self;
   }
 
   /// Override final error message (retains codes).
@@ -269,13 +269,20 @@ class BaseBuilder<B extends BaseBuilder<B, T>, T> {
   }
 
   /// Build resulting validator.
-  IValidator build() => chain.build();
+  IValidator build() => _maybeNullOrOptional(chain.build());
 
   /// Convenience validate (sync only chain).
   Result validate(dynamic value) => build().validate(value);
 
   /// Convenience validateAsync (mixed / async).
   Future<Result> validateAsync(dynamic value) => build().validateAsync(value);
+
+  IValidator _maybeNullOrOptional(IValidator validator) {
+    return validator.copyWith(
+      nullable: _nullable,
+      optional: _optional,
+    );
+  }
 
   IValidator _maybeAddMessage(IValidator validator, String? message) {
     return (message != null && message.isNotEmpty)
