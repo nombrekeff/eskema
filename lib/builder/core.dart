@@ -142,6 +142,17 @@ class Chain {
     return core;
   }
 
+  Chain copyWith() {
+    final c = Chain();
+    c._preValidators = _preValidators?.copyWith();
+    c._postValidators = _postValidators?.copyWith();
+    c._coercion = _coercion;
+    c._coercionKind = _coercionKind;
+    c._prefix = _prefix;
+    c._preservePreValidators = _preservePreValidators;
+    return c;
+  }
+
   // Readable getters for coercion state (used by transformer mixin).
   bool get coercedToInt => _isKind(CoercionKind.int_);
   bool get coercedToDouble => _isKind(CoercionKind.double_);
@@ -201,12 +212,12 @@ class CustomPivot {
 /// // Optional fields
 /// final optionalField = v().string().optional().lengthMin(2).build();
 /// ```
-class BaseBuilder<B extends BaseBuilder<B, T>, T> {
-  BaseBuilder({bool negated = false, Chain? chain})
+class BaseBuilder<B extends BaseBuilder<B, T>, T> extends IValidator {
+  BaseBuilder({bool negated = false, Chain? chain, bool? optional, bool? nullable})
       : chain = chain ?? Chain(),
         _negated = negated,
-        _optional = false,
-        _nullable = false;
+        _optional = optional ?? false,
+        _nullable = nullable ?? false;
 
   final Chain chain;
   bool _negated;
@@ -237,13 +248,15 @@ class BaseBuilder<B extends BaseBuilder<B, T>, T> {
   }
 
   /// Mark current chain optional (skipped when key absent).
-  B optional({String? message}) {
+  @override
+  B optional<_>() {
     this._optional = true;
     return self;
   }
 
   /// Mark current chain nullable (null accepted as valid).
-  B nullable({String? message}) {
+  @override
+  B nullable<_>({String? message}) {
     this._nullable = true;
     return self;
   }
@@ -272,10 +285,31 @@ class BaseBuilder<B extends BaseBuilder<B, T>, T> {
   IValidator build() => _maybeNullOrOptional(chain.build());
 
   /// Convenience validate (sync only chain).
-  Result validate(dynamic value) => build().validate(value);
+  @override
+  Result validate(dynamic value, {bool? exists}) {
+    return build().validate(value, exists: exists ?? true);
+  }
 
   /// Convenience validateAsync (mixed / async).
-  Future<Result> validateAsync(dynamic value) => build().validateAsync(value);
+  @override
+  Future<Result> validateAsync(dynamic value, {bool? exists}) {
+    return build().validateAsync(value, exists: exists ?? true);
+  }
+
+  @override
+  FutureOr<Result> validator(value) {
+    // Short-circuit here for mid-chain nullable usage when the builder is consumed
+    // directly as an IValidator and the caller invokes `validator()` (bypassing
+    // the IValidator.validate() null handling logic). This happens inside some
+    // composite validators (e.g. map/field validators) that call child.validator
+    // for performance. Without this, a chain like `builder().string().nullable().lengthMin(2)`
+    // would still run the `string()` validator on null and incorrectly fail.
+    if (value == null && _nullable) {
+      return Result.valid(value);
+    }
+
+    return build().validator(value);
+  }
 
   IValidator _maybeNullOrOptional(IValidator validator) {
     return validator.copyWith(
@@ -292,5 +326,15 @@ class BaseBuilder<B extends BaseBuilder<B, T>, T> {
 
   IValidator _maybeNegate(IValidator validator) {
     return negated ? esk.not(validator) : validator;
+  }
+
+  @override
+  IValidator copyWith({bool? nullable, bool? optional}) {
+    return BaseBuilder<B, T>(
+      negated: negated,
+      chain: chain.copyWith(),
+      optional: optional ?? _optional,
+      nullable: nullable ?? _nullable,
+    );
   }
 }

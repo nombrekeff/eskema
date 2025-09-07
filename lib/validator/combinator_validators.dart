@@ -272,11 +272,18 @@ class NoneValidator extends MultiValidatorBase {
     // For `none`, collect expectations from VALID results (passing validators)
     // and transform them to "not X" messages
     if (result.isValid) {
-      final notExpectations = result.expectations
-          .map((exp) => exp.copyWith(message: 'not ${exp.message}'))
+      // If the passing child produced no expectations (common for simple validators),
+      // synthesize a placeholder so `none` can still fail meaningfully.
+      final source = result.expectations.isEmpty
+          ? [Expectation(message: 'passed', value: inputValue)]
+          : result.expectations;
+
+      final notExpectations = source
+          .map((exp) => exp.copyWith(message: 'not ${exp.message}', value: inputValue))
           .toList();
       aggregatedExpectations.addAll(notExpectations);
     }
+    
     // Never short-circuit, always continue
     return (false, null);
   }
