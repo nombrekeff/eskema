@@ -40,7 +40,7 @@ class OuterMapValidator extends MapValidator<Map<String, dynamic>> {
 void main() {
   group('Expectation helpers', () {
     test('copyWith + addToPath + toInvalidResult', () {
-      final e = Expectation(path: 'user', message: 'is bad', value: 1);
+      final e = const Expectation(path: 'user', message: 'is bad', value: 1);
       final e2 = e.copyWith(message: 'really bad');
       expect(e2.message, 'really bad');
       final e3 = e2.addToPath('name');
@@ -49,28 +49,19 @@ void main() {
       expect(r.isValid, false);
       expect(r.firstExpectation.description.contains('user.name'), true);
     });
-
-    test('shortDescription / description path vs no path', () {
-      final withPath = Expectation(path: 'a', message: 'fail', value: 5);
-      final noPath = Expectation(message: 'oops', value: 6);
-      expect(withPath.shortDescription, 'a: fail');
-      expect(noPath.shortDescription, 'oops');
-      expect(withPath.description.contains('value:'), true);
-      expect(noPath.description.startsWith('oops'), true);
-    });
   });
 
   group('Result helpers', () {
-    test('copyWith changes fields + multi expectation shortDescription join', () {
+    test('copyWith changes fields + multi expectation description join', () {
       final r = Result.invalid(10, expectations: [
-        Expectation(message: 'e1', value: 10),
-        Expectation(message: 'e2', value: 10),
+        const Expectation(message: 'e1', value: 10),
+        const Expectation(message: 'e2', value: 10),
       ]);
       final r2 = r.copyWith(isValid: true, value: 11);
       expect(r2.isValid, true);
-      expect(r.shortDescription, contains('e1'));
-      expect(r.shortDescription, contains('e2'));
-      expect(r.shortDescription.contains(', '), true);
+      expect(r.description, contains('e1'));
+      expect(r.description, contains('e2'));
+      expect(r.description.contains(', '), true);
       expect(r2.value, 11);
     });
   });
@@ -98,7 +89,7 @@ void main() {
     });
 
     test('withError wraps async child', () async {
-      final v = withExpectation(asyncFail('inner'), Expectation(message: 'outer'));
+      final v = withExpectation(asyncFail('inner'), const Expectation(message: 'outer'));
       final r = await v.validateAsync('z');
       expect(r.isValid, false);
       expect(r.firstExpectation.message, 'outer');
@@ -120,6 +111,20 @@ void main() {
       final v = not(asyncFail('bad'));
       final r = await v.validateAsync('x');
       expect(r.isValid, true);
+    });
+
+    test('all validator collects expectations from all failing child validators', () async {
+      // Use AllValidator with collecting=true for collecting all failures without value chaining
+      final v = AllValidator([
+        asyncFail('failure1'),
+        validator((v) => false, (v) => Expectation(message: 'failure2', value: v)),
+        asyncFail('failure3'),
+      ], collecting: true);
+      final r = await v.validateAsync('x');
+      expect(r.isValid, false);
+      // AllValidator with collecting=true should collect expectations from ALL failing validators
+      expect(r.expectationCount, 3);
+      expect(r.expectations.map((e) => e.message), containsAll(['failure1', 'failure2', 'failure3']));
     });
   });
 

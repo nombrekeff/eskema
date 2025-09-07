@@ -74,9 +74,15 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Expectation expectation(String message, dynamic value,
-        [String? path, String? code, Map&lt;String, Object?&gt;? data]) =&gt;
-    Expectation(path: path, message: message, value: value, code: code, data: data);</code></pre>
+  <pre class="language-dart"><code class="language-dart">Expectation expectation(
+  String message,
+  dynamic value, [
+  String? path,
+  String? code,
+  Map&lt;String, Object?&gt;? data,
+]) {
+  return Expectation(path: path, message: message, value: value, code: code, data: data);
+}</code></pre>
 </section>
 
 

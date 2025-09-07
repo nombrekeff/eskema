@@ -6,45 +6,34 @@
 library result;
 
 import 'package:eskema/expectation.dart';
-import 'package:eskema/src/util.dart';
+
+const _emptyExpectations = <Expectation>[];
 
 /// Represents the result of a validation.
-class Result<T> {
+class Result {
   Result({
     required this.isValid,
     required this.value,
-    List<Expectation>? expectations,
+    Iterable<Expectation>? expectations,
     Expectation? expectation,
-  })  : assert(
-          isValid ||
-              (!isValid && expectation != null ||
-                  (expectations != null && expectations.isNotEmpty)),
-          'invalid -> provide an expectation or non-empty expectations list',
-        ),
-        expectations = List.unmodifiable(
-          expectations ?? (expectation == null ? const <Expectation>[] : [expectation]),
-        );
+  }) : expectations =
+            expectations ?? (expectation == null ? _emptyExpectations : [expectation]);
 
   Result.valid(this.value)
       : isValid = true,
-        expectations = const <Expectation>[];
+        expectations = _emptyExpectations;
 
-  Result.invalid(this.value, {List<Expectation>? expectations, Expectation? expectation})
-      : assert(
-          (expectation != null || (expectations != null && expectations.isNotEmpty)),
-          "If invalid, either 'expectation' or a non-empty 'expectations' list must be provided",
-        ),
-        isValid = false,
-        expectations = (expectations != null
-            ? List.unmodifiable(expectations)
-            : List.unmodifiable([expectation!]));
+  Result.invalid(this.value, {Iterable<Expectation>? expectations, Expectation? expectation})
+      : isValid = false,
+        expectations =
+            expectations ?? (expectation == null ? _emptyExpectations : [expectation]);
 
   final bool isValid;
 
   /// The list of expectations for the validation result.
   /// It will contain expectations independent of the validation result.
-  final List<Expectation> expectations;
-  final T value;
+  final Iterable<Expectation> expectations;
+  final dynamic value;
 
   bool get hasExpectations => expectations.isNotEmpty;
   bool get isNotValid => !isValid;
@@ -54,14 +43,8 @@ class Result<T> {
 
   int get expectationCount => expectations.length;
 
-  String get shortDescription {
-    return isValid ? 'Valid' : expectations.map((e) => e.shortDescription).join(', ');
-  }
-
   String get description {
-    return isValid
-        ? 'Valid: ${prettifyValue(value)}'
-        : '$shortDescription (value: ${prettifyValue(value)})';
+    return isValid ? 'Valid' : expectations.map((e) => e.description).join(', ');
   }
 
   /// Creates a copy of the result with the given parameters.
@@ -79,6 +62,8 @@ class Result<T> {
 
   @override
   String toString() {
+    // Keep valid results concise; invalid use joined expectation descriptions (legacy behavior).
+    // Callers needing structured formatting should use error_format.dart helpers.
     return description;
   }
 

@@ -23,17 +23,18 @@ void main() {
     'birthday': optional(isDate()),
   });
 
+  // Validate a mostly complete user (premium missing => reported because nullable() only allows null, not absence)
   final ok = userValidator.validate({
     'username': 'bob',
     'lastname': 'builder',
     'theme': 'light',
     'age': 42,
   });
-  print('User is valid: $ok');
+  print('Partial user validation (missing premium): $ok');
 
   final res = userValidator.validate({
     'username': 'alice',
     'age': -1,
   });
-  print(res); // false - "Expected age -> greater than or equal to 0, got -1"
+  print(res); // Shows multiple expectations for missing/invalid fields
 }

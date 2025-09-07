@@ -1,5 +1,4 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/src/util.dart';
 
 /// Represents an expectation for a validation result.
 class Expectation {
@@ -19,7 +18,7 @@ class Expectation {
   /// Optional structured metadata (e.g. {'expectedType': 'String', 'foundType': 'int'})
   final Map<String, Object?>? data;
 
-  Expectation({
+  const Expectation({
     this.path,
     required this.message,
     this.value,
@@ -27,24 +26,13 @@ class Expectation {
     this.data,
   });
 
-  /// Get a short description of the expectation.
-  String get shortDescription {
+  /// Get a detailed description of the expectation.
+  String get description {
     if (path != null && path!.isNotEmpty) {
       return '$path: $message';
     }
 
     return message;
-  }
-
-  /// Get a detailed description of the expectation.
-  String get description {
-    final messageSuffix = '$message (value: ${prettifyValue(value)})';
-
-    if (path != null && path!.isNotEmpty) {
-      return '$path: $messageSuffix';
-    }
-
-    return messageSuffix;
   }
 
   Expectation copyWith({
@@ -88,6 +76,12 @@ class Expectation {
 }
 
 /// Creates an expectation for a validation result.
-Expectation expectation(String message, dynamic value,
-        [String? path, String? code, Map<String, Object?>? data]) =>
-    Expectation(path: path, message: message, value: value, code: code, data: data);
+Expectation expectation(
+  String message,
+  dynamic value, [
+  String? path,
+  String? code,
+  Map<String, Object?>? data,
+]) {
+  return Expectation(path: path, message: message, value: value, code: code, data: data);
+}

@@ -7,7 +7,7 @@ import 'package:eskema/eskema.dart';
 /// get a simple boolean or have the validator throw an exception on failure.
 ///
 void main() {
-  final validator = isString() & isNotEmpty();
+  final validator = isString() & not($isStringEmpty);
 
   // --- 1. Using the `Result` Object (Default) ---
   // This is the most flexible approach. The `Result` object gives you access

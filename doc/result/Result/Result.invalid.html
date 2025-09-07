@@ -55,7 +55,7 @@
     <section class="multi-line-signature">
       
       <span class="name ">Result&lt;<wbr><span class="type-parameter">T</span>&gt;.invalid</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="invalid-param-value"><span class="type-annotation">T</span> <span class="parameter-name">value</span>, {</span></li>
-<li><span class="parameter" id="invalid-param-expectations"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../expectation/Expectation-class.html">Expectation</a></span>&gt;</span>?</span> <span class="parameter-name">expectations</span>, </span></li>
+<li><span class="parameter" id="invalid-param-expectations"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../expectation/Expectation-class.html">Expectation</a></span>&gt;</span>?</span> <span class="parameter-name">expectations</span>, </span></li>
 <li><span class="parameter" id="invalid-param-expectation"><span class="type-annotation"><a href="../../expectation/Expectation-class.html">Expectation</a>?</span> <span class="parameter-name">expectation</span>, </span></li>
 </ol>})
     </section>
@@ -65,15 +65,10 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Result.invalid(this.value, {List&lt;Expectation&gt;? expectations, Expectation? expectation})
-    : assert(
-        (expectation != null || (expectations != null &amp;&amp; expectations.isNotEmpty)),
-        &quot;If invalid, either &#39;expectation&#39; or a non-empty &#39;expectations&#39; list must be provided&quot;,
-      ),
-      isValid = false,
-      expectations = (expectations != null
-          ? List.unmodifiable(expectations)
-          : List.unmodifiable([expectation!]));</code></pre>
+  <pre class="language-dart"><code class="language-dart">Result.invalid(this.value, {Iterable&lt;Expectation&gt;? expectations, Expectation? expectation})
+    : isValid = false,
+      expectations =
+          expectations ?? (expectation == null ? _emptyExpectations : [expectation]);</code></pre>
 </section>
 
 

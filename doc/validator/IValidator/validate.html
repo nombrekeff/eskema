@@ -78,14 +78,17 @@ this is most useful for optional fields in maps.</p>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Result validate(dynamic value, {bool exists = true}) {
-  if ((value == null &amp;&amp; isNullable &amp;&amp; exists) || (!exists &amp;&amp; isOptional)) {
+  if ((value == null &amp;&amp; isNullable &amp;&amp; exists) || (value == null &amp;&amp; isOptional &amp;&amp; !exists)) {
     return Result.valid(value);
   }
-  final r = validator(value);
-  if (r is Future&lt;Result&gt;) {
+
+  final result = validator(value);
+
+  if (result is Future&lt;Result&gt;) {
     throw AsyncValidatorException();
   }
-  return r;
+
+  return result;
 }</code></pre>
 </section>
 

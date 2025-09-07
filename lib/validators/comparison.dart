@@ -2,25 +2,26 @@
 ///
 /// This file contains validators for comparing values
 
-library comparison_validators;
+library validators.comparison;
 
 import 'package:collection/collection.dart';
 import 'package:eskema/src/util.dart';
 import '../eskema.dart';
+import 'package:eskema/expectation_codes.dart';
 
 Function _collectionEquals = const DeepCollectionEquality().equals;
 
 /// Checks whether the given value is equal to the [otherValue] value of type [T]
 ///
-/// Even though this function accepts any Type, note that it will not work with Collections. For that usecase prefer using [isDeepEq] instead.
-IValidator isEq<T>(T otherValue) =>
-    isType<T>() &
+/// Even though this function accepts any Type, note that it will not work with Collections. 
+/// For that usecase prefer using [isDeepEq] instead.
+IValidator isEq<T>(T otherValue, {String? message}) =>
     validator(
       (value) => value == otherValue,
       (value) => Expectation(
-        message: 'equal to ${prettifyValue(otherValue)}',
+        message: message ?? 'equal to ${prettifyValue(otherValue)}',
         value: value,
-        code: 'value.equal_mismatch',
+        code: ExpectationCodes.valueEqualMismatch,
         data: {
           'expected': prettifyValue(otherValue),
           'found': prettifyValue(value),
@@ -30,14 +31,14 @@ IValidator isEq<T>(T otherValue) =>
     );
 
 /// Checks whether the given value is equal to the [otherValue] value of type [T]
-IValidator isDeepEq<T>(T otherValue) =>
+IValidator isDeepEq<T>(T otherValue, {String? message}) =>
     isType<T>() &
     validator(
       (value) => _collectionEquals(value, otherValue),
       (value) => Expectation(
-        message: 'equal to ${prettifyValue(otherValue)}',
+        message: message ?? 'equal to ${prettifyValue(otherValue)}',
         value: value,
-        code: 'value.deep_equal_mismatch',
+        code: ExpectationCodes.valueDeepEqualMismatch,
         data: {
           'expected': prettifyValue(otherValue),
           'found': prettifyValue(value),
@@ -47,62 +48,72 @@ IValidator isDeepEq<T>(T otherValue) =>
     );
 
 /// Checks whether the given value has a length property and the length matches the validators
-IValidator length(List<IValidator> validators) => Validator((value) {
-      if (hasLengthProperty(value)) {
-        final result = all(validators).validate((value as dynamic).length);
+IValidator length(List<IValidator> validators, {String? message}) {
+  return Validator((value) {
+    if (hasLengthProperty(value)) {
+      final len = (value as dynamic).length;
+      final result = all(validators).validate(len);
 
-        return result.copyWith(
-          expectations: [
-            Expectation(
-              message: 'length ${result.expectations}',
-              value: value,
-              code: 'value.length_out_of_range',
-              data: {'length': (value as dynamic).length},
-            )
-          ],
-        );
-      } else {
-  return expectation('${value.runtimeType} does not have a length property', value, null, 'logic.predicate_failed')
-            .toInvalidResult();
-      }
-    });
+      if (result.isValid) return Result.valid(value);
+
+      // Re-wrap child expectations into a single consolidated expectation for clarity.
+      // Child messages (e.g. 'equal to 2') are wrapped in square brackets like prior behavior.
+      final joined = result.expectations.map((e) => e.message).join(' & ');
+
+      return Expectation(
+        message: message ?? 'length [$joined]',
+        value: value,
+        code: ExpectationCodes.valueLengthOutOfRange,
+        data: {'length': len},
+      ).toInvalidResult();
+    }
+
+    return Expectation(
+      message: message ?? '${value.runtimeType} does not have a length property',
+      value: value,
+      code: ExpectationCodes.logicPredicateFailed,
+    ).toInvalidResult();
+  });
+}
 
 /// Checks whether the given value contains the [item] value of type [T]
 ///
 /// Works for iterables and strings
-IValidator contains<T>(T item) => Validator((value) {
-      if (hasContainsProperty(value)) {
-        return Result(
-          isValid: value.contains(item),
-          expectation: expectation('contains ${prettifyValue(item)}', value, null, 'value.contains_missing'),
-          value: value,
-        );
-      } else {
-  return expectation('${value.runtimeType} does not have a contains property', value, null, 'logic.predicate_failed')
-            .toInvalidResult();
-      }
-    });
-
-IValidator containsKey(String key) =>
-    isMap() &
-    Validator((value) {
+IValidator contains<T>(T item, {String? message}) {
+  return Validator((value) {
+    if (hasContainsProperty(value)) {
       return Result(
-        isValid: value.containsKey(key),
-  expectation: expectation('contains key "$key"', value, key, 'value.contains_missing'),
+        isValid: value.contains(item),
+        expectation: Expectation(
+          message: message ?? 'contains ${prettifyValue(item)}',
+          value: value,
+          code: ExpectationCodes.valueContainsMissing,
+          data: {'needle': prettifyValue(item)},
+        ),
         value: value,
       );
-    });
+    }
+
+    return Expectation(
+      message: '${value.runtimeType} does not have a contains property',
+      value: value,
+      code: ExpectationCodes.valueContainsMissing,
+    ).toInvalidResult();
+  });
+}
 
 /// Checks whether the given value is one of the [options] values of type [T]
-IValidator isOneOf<T>(List<T> options) => all([
-      isType<T>(),
-      Validator(
-        (value) => Result(
-          isValid: options.contains(value),
-          expectations: [
-            Expectation(message: 'one of: ${prettifyValue(options)}', value: value, code: 'value_not_in_set', data: {'options': options.map((e)=>e.toString()).toList()} )
-          ],
-          value: value,
-        ),
+IValidator isOneOf<T>(Iterable<T> options, {String? message}) {
+  return Validator(
+    (value) => Result(
+      isValid: options.contains(value),
+      expectation: Expectation(
+        message: message ?? 'one of: ${prettifyValue(options)}',
+        value: value,
+        code: ExpectationCodes.valueMembershipMismatch,
+        data: {'options': options.map((e) => e.toString()).toList()},
       ),
-    ]);
+      value: value,
+    ),
+  );
+}

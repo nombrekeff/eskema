@@ -1,3 +1,53 @@
+
+## 2.0.0
+## feat: Fluent Builder API and Comprehensive Validation Overhaul
+
+This major update introduces a complete overhaul of the validation framework, centered around a new fluent, type-safe builder API. It significantly expands the library's capabilities with a wide range of new validators and transformers, while refactoring the entire codebase for improved structure, maintainability, and developer experience.
+
+---
+
+### ✨ Key Features
+
+* **New Fluent Builder API**:
+    * Introduced a new `builder()` entry point and a suite of **type-specific builders** (e.g., `StringBuilder`, `IntBuilder`, `DateTimeBuilder`, `MapBuilder`) to create validation chains with a more intuitive and type-safe approach.
+    * Builders now implement the `IValidator` interface, making them **composable** and allowing them to be used interchangeably with standard validators.
+
+* **Expanded Validator & Transformer Library**:
+    * **Date Validators**: Comprehensive checks for past/future dates, date ranges, and same-day comparisons (`isDateBefore`, `isDateAfter`, `isDateBetween`, etc.).
+    * **JSON Validators**: Deep validation for JSON structures, including checks for containers, object/array types, key existence, and array lengths (`isJsonObject`, `jsonHasKeys`, `jsonArrayLength`, etc.).
+    * **Map Validators**: Helpers for schema-like map validation (`containsKey`, `containsValues`).
+    * **String Normalizers**: A powerful set of string transformers, including `trim`, `collapseWhitespace`, `slugify`, `stripHtml`, `removeDiacritics`, and more.
+
+* **Enhanced Error Handling & Custom Messages**:
+    * Implemented a **centralized expectation code system** to standardize error types and prevent typos.
+    * Added support for **custom validation messages** across all validators and combinators (`all`, `any`, `not`), allowing for more user-friendly error feedback.
+    * Introduced error formatting utilities to simplify the presentation of validation failures.
+
+---
+
+### 🔄 Major Refactoring & Improvements
+
+* **Modular Library Structure**: The core validator library has been broken down into a more logical structure with `base`, `combinator`, and `map` validator files for better organization and maintainability.
+* **API Consistency**: Refactored method signatures, parameter names, and library declarations to follow a unified and consistent convention.
+* **Code Quality & Readability**: Simplified internal validation logic, removed redundant code, improved formatting, and refactored transformers and validators for better clarity and consistency. The `Result` class was updated to use `Iterable` instead of `List` for expectations, improving flexibility.
+
+---
+
+### 🛠️ Tooling & Quality Assurance
+
+* **CI Enhancements**: The CI workflow has been upgraded to include a **SonarQube scan** for static code analysis and a **lint step** to enforce code quality standards automatically.
+* **Robust Testing**: Massively expanded the test suite to cover all new features, including:
+    * Comprehensive tests for custom message propagation.
+    * Behavioral tests for asynchronous combinators.
+    * The introduction of **monkey fuzz testing** to stress-test validators and ensure their robustness against unexpected inputs.
+
+---
+
+### ⚠️ Breaking Changes
+
+* The primary entry point for creating validation chains has been changed from `v()` to the more descriptive **`builder()`**. All previous `v()` calls will need to be updated.
+* The refactoring of the library's internal file structure may require adjustments to import statements in existing code.
+
 ## 1.0.0
 ### Breaking
 

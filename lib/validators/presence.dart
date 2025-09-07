@@ -2,7 +2,7 @@
 ///
 /// This file contains validators for checking the presence of a value.
 
-library presence_validators;
+library validators.presence;
 import 'package:eskema/validator.dart';
 
 /// If the field is not present (null) it will be considered valid

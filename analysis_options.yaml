@@ -10,6 +10,7 @@ analyzer:
     prefer_final_fields: warning
     unnecessary_library_name: ignore
     file_names: ignore
+    strict_top_level_inference: ignore
 
 linter:
   rules:

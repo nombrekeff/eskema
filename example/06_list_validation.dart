@@ -29,7 +29,7 @@ void main() {
   ]);
 
   final validTuple = ['user_profile', 123, true];
-  final invalidTuple = ['user_profile', '123', true]; // '123' is not an int.
+    final invalidTuple = ['user_profile', '123', true]; // '123' is not an int (second position fails)
 
   print('Validating $validTuple: ${tupleValidator.validate(validTuple)}'); // Valid
   print(
@@ -47,8 +47,8 @@ void main() {
 
   print(
       'Validating $validList: ${listPropertiesValidator.validate(validList)}'); // Valid
-  print(
-      'Validating $invalidList: ${listPropertiesValidator.validate(invalidList)}'); // Invalid
+    print(
+            'Validating $invalidList: ${listPropertiesValidator.validate(invalidList)}'); // Invalid (fails length & contains)
 
   print('-' * 20);
 }
