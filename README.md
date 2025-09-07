@@ -10,6 +10,7 @@ Composable runtime validation for Dart. Build readable schemas from tiny validat
 * Concise composition (`&`, `|`, `not()`, `nullable()`, `optional()`)
 * Sync fast path, auto async when needed
 * Rich `Expectation` objects: message, code, path, data
+* Extensively tested
 
 ## Install
 ```bash
