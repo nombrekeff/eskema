@@ -248,7 +248,7 @@ class AnyValidator extends MultiValidatorBase {
   AnyValidator copyWith({
     bool? nullable,
     bool? optional,
-    List<IValidator>? validators,
+    Iterable<IValidator>? validators,
     String? message,
   }) =>
       AnyValidator(
@@ -278,12 +278,11 @@ class NoneValidator extends MultiValidatorBase {
           ? [Expectation(message: 'passed', value: inputValue)]
           : result.expectations;
 
-      final notExpectations = source
-          .map((exp) => exp.copyWith(message: 'not ${exp.message}', value: inputValue))
-          .toList();
+      final notExpectations =
+          source.map((exp) => exp.copyWith(message: 'not ${exp.message}', value: inputValue));
       aggregatedExpectations.addAll(notExpectations);
     }
-    
+
     // Never short-circuit, always continue
     return (false, null);
   }
@@ -348,10 +347,15 @@ class NotValidator extends _SingleChildValidator {
       if (message != null) {
         return _failWithMsg(value, message!);
       } else {
-        // Create "not X" expectations from the child's expectations
-        final notExpectations = result.expectations
-            .map((exp) => exp.copyWith(message: 'not ${exp.message}', value: value))
-            .toList();
+        // Create "not X" expectations from the child's expectations. If the child
+        // produced none (common for primitive validators), synthesize a placeholder
+        // so that consumers (and fuzz tests) always see at least one expectation.
+        final source = result.expectations.isEmpty
+            ? [Expectation(message: 'passed', value: value)]
+            : result.expectations;
+
+        final notExpectations =
+            source.map((exp) => exp.copyWith(message: 'not ${exp.message}', value: value));
         return Result.invalid(value, expectations: notExpectations);
       }
     }

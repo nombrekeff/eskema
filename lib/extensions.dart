@@ -44,7 +44,7 @@ extension EskemaEskValidatorOperations on IValidator {
   /// Combines two validators with a logical AND, same as using [all]
   ///
   /// This is **Sugar**, it allows for more concise validator composition.
-  AllValidator operator &(IValidator other) {
+  IValidator operator &(IValidator other) {
     if (this is AllValidator && other is AllValidator) {
       final mv1 = this as AllValidator;
       return mv1.copyWith(validators: {...mv1.validators, ...other.validators});
@@ -56,8 +56,7 @@ extension EskemaEskValidatorOperations on IValidator {
     }
 
     if (other is AllValidator) {
-      final mv = other;
-      return mv.copyWith(validators: {...mv.validators, this});
+      return other.copyWith(validators: {...other.validators, this});
     }
 
     return all([this, other]);
@@ -66,7 +65,23 @@ extension EskemaEskValidatorOperations on IValidator {
   /// Combines two validators with a logical OR, same as using [any]
   ///
   /// This is **Sugar**, it allows for more concise validator composition.
-  IValidator operator |(IValidator other) => any([this, other]);
+  IValidator operator |(IValidator other) {
+    if (this is AnyValidator && other is AnyValidator) {
+      final mv1 = this as AnyValidator;
+      return mv1.copyWith(validators: {...mv1.validators, ...other.validators});
+    }
+
+    if (this is AnyValidator) {
+      final mv = this as AnyValidator;
+      return mv.copyWith(validators: {...mv.validators, other});
+    }
+
+    if (other is AnyValidator) {
+      return other.copyWith(validators: {...other.validators, this});
+    }
+
+    return any([this, other]);
+  }
 
   /// Returns a new validator that will return the [error] message if the validation fails
   ///

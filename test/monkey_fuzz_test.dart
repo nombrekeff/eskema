@@ -17,7 +17,8 @@ import 'package:eskema/result.dart';
 /// Increase iterations:
 ///   dart test test/monkey_fuzz_test.dart -DFUZZ_ITER=500
 void main() {
-  final seed = int.tryParse(const String.fromEnvironment('FUZZ_SEED')) ?? DateTime.now().millisecondsSinceEpoch;
+  final seed = int.tryParse(const String.fromEnvironment('FUZZ_SEED')) ??
+      DateTime.now().millisecondsSinceEpoch;
   final iterations = int.tryParse(const String.fromEnvironment('FUZZ_ITER')) ?? 120;
   final rnd = Random(seed);
 
@@ -25,9 +26,9 @@ void main() {
 
   group('monkey_fuzz', () {
     for (var i = 0; i < iterations; i++) {
-      test('fuzz case #$i', () async {
-        final spec = _randomValidatorSpec(rnd, depth: 0);
-        final value = _randomValue(rnd, maxDepth: 2);
+      final spec = _randomValidatorSpec(rnd, depth: 0);
+      final value = _randomValue(rnd, maxDepth: 2);
+      test('fuzz case #$i - ${spec.debug()} $value', () async {
         Result? syncResult;
 
         // Try sync path first; catch async escalation.
@@ -37,10 +38,12 @@ void main() {
           syncResult = null; // Will use async path only.
         } on ValidatorFailedException catch (e) {
           // ThrowInstead validator scenario: ensure expectations exist.
-          expect(e.result.expectations.isNotEmpty, true, reason: 'Thrown result must have expectations');
+          expect(e.result.expectations.isNotEmpty, true,
+              reason: 'Thrown result must have expectations');
           return; // Accept thrown path.
         } catch (e, st) {
-          fail('Unexpected exception (seed=$seed i=$i) spec=${spec.debug()} value=$value -> $e\n$st');
+          fail(
+              'Unexpected exception (seed=$seed i=$i) spec=${spec.debug()} value=$value -> $e\n$st');
         }
 
         Result asyncResult;
@@ -48,26 +51,31 @@ void main() {
           asyncResult = await spec.validator.validateAsync(value);
         } on ValidatorFailedException catch (e) {
           // ThrowInstead path via async chain.
-            expect(e.result.expectations.isNotEmpty, true);
-            return;
+          expect(e.result.expectations.isNotEmpty, true);
+          return;
         } catch (e, st) {
-          fail('Unexpected async exception (seed=$seed i=$i) spec=${spec.debug()} value=$value -> $e\n$st');
+          fail(
+              'Unexpected async exception (seed=$seed i=$i) spec=${spec.debug()} value=$value -> $e\n$st');
         }
 
         if (syncResult != null) {
-          expect(syncResult.isValid, asyncResult.isValid, reason: 'sync/async validity diverged seed=$seed i=$i spec=${spec.debug()} value=$value');
+          expect(syncResult.isValid, asyncResult.isValid,
+              reason:
+                  'sync/async validity diverged seed=$seed i=$i spec=${spec.debug()} value=$value');
         }
 
         final result = syncResult ?? asyncResult;
 
         if (result.isNotValid) {
-          expect(result.expectations.isNotEmpty, true, reason: 'Invalid result must have expectations');
+          expect(result.expectations.isNotEmpty, true,
+              reason: 'Invalid result must have expectations');
         }
 
         // If top-level is NoneValidator, check expectation messages shape when invalid.
         if (spec.kind == _Kind.none && result.isNotValid) {
           for (final e in result.expectations) {
-            expect(e.message.startsWith('not '), true, reason: 'none expectation message must start with "not "');
+            expect(e.message.startsWith('not '), true,
+                reason: 'none expectation message must start with "not "');
           }
         }
 
@@ -220,7 +228,8 @@ dynamic _randomLeafValue(Random rnd) {
     case 3:
       return rnd.nextBool();
     case 4:
-      return String.fromCharCodes(List.generate(1 + rnd.nextInt(5), (_) => 97 + rnd.nextInt(26)));
+      return String.fromCharCodes(
+          List.generate(1 + rnd.nextInt(5), (_) => 97 + rnd.nextInt(26)));
     case 5:
       return rnd.nextInt(2); // small int good for eq validators
     default:
