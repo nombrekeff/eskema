@@ -1,5 +1,4 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/expectation.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -60,7 +59,6 @@ void main() {
         final validator3 = isEq(100);
         final validator4 = isEq(50);
 
-        print("---------------");
         final allValidator1 = validator1 & validator2;
         final allValidator2 = validator3 & validator4;
         final finalCombined = allValidator1 & allValidator2;
