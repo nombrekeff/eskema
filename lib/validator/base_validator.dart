@@ -8,8 +8,6 @@ import 'package:eskema/validator/exception.dart';
 /// Type representing a validator function (may be sync or async).
 typedef ValidatorFunction<T extends Result> = FutureOr<T> Function(dynamic value);
 
-typedef FnValidator = String? Function(dynamic value);
-
 /// Immutable base class from which all validators inherit.
 abstract class IValidator {
   const IValidator({bool nullable = false, bool optional = false})
@@ -46,12 +44,22 @@ abstract class IValidator {
     return result;
   }
 
+  /// Checks if the value is valid according to the validator.
   bool isValid(dynamic value) => validate(value).isValid;
+
+  /// Checks if the value is valid according to the validator asynchronously.
   FutureOr<bool> isValidAsync(dynamic value) async => (await validateAsync(value)).isValid;
+
+  /// Checks if the value is not valid according to the validator.
   bool isNotValid(dynamic value) => !validate(value).isValid;
+
+  /// Checks if the value is not valid according to the validator asynchronously.
   FutureOr<bool> isNotValidAsync(dynamic value) async => !(await isValidAsync(value));
 
-  FnValidator toForm() {
+  /// Converts the validator to a function that returns a string error message or null.
+  /// This is useful for integrating with form libraries that expect a specific function signature.
+  /// If the validation passes, the function returns null; otherwise, it returns the error description.
+  String? Function(dynamic value) toFunction() {
     return (dynamic value) {
       final result = validate(value);
       return result.description;
@@ -66,7 +74,8 @@ abstract class IValidator {
 /// A special type of validator that can operate on a parent map context.
 abstract class IWhenValidator extends IValidator {
   IWhenValidator({super.nullable, super.optional});
-  FutureOr<Result> validateWithParent(dynamic value, Map<String, dynamic> map, {bool exists = true});
+  FutureOr<Result> validateWithParent(dynamic value, Map<String, dynamic> map,
+      {bool exists = true});
 }
 
 /// Generic implementation wrapper for a validator.
@@ -92,6 +101,7 @@ class Validator<T extends Result> extends IValidator {
 /// Base class that adds an identifier to a validator (used by map/field validators).
 class IdValidator<T extends Result> extends Validator<T> {
   final String? id;
-  IdValidator({required ValidatorFunction<T> validator, this.id = '', super.nullable, super.optional})
+  IdValidator(
+      {required ValidatorFunction<T> validator, this.id = '', super.nullable, super.optional})
       : super(validator);
 }
