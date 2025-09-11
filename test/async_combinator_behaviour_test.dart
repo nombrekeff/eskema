@@ -43,7 +43,7 @@ void main() {
       final r = await v.validateAsync(3);
       expect(r.isValid, false);
       expect(r.value, 3, reason: 'collecting mode keeps original value');
-      expect(r.description.contains('6'), true, reason: 'failure from isEq(6) present');
+      expect(r.description?.contains('6'), true, reason: 'failure from isEq(6) present');
     });
 
     test('any short-circuits on first async success (later async not executed)', () async {
@@ -59,7 +59,7 @@ void main() {
       ]);
       final r = await v.validateAsync('x');
       expect(r.isValid, true, reason: 'second validator should succeed');
-      expect(r.description == 'Valid' || r.description.contains('B'), true,
+      expect(r.description == null || (r.description?.contains('B') ?? false), true,
           reason: 'description may be plain Valid or include success expectation');
       expect(ranLate, false, reason: 'later validator should not run');
     });
@@ -71,15 +71,15 @@ void main() {
       ]);
       final r = await v.validateAsync('x');
       expect(r.isValid, false);
-      expect(r.description.contains('not alpha'), true);
-      expect(r.description.contains('beta'), false, reason: 'failing child not collected');
+      expect(r.description?.contains('not alpha'), true);
+      expect(r.description?.contains('beta'), false, reason: 'failing child not collected');
     });
 
     test('not with async child: async pass => failure with not message', () async {
       final v = not(asyncPass('inner ok'));
       final r = await v.validateAsync('x');
       expect(r.isValid, false);
-      expect(r.description.contains('not inner ok'), true);
+      expect(r.description?.contains('not inner ok'), true);
     });
 
     test('not with async failing child => success', () async {
@@ -98,7 +98,7 @@ void main() {
       final v = asyncPass('one') & asyncFail('two') & late;
       final r = await v.validateAsync('x');
       expect(r.isValid, false);
-      expect(r.description.contains('two'), true);
+      expect(r.description?.contains('two'), true);
       expect(ranLate, false, reason: 'short-circuited before late ran');
     });
 

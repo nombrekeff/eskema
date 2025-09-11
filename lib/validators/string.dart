@@ -133,7 +133,7 @@ final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 /// ```
 IValidator isEmail({String? message}) {
   return isString() &
-      stringMatches(emailRegex, message: message ?? 'A valid email address');
+      stringMatches(emailRegex, message: message ?? 'Invalid email address');
 }
 
 /// Checks whether the given string is empty

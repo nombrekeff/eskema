@@ -61,7 +61,7 @@ void main() {
       expect(r2.isValid, true);
       expect(r.description, contains('e1'));
       expect(r.description, contains('e2'));
-      expect(r.description.contains(', '), true);
+      expect(r.description?.contains(', '), true);
       expect(r2.value, 11);
     });
   });

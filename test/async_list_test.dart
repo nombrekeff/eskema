@@ -23,7 +23,7 @@ void main() {
       final v = listEach(delayedInt);
       final r = await v.validateAsync([1,'x',3]);
       expect(r.isValid, false);
-      expect(r.description.contains('[1]'), true);
+      expect(r.description?.contains('[1]'), true);
     });
 
     test('eskemaList with mixed async+sync', () async {
@@ -36,7 +36,7 @@ void main() {
       final v = eskemaList([delayedInt, isString()]);
       final r = await v.validateAsync(['bad','ok']);
       expect(r.isValid, false);
-      expect(r.description.contains('[0]'), true);
+      expect(r.description?.contains('[0]'), true);
     });
   });
 }

@@ -22,7 +22,12 @@ class RegisterFormState extends State<RegisterForm> {
     isInRange(8, 32),
   ], message: "Name must be between 8 and 32 characters");
   final emailValidator = not($isStringEmpty) & isEmail();
-  final passwordValidator = not($isStringEmpty) & stringLength([isInRange(6, 32)]) & stringMatches('');
+  final passwordValidator =
+      stringLength([isInRange(6, 32)]) &
+      stringMatches(RegExp(r'[0-9]'), message: "Must contain numbers") &
+      stringMatches(RegExp(r'[a-z]'), message: "Must contain lowercase letters") &
+      stringMatches(RegExp(r'[A-Z]'), message: "Must contain uppercase letters") &
+      stringMatches(RegExp(r'[^A-Za-z0-9]'), message: "Must contain special characters");
 
   @override
   Widget build(BuildContext context) {

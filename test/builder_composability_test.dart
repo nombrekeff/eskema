@@ -71,7 +71,7 @@ void main() {
       final v = builder().string().lengthMin(2) & asyncFailing;
       final r = await v.validateAsync('ok');
       expect(r.isValid, false);
-      expect(r.description.contains('bad'), true);
+      expect(r.description?.contains('bad'), true);
     });
 
     test('copyWith on builder retains chain and flags', () {

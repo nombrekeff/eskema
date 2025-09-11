@@ -432,7 +432,7 @@ void main() {
 
       // String pre-validator fails
       expect(validator.validate('1').isValid, false); // '1'.length < 2
-      expect(validator.validate('1').description.contains('length'), true);
+      expect(validator.validate('1').description, 'Length must be greater than or equal to 2');
     });
 
     test('custom pivot with dropPre: true drops pre-validators', () {
