@@ -43,8 +43,8 @@ class Result {
 
   int get expectationCount => expectations.length;
 
-  String get description {
-    return isValid ? '' : expectations.map((e) => e.description).join(', ');
+  String? get description {
+    return isValid ? null : expectations.map((e) => e.description).join(', ');
   }
 
   /// Creates a copy of the result with the given parameters.
@@ -64,7 +64,7 @@ class Result {
   String toString() {
     // Keep valid results concise; invalid use joined expectation descriptions (legacy behavior).
     // Callers needing structured formatting should use error_format.dart helpers.
-    return description;
+    return description ?? 'Valid';
   }
 
   Map<String, Object?> toJson() => {
