@@ -61,7 +61,7 @@ IValidator length(List<IValidator> validators, {String? message}) {
       final joined = result.expectations.map((e) => e.message).join(' & ');
 
       return Expectation(
-        message: message ?? 'length [$joined]',
+        message: message ?? 'Length $joined',
         value: value,
         code: ExpectationCodes.valueLengthOutOfRange,
         data: {'length': len},

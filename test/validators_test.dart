@@ -187,11 +187,11 @@ void main() {
 
       final res1 = validator.validate('1');
       expect(res1.isValid, false);
-      expect(res1.description, 'String length [to be 2]');
+      expect(res1.description, 'String length to be 2');
 
       final res2 = validator.validate('123');
       expect(res2.isValid, false);
-      expect(res2.description, 'String length [to be 2]');
+      expect(res2.description, 'String length to be 2');
 
       final res3 = validator.validate(1232);
       expect(res3.isValid, false);
@@ -325,7 +325,7 @@ void main() {
 
       final res1 = validator.validate([]);
       expect(res1.isValid, false);
-      expect(res1.description, 'length [equal to 2]');
+      expect(res1.description, 'Length equal to 2');
 
       final res2 = validator.validate([1, 2]);
       expect(res2.isValid, false);
@@ -333,7 +333,7 @@ void main() {
 
       final res3 = validator.validate([1, 2, 3]);
       expect(res3.isValid, false);
-      expect(res3.description, 'length [equal to 2]');
+      expect(res3.description, 'Length equal to 2');
 
       final res4 = validator.validate(['1', 2]);
       expect(res4.isValid, true);

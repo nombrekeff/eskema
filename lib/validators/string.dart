@@ -31,7 +31,7 @@ IValidator stringLength(List<IValidator> validators, {String? message}) {
 /// This validator also validates that the value is a String first
 /// So there's no need to add the [isString] validator when using this validator
 IValidator stringIsOfLength(int size, {String? message}) {
-  return stringLength([isEq(size)], message: message ?? 'String length [to be $size]');
+  return stringLength([isEq(size)], message: message ?? 'String length to be $size');
 }
 
 /// Validates that the String contains [str]

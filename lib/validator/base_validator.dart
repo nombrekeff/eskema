@@ -8,6 +8,8 @@ import 'package:eskema/validator/exception.dart';
 /// Type representing a validator function (may be sync or async).
 typedef ValidatorFunction<T extends Result> = FutureOr<T> Function(dynamic value);
 
+typedef FnValidator = String? Function(dynamic value);
+
 /// Immutable base class from which all validators inherit.
 abstract class IValidator {
   const IValidator({bool nullable = false, bool optional = false})
@@ -49,8 +51,14 @@ abstract class IValidator {
   bool isNotValid(dynamic value) => !validate(value).isValid;
   FutureOr<bool> isNotValidAsync(dynamic value) async => !(await isValidAsync(value));
 
-  IValidator copyWith({bool? nullable, bool? optional});
+  FnValidator toForm() {
+    return (dynamic value) {
+      final result = validate(value);
+      return result.description;
+    };
+  }
 
+  IValidator copyWith({bool? nullable, bool? optional});
   IValidator nullable<T>() => copyWith(nullable: true);
   IValidator optional<T>() => copyWith(optional: true);
 }
