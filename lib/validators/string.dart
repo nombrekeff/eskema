@@ -67,20 +67,20 @@ IValidator stringContains(String str, {String? message}) {
 /// **Usage Examples:**
 /// ```dart
 /// // Validate phone number format
-/// final phonePattern = stringMatchesPattern(r'^\+?[\d\s\-\(\)]+$');
+/// final phonePattern = stringMatches(r'^\+?[\d\s\-\(\)]+$');
 /// phonePattern.validate("+1-555-0123");     // Valid
 /// phonePattern.validate("invalid-phone");    // Invalid
 ///
 /// // Validate hexadecimal color
-/// final hexColor = stringMatchesPattern(r'^#[0-9A-Fa-f]{6}$');
+/// final hexColor = stringMatches(r'^#[0-9A-Fa-f]{6}$');
 /// hexColor.validate("#FF5733");              // Valid
 /// hexColor.validate("#GGG");                 // Invalid
 ///
 /// // Custom error message
-/// final customPattern = stringMatchesPattern(r'^\d{4}-\d{2}-\d{2}$',
+/// final customPattern = stringMatches(r'^\d{4}-\d{2}-\d{2}$',
 ///   message: 'Date must be in YYYY-MM-DD format');
 /// ```
-IValidator stringMatchesPattern(Pattern pattern, {String? message}) {
+IValidator stringMatches(Pattern pattern, {String? message}) {
   return isType<String>() &
       validator(
         (value) => pattern.allMatches(value).isNotEmpty,
@@ -133,7 +133,7 @@ final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 /// ```
 IValidator isEmail({String? message}) {
   return isString() &
-      stringMatchesPattern(emailRegex, message: message ?? 'a valid email address');
+      stringMatches(emailRegex, message: message ?? 'A valid email address');
 }
 
 /// Checks whether the given string is empty
@@ -203,7 +203,7 @@ final uuidRegex = RegExp(
 /// });
 /// ```
 IValidator isUuidV4({String? message}) {
-  return isString() & stringMatchesPattern(uuidRegex, message: message ?? 'a valid UUID v4');
+  return isString() & stringMatches(uuidRegex, message: message ?? 'a valid UUID v4');
 }
 
 /// Validates that the String can be parsed as an `int` (e.g. '123', '-42')

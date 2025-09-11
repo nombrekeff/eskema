@@ -19,7 +19,7 @@ import 'package:eskema/eskema.dart';
 /// // Multiple validation strategies for email
 /// final emailValidator = any([
 ///   $isEmail,  // Standard email format
-///   stringMatchesPattern(r'^.+@localhost$'), // Local development
+///   stringMatches(r'^.+@localhost$'), // Local development
 /// ]);
 /// ```
 IValidator any(List<IValidator> validators, {String? message}) {
@@ -38,15 +38,15 @@ IValidator any(List<IValidator> validators, {String? message}) {
 /// final passwordValidator = all([
 ///   toString(),                         // Convert to string first
 ///   stringLength([isGte(8)]),          // Then validate length (chained value)
-///   stringMatchesPattern(r'[A-Z]'),     // Must contain uppercase
+///   stringMatches(r'[A-Z]'),     // Must contain uppercase
 /// ]);
 ///
 /// // Collecting behavior: show all errors at once
 /// final formValidator = all([
 ///   isType<String>(),                   // Must be a string
 ///   stringLength([isGte(3)]),          // Must be at least 3 chars
-///   stringMatchesPattern(r'[A-Z]'),     // Must contain uppercase
-///   stringMatchesPattern(r'[0-9]'),     // Must contain number
+///   stringMatches(r'[A-Z]'),     // Must contain uppercase
+///   stringMatches(r'[0-9]'),     // Must contain number
 /// ], collecting: true);
 /// 
 /// // Will show ALL validation errors, not just the first one
@@ -205,7 +205,7 @@ IValidator withExpectation(IValidator child, Expectation error, {String? message
 ///   'method': $isString,
 ///   'cardNumber': when(
 ///     isEq('credit_card'),     // If payment method is credit card
-///     stringMatchesPattern(r'^\d{16}$'), // Then: validate 16-digit card number
+///     stringMatches(r'^\d{16}$'), // Then: validate 16-digit card number
 ///     isEq(null),              // Otherwise: card number should be null
 ///   ),
 /// });

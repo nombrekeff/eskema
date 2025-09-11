@@ -22,8 +22,7 @@ class RegisterFormState extends State<RegisterForm> {
     isInRange(8, 32),
   ], message: "Name must be between 8 and 32 characters");
   final emailValidator = not($isStringEmpty) & isEmail();
-  final passwordValidator = not($isStringEmpty) & stringLength([isInRange(6, 32)]);
-  // final confirmPasswordValidator = not($isStringEmpty) & isEqualTo(passwordController.text);
+  final passwordValidator = not($isStringEmpty) & stringLength([isInRange(6, 32)]) & stringMatches('');
 
   @override
   Widget build(BuildContext context) {
@@ -41,39 +40,38 @@ class RegisterFormState extends State<RegisterForm> {
               labelText: 'Enter your name',
               suffixIcon: Icon(Icons.person),
             ),
-            validator: (value) {
-              final res = nameValidator.validate(value);
-              return res.description;
-            },
+            validator: nameValidator.toForm(),
           ),
           SizedBox(height: 16),
           TextFormField(
+            initialValue: formState.email,
+            onChanged: (value) {
+              formState.email = value;
+            },
             decoration: InputDecoration(
               labelText: 'Enter your email',
               suffixIcon: Icon(Icons.email),
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
+            validator: emailValidator.toForm(),
           ),
           SizedBox(height: 16),
           TextFormField(
+            initialValue: formState.password,
+            onChanged: (value) {
+              formState.password = value;
+            },
             decoration: InputDecoration(
               labelText: 'Enter a password',
               suffixIcon: Icon(Icons.lock),
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
+            validator: passwordValidator.toForm(),
           ),
           SizedBox(height: 16),
           TextFormField(
+            initialValue: formState.confirmPassword,
+            onChanged: (value) {
+              formState.confirmPassword = value;
+            },
             decoration: InputDecoration(
               labelText: 'Confirm your password',
               suffixIcon: Icon(Icons.lock),

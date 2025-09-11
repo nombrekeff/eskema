@@ -231,8 +231,8 @@ void main() {
       expect(res2.description, 'String');
     });
 
-    test('stringMatchesPattern works', () {
-      final validator = stringMatchesPattern(RegExp(r'[\d]'));
+    test('stringMatches works', () {
+      final validator = stringMatches(RegExp(r'[\d]'));
       expect(validator.validate('123').isValid, true);
       expect(validator.validate('55555').isValid, true);
 
@@ -244,8 +244,8 @@ void main() {
       );
     });
 
-    test('stringMatchesPattern works with custom message', () {
-      final validator = stringMatchesPattern(
+    test('stringMatches works with custom message', () {
+      final validator = stringMatches(
         RegExp(r'[\d]'),
         message: 'Incorrect numerical string',
       );
@@ -325,7 +325,7 @@ void main() {
 
       final res1 = validator.validate([]);
       expect(res1.isValid, false);
-      expect(res1.description, 'Length equal to 2');
+      expect(res1.description, 'Length must be equal to 2');
 
       final res2 = validator.validate([1, 2]);
       expect(res2.isValid, false);
@@ -333,7 +333,7 @@ void main() {
 
       final res3 = validator.validate([1, 2, 3]);
       expect(res3.isValid, false);
-      expect(res3.description, 'Length equal to 2');
+      expect(res3.description, 'Length must be equal to 2');
 
       final res4 = validator.validate(['1', 2]);
       expect(res4.isValid, true);

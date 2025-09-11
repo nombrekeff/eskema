@@ -7,11 +7,11 @@ void main() {
 
     final invalidRes1 = field.validate([]);
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.description, 'Length equal to 2');
+    expect(invalidRes1.description, 'Length must be equal to 2');
 
     final invalidRes2 = field.validate([1]);
     expect(invalidRes2.isValid, false);
-    expect(invalidRes2.description, 'Length equal to 2');
+    expect(invalidRes2.description, 'Length must be equal to 2');
 
     final invalidRes3 = field.validate(123);
     expect(invalidRes3.isValid, false);
@@ -38,7 +38,7 @@ void main() {
 
     final invalidRes1 = isListValid.validate(['1', null, 3]);
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.description, 'Length equal to 2');
+    expect(invalidRes1.description, 'Length must be equal to 2');
   });
 
   test('Basic ListField validates items', () {
@@ -77,7 +77,7 @@ void main() {
       [1]
     ]);
     expect(invalidRes1.isValid, false);
-    expect(invalidRes1.description, '[0]: Length equal to 2');
+    expect(invalidRes1.description, '[0]: Length must be equal to 2');
 
     final invalidRes2 = isListValid.validate([
       [1, 'aaaa']

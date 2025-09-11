@@ -172,7 +172,7 @@ mixin NumberMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
 mixin StringMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   /// Validate that the string matches the provided regular expression pattern.
   B matches(RegExp pattern, {String? message}) {
-    return add(stringMatchesPattern(pattern), message: message);
+    return add(stringMatches(pattern), message: message);
   }
 
   /// Validate that the string is a valid email address.

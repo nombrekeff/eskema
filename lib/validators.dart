@@ -5,7 +5,7 @@
 ///   Each has a cached `$` alias (`$isString`, `$isInt`) for zero‑arg reuse.
 /// - Logical/comparison: `isGt`, `isGte`, `isLt`, `isLte`, `isEq`, `isDeepEq`.
 /// - Collection / structure helpers: `contains`, `containsKey`, `listEach`, `eskema`, `eskemaList`.
-/// - String/length: `stringIsOfLength`, `stringContains`, `stringMatchesPattern`.
+/// - String/length: `stringIsOfLength`, `stringContains`, `stringMatches`.
 /// - Numeric/string parsing predicates: `isIntString`, `isDoubleString`, `isNumString`.
 /// - Date/time: `isDate` (parsable ISO 8601 string), `isDateTime` (actual DateTime type).
 /// - Combinators:
