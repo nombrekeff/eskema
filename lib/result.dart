@@ -44,7 +44,7 @@ class Result {
   int get expectationCount => expectations.length;
 
   String get description {
-    return isValid ? 'Valid' : expectations.map((e) => e.description).join(', ');
+    return isValid ? '' : expectations.map((e) => e.description).join(', ');
   }
 
   /// Creates a copy of the result with the given parameters.
