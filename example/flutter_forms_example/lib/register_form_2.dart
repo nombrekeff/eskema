@@ -1,15 +1,15 @@
-import 'package:flutter/material.dart';
 import 'package:eskema/eskema.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_forms_example/my_validators.dart';
 
-class RegisterForm extends StatefulWidget {
-  const RegisterForm({super.key});
+class RegisterForm2 extends StatefulWidget {
+  const RegisterForm2({super.key});
 
   @override
-  RegisterFormState createState() => RegisterFormState();
+  RegisterForm2State createState() => RegisterForm2State();
 }
 
-class RegisterFormState extends State<RegisterForm> {
+class RegisterForm2State extends State<RegisterForm2> {
   final _formKey = GlobalKey<FormState>();
   final _formState = RegisterFormData();
 
@@ -18,27 +18,26 @@ class RegisterFormState extends State<RegisterForm> {
 
   // For validators that do not depend on other fields, we can define them as final fields.
   // For validators that depend on other fields (like confirmPassword), we use a getter.
-  final nameValidator = stringLength([isInRange(8, 32)]).toFunction();
-  final emailValidator = isEmail().toFunction();
-
-  // Made private to be able to reuse it in confirmPasswordValidator
-  final _passwordValidator =
+  final nameValidator = stringLength([isInRange(8, 32)]);
+  final emailValidator = isEmail();
+  final passwordValidator =
       stringLength([isInRange(6, 32)]) &
       $containsNumber &
       $containsLowercase &
       $containsUppercase &
       $containsSpecialChar;
 
-  // Expose passwordValidator as a function for use in TextFormField
-  get passwordValidator => _passwordValidator.toFunction();
-
   // Domain-specific validator for confirming passwords
   // Use a getter to return a validator function to access `passwordValidator` and `formState.password`
   get confirmPasswordValidator {
     return (value) =>
-        (_passwordValidator & isEq(_formState.password, message: "Passwords do not match"))
+        (passwordValidator & isEq(_formState.password, message: "Passwords do not match"))
             .validate(value)
             .description;
+  }
+
+  void validate() {
+    final result = nameValidator.validate(_formState.name);
   }
 
   @override
@@ -48,9 +47,6 @@ class RegisterFormState extends State<RegisterForm> {
       autovalidateMode: AutovalidateMode.onUnfocus,
       child: Column(
         children: [
-          //
-          // Name field
-          //
           TextFormField(
             initialValue: _formState.name,
             onChanged: (value) {
@@ -59,58 +55,12 @@ class RegisterFormState extends State<RegisterForm> {
             decoration: InputDecoration(
               labelText: 'Enter your name',
               suffixIcon: Icon(Icons.person),
+              errorText: 'aaa'
             ),
-            validator: nameValidator,
+            // validator: nameValidator,
           ),
           SizedBox(height: 16),
-          //
-          // Email field
-          //
-          TextFormField(
-            initialValue: _formState.email,
-            onChanged: (value) {
-              _formState.email = value;
-            },
-            decoration: InputDecoration(
-              labelText: 'Enter your email',
-              suffixIcon: Icon(Icons.email),
-            ),
-            validator: emailValidator,
-          ),
-          SizedBox(height: 16),
-          //
-          // Password field
-          //
-          TextFormField(
-            initialValue: _formState.password,
-            onChanged: (value) {
-              _formState.password = value;
-            },
-            decoration: InputDecoration(
-              labelText: 'Enter a password',
-              suffixIcon: Icon(Icons.lock),
-            ),
-            validator: passwordValidator,
-          ),
-          SizedBox(height: 16),
-          //
-          // Confirm Password field
-          //
-          TextFormField(
-            initialValue: _formState.confirmPassword,
-            onChanged: (value) {
-              _formState.confirmPassword = value;
-            },
-            decoration: InputDecoration(
-              labelText: 'Confirm your password',
-              suffixIcon: Icon(Icons.lock),
-            ),
-            validator: confirmPasswordValidator,
-          ),
-          SizedBox(height: 32),
-          //
-          // Submit button
-          //
+          
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               minimumSize: Size(double.infinity, 48), // Make button full width
@@ -118,14 +68,7 @@ class RegisterFormState extends State<RegisterForm> {
               foregroundColor: Colors.white,
             ),
             onPressed: () {
-              // Validate returns true if the form is valid, or false otherwise.
-              if (_formKey.currentState!.validate()) {
-                // If the form is valid, display a snackbar. In the real world,
-                // you'd often call a server or save the information in a database.
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(const SnackBar(content: Text('Processing Data')));
-              }
+              
             },
             child: const Text('Submit'),
           ),

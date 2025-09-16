@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_forms_example/register_form.dart';
+import 'package:flutter_forms_example/register_form_2.dart';
 
 void main() {
   runApp(const MainApp());
@@ -19,7 +20,8 @@ class MainApp extends StatelessWidget {
               children: [
                 Text("Register", style: Theme.of(context).textTheme.headlineMedium),
                 SizedBox(height: 16),
-                RegisterForm(),
+                // RegisterForm(),
+                RegisterForm2(),
               ],
             ),
           ),
