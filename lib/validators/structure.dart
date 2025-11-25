@@ -172,38 +172,12 @@ IValidator eskemaStrict(Map<String, IValidator> schema, {String? message}) {
 /// This validator also checks that the value is a list
 IValidator eskemaList<T>(List<IValidator> eskema) {
   FutureOr<Result> listPredicate(value) {
-    final errors = <Expectation>[];
-
-    FutureOr<Result> loop(int index) {
-      if (index >= value.length) {
-        return errors.isEmpty
-            ? Result.valid(value)
-            : Result.invalid(value, expectations: errors);
-      }
-
-      final item = value[index];
-      final effectiveValidator = eskema[index];
-
-      // Nullable short-circuit
-      if (item == null && effectiveValidator.isNullable) {
-        return loop(index + 1);
-      }
-
-      final res = effectiveValidator.validator(item);
-
-      if (res is Future<Result>) {
-        return res.then((r) {
-          _collectListIndex(r, errors, index, null);
-          return loop(index + 1);
-        });
-      }
-
-      _collectListIndex(res, errors, index, null);
-
-      return loop(index + 1);
-    }
-
-    return loop(0);
+    return _listLoop(
+      value: value,
+      getValidator: (index) => eskema[index],
+      errors: [],
+      index: 0,
+    );
   }
 
   return isType<List>() & listIsOfLength(eskema.length) & Validator(listPredicate);
@@ -214,39 +188,63 @@ IValidator eskemaList<T>(List<IValidator> eskema) {
 /// This validator also checks that the value is a list
 IValidator listEach(IValidator itemValidator, {String? message}) {
   FutureOr<Result> listEachPredicate(value) {
-    final errors = <Expectation>[];
-
-    FutureOr<Result> loop(int index) {
-      if (index >= value.length) {
-        return errors.isEmpty
-            ? Result.valid(value)
-            : Result.invalid(value, expectations: errors);
-      }
-
-      final item = value[index];
-
-      if (item == null && itemValidator.isNullable) {
-        return loop(index + 1);
-      }
-
-      final res = itemValidator.validator(item);
-
-      if (res is Future<Result>) {
-        return res.then((r) {
-          _collectListIndex(r, errors, index, message);
-          return loop(index + 1);
-        });
-      }
-
-      _collectListIndex(res, errors, index, message);
-
-      return loop(index + 1);
-    }
-
-    return loop(0);
+    return _listLoop(
+      value: value,
+      getValidator: (_) => itemValidator,
+      errors: [],
+      index: 0,
+      message: message,
+    );
   }
 
   return $isList & Validator(listEachPredicate);
+}
+
+FutureOr<Result> _listLoop({
+  required dynamic value,
+  required IValidator Function(int) getValidator,
+  required List<Expectation> errors,
+  required int index,
+  String? message,
+}) {
+  if (index >= value.length) {
+    return errors.isEmpty ? Result.valid(value) : Result.invalid(value, expectations: errors);
+  }
+
+  final item = value[index];
+  final validator = getValidator(index);
+
+  if (item == null && validator.isNullable) {
+    return _listLoop(
+        value: value,
+        getValidator: getValidator,
+        errors: errors,
+        index: index + 1,
+        message: message);
+  }
+
+  final res = validator.validator(item);
+
+  if (res is Future<Result>) {
+    return res.then((r) {
+      _collectListIndex(r, errors, index, message);
+      return _listLoop(
+          value: value,
+          getValidator: getValidator,
+          errors: errors,
+          index: index + 1,
+          message: message);
+    });
+  }
+
+  _collectListIndex(res, errors, index, message);
+
+  return _listLoop(
+      value: value,
+      getValidator: getValidator,
+      errors: errors,
+      index: index + 1,
+      message: message);
 }
 
 void _collectListIndex(Result result, List<Expectation> errors, int index, [String? message]) {

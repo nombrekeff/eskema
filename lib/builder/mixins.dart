@@ -87,9 +87,8 @@ mixin TransformerMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
 /// Mixin providing length validation methods.
 mixin LengthMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   /// Validate that the length matches all the provided validators.
-  B length(List<IValidator> lengthValidators, {String? message}) {
-    return add(esk.length(lengthValidators), message: message);
-  }
+  B length(List<IValidator> lengthValidators, {String? message}) =>
+      add(esk.length(lengthValidators), message: message);
 
   /// Validate that the length is at least the specified minimum.
   B lengthMin(int min, {String? message}) => length([isGte(min)], message: message);
@@ -98,9 +97,8 @@ mixin LengthMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   B lengthMax(int max, {String? message}) => length([isLte(max)], message: message);
 
   /// Validate that the length is within the specified range.
-  B lengthRange(int min, int max, {String? message}) {
-    return length([isInRange(min, max)], message: message);
-  }
+  B lengthRange(int min, int max, {String? message}) =>
+      length([isInRange(min, max)], message: message);
 }
 
 /// Mixin providing empty validation methods.
@@ -115,9 +113,8 @@ mixin ComparisonMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {}
 /// Mixin providing contains validation methods.
 mixin ContainsMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   /// Validate that the value contains the specified element.
-  B contains(value, {String? message}) {
-    return add(esk.contains(value), message: message ?? 'A value that contains value: $value');
-  }
+  B contains(value, {String? message}) =>
+      add(esk.contains(value), message: message ?? 'A value that contains value: $value');
 }
 
 /// Mixin providing boolean-specific validation methods.
@@ -147,9 +144,7 @@ mixin NumberMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
 /// Mixin providing string-specific validation methods.
 mixin StringMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   /// Validate that the string matches the provided regular expression pattern.
-  B matches(RegExp pattern, {String? message}) {
-    return add(stringMatches(pattern), message: message);
-  }
+  B matches(RegExp pattern, {String? message}) => add(stringMatches(pattern), message: message);
 
   /// Validate that the string is a valid email address.
   B email({String? message}) => add($isEmail, message: message);
@@ -203,9 +198,8 @@ mixin MapMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   B schema(Map<String, IValidator> schema) => add(eskema(schema));
 
   /// Validate that the map contains the specified key.
-  B containsKey(key, {String? message}) {
-    return add(esk.containsKey(key), message: message ?? 'A value that contains key: $key');
-  }
+  B containsKey(key, {String? message}) =>
+      add(esk.containsKey(key), message: message ?? 'A value that contains key: $key');
 
   /// Extract only the specified keys from the map.
   B pick(Iterable<String> keys) => wrap((c) => tr.pickKeys(keys, c));
@@ -236,14 +230,12 @@ mixin MapMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
 /// Mixin providing DateTime-specific validation methods.
 mixin DateTimeMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   /// Validate that the DateTime is before the specified date.
-  B before(DateTime dt, {bool inclusive = false, String? message}) {
-    return add(isDateBefore(dt, inclusive: inclusive), message: message);
-  }
+  B before(DateTime dt, {bool inclusive = false, String? message}) =>
+      add(isDateBefore(dt, inclusive: inclusive), message: message);
 
   /// Validate that the DateTime is after the specified date.
-  B after(DateTime dt, {bool inclusive = false, String? message}) {
-    return add(isDateAfter(dt, inclusive: inclusive), message: message);
-  }
+  B after(DateTime dt, {bool inclusive = false, String? message}) =>
+      add(isDateAfter(dt, inclusive: inclusive), message: message);
 
   /// Validate that the DateTime is within the specified date range.
   /// @return The builder for chaining
@@ -265,14 +257,12 @@ mixin DateTimeMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   B sameDay(DateTime dt, {String? message}) => add(isDateSameDay(dt), message: message);
 
   /// Validate that the DateTime is in the past.
-  B inPast({bool allowNow = true, String? message}) {
-    return add(isDateInPast(allowNow: allowNow), message: message);
-  }
+  B inPast({bool allowNow = true, String? message}) =>
+      add(isDateInPast(allowNow: allowNow), message: message);
 
   /// Validate that the DateTime is in the future.
-  B inFuture({bool allowNow = true, String? message}) {
-    return add(isDateInFuture(allowNow: allowNow), message: message);
-  }
+  B inFuture({bool allowNow = true, String? message}) =>
+      add(isDateInFuture(allowNow: allowNow), message: message);
 }
 
 /// Mixin providing JSON-specific validation methods.
@@ -287,25 +277,16 @@ mixin JsonMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   B jsonArray({String? message}) => add(isJsonArray(), message: message);
 
   /// Validate that the JSON object contains all required keys.
-  B jsonRequiresKeys(Iterable<String> keys, {String? message}) {
-    return add(jsonHasKeys(keys), message: message);
-  }
+  B jsonRequiresKeys(Iterable<String> keys, {String? message}) =>
+      add(jsonHasKeys(keys), message: message);
 
   /// Validate the length of a JSON array.
-  B jsonArrayLen({int? min, int? max, String? message}) {
-    return add(
-      jsonArrayLength(min: min, max: max),
-      message: message,
-    );
-  }
+  B jsonArrayLen({int? min, int? max, String? message}) =>
+      add(jsonArrayLength(min: min, max: max), message: message);
 
   /// Validate that each element in a JSON array satisfies the provided validator.
-  B jsonArrayEach(IValidator elementValidator, {String? message}) {
-    return add(
-      jsonArrayEvery(elementValidator),
-      message: message,
-    );
-  }
+  B jsonArrayEach(IValidator elementValidator, {String? message}) =>
+      add(jsonArrayEvery(elementValidator), message: message);
 }
 
 /// Mixin providing iterable-specific validation methods.
