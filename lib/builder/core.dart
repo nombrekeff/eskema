@@ -145,12 +145,7 @@ class Chain {
   }
 
   // Readable getters for coercion state
-  bool get coercedToInt => _isKind(CoercionKind.int_);
-  bool get coercedToDouble => _isKind(CoercionKind.double_);
-  bool get coercedToBool => _isKind(CoercionKind.bool_);
-  bool get coercedToString => _isKind(CoercionKind.string_);
-  bool get coercedToDateTime => _isKind(CoercionKind.datetime_);
-  bool get coercedToJson => _isKind(CoercionKind.json_);
+  bool isKind(CoercionKind k) => _isKind(k);
 }
 
 /// Kind of coercion applied to the chain (single pivot allowed).

@@ -16,50 +16,57 @@ import 'type_builders.dart';
 mixin TransformerMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   /// Transform the value to an integer using standard parsing.
   IntBuilder toInt({String? message}) {
-    if (chain.coercedToInt) return IntBuilder(chain: chain);
-    chain.setTransform(CoercionKind.int_, (child) => tr.toInt(child));
+    if (!chain.isKind(CoercionKind.int_)) {
+      chain.setTransform(CoercionKind.int_, (child) => tr.toInt(child));
+    }
     return IntBuilder(chain: chain);
   }
 
   /// Transform the value to an integer using strict parsing (no fallback to 0).
   IntBuilder toIntStrict({String? message}) {
-    if (chain.coercedToInt) return IntBuilder(chain: chain);
-    chain.setTransform(CoercionKind.int_, (child) => tr.toIntStrict(child));
+    if (!chain.isKind(CoercionKind.int_)) {
+      chain.setTransform(CoercionKind.int_, (child) => tr.toIntStrict(child));
+    }
     return IntBuilder(chain: chain);
   }
 
   /// Transform the value to an integer using safe parsing (returns null on failure).
   IntBuilder toIntSafe({String? message}) {
-    if (chain.coercedToInt) return IntBuilder(chain: chain);
-    chain.setTransform(CoercionKind.int_, (child) => tr.toIntSafe(child));
+    if (!chain.isKind(CoercionKind.int_)) {
+      chain.setTransform(CoercionKind.int_, (child) => tr.toIntSafe(child));
+    }
     return IntBuilder(chain: chain);
   }
 
   /// Transform the value to a double using standard parsing.
   DoubleBuilder toDouble({String? message}) {
-    if (chain.coercedToDouble) return DoubleBuilder(chain: chain);
-    chain.setTransform(CoercionKind.double_, (child) => tr.toDouble(child));
+    if (!chain.isKind(CoercionKind.double_)) {
+      chain.setTransform(CoercionKind.double_, (child) => tr.toDouble(child));
+    }
     return DoubleBuilder(chain: chain);
   }
 
   /// Transform the value to a boolean using standard parsing.
   BoolBuilder toBool({String? message}) {
-    if (chain.coercedToBool) return BoolBuilder(chain: chain);
-    chain.setTransform(CoercionKind.bool_, (child) => tr.toBool(child));
+    if (!chain.isKind(CoercionKind.bool_)) {
+      chain.setTransform(CoercionKind.bool_, (child) => tr.toBool(child));
+    }
     return BoolBuilder(chain: chain);
   }
 
   /// Transform the value to a boolean using strict parsing.
   BoolBuilder toBoolStrict({String? message}) {
-    if (chain.coercedToBool) return BoolBuilder(chain: chain);
-    chain.setTransform(CoercionKind.bool_, (child) => tr.toBoolStrict(child));
+    if (!chain.isKind(CoercionKind.bool_)) {
+      chain.setTransform(CoercionKind.bool_, (child) => tr.toBoolStrict(child));
+    }
     return BoolBuilder(chain: chain);
   }
 
   /// Transform the value to a boolean using lenient parsing.
   BoolBuilder toBoolLenient({String? message}) {
-    if (chain.coercedToBool) return BoolBuilder(chain: chain);
-    chain.setTransform(CoercionKind.bool_, (child) => tr.toBoolLenient(child));
+    if (!chain.isKind(CoercionKind.bool_)) {
+      chain.setTransform(CoercionKind.bool_, (child) => tr.toBoolLenient(child));
+    }
     return BoolBuilder(chain: chain);
   }
 
@@ -67,37 +74,42 @@ mixin TransformerMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   StringBuilder toString_({String? message}) {
     // Use the toString() transformer from transformers.dart (imported unprefixed)
     // but qualify via a helper variable to avoid confusion with Object.toString.
-    if (chain.coercedToString) return StringBuilder(chain: chain);
-    chain.setTransform(CoercionKind.string_, (child) => tr.toString(child));
+    if (!chain.isKind(CoercionKind.string_)) {
+      chain.setTransform(CoercionKind.string_, (child) => tr.toString(child));
+    }
     return StringBuilder(chain: chain);
   }
 
   /// Transform the value to a number (int or double).
   NumberBuilder toNum() {
-    if (chain.coercedToDouble || chain.coercedToInt) return NumberBuilder(chain: chain);
-    chain.setTransform(CoercionKind.double_, (child) => tr.toNum(child));
+    if (!chain.isKind(CoercionKind.double_) && !chain.isKind(CoercionKind.int_)) {
+      chain.setTransform(CoercionKind.double_, (child) => tr.toNum(child));
+    }
     return NumberBuilder(chain: chain);
   }
 
   /// Transform the value to a BigInt.
   NumberBuilder toBigInt() {
     // Represent BigInt coercion using double_ slot to avoid new enum value (keeps simplicity)
-    if (chain.coercedToDouble) return NumberBuilder(chain: chain);
-    chain.setTransform(CoercionKind.double_, (child) => tr.toBigInt(child));
+    if (!chain.isKind(CoercionKind.double_)) {
+      chain.setTransform(CoercionKind.double_, (child) => tr.toBigInt(child));
+    }
     return NumberBuilder(chain: chain);
   }
 
   /// Transform JSON string to decoded object (Map/List).
   JsonDecodedBuilder toJson() {
-    if (chain.coercedToJson) return JsonDecodedBuilder(chain: chain);
-    chain.setTransform(CoercionKind.json_, (child) => tr.toJsonDecoded(child));
+    if (!chain.isKind(CoercionKind.json_)) {
+      chain.setTransform(CoercionKind.json_, (child) => tr.toJsonDecoded(child));
+    }
     return JsonDecodedBuilder(chain: chain);
   }
 
   /// Transform string to DateTime using standard parsing.
   DateTimeBuilder toDateTime() {
-    if (chain.coercedToDateTime) return DateTimeBuilder(chain: chain);
-    chain.setTransform(CoercionKind.datetime_, (child) => tr.toDateTime(child));
+    if (!chain.isKind(CoercionKind.datetime_)) {
+      chain.setTransform(CoercionKind.datetime_, (child) => tr.toDateTime(child));
+    }
     return DateTimeBuilder(chain: chain);
   }
 
