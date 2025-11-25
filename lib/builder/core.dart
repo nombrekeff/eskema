@@ -40,25 +40,23 @@ import '../validators.dart' as esk;
 /// .toInt("age")                // coercion: String -> int
 /// .gt(0)                       // post-coercion validation
 /// ```
+/// Encapsulates the state of a type coercion in the chain.
+
 class Chain {
   // Validators accumulated BEFORE any type coercion (original type domain).
   IValidator? _preValidators;
   // Validators accumulated AFTER coercion (new type domain).
   IValidator? _postValidators;
-  // The single coercion transformer (wraps _postValidators when building).
-  IValidator Function(IValidator child)? _coercion;
-  // Which coercion (if any) has been applied.
-  CoercionKind? _coercionKind;
   // A prefix transformer applied BEFORE coercion (value pivot like pluckValue / pick / flatten).
   IValidator Function(IValidator child)? _prefix;
-  // Whether pre-validators should be preserved when applying coercion
-  bool _preservePreValidators = false;
 
-  bool get _hasCoercion => _coercionKind != null;
-  bool _isKind(CoercionKind k) => _coercionKind == k;
+  // The active coercion context, if any.
+  CoercionContext? _coercion;
+
+  bool get _hasCoercion => _coercion != null;
+  bool _isKind(CoercionKind k) => _coercion?.kind == k;
 
   /// Adds a validator to the appropriate position in the chain.
-  /// Pre-coercion validators go before coercion, post-coercion validators go after.
   void add(IValidator v) {
     if (_hasCoercion) {
       _postValidators = _postValidators == null ? v : (_postValidators! & v);
@@ -77,36 +75,35 @@ class Chain {
   }
 
   /// Sets a type coercion transformer with optional pre-validator preservation.
-  ///
-  /// **Composition Rules:**
-  /// - First coercion: Sets the coercion and optionally drops pre-validators
-  /// - Subsequent coercions: If either is custom, composes them; otherwise replaces
   void setTransform(
     CoercionKind kind,
     IValidator Function(IValidator child) transformer, {
     bool dropPre = true,
   }) {
-    if (_coercionKind == null) {
-      // First pivot: drop pre validators (they targeted old domain)
-      _coercionKind = kind;
-      _coercion = transformer;
-      _preservePreValidators = !dropPre;
+    if (_coercion == null) {
+      // First pivot
+      _coercion = CoercionContext(kind, transformer, preservePreValidators: !dropPre);
       if (dropPre) _preValidators = null;
       return;
     }
+
     // Subsequent pivot: compose if either current or previous is custom; replace only if both are built-in
-    if (kind == CoercionKind.custom || _coercionKind == CoercionKind.custom) {
-      final previous = _coercion!;
-      _coercion = (child) => previous(transformer(child));
+    final currentKind = _coercion!.kind;
+    if (kind == CoercionKind.custom || currentKind == CoercionKind.custom) {
+      final previous = _coercion!.transformer;
+      final composed = (IValidator child) => previous(transformer(child));
+      // Preserve the 'preservePreValidators' setting from the first coercion
+      _coercion = CoercionContext(kind, composed,
+          preservePreValidators: _coercion!.preservePreValidators);
     } else {
-      _coercion = transformer;
+      // Replace
+      _coercion = CoercionContext(kind, transformer, preservePreValidators: !dropPre);
+      if (dropPre) _preValidators = null;
     }
-    _coercionKind = kind;
     _postValidators = null;
   }
 
   /// Adds a prefix value-mapping validator that runs before coercion and post-validators.
-  /// Used for operations like pluckValue that extract values from containers.
   void addPrefix(IValidator Function(IValidator child) prefix) {
     if (_prefix == null) {
       _prefix = prefix;
@@ -117,20 +114,16 @@ class Chain {
   }
 
   /// Builds the final validator by composing all chain elements in the correct order.
-  ///
-  /// **Build Order:**
-  /// 1. Apply prefix transformer (if any)
-  /// 2. Apply coercion with post-validators (if coercion exists)
-  /// 3. Apply pre-validators (if no coercion or preservation requested)
   IValidator build() {
     IValidator core;
-    // Apply prefix first so coercion sees transformed value.
+
     IValidator tail() {
       if (_coercion != null) {
+        final ctx = _coercion!;
         final child = _postValidators ?? Validator.valid;
-        final coerced = _coercion!(child);
-        // If preserving pre-validators, apply them before coercion
-        if (_preservePreValidators && _preValidators != null) {
+        final coerced = ctx.transformer(child);
+
+        if (ctx.preservePreValidators && _preValidators != null) {
           return _preValidators! & coerced;
         }
         return coerced;
@@ -146,14 +139,12 @@ class Chain {
     final c = Chain();
     c._preValidators = _preValidators?.copyWith();
     c._postValidators = _postValidators?.copyWith();
-    c._coercion = _coercion;
-    c._coercionKind = _coercionKind;
     c._prefix = _prefix;
-    c._preservePreValidators = _preservePreValidators;
+    c._coercion = _coercion; // CoercionContext is immutable
     return c;
   }
 
-  // Readable getters for coercion state (used by transformer mixin).
+  // Readable getters for coercion state
   bool get coercedToInt => _isKind(CoercionKind.int_);
   bool get coercedToDouble => _isKind(CoercionKind.double_);
   bool get coercedToBool => _isKind(CoercionKind.bool_);
@@ -164,6 +155,14 @@ class Chain {
 
 /// Kind of coercion applied to the chain (single pivot allowed).
 enum CoercionKind { int_, double_, bool_, string_, datetime_, json_, custom }
+
+class CoercionContext {
+  final CoercionKind kind;
+  final IValidator Function(IValidator child) transformer;
+  final bool preservePreValidators;
+
+  CoercionContext(this.kind, this.transformer, {required this.preservePreValidators});
+}
 
 /// Represents a custom pivot for extensibility.
 ///
