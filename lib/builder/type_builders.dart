@@ -4,6 +4,7 @@
 /// type-specific validation methods for different data types.
 library builder.type_builders;
 
+import '../validator.dart';
 import '../validators.dart';
 import 'core.dart';
 import 'mixins.dart';
@@ -332,58 +333,44 @@ class GenericBuilder<T> extends BaseBuilder<GenericBuilder<T>, T>
 /// final tagsValidator = v().list().each(v().string().lengthMin(1).build()).build();
 /// ```
 class RootBuilder {
-  /// Expect a String; returns a StringBuilder with string‑specific methods.
-  StringBuilder string({String? message}) {
-    return StringBuilder()..add($isString, message: message);
+  /// Helper to create a builder with an initial validator.
+  B _make<B extends BaseBuilder<dynamic, dynamic>>(B builder, IValidator v, String? msg) {
+    builder.add(v, message: msg);
+    return builder;
   }
+
+  /// Expect a String; returns a StringBuilder with string‑specific methods.
+  StringBuilder string({String? message}) => _make(StringBuilder(), $isString, message);
 
   /// Expect an int; returns an IntBuilder with integer-specific methods.
-  IntBuilder int_({String? message}) {
-    return IntBuilder()..add($isInt, message: message);
-  }
+  IntBuilder int_({String? message}) => _make(IntBuilder(), $isInt, message);
 
   /// Expect a double; returns a DoubleBuilder with double-specific methods.
-  DoubleBuilder double_({String? message}) {
-    return DoubleBuilder()..add($isDouble, message: message);
-  }
+  DoubleBuilder double_({String? message}) => _make(DoubleBuilder(), $isDouble, message);
 
   /// Expect a number (int or double); returns a NumberBuilder with numeric methods.
-  NumberBuilder number({String? message}) {
-    return NumberBuilder()..add($isNumber, message: message);
-  }
+  NumberBuilder number({String? message}) => _make(NumberBuilder(), $isNumber, message);
 
   /// Expect a bool; returns a BoolBuilder with boolean-specific methods.
-  BoolBuilder bool({String? message}) {
-    return BoolBuilder()..add($isBool, message: message);
-  }
+  BoolBuilder bool({String? message}) => _make(BoolBuilder(), $isBool, message);
 
   /// Expect an Iterable; returns an IterableBuilder with collection methods.
-  IterableBuilder<T> iterable<T>({String? message}) {
-    return IterableBuilder<T>()..add(isIterable<T>(), message: message);
-  }
+  IterableBuilder<T> iterable<T>({String? message}) =>
+      _make(IterableBuilder<T>(), isIterable<T>(), message);
 
   /// Expect a List; returns a ListBuilder with list-specific methods.
-  ListBuilder<T> list<T>({String? message}) {
-    return ListBuilder<T>()..add(isList<T>(), message: message);
-  }
+  ListBuilder<T> list<T>({String? message}) => _make(ListBuilder<T>(), isList<T>(), message);
 
   /// Expect a Set; returns a SetBuilder with set-specific methods.
-  SetBuilder<T> set<T>({String? message}) {
-    return SetBuilder<T>()..add(isSet<T>(), message: message);
-  }
+  SetBuilder<T> set<T>({String? message}) => _make(SetBuilder<T>(), isSet<T>(), message);
 
   /// Expect a Map; returns a MapBuilder with map-specific methods.
-  MapBuilder<K, V> map<K, V>({String? message}) {
-    return MapBuilder<K, V>()..add($isMap, message: message);
-  }
+  MapBuilder<K, V> map<K, V>({String? message}) => _make(MapBuilder<K, V>(), $isMap, message);
 
   /// Expect a DateTime; returns a DateTimeBuilder with date/time methods.
-  DateTimeBuilder dateTime({String? message}) {
-    return DateTimeBuilder()..add(isType<DateTime>(), message: message);
-  }
+  DateTimeBuilder dateTime({String? message}) =>
+      _make(DateTimeBuilder(), isType<DateTime>(), message);
 
   /// Generic type guard (rarely needed; concrete helpers preferred).
-  GenericBuilder type<T>({String? message}) {
-    return GenericBuilder<T>()..add(isType<T>(), message: message);
-  }
+  GenericBuilder type<T>({String? message}) => _make(GenericBuilder<T>(), isType<T>(), message);
 }

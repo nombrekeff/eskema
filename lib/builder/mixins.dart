@@ -15,70 +15,47 @@ import 'type_builders.dart';
 /// Mixin providing type transformation methods for builders.
 mixin TransformerMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   /// Transform the value to an integer using standard parsing.
-  IntBuilder toInt({String? message}) {
-    if (!chain.isKind(CoercionKind.int_)) {
-      chain.setTransform(CoercionKind.int_, (child) => tr.toInt(child));
-    }
-    return IntBuilder(chain: chain);
+  /// Helper to transition to a new builder type with a coercion.
+  R _transition<R>(
+    CoercionKind kind,
+    IValidator Function(IValidator) trans,
+    R Function({required Chain chain}) factory,
+  ) {
+    if (!chain.isKind(kind)) chain.setTransform(kind, trans);
+    return factory(chain: chain);
   }
+
+  /// Transform the value to an integer using standard parsing.
+  IntBuilder toInt({String? message}) => _transition(
+      CoercionKind.int_, (c) => tr.toInt(c), ({required chain}) => IntBuilder(chain: chain));
 
   /// Transform the value to an integer using strict parsing (no fallback to 0).
-  IntBuilder toIntStrict({String? message}) {
-    if (!chain.isKind(CoercionKind.int_)) {
-      chain.setTransform(CoercionKind.int_, (child) => tr.toIntStrict(child));
-    }
-    return IntBuilder(chain: chain);
-  }
+  IntBuilder toIntStrict({String? message}) => _transition(CoercionKind.int_,
+      (c) => tr.toIntStrict(c), ({required chain}) => IntBuilder(chain: chain));
 
   /// Transform the value to an integer using safe parsing (returns null on failure).
-  IntBuilder toIntSafe({String? message}) {
-    if (!chain.isKind(CoercionKind.int_)) {
-      chain.setTransform(CoercionKind.int_, (child) => tr.toIntSafe(child));
-    }
-    return IntBuilder(chain: chain);
-  }
+  IntBuilder toIntSafe({String? message}) => _transition(CoercionKind.int_,
+      (c) => tr.toIntSafe(c), ({required chain}) => IntBuilder(chain: chain));
 
   /// Transform the value to a double using standard parsing.
-  DoubleBuilder toDouble({String? message}) {
-    if (!chain.isKind(CoercionKind.double_)) {
-      chain.setTransform(CoercionKind.double_, (child) => tr.toDouble(child));
-    }
-    return DoubleBuilder(chain: chain);
-  }
+  DoubleBuilder toDouble({String? message}) => _transition(CoercionKind.double_,
+      (c) => tr.toDouble(c), ({required chain}) => DoubleBuilder(chain: chain));
 
   /// Transform the value to a boolean using standard parsing.
-  BoolBuilder toBool({String? message}) {
-    if (!chain.isKind(CoercionKind.bool_)) {
-      chain.setTransform(CoercionKind.bool_, (child) => tr.toBool(child));
-    }
-    return BoolBuilder(chain: chain);
-  }
+  BoolBuilder toBool({String? message}) => _transition(
+      CoercionKind.bool_, (c) => tr.toBool(c), ({required chain}) => BoolBuilder(chain: chain));
 
   /// Transform the value to a boolean using strict parsing.
-  BoolBuilder toBoolStrict({String? message}) {
-    if (!chain.isKind(CoercionKind.bool_)) {
-      chain.setTransform(CoercionKind.bool_, (child) => tr.toBoolStrict(child));
-    }
-    return BoolBuilder(chain: chain);
-  }
+  BoolBuilder toBoolStrict({String? message}) => _transition(CoercionKind.bool_,
+      (c) => tr.toBoolStrict(c), ({required chain}) => BoolBuilder(chain: chain));
 
   /// Transform the value to a boolean using lenient parsing.
-  BoolBuilder toBoolLenient({String? message}) {
-    if (!chain.isKind(CoercionKind.bool_)) {
-      chain.setTransform(CoercionKind.bool_, (child) => tr.toBoolLenient(child));
-    }
-    return BoolBuilder(chain: chain);
-  }
+  BoolBuilder toBoolLenient({String? message}) => _transition(CoercionKind.bool_,
+      (c) => tr.toBoolLenient(c), ({required chain}) => BoolBuilder(chain: chain));
 
   /// Transform the value to a string.
-  StringBuilder toString_({String? message}) {
-    // Use the toString() transformer from transformers.dart (imported unprefixed)
-    // but qualify via a helper variable to avoid confusion with Object.toString.
-    if (!chain.isKind(CoercionKind.string_)) {
-      chain.setTransform(CoercionKind.string_, (child) => tr.toString(child));
-    }
-    return StringBuilder(chain: chain);
-  }
+  StringBuilder toString_({String? message}) => _transition(CoercionKind.string_,
+      (c) => tr.toString(c), ({required chain}) => StringBuilder(chain: chain));
 
   /// Transform the value to a number (int or double).
   NumberBuilder toNum() {
@@ -89,29 +66,16 @@ mixin TransformerMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   }
 
   /// Transform the value to a BigInt.
-  NumberBuilder toBigInt() {
-    // Represent BigInt coercion using double_ slot to avoid new enum value (keeps simplicity)
-    if (!chain.isKind(CoercionKind.double_)) {
-      chain.setTransform(CoercionKind.double_, (child) => tr.toBigInt(child));
-    }
-    return NumberBuilder(chain: chain);
-  }
+  NumberBuilder toBigInt() => _transition(CoercionKind.double_, (c) => tr.toBigInt(c),
+      ({required chain}) => NumberBuilder(chain: chain));
 
   /// Transform JSON string to decoded object (Map/List).
-  JsonDecodedBuilder toJson() {
-    if (!chain.isKind(CoercionKind.json_)) {
-      chain.setTransform(CoercionKind.json_, (child) => tr.toJsonDecoded(child));
-    }
-    return JsonDecodedBuilder(chain: chain);
-  }
+  JsonDecodedBuilder toJson() => _transition(CoercionKind.json_, (c) => tr.toJsonDecoded(c),
+      ({required chain}) => JsonDecodedBuilder(chain: chain));
 
   /// Transform string to DateTime using standard parsing.
-  DateTimeBuilder toDateTime() {
-    if (!chain.isKind(CoercionKind.datetime_)) {
-      chain.setTransform(CoercionKind.datetime_, (child) => tr.toDateTime(child));
-    }
-    return DateTimeBuilder(chain: chain);
-  }
+  DateTimeBuilder toDateTime() => _transition(CoercionKind.datetime_, (c) => tr.toDateTime(c),
+      ({required chain}) => DateTimeBuilder(chain: chain));
 
   /// Apply a custom transformation using the provided pivot.
   GenericBuilder<dynamic> use(CustomPivot pivot) {
