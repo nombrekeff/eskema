@@ -32,8 +32,8 @@ void main() {
       final m = {'id': 1, 'name': 'John', 'email': 'x', 'age': 10};
       final r = await schema.validateAsync(m);
       expect(r.isValid, false);
-      expect(r.description.contains('too young'), true);
-      expect(r.description.contains('.age'), true);
+      expect(r.description?.contains('too young'), true);
+      expect(r.description?.contains('.age'), true);
     });
 
     test('validate() throws on async path', () {
