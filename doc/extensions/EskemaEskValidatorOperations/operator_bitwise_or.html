@@ -71,7 +71,23 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator operator |(IValidator other) =&gt; any([this, other]);</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator operator |(IValidator other) {
+  if (this is AnyValidator &amp;&amp; other is AnyValidator) {
+    final mv1 = this as AnyValidator;
+    return mv1.copyWith(validators: {...mv1.validators, ...other.validators});
+  }
+
+  if (this is AnyValidator) {
+    final mv = this as AnyValidator;
+    return mv.copyWith(validators: {...mv.validators, other});
+  }
+
+  if (other is AnyValidator) {
+    return other.copyWith(validators: {...other.validators, this});
+  }
+
+  return any([this, other]);
+}</code></pre>
 </section>
 
 
@@ -99,7 +115,7 @@
 <footer>
   <span class="no-break">
     eskema
-      1.0.0
+      2.0.1
   </span>
   
 </footer>
