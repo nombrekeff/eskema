@@ -66,7 +66,7 @@ mixin TransformerMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   }
 
   /// Transform the value to a BigInt.
-  NumberBuilder toBigInt() => _transition(CoercionKind.double_, (c) => tr.toBigInt(c),
+  NumberBuilder toBigInt() => _transition(CoercionKind.bigInt_, (c) => tr.toBigInt(c),
       ({required chain}) => NumberBuilder(chain: chain));
 
   /// Transform JSON string to decoded object (Map/List).

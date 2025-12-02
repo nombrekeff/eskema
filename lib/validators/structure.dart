@@ -170,7 +170,7 @@ IValidator eskemaStrict(Map<String, IValidator> schema, {String? message}) {
 /// * and the second item is an int
 ///
 /// This validator also checks that the value is a list
-IValidator eskemaList<T>(List<IValidator> eskema) {
+IValidator eskemaList(List<IValidator> eskema) {
   FutureOr<Result> listPredicate(value) {
     return _listLoop(
       value: value,

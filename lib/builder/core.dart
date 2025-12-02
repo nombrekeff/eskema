@@ -149,7 +149,7 @@ class Chain {
 }
 
 /// Kind of coercion applied to the chain (single pivot allowed).
-enum CoercionKind { int_, double_, bool_, string_, datetime_, json_, custom }
+enum CoercionKind { int_, double_, bool_, string_, datetime_, json_, bigInt_, custom }
 
 class CoercionContext {
   final CoercionKind kind;

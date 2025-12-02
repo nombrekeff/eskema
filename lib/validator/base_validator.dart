@@ -27,7 +27,8 @@ abstract class IValidator {
       final result = validator(value);
       if (result is Future<Result>) {
         throw AsyncValidatorException(
-            this is IdValidator ? (this as IdValidator).id : toString());
+          this is IdValidator ? (this as IdValidator).id : toString(),
+        );
       }
       return result;
     } on AsyncValidatorException catch (e) {
@@ -80,17 +81,30 @@ abstract class IValidator {
 }
 
 /// A special type of validator that can operate on a parent map context.
+/// Only works with `eskema` validators.
 abstract class IWhenValidator extends IValidator {
   IWhenValidator({super.nullable, super.optional});
-  FutureOr<Result> validateWithParent(dynamic value, Map<String, dynamic> map,
-      {bool exists = true});
+
+  /// Validates the value with the parent map context.
+  ///
+  /// This is used by `eskema` validators to validate the value with the parent map context.
+  FutureOr<Result> validateWithParent(
+    dynamic value,
+    Map<String, dynamic> map, {
+    bool exists = true,
+  });
 }
 
 /// Generic implementation wrapper for a validator.
 class Validator<T extends Result> extends IValidator {
   static final Validator valid = Validator((v) => Result.valid(v));
   final ValidatorFunction<T> _validator;
-  Validator(this._validator, {super.nullable, super.optional});
+
+  Validator(
+    this._validator, {
+    super.nullable,
+    super.optional,
+  });
 
   @override
   FutureOr<T> validator(dynamic value) => _validator.call(value);
