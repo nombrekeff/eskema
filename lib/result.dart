@@ -8,6 +8,7 @@ library result;
 import 'package:eskema/expectation.dart';
 
 const _emptyExpectations = <Expectation>[];
+const _defaultExpectation = Expectation(message: 'Validation failed');
 
 /// Represents the result of a validation.
 class Result {
@@ -26,7 +27,7 @@ class Result {
   Result.invalid(this.value, {Iterable<Expectation>? expectations, Expectation? expectation})
       : isValid = false,
         expectations =
-            expectations ?? (expectation == null ? _emptyExpectations : [expectation]);
+            expectations ?? (expectation == null ? [_defaultExpectation] : [expectation]);
 
   final bool isValid;
 
