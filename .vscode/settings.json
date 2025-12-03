@@ -9,5 +9,8 @@
   "dart.lineLength": 96,
   "editor.rulers": [
     96
+  ],
+  "java.project.sourcePaths": [
+    ""
   ]
 }
