@@ -73,6 +73,6 @@ IValidator optional(IValidator validator) => validator.optional();
 /// // If the field is missing from a map, it's considered valid.
 /// validListField.isValid({});                    // false
 /// ```
-IValidator required(IValidator validator) {
-  return not(isNull(), message: 'is required') & validator;
+IValidator required(IValidator validator, {String message = 'is required'}) {
+  return not(isNull(), message: message) & validator;
 }
