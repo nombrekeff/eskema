@@ -57,9 +57,3 @@ extension ResultExtensions on Result {
   /// Returns the value if valid, otherwise returns [defaultValue].
   dynamic valueOr(dynamic defaultValue) => isValid ? value : defaultValue;
 }
-
-
-void main() {
-  final n = 'my-name';
-  print(n.validate(isInt()).detailed());
-}

@@ -4,11 +4,12 @@
 /// methods for different data types in the fluent builder pattern.
 library builder.mixins;
 
+import 'package:eskema/validators/json.dart';
+
 import '../validators.dart';
 import '../validator.dart';
 import '../transformers.dart' as tr;
 import '../validators.dart' as esk;
-import '../validators/json.dart';
 import 'core.dart';
 import 'type_builders.dart';
 

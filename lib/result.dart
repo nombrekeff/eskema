@@ -15,17 +15,22 @@ class Result {
   Result({
     required this.isValid,
     required this.value,
+    dynamic originalValue,
     Iterable<Expectation>? expectations,
     Expectation? expectation,
-  }) : expectations =
+  })  : originalValue = originalValue ?? value,
+        expectations =
             expectations ?? (expectation == null ? _emptyExpectations : [expectation]);
 
-  Result.valid(this.value)
+  Result.valid(this.value, {dynamic originalValue})
       : isValid = true,
+        originalValue = originalValue ?? value,
         expectations = _emptyExpectations;
 
-  Result.invalid(this.value, {Iterable<Expectation>? expectations, Expectation? expectation})
+  Result.invalid(this.value,
+      {Iterable<Expectation>? expectations, Expectation? expectation, dynamic originalValue})
       : isValid = false,
+        originalValue = originalValue ?? value,
         expectations =
             expectations ?? (expectation == null ? [_defaultExpectation] : [expectation]);
 
@@ -35,6 +40,9 @@ class Result {
   /// It will contain expectations independent of the validation result.
   final Iterable<Expectation> expectations;
   final dynamic value;
+
+  /// The original value before any transformation.
+  final dynamic originalValue;
 
   bool get hasExpectations => expectations.isNotEmpty;
   bool get isNotValid => !isValid;
@@ -53,11 +61,13 @@ class Result {
     bool? isValid,
     List<Expectation>? expectations,
     dynamic value,
+    dynamic originalValue,
   }) {
     return Result(
       isValid: isValid ?? this.isValid,
       expectations: expectations ?? this.expectations,
       value: value ?? this.value,
+      originalValue: originalValue ?? this.originalValue,
     );
   }
 
@@ -71,6 +81,7 @@ class Result {
   Map<String, Object?> toJson() => {
         'isValid': isValid,
         if (value != null) 'value': value,
+        if (originalValue != value) 'originalValue': originalValue,
         if (!isValid) 'errors': expectations.map((e) => e.toJson()).toList(growable: false),
       };
 }

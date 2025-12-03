@@ -52,12 +52,12 @@ void main() {
 
     if (result.isValid) {
       print('Record ${i + 1}: Success');
-      print('  Original: $record');
+      print('  Original: ${result.originalValue}');
       print('  Cleaned:  ${result.value}');
     } else {
       print('Record ${i + 1}: Failed');
       print('  Original: $record');
-      print('  Error:    ${result.expectations.first.message}');
+      print('  Expected: ${result.description}');
     }
   }
 

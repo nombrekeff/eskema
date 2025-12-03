@@ -47,7 +47,7 @@ abstract class MultiValidatorBase extends IValidator {
     }
 
     return _buildFinalResult(
-        _config.chainsValues ? currentValue : value, aggregatedExpectations);
+        _config.chainsValues ? currentValue : value, aggregatedExpectations, value);
   }
 
   Future<Result> _continueAsync(
@@ -78,7 +78,7 @@ abstract class MultiValidatorBase extends IValidator {
     }
 
     return _buildFinalResult(
-        _config.chainsValues ? currentValue : originalValue, aggregatedExpectations);
+        _config.chainsValues ? currentValue : originalValue, aggregatedExpectations, originalValue);
   }
 
   /// Processes a validation result and determines if validation should continue.
@@ -87,7 +87,8 @@ abstract class MultiValidatorBase extends IValidator {
       Result result, dynamic inputValue, List<Expectation> aggregatedExpectations);
 
   /// Builds the final result when all validators have been processed.
-  Result _buildFinalResult(dynamic finalValue, List<Expectation> aggregatedExpectations);
+  Result _buildFinalResult(
+      dynamic finalValue, List<Expectation> aggregatedExpectations, dynamic originalValue);
 
   @override
   MultiValidatorBase copyWith({
@@ -186,18 +187,22 @@ class AllValidator extends MultiValidatorBase {
   }
 
   @override
-  Result _buildFinalResult(dynamic finalValue, List<Expectation> aggregatedExpectations) {
+  Result _buildFinalResult(
+      dynamic finalValue, List<Expectation> aggregatedExpectations, dynamic originalValue) {
     if (collecting) {
       // Collecting mode: return failures if any, success otherwise
       if (aggregatedExpectations.isNotEmpty) {
         return message != null
             ? _failWithMsg(finalValue, message!)
-            : Result.invalid(finalValue, expectations: aggregatedExpectations);
+            : Result.invalid(finalValue,
+                expectations: aggregatedExpectations, originalValue: originalValue);
       }
-      return Result.valid(finalValue);
+      return Result.valid(finalValue, originalValue: originalValue);
     } else {
       // Standard mode: message forces failure even if all children pass
-      return message != null ? _failWithMsg(finalValue, message!) : Result.valid(finalValue);
+      return message != null
+          ? _failWithMsg(finalValue, message!)
+          : Result.valid(finalValue, originalValue: originalValue);
     }
   }
 
@@ -237,11 +242,13 @@ class AnyValidator extends MultiValidatorBase {
   }
 
   @override
-  Result _buildFinalResult(dynamic finalValue, List<Expectation> aggregatedExpectations) {
+  Result _buildFinalResult(
+      dynamic finalValue, List<Expectation> aggregatedExpectations, dynamic originalValue) {
     // If we get here, all validators failed
     return message != null
         ? _failWithMsg(finalValue, message!)
-        : Result.invalid(finalValue, expectations: aggregatedExpectations);
+        : Result.invalid(finalValue,
+            expectations: aggregatedExpectations, originalValue: originalValue);
   }
 
   @override
@@ -288,16 +295,18 @@ class NoneValidator extends MultiValidatorBase {
   }
 
   @override
-  Result _buildFinalResult(dynamic finalValue, List<Expectation> aggregatedExpectations) {
+  Result _buildFinalResult(
+      dynamic finalValue, List<Expectation> aggregatedExpectations, dynamic originalValue) {
     // If we have any passing validators (which add their expectations to the aggregated list)
     // then `none` should fail and return those expectations
     if (aggregatedExpectations.isNotEmpty) {
       return message != null
           ? _failWithMsg(finalValue, message!)
-          : Result.invalid(finalValue, expectations: aggregatedExpectations);
+          : Result.invalid(finalValue,
+              expectations: aggregatedExpectations, originalValue: originalValue);
     }
     // If we get here, all validators failed, so `none` succeeds
-    return Result.valid(finalValue);
+    return Result.valid(finalValue, originalValue: originalValue);
   }
 
   @override
