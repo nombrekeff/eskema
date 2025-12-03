@@ -70,7 +70,7 @@ IValidator requiredWhen(
   return when(
     condition, 
     then: required(validator), 
-    otherwise: validator, 
+    otherwise: optional(validator), 
     message: message
   );
 }

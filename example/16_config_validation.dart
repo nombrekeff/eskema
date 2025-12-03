@@ -36,19 +36,12 @@ void main() {
       getField('ssl_enabled', isEq(true)),
       validator: isString() & not($isStringEmpty),
       message: 'SSL Cert required when SSL is enabled',
-      // otherwise: any([isString(), isNull()]),
     ),
-    // 'ssl_cert': when(
-    //   getField('ssl_enabled', isEq(true)),
-    //   then: required(isString() & not($isStringEmpty), message: 'SSL Cert required when SSL is enabled'),
-    //   otherwise: any([isString(), isNull()]),
-    // ),
-
-    // 'ssl_key': when(
-    //   getField('ssl_enabled', isEq(true)),
-    //   then: required(isString() & not($isStringEmpty), message: 'SSL Key required when SSL is enabled'),
-    //   otherwise: any([isString(), isNull()]),
-    // ),
+    'ssl_key': requiredWhen(
+      getField('ssl_enabled', isEq(true)),
+      validator: isString() & not($isStringEmpty),
+      message: 'SSL Key required when SSL is enabled',
+    ),
   });
 
   // 2. Define Data
