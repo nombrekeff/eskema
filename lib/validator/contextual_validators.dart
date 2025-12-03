@@ -9,6 +9,7 @@ import 'package:eskema/validator/base_validator.dart';
 Result _failWithMsg(dynamic value, String message) =>
     Result.invalid(value, expectation: Expectation(message: message, value: value));
 
+/// Resolves a validator based on the parent object.
 class ResolveValidator extends IWhenValidator {
   final IValidator? Function(Map parentObject) resolver;
 
@@ -65,6 +66,7 @@ class ResolveValidator extends IWhenValidator {
   FutureOr<Result> validator(value) => throw UnimplementedError();
 }
 
+/// Conditional validator. It's conditional based on some other field in the eskema.
 class WhenValidator extends IWhenValidator {
   final IValidator condition;
   final IValidator then;
@@ -121,6 +123,7 @@ class WhenValidator extends IWhenValidator {
   FutureOr<Result> validator(value) => throw UnimplementedError();
 }
 
+/// Adds a custom error message to a `when` validator.
 class WhenWithMessage extends IWhenValidator {
   final WhenValidator inner;
   final String message;
@@ -131,8 +134,17 @@ class WhenWithMessage extends IWhenValidator {
     dynamic value,
     Map<String, dynamic> map, {
     bool exists = true,
-  }) async {
-    final res = await inner.validateWithParent(value, map, exists: exists);
+  }) {
+    final res = inner.validateWithParent(value, map, exists: exists);
+
+    if (res is Future<Result>) {
+      return res.then((r) => _processResult(r, value));
+    }
+
+    return _processResult(res, value);
+  }
+
+  Result _processResult(Result res, dynamic value) {
     if (res.isValid) return res;
     return _failWithMsg(value, message);
   }

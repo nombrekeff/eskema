@@ -5,7 +5,6 @@
 library validators.presence;
 
 import 'package:eskema/eskema.dart';
-import 'package:eskema/extensions/operator_extensions.dart';
 
 /// If the field is not present (null) it will be considered valid
 /// If you want to allow empty strings as valid, use [optional] instead

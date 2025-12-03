@@ -1,50 +1,58 @@
 import 'package:eskema/eskema.dart';
 
-Validator<Result> isValidName = Validator((value) async {
-  return Result.valid(await Future.value(false));
-});
+///
+/// This example demonstrates the Builder API.
+///
+/// The Builder API provides a fluent interface for constructing schemas.
+/// It mirrors the functional API but allows for method chaining, which some
+/// developers find more readable, especially for complex nested structures.
+///
+void main() {
+  print('--- Builder API Example ---');
 
-void simpleExample() async {
-  final nameValidator = $string().lengthRange(3, 10).not.empty().add(isValidName);
+  // 1. Define Schema using Builder
+  // Start with `v()` (alias for `builder()`) and chain methods.
+  final userSchema = $map().schema({
+    // .string() -> ensures it's a string
+    // .trim() -> transformer: trims whitespace
+    // .not.empty() -> validator: string must not be empty
+    'name': $string().trim().not.empty().build(),
 
-  final nameRes = await nameValidator.validateAsync('123');
-  print(nameRes.detailed());
+    // .email() -> validator: must be a valid email format
+    'email': $string().email().build(),
 
-  final ageValidator = $int().eq(0).nullable();
+    // .int_() -> ensures it's an int
+    // .gte(18) -> validator: must be >= 18
+    // .optional() -> field is not required
+    'age': $int().gte(18).optional().build(),
+  }).build();
 
-  final ageRes = ageValidator.validate(0);
-  print(ageRes.detailed());
-}
+  // 2. Define Data
+  final validUser = {
+    'name': '  John Doe  ', // Will be trimmed
+    'email': 'john@example.com',
+    'age': 25,
+  };
 
-void complexExample() async {
-  final userValidator = $map().schema({
-    'name': $string().lengthRange(3, 10).not.empty().add(isValidName),
-    'age': $int().eq(0).nullable(),
-    'status': $string().oneOf(['active', 'inactive', 'banned']).error('Invalid status'),
+  final invalidUser = {
+    'name': '', // Empty
+    'email': 'not-an-email',
+    'age': 16, // Too young
+  };
 
-    // If status is banned, banned_reason is required
-    'banned_reason': resolve((parent) {
-      if (parent['status'] == 'banned') {
-        return required(
-          $string().not.empty(),
-          message: 'Banned reason is required if status is banned',
-        );
-      }
-      return null;
-    }),
-  });
+  // 3. Validate
+  print('\n--- Valid User ---');
+  final validResult = userSchema.validate(validUser);
+  print('Is Valid: ${validResult.isValid}');
+  print('Cleaned Data: ${validResult.value}'); // Name is trimmed
 
-  final userRes = await userValidator.validateAsync({
-    'name': '123',
-    'age': 0,
-    'status': 'banned',
-    'banned_reason': '123',
-  });
+  print('\n--- Invalid User ---');
+  final invalidResult = userSchema.validate(invalidUser);
+  print('Is Valid: ${invalidResult.isValid}');
+  print('Errors:');
+  for (final e in invalidResult.expectations) {
+    print('  - ${e.path}: ${e.message}');
+  }
 
-  print(userRes.detailed());
-}
-
-void main() async {
-  simpleExample();
-  complexExample();
+  print('-' * 20);
 }

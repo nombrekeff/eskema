@@ -1,5 +1,4 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/validator/contextual_validators.dart';
 
 /// Creates a conditional validator. It's conditional based on some other field in the eskema.
 ///
@@ -49,6 +48,31 @@ IValidator when(
 
   // Wrap with a proxy that intercepts misuse (validate()) and parent usage (validateWithParent)
   return message == null ? base : WhenWithMessage(base, message);
+}
+
+/// Make a validator required when a condition is met.
+///
+/// **Usage Examples:**
+/// ```dart
+/// final schema = eskema({
+///   'age': $isInt,
+///   'licenseNumber': requiredWhen(
+///     isGte(18),               // Condition: if age >= 18
+///     stringLength([isEq(8)]), // Then: license must be 8 characters
+///   ),
+/// });
+/// ```
+IValidator requiredWhen(
+  IValidator condition, {
+  required IValidator validator,
+  String? message,
+}) {
+  return when(
+    condition, 
+    then: required(validator), 
+    otherwise: validator, 
+    message: message
+  );
 }
 
 /// Creates a polymorphic (switch-case) validator that depends on the value of a key in the parent map.
