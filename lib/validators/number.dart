@@ -5,7 +5,7 @@ library validators.number;
 
 import 'package:eskema/expectation.dart';
 import 'package:eskema/expectation_codes.dart';
-import 'package:eskema/extensions.dart';
+import 'package:eskema/extensions/operator_extensions.dart';
 import 'package:eskema/validator.dart';
 import 'package:eskema/validators.dart';
 

@@ -1,5 +1,5 @@
+import 'package:eskema/extensions/operator_extensions.dart';
 import 'package:eskema/validators.dart';
-import 'package:eskema/extensions.dart';
 
 void main() {
   final v1 = isString();

@@ -1,4 +1,4 @@
-import 'package:eskema/extensions.dart';
+import 'package:eskema/extensions/base_extensions.dart';
 import 'package:eskema/validators.dart';
 import 'package:test/test.dart';
 
