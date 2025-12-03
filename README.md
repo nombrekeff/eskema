@@ -60,7 +60,7 @@ Each failure is an `Expectation` having:
 ## More examples
 See the `example/` directory for:
 * transformers (`toInt`, `defaultTo`, `trim`)
-* conditional validation (`when` + `getField`)
+* contextual & polymorphic validation (`resolve`, `when`, `switchBy`)
 * custom validators & builders
 * list & strict schema validation
 

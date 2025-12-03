@@ -60,76 +60,107 @@
 
     
 <section class="desc markdown">
-  <p>Validator library</p>
-<p>This library provides a set of classes for validating data. For built in va</p>
+  <p>Backward-compatible export barrel for validator classes.</p>
 </section>
 
 
     <section class="summary offset-anchor" id="classes">
       <h2>Classes</h2>
       <dl>
+          <dt id="AllValidator">
+  <span class="name "><a href="../validator.combinators/AllValidator-class.html">AllValidator</a></span> 
+
+</dt>
+<dd>
+  Succeeds if all child validators succeed. Fails on the first failure or collects all failures.
+</dd>
+
+          <dt id="AnyValidator">
+  <span class="name "><a href="../validator.combinators/AnyValidator-class.html">AnyValidator</a></span> 
+
+</dt>
+<dd>
+  Succeeds if at least one child validator succeeds. Fails if all fail.
+</dd>
+
           <dt id="Field">
-  <span class="name "><a href="../validator/Field-class.html">Field</a></span> 
-
-</dt>
-<dd>
-  An implementation of <a href="../validator/IdValidator-class.html">IdValidator</a>, which acepts a list of validators.
-</dd>
-
-          <dt id="IdValidator">
-  <span class="name "><a href="../validator/IdValidator-class.html">IdValidator</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../result/Result-class.html">Result</a></span>&gt;</span></span> 
-
-</dt>
-<dd>
-  A <a href="../validator/Validator-class.html">Validator</a> sub-class, which adds an identifier,
-which can be used to identify the validator,
-for example <a href="../validator/MapValidator-class.html">MapValidator</a> uses it to validate its fields.
-</dd>
-
-          <dt id="IValidator">
-  <span class="name "><a href="../validator/IValidator-class.html">IValidator</a></span> 
-
-</dt>
-<dd>
-  Inmutable class from which all validators inherit.
-</dd>
-
-          <dt id="IWhenValidator">
-  <span class="name "><a href="../validator/IWhenValidator-class.html">IWhenValidator</a></span> 
-
-</dt>
-<dd>
-  A special type of validator that can operate on a parent map context.
-Used for conditional validation within an <code>eskema</code> map validator.
-</dd>
-
-          <dt id="MapValidator">
-  <span class="name "><a href="../validator/MapValidator-class.html">MapValidator</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a></span>&gt;</span></span> 
-
-</dt>
-<dd>
-  Abstract class from which to create class based validator schemes.
-EskMap is a utility class designed to facilitate the validation and transformation
-of map-like data structures in Dart. It provides a flexible way to define validation
-rules and apply them to input data, ensuring that the data conforms to expected
-formats or constraints.
-</dd>
-
-          <dt id="Validator">
-  <span class="name "><a href="../validator/Validator-class.html">Validator</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../result/Result-class.html">Result</a></span>&gt;</span></span> 
-
-</dt>
-<dd>
-  An implementation of <a href="../validator/IValidator-class.html">IValidator</a>, which accepts a validator function,
-which is used by the EskValidator to validate some data.
-</dd>
-
-          <dt id="WhenValidator">
-  <span class="name "><a href="../validator/WhenValidator-class.html">WhenValidator</a></span> 
+  <span class="name "><a href="../validator.combinators/Field-class.html">Field</a></span> 
 
 </dt>
 <dd>
   
+</dd>
+
+          <dt id="IdValidator">
+  <span class="name "><a href="../validator.base/IdValidator-class.html">IdValidator</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../result/Result-class.html">Result</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Base class that adds an identifier to a validator (used by map/field validators).
+</dd>
+
+          <dt id="IValidator">
+  <span class="name "><a href="../validator.base/IValidator-class.html">IValidator</a></span> 
+
+</dt>
+<dd>
+  Immutable base class from which all validators inherit.
+</dd>
+
+          <dt id="IWhenValidator">
+  <span class="name "><a href="../validator.base/IWhenValidator-class.html">IWhenValidator</a></span> 
+
+</dt>
+<dd>
+  A special type of validator that can operate on a parent map context.
+</dd>
+
+          <dt id="MapValidator">
+  <span class="name "><a href="../validator.map/MapValidator-class.html">MapValidator</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Abstract class for schema-like map validators composed of Field/IdValidator instances.
+</dd>
+
+          <dt id="MultiValidatorBase">
+  <span class="name "><a href="../validator.combinators/MultiValidatorBase-class.html">MultiValidatorBase</a></span> 
+
+</dt>
+<dd>
+  An abstract base for validators that operate on a list of child validators.
+</dd>
+
+          <dt id="NoneValidator">
+  <span class="name "><a href="../validator.combinators/NoneValidator-class.html">NoneValidator</a></span> 
+
+</dt>
+<dd>
+  Succeeds if all child validators fail. Fails if any succeed.
+</dd>
+
+          <dt id="NotValidator">
+  <span class="name "><a href="../validator.combinators/NotValidator-class.html">NotValidator</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ThrowInsteadValidator">
+  <span class="name "><a href="../validator.combinators/ThrowInsteadValidator-class.html">ThrowInsteadValidator</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="Validator">
+  <span class="name "><a href="../validator.base/Validator-class.html">Validator</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../result/Result-class.html">Result</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Generic implementation wrapper for a validator.
 </dd>
 
       </dl>
@@ -147,7 +178,7 @@ which is used by the EskValidator to validate some data.
       <dl>
           
   <dt id="ValidatorFunction" class="callable">
-    <span class="name"><a href="../validator/ValidatorFunction.html">ValidatorFunction</a></span>&lt;<wbr><span class="type-parameter">T extends <a href="../result/Result-class.html">Result</a></span>&gt;<span class="signature">
+    <span class="name"><a href="../validator.base/ValidatorFunction.html">ValidatorFunction</a></span>&lt;<wbr><span class="type-parameter">T extends <a href="../result/Result-class.html">Result</a></span>&gt;<span class="signature">
       <span class="returntype parameter">= <a href="https://api.flutter.dev/flutter/dart-async/FutureOr-class.html">FutureOr</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span> Function<span class="signature">(<span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)</span></span>
     </span>
     
@@ -166,19 +197,19 @@ which is used by the EskValidator to validate some data.
       <h2>Exceptions / Errors</h2>
       <dl>
           <dt id="AsyncValidatorException">
-  <span class="name "><a href="../validator/AsyncValidatorException-class.html">AsyncValidatorException</a></span> 
+  <span class="name "><a href="../validator_exception/AsyncValidatorException-class.html">AsyncValidatorException</a></span> 
 
 </dt>
 <dd>
-  Thrown when a synchronous validate() call encounters an async validator.
+  Thrown when a synchronous validate() call encounters an async validator chain.
 </dd>
 
           <dt id="ValidatorFailedException">
-  <span class="name "><a href="../validator/ValidatorFailedException-class.html">ValidatorFailedException</a></span> 
+  <span class="name "><a href="../validator_exception/ValidatorFailedException-class.html">ValidatorFailedException</a></span> 
 
 </dt>
 <dd>
-  
+  Thrown when a validation fails and validateOrThrow() is used.
 </dd>
 
       </dl>
@@ -199,22 +230,45 @@ which is used by the EskValidator to validate some data.
     <h5><span class="package-name">eskema</span> <span class="package-kind">package</span></h5>
     <ol>
       <li class="section-title">Libraries</li>
+      <li><a href="../builder/">builder</a></li>
+      <li><a href="../builder.core/">builder/core</a></li>
+      <li><a href="../builder.mixins/">builder/mixins</a></li>
+      <li><a href="../builder.type_builders/">builder/type_builders</a></li>
+      <li><a href="../error_format/">error_format</a></li>
       <li><a href="../eskema/">eskema</a></li>
       <li><a href="../expectation/">expectation</a></li>
+      <li><a href="../expectation_codes/">expectation_codes</a></li>
       <li><a href="../extensions/">extensions</a></li>
       <li><a href="../result/">result</a></li>
       <li><a href="../transformers/">transformers</a></li>
+      <li><a href="../transformers.boolean/">transformers/boolean</a></li>
+      <li><a href="../transformers.core/">transformers/core</a></li>
+      <li><a href="../transformers.datetime/">transformers/datetime</a></li>
+      <li><a href="../transformers.json/">transformers/json</a></li>
+      <li><a href="../transformers.map/">transformers/map</a></li>
+      <li><a href="../transformers.number/">transformers/number</a></li>
+      <li><a href="../transformers.string/">transformers/string</a></li>
+      <li><a href="../transformers.utility/">transformers/utility</a></li>
       <li><a href="../validator/">validator</a></li>
+      <li><a href="../validator.base/">validator/base_validator</a></li>
+      <li><a href="../validator.combinators/">validator/combinator_validators</a></li>
+      <li><a href="../validator_contextual_validators/">validator/contextual_validators</a></li>
+      <li><a href="../validator_exception/">validator/exception</a></li>
+      <li><a href="../validator.map/">validator/map_validators</a></li>
       <li><a href="../validators/">validators</a></li>
-      <li><a href="../cached_validators/">validators/cached</a></li>
-      <li><a href="../combinator_validators/">validators/combinator</a></li>
-      <li><a href="../comparison_validators/">validators/comparison</a></li>
-      <li><a href="../list_validators/">validators/list</a></li>
-      <li><a href="../number_validators/">validators/number</a></li>
-      <li><a href="../presence_validators/">validators/presence</a></li>
-      <li><a href="../string_validators/">validators/string</a></li>
-      <li><a href="../structure_validators/">validators/structure</a></li>
-      <li><a href="../type_validators/">validators/type</a></li>
+      <li><a href="../validators.cached/">validators/cached</a></li>
+      <li><a href="../validators.combinator/">validators/combinator</a></li>
+      <li><a href="../validators.comparison/">validators/comparison</a></li>
+      <li><a href="../validators_contextual/">validators/contextual</a></li>
+      <li><a href="../validators.date/">validators/date</a></li>
+      <li><a href="../validators.json/">validators/json</a></li>
+      <li><a href="../validators.list/">validators/list</a></li>
+      <li><a href="../validators.map/">validators/map</a></li>
+      <li><a href="../validators.number/">validators/number</a></li>
+      <li><a href="../validators.presence/">validators/presence</a></li>
+      <li><a href="../validators.string/">validators/string</a></li>
+      <li><a href="../validators.structure/">validators/structure</a></li>
+      <li><a href="../validators.type/">validators/type</a></li>
 </ol>
 
   </div>
@@ -225,7 +279,7 @@ which is used by the EskValidator to validate some data.
 <footer>
   <span class="no-break">
     eskema
-      1.0.0
+      2.0.1
   </span>
   
 </footer>

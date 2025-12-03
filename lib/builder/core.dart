@@ -250,14 +250,14 @@ class BaseBuilder<B extends BaseBuilder<B, T>, T> extends IValidator {
   /// Mark current chain optional (skipped when key absent).
   @override
   B optional<_>() {
-    this._optional = true;
+    _optional = true;
     return self;
   }
 
   /// Mark current chain nullable (null accepted as valid).
   @override
   B nullable<_>({String? message}) {
-    this._nullable = true;
+    _nullable = true;
     return self;
   }
 

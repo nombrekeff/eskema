@@ -3,7 +3,8 @@
 /// This file contains validators for checking the presence of a value.
 
 library validators.presence;
-import 'package:eskema/validator.dart';
+
+import 'package:eskema/eskema.dart';
 
 /// If the field is not present (null) it will be considered valid
 /// If you want to allow empty strings as valid, use [optional] instead
@@ -50,3 +51,26 @@ IValidator nullable(IValidator validator) => validator.nullable();
 /// validListField.isValid({});                    // true
 /// ```
 IValidator optional(IValidator validator) => validator.optional();
+
+/// Opposite of [optional], it will be considered valid if the field is not null
+/// and the [validator] returns valid.
+///
+/// **Example**
+/// ```dart
+/// final isValid = required(isString()).isValid('');    // false
+/// final isValid = required(isString()).isValid(false); // false
+/// final isValid = required(isString()).isValid(null);  // false
+///
+/// final validListField = eskema({
+///   'required': required(isString()),
+/// });
+///
+/// validListField.isValid({'required': 'test'});  // true
+/// validListField.isValid({'required': ''});      // false
+/// validListField.isValid({'required ': null});   // false
+/// // If the field is missing from a map, it's considered valid.
+/// validListField.isValid({});                    // false
+/// ```
+IValidator required(IValidator validator, {String message = 'is required'}) {
+  return not(isNull(), message: message) & validator;
+}
