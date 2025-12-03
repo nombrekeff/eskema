@@ -54,8 +54,8 @@
 
     <section class="multi-line-signature">
       
-<span class="returntype"><a href="../../validator/IValidator-class.html">IValidator</a></span>
-<span class="name ">operator |</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="|-param-other"><span class="type-annotation"><a href="../../validator/IValidator-class.html">IValidator</a></span> <span class="parameter-name">other</span></span></li>
+<span class="returntype"><a href="../../validator.base/IValidator-class.html">IValidator</a></span>
+<span class="name ">operator |</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="|-param-other"><span class="type-annotation"><a href="../../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">other</span></span></li>
 </ol>)
 
       
@@ -63,7 +63,7 @@
     </section>
     
 <section class="desc markdown">
-  <p>Combines two validators with a logical OR, same as using <a href="../../combinator_validators/any.html">any</a></p>
+  <p>Combines two validators with a logical OR, same as using <a href="../../validators.combinator/any.html">any</a></p>
 <p>This is <strong>Sugar</strong>, it allows for more concise validator composition.</p>
 </section>
 
@@ -71,7 +71,23 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">IValidator operator |(IValidator other) =&gt; any([this, other]);</code></pre>
+  <pre class="language-dart"><code class="language-dart">IValidator operator |(IValidator other) {
+  if (this is AnyValidator &amp;&amp; other is AnyValidator) {
+    final mv1 = this as AnyValidator;
+    return mv1.copyWith(validators: {...mv1.validators, ...other.validators});
+  }
+
+  if (this is AnyValidator) {
+    final mv = this as AnyValidator;
+    return mv.copyWith(validators: {...mv.validators, other});
+  }
+
+  if (other is AnyValidator) {
+    return other.copyWith(validators: {...other.validators, this});
+  }
+
+  return any([this, other]);
+}</code></pre>
 </section>
 
 
@@ -90,7 +106,7 @@
     <li class="self-crumb">operator | method</li>
 </ol>
 
-    <h5>EskemaEskValidatorOperations extension on <a href="../../validator/IValidator-class.html">IValidator</a></h5>
+    <h5>EskemaEskValidatorOperations extension on <a href="../../validator.base/IValidator-class.html">IValidator</a></h5>
     <div id="dartdoc-sidebar-left-content"></div>
   </div><!--/.sidebar-offcanvas-->
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
@@ -99,7 +115,7 @@
 <footer>
   <span class="no-break">
     eskema
-      1.0.0
+      2.0.1
   </span>
   
 </footer>

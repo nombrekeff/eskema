@@ -11,6 +11,9 @@ import 'package:eskema/expectation_codes.dart';
 
 Function _collectionEquals = const DeepCollectionEquality().equals;
 
+/// A validator that always returns valid
+IValidator noop() => Validator((value) => Result.valid(value));
+
 /// Checks whether the given value is equal to the [otherValue] value of type [T]
 ///
 /// Even though this function accepts any Type, note that it will not work with Collections. 

@@ -40,20 +40,31 @@
   </button>
 </header>
 <main>
-  <div id="dartdoc-main-content" class="main-content">
-    <h1>404: Something's gone wrong :-(</h1>
-    <section class="desc">
-      <p>You've tried to visit a page that doesn't exist.  Luckily this site
-         has other <a href="index.html">pages</a>.</p>
-      <p>If you were looking for something specific, try searching:
+<div id="dartdoc-main-content" class="main-content">
+  <h1>404: Something's gone wrong :-(</h1>
+  <section class="desc">
+    <p>
+      You've tried to visit a page that doesn't exist. Luckily this site has
+      other <a href="index.html">pages</a>.
+    </p>
+    <div>
+      If you were looking for something specific, try searching:
       <form class="search-body" role="search">
-        <input type="text" id="search-body" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+        <input
+          type="text"
+          id="search-body"
+          autocomplete="off"
+          disabled
+          class="form-control typeahead"
+          placeholder="Loading search..."
+        />
       </form>
-      </p>
-    </section>
-  </div> <!-- /.main-content -->
-  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
-    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+    </div>
+  </section>
+</div>
+<!-- /.main-content -->
+<div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+  <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
 <header id="header-search-sidebar" class="hidden-l">
   <form class="search-sidebar" role="search">
     <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
@@ -63,35 +74,60 @@
     <li><a href="https://github.com/nombrekeff/eskema">eskema package</a></li>
 </ol>
 
-    <h5><span class="package-name">eskema</span> <span class="package-kind">package</span></h5>
-    <ol>
+  <h5>
+    <span class="package-name">eskema</span>
+    <span class="package-kind">package</span>
+  </h5>
+  <ol>
       <li class="section-title">Libraries</li>
+      <li><a href="builder/">builder</a></li>
+      <li><a href="builder.core/">builder/core</a></li>
+      <li><a href="builder.mixins/">builder/mixins</a></li>
+      <li><a href="builder.type_builders/">builder/type_builders</a></li>
+      <li><a href="error_format/">error_format</a></li>
       <li><a href="eskema/">eskema</a></li>
       <li><a href="expectation/">expectation</a></li>
+      <li><a href="expectation_codes/">expectation_codes</a></li>
       <li><a href="extensions/">extensions</a></li>
       <li><a href="result/">result</a></li>
       <li><a href="transformers/">transformers</a></li>
+      <li><a href="transformers.boolean/">transformers/boolean</a></li>
+      <li><a href="transformers.core/">transformers/core</a></li>
+      <li><a href="transformers.datetime/">transformers/datetime</a></li>
+      <li><a href="transformers.json/">transformers/json</a></li>
+      <li><a href="transformers.map/">transformers/map</a></li>
+      <li><a href="transformers.number/">transformers/number</a></li>
+      <li><a href="transformers.string/">transformers/string</a></li>
+      <li><a href="transformers.utility/">transformers/utility</a></li>
       <li><a href="validator/">validator</a></li>
+      <li><a href="validator.base/">validator/base_validator</a></li>
+      <li><a href="validator.combinators/">validator/combinator_validators</a></li>
+      <li><a href="validator_contextual_validators/">validator/contextual_validators</a></li>
+      <li><a href="validator_exception/">validator/exception</a></li>
+      <li><a href="validator.map/">validator/map_validators</a></li>
       <li><a href="validators/">validators</a></li>
-      <li><a href="cached_validators/">validators/cached</a></li>
-      <li><a href="combinator_validators/">validators/combinator</a></li>
-      <li><a href="comparison_validators/">validators/comparison</a></li>
-      <li><a href="list_validators/">validators/list</a></li>
-      <li><a href="number_validators/">validators/number</a></li>
-      <li><a href="presence_validators/">validators/presence</a></li>
-      <li><a href="string_validators/">validators/string</a></li>
-      <li><a href="structure_validators/">validators/structure</a></li>
-      <li><a href="type_validators/">validators/type</a></li>
+      <li><a href="validators.cached/">validators/cached</a></li>
+      <li><a href="validators.combinator/">validators/combinator</a></li>
+      <li><a href="validators.comparison/">validators/comparison</a></li>
+      <li><a href="validators_contextual/">validators/contextual</a></li>
+      <li><a href="validators.date/">validators/date</a></li>
+      <li><a href="validators.json/">validators/json</a></li>
+      <li><a href="validators.list/">validators/list</a></li>
+      <li><a href="validators.map/">validators/map</a></li>
+      <li><a href="validators.number/">validators/number</a></li>
+      <li><a href="validators.presence/">validators/presence</a></li>
+      <li><a href="validators.string/">validators/string</a></li>
+      <li><a href="validators.structure/">validators/structure</a></li>
+      <li><a href="validators.type/">validators/type</a></li>
 </ol>
 
-  </div>
-  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
-  </div>
+</div>
+<div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right"></div>
 </main>
 <footer>
   <span class="no-break">
     eskema
-      1.0.0
+      2.0.1
   </span>
   
 </footer>
