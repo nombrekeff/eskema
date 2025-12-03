@@ -1,3 +1,13 @@
+
+## 2.1.0
+
+### Fix
+- Fixed issue with `eskema` not preserving original value when using transformers.
+  
+### Feature
+- Added `originalValue` to `Result` to track untransformed data, and update `eskema` and combinator validators to propagate it.
+- Added more extensions, check [./lib/extensions](./lib/extensions) for more info.
+
 ## 2.0.1
 ### Fix
 - Fixed issue with default expectation not being used when a result is invalid.
