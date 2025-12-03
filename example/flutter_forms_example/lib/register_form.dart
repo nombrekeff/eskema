@@ -20,7 +20,7 @@ class RegisterFormState extends State<RegisterForm> {
 
   final nameValidator = stringLength([
     isInRange(8, 32),
-  ], message: "Name must be between 8 and 32 characters");
+  ], message: 'Name must be between 8 and 32 characters');
   final emailValidator = not($isStringEmpty) & isEmail();
   final passwordValidator = not($isStringEmpty) & stringLength([isInRange(6, 32)]);
   // final confirmPasswordValidator = not($isStringEmpty) & isEqualTo(passwordController.text);
@@ -37,7 +37,7 @@ class RegisterFormState extends State<RegisterForm> {
             onChanged: (value) {
               formState.name = value;
             },
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Enter your name',
               suffixIcon: Icon(Icons.person),
             ),
@@ -46,9 +46,9 @@ class RegisterFormState extends State<RegisterForm> {
               return res.description;
             },
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           TextFormField(
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Enter your email',
               suffixIcon: Icon(Icons.email),
             ),
@@ -59,9 +59,9 @@ class RegisterFormState extends State<RegisterForm> {
               return null;
             },
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           TextFormField(
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Enter a password',
               suffixIcon: Icon(Icons.lock),
             ),
@@ -72,9 +72,9 @@ class RegisterFormState extends State<RegisterForm> {
               return null;
             },
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           TextFormField(
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Confirm your password',
               suffixIcon: Icon(Icons.lock),
             ),

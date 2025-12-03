@@ -1,1 +1,19 @@
 include: package:flutter_lints/flutter.yaml
+# Additional information about this file can be found at
+# https://dart.dev/guides/language/analysis-options
+analyzer:
+  errors:
+    prefer_single_quotes: warning
+    prefer_const_constructors: warning
+    prefer_final_locals: warning
+    prefer_final_fields: warning
+    unnecessary_library_name: ignore
+    file_names: ignore
+    strict_top_level_inference: ignore
+
+linter:
+  rules:
+    prefer_single_quotes: true
+    prefer_const_constructors: true
+    prefer_final_locals: true
+    prefer_final_fields: true
