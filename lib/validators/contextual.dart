@@ -51,22 +51,22 @@ IValidator when(
   return message == null ? base : WhenWithMessage(base, message);
 }
 
-/// Creates a polymorphic validator that depends on the value of a key in the parent map.
+/// Creates a polymorphic (switch-case) validator that depends on the value of a key in the parent map.
 ///
 /// **Usage Examples:**
 /// ```dart
-/// final schema = polymorphic({
+/// final schema = switchBy('type', {
 ///   'business': eskema({
 ///     'taxId': required(isString()) & stringLength([isGte(5)]),
 ///   }),
 ///   'person': eskema({
 ///     'name': required(isString() & stringLength([isGte(5)])),
 ///   }),
-/// }, 'type');
+/// });
 /// final result = schema.validate({'type': 'business', 'taxId': '123456789'});
 /// print(result);
 /// ```
-IValidator polymorphic(Map<String, IValidator> by, String key) {
+IValidator switchBy(String key, Map<String, IValidator> by) {
   return $isMap &
       containsKeys([key], message: 'Missing key: "$key"') &
       Validator((value) {
@@ -84,8 +84,6 @@ IValidator polymorphic(Map<String, IValidator> by, String key) {
         return r.isValid ? Result.valid(value) : r;
       });
 }
-
-IValidator poly(Map<String, IValidator> by, String key) => polymorphic(by, key);
 
 /// Creates a provider validator that depends on the parent object.
 ///
