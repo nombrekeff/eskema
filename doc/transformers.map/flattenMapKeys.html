@@ -74,6 +74,32 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IValidator flattenMapKeys(String delimiter, IValidator child, {String? message}) {
+<<<<<<< HEAD
+  Map&lt;String, dynamic&gt; walk(Map&lt;String, dynamic&gt; flat, dynamic node, String prefix) {
+    if (node is Map) {
+      node.forEach((k, val) {
+        final newPrefix = prefix.isEmpty ? &#39;$k&#39; : &#39;$prefix$delimiter$k&#39;;
+        if (val is Map) {
+          walk(flat, val, newPrefix);
+        } else {
+          flat[newPrefix] = val;
+        }
+      });
+    } else {
+      if (prefix.isNotEmpty) flat[prefix] = node;
+    }
+
+    return flat;
+  }
+
+  Map&lt;String, dynamic&gt;? transform(value) {
+    if (value is! Map) return null;
+    return walk({}, value, &#39;&#39;);
+  }
+
+  return core.pivotValue(
+    transform,
+=======
   return core.pivotValue(
     (value) {
       if (value is! Map) return null;
@@ -99,6 +125,7 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 
       return flat;
     },
+>>>>>>> develop
     child: child,
     errorMessage: message ?? &#39;a Map flattable by keys&#39;,
   );
@@ -129,7 +156,11 @@ Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left 
 <footer>
   <span class="no-break">
     eskema
+<<<<<<< HEAD
+      2.0.1
+=======
       1.0.0
+>>>>>>> develop
   </span>
   
 </footer>

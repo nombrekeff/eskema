@@ -63,7 +63,11 @@
     </section>
     
 <section class="desc markdown">
+<<<<<<< HEAD
+  <p>Returns a <a href="../validator.base/Validator-class.html">Validator</a> that throws a <a href="../validator_exception/ValidatorFailedException-class.html">ValidatorFailedException</a> instead of returning a result</p>
+=======
   <p>Returns a <a href="../validator.base/Validator-class.html">Validator</a> that throws a <a href="../validator.base/ValidatorFailedException-class.html">ValidatorFailedException</a> instead of returning a result</p>
+>>>>>>> develop
 <p><strong>Usage Examples:</strong></p>
 <pre class="language-dart"><code class="language-dart">// API endpoint validation that throws on invalid input
 final strictEmail = throwInstead($isEmail);
@@ -85,6 +89,11 @@ final formValidator = throwInstead(all([
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
+<<<<<<< HEAD
+  <pre class="language-dart"><code class="language-dart">IValidator throwInstead(IValidator validator) {
+  return ThrowInsteadValidator(validator);
+}</code></pre>
+=======
   <pre class="language-dart"><code class="language-dart">IValidator throwInstead(IValidator validator) =&gt; Validator&lt;Result&gt;((value) {
       final resOr = validator.validator(value);
 
@@ -93,6 +102,7 @@ final formValidator = throwInstead(all([
 
       return Result.valid(value);
     });</code></pre>
+>>>>>>> develop
 </section>
 
 
@@ -119,7 +129,11 @@ final formValidator = throwInstead(all([
 <footer>
   <span class="no-break">
     eskema
+<<<<<<< HEAD
+      2.0.1
+=======
       1.0.0
+>>>>>>> develop
   </span>
   
 </footer>

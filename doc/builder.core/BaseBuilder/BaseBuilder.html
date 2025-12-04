@@ -56,6 +56,11 @@
       
       <span class="name ">BaseBuilder&lt;<wbr><span class="type-parameter">B extends BaseBuilder&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span>, <span class="type-parameter">T</span>&gt;</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="-param-negated"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">negated</span> = <span class="default-value">false</span>, </span></li>
 <li><span class="parameter" id="-param-chain"><span class="type-annotation"><a href="../../builder.core/Chain-class.html">Chain</a>?</span> <span class="parameter-name">chain</span>, </span></li>
+<<<<<<< HEAD
+<li><span class="parameter" id="-param-optional"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">optional</span>, </span></li>
+<li><span class="parameter" id="-param-nullable"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">nullable</span>, </span></li>
+=======
+>>>>>>> develop
 </ol>})
     </section>
     
@@ -64,9 +69,17 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
+<<<<<<< HEAD
+  <pre class="language-dart"><code class="language-dart">BaseBuilder({bool negated = false, Chain? chain, bool? optional, bool? nullable})
+    : chain = chain ?? Chain(),
+      _negated = negated,
+      _optional = optional ?? false,
+      _nullable = nullable ?? false;</code></pre>
+=======
   <pre class="language-dart"><code class="language-dart">BaseBuilder({bool negated = false, Chain? chain})
     : chain = chain ?? Chain(),
       _negated = negated;</code></pre>
+>>>>>>> develop
 </section>
 
 
@@ -94,7 +107,11 @@
 <footer>
   <span class="no-break">
     eskema
+<<<<<<< HEAD
+      2.0.1
+=======
       1.0.0
+>>>>>>> develop
   </span>
   
 </footer>

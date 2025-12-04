@@ -26,7 +26,7 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">eskema</a></li>
     <li><a href="../../result/">result.dart</a></li>
-    <li><a href="../../result/Result-class.html">Result<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+    <li><a href="../../result/Result-class.html">Result</a></li>
     <li class="self-crumb">toString method</li>
   </ol>
   <div class="self-name">toString</div>
@@ -85,7 +85,9 @@ mainly for debugging or logging.</p>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 String toString() {
-  return description;
+  &#47;&#47; Keep valid results concise; invalid use joined expectation descriptions (legacy behavior).
+  &#47;&#47; Callers needing structured formatting should use error_format.dart helpers.
+  return description ?? &#39;Valid&#39;;
 }</code></pre>
 </section>
 
@@ -101,7 +103,7 @@ String toString() {
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">eskema</a></li>
     <li><a href="../../result/">result</a></li>
-    <li><a href="../../result/Result-class.html">Result<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+    <li><a href="../../result/Result-class.html">Result</a></li>
     <li class="self-crumb">toString method</li>
 </ol>
 
@@ -114,7 +116,7 @@ String toString() {
 <footer>
   <span class="no-break">
     eskema
-      1.0.0
+      2.0.1
   </span>
   
 </footer>

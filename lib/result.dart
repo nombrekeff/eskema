@@ -8,6 +8,7 @@ library result;
 import 'package:eskema/expectation.dart';
 
 const _emptyExpectations = <Expectation>[];
+const _defaultExpectation = Expectation(message: 'Validation failed');
 
 /// Represents the result of a validation.
 class Result {
@@ -26,7 +27,7 @@ class Result {
   Result.invalid(this.value, {Iterable<Expectation>? expectations, Expectation? expectation})
       : isValid = false,
         expectations =
-            expectations ?? (expectation == null ? _emptyExpectations : [expectation]);
+            expectations ?? (expectation == null ? [_defaultExpectation] : [expectation]);
 
   final bool isValid;
 
@@ -43,8 +44,8 @@ class Result {
 
   int get expectationCount => expectations.length;
 
-  String get description {
-    return isValid ? 'Valid' : expectations.map((e) => e.description).join(', ');
+  String? get description {
+    return isValid ? null : expectations.map((e) => e.description).join(', ');
   }
 
   /// Creates a copy of the result with the given parameters.
@@ -64,12 +65,12 @@ class Result {
   String toString() {
     // Keep valid results concise; invalid use joined expectation descriptions (legacy behavior).
     // Callers needing structured formatting should use error_format.dart helpers.
-    return description;
+    return description ?? 'Valid';
   }
 
   Map<String, Object?> toJson() => {
-        'isValid': isValid,
-        if (value != null) 'value': value,
-        if (!isValid) 'errors': expectations.map((e) => e.toJson()).toList(growable: false),
-      };
+    'isValid': isValid,
+    if (value != null) 'value': value,
+    if (!isValid) 'errors': expectations.map((e) => e.toJson()).toList(growable: false),
+  };
 }

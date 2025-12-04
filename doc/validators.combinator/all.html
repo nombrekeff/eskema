@@ -54,9 +54,16 @@
 
     <section class="multi-line-signature">
         
+<<<<<<< HEAD
+<span class="returntype"><a href="../validator.combinators/AllValidator-class.html">AllValidator</a></span>
+<span class="name ">all</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="all-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator.base/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span>, {</span></li>
+<li><span class="parameter" id="all-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+<li><span class="parameter" id="all-param-collecting"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">collecting</span> = <span class="default-value">false</span>, </span></li>
+=======
 <span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
 <span class="name ">all</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="all-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator.base/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span>, {</span></li>
 <li><span class="parameter" id="all-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
+>>>>>>> develop
 </ol>})
 
         
@@ -65,6 +72,30 @@
     
 <section class="desc markdown">
   <p>Passes the test if all of the <a href="../validator.base/Validator-class.html">Validator</a>s are valid, and fails if any of them are invalid</p>
+<<<<<<< HEAD
+<p>By default, validation stops at the first failure and chains transformed values.
+If <code>collecting</code> is true, all validators are run against the original input value
+and all failures are collected without value chaining.</p>
+<p><strong>Usage Examples:</strong></p>
+<pre class="language-dart"><code class="language-dart">// Standard behavior: stop at first failure, chain values
+final passwordValidator = all([
+  toString(),                         // Convert to string first
+  stringLength([isGte(8)]),          // Then validate length (chained value)
+  stringMatchesPattern(r'[A-Z]'),     // Must contain uppercase
+]);
+
+// Collecting behavior: show all errors at once
+final formValidator = all([
+  isType&lt;String&gt;(),                   // Must be a string
+  stringLength([isGte(3)]),          // Must be at least 3 chars
+  stringMatchesPattern(r'[A-Z]'),     // Must contain uppercase
+  stringMatchesPattern(r'[0-9]'),     // Must contain number
+], collecting: true);
+
+// Will show ALL validation errors, not just the first one
+final result = formValidator.validate(123);
+// result.expectations will contain errors for type, length, uppercase, and number
+=======
 <p>In the case that a <a href="../validator.base/Validator-class.html">Validator</a> fails, it's <a href="../result/Result-class.html">Result</a> will be returned</p>
 <p><strong>Usage Examples:</strong></p>
 <pre class="language-dart"><code class="language-dart">// Validate a password with multiple requirements
@@ -81,6 +112,7 @@ final processedData = all([
   stringLength([isGte(1)]),          // Then validate length
   stringMatchesPattern(r'^[A-Z]'),    // Must start with uppercase
 ]);
+>>>>>>> develop
 </code></pre>
 </section>
 
@@ -88,6 +120,10 @@ final processedData = all([
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
+<<<<<<< HEAD
+  <pre class="language-dart"><code class="language-dart">AllValidator all(List&lt;IValidator&gt; validators, {String? message, bool collecting = false}) {
+  return AllValidator(validators, message: message, collecting: collecting);
+=======
   <pre class="language-dart"><code class="language-dart">IValidator all(List&lt;IValidator&gt; validators, {String? message}) {
   FutureOr&lt;Result&gt; pipeline(dynamic value) {
     for (var i = 0; i &lt; validators.length; i++) {
@@ -108,6 +144,7 @@ final processedData = all([
   }
 
   return Validator&lt;Result&gt;(pipeline);
+>>>>>>> develop
 }</code></pre>
 </section>
 
@@ -135,7 +172,11 @@ final processedData = all([
 <footer>
   <span class="no-break">
     eskema
+<<<<<<< HEAD
+      2.0.1
+=======
       1.0.0
+>>>>>>> develop
   </span>
   
 </footer>

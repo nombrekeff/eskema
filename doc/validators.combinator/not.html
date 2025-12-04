@@ -55,7 +55,11 @@
     <section class="multi-line-signature">
         
 <span class="returntype"><a href="../validator.base/IValidator-class.html">IValidator</a></span>
+<<<<<<< HEAD
+<span class="name ">not</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="not-param-child"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span></li>
+=======
 <span class="name ">not</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="not-param-validator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span>, {</span></li>
+>>>>>>> develop
 <li><span class="parameter" id="not-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span></li>
 </ol>})
 
@@ -64,7 +68,11 @@
     </section>
     
 <section class="desc markdown">
+<<<<<<< HEAD
+  <p>Passes the test if the child validator is not valid</p>
+=======
   <p>Passes the test if the passed in validator is not valid</p>
+>>>>>>> develop
 <p>When the inner validator succeeds, the failure will reuse its <code>code</code> if present,
 otherwise falls back to <code>logic.not_expected</code>. See docs/expectation_codes.md.</p>
 <p><strong>Usage Examples:</strong></p>
@@ -87,6 +95,11 @@ final fieldNotPresent = not(exists());
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
+<<<<<<< HEAD
+  <pre class="language-dart"><code class="language-dart">IValidator not(IValidator child, {String? message}) {
+  return NotValidator(child, message: message);
+}</code></pre>
+=======
   <pre class="language-dart"><code class="language-dart">IValidator not(IValidator validator, {String? message}) =&gt; Validator&lt;Result&gt;((value) {
       final result = validator.validator(value);
 
@@ -102,6 +115,7 @@ final fieldNotPresent = not(exists());
 
       return Result(isValid: result.isNotValid, expectations: mapped, value: value);
     });</code></pre>
+>>>>>>> develop
 </section>
 
 
@@ -128,7 +142,11 @@ final fieldNotPresent = not(exists());
 <footer>
   <span class="no-break">
     eskema
+<<<<<<< HEAD
+      2.0.1
+=======
       1.0.0
+>>>>>>> develop
   </span>
   
 </footer>

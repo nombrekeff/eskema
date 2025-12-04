@@ -75,6 +75,25 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
     <section class="summary offset-anchor" id="classes">
       <h2>Classes</h2>
       <dl>
+<<<<<<< HEAD
+          <dt id="AllValidator">
+  <span class="name "><a href="../validator.combinators/AllValidator-class.html">AllValidator</a></span> 
+
+</dt>
+<dd>
+  Succeeds if all child validators succeed. Fails on the first failure or collects all failures.
+</dd>
+
+          <dt id="AnyValidator">
+  <span class="name "><a href="../validator.combinators/AnyValidator-class.html">AnyValidator</a></span> 
+
+</dt>
+<dd>
+  Succeeds if at least one child validator succeeds. Fails if all fail.
+</dd>
+
+=======
+>>>>>>> develop
           <dt id="BaseBuilder">
   <span class="name "><a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
 
@@ -133,6 +152,8 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
 
           <dt id="Field">
   <span class="name "><a href="../validator.combinators/Field-class.html">Field</a></span> 
+<<<<<<< HEAD
+=======
 
 </dt>
 <dd>
@@ -269,10 +290,171 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
 
           <dt id="WhenValidator">
   <span class="name "><a href="../validator.combinators/WhenValidator-class.html">WhenValidator</a></span> 
+>>>>>>> develop
 
 </dt>
 <dd>
   Conditional validator picking between two branches given a condition.
+</dd>
+
+          <dt id="GenericBuilder">
+  <span class="name "><a href="../builder.type_builders/GenericBuilder-class.html">GenericBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Generic builder that supports all validation methods.
+</dd>
+
+          <dt id="IdValidator">
+  <span class="name "><a href="../validator.base/IdValidator-class.html">IdValidator</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../result/Result-class.html">Result</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Base class that adds an identifier to a validator (used by map/field validators).
+</dd>
+
+          <dt id="IntBuilder">
+  <span class="name "><a href="../builder.type_builders/IntBuilder-class.html">IntBuilder</a></span> 
+
+</dt>
+<dd>
+  Builder for integer validations, inherits from NumberBuilder.
+</dd>
+
+          <dt id="IterableBuilder">
+  <span class="name "><a href="../builder.type_builders/IterableBuilder-class.html">IterableBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Builder for iterable validations with length and iteration methods.
+</dd>
+
+          <dt id="IValidator">
+  <span class="name "><a href="../validator.base/IValidator-class.html">IValidator</a></span> 
+
+</dt>
+<dd>
+  Immutable base class from which all validators inherit.
+</dd>
+
+          <dt id="IWhenValidator">
+  <span class="name "><a href="../validator.base/IWhenValidator-class.html">IWhenValidator</a></span> 
+
+</dt>
+<dd>
+  A special type of validator that can operate on a parent map context.
+</dd>
+
+          <dt id="JsonDecodedBuilder">
+  <span class="name "><a href="../builder.type_builders/JsonDecodedBuilder-class.html">JsonDecodedBuilder</a></span> 
+
+</dt>
+<dd>
+  Builder for JSON-decoded data with both map and iterable methods.
+</dd>
+
+          <dt id="ListBuilder">
+  <span class="name "><a href="../builder.type_builders/ListBuilder-class.html">ListBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Builder for list validations, inherits from IterableBuilder.
+</dd>
+
+          <dt id="MapBuilder">
+  <span class="name "><a href="../builder.type_builders/MapBuilder-class.html">MapBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">K</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Builder for map validations with map-specific methods.
+</dd>
+
+          <dt id="MapValidator">
+  <span class="name "><a href="../validator.map/MapValidator-class.html">MapValidator</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Abstract class for schema-like map validators composed of Field/IdValidator instances.
+</dd>
+
+          <dt id="MultiValidatorBase">
+  <span class="name "><a href="../validator.combinators/MultiValidatorBase-class.html">MultiValidatorBase</a></span> 
+
+</dt>
+<dd>
+  An abstract base for validators that operate on a list of child validators.
+</dd>
+
+          <dt id="NoneValidator">
+  <span class="name "><a href="../validator.combinators/NoneValidator-class.html">NoneValidator</a></span> 
+
+</dt>
+<dd>
+  Succeeds if all child validators fail. Fails if any succeed.
+</dd>
+
+          <dt id="NotValidator">
+  <span class="name "><a href="../validator.combinators/NotValidator-class.html">NotValidator</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="NumberBuilder">
+  <span class="name "><a href="../builder.type_builders/NumberBuilder-class.html">NumberBuilder</a></span> 
+
+</dt>
+<dd>
+  Builder for number validations with numeric comparison methods.
+</dd>
+
+          <dt id="Result">
+  <span class="name "><a href="../result/Result-class.html">Result</a></span> 
+
+</dt>
+<dd>
+  Represents the result of a validation.
+</dd>
+
+          <dt id="RootBuilder">
+  <span class="name "><a href="../builder.type_builders/RootBuilder-class.html">RootBuilder</a></span> 
+
+</dt>
+<dd>
+  Root builder that provides entry points for different data types.
+</dd>
+
+          <dt id="SetBuilder">
+  <span class="name "><a href="../builder.type_builders/SetBuilder-class.html">SetBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Builder for set validations, inherits from IterableBuilder.
+</dd>
+
+          <dt id="StringBuilder">
+  <span class="name "><a href="../builder.type_builders/StringBuilder-class.html">StringBuilder</a></span> 
+
+</dt>
+<dd>
+  Builder for string validations with string-specific methods.
+</dd>
+
+          <dt id="ThrowInsteadValidator">
+  <span class="name "><a href="../validator.combinators/ThrowInsteadValidator-class.html">ThrowInsteadValidator</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="Validator">
+  <span class="name "><a href="../validator.base/Validator-class.html">Validator</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../result/Result-class.html">Result</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Generic implementation wrapper for a validator.
 </dd>
 
       </dl>
@@ -445,6 +627,49 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
     <section class="summary offset-anchor" id="properties">
       <h2>Properties</h2>
       <dl class="properties">
+<<<<<<< HEAD
+          <dt id="$b" class="property">
+  <span class="name"><a href="../eskema/$b.html">$b</a></span>
+  <span class="signature">&#8596; <a href="../builder.type_builders/RootBuilder-class.html">RootBuilder</a></span>
+=======
+          <dt id="$isBool" class="property">
+  <span class="name"><a href="../eskema/$isBool.html">$isBool</a></span>
+  <span class="signature">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+>>>>>>> develop
+  
+
+</dt>
+<dd>
+<<<<<<< HEAD
+  Pre-built builder instance. See <a href="../builder/builder.html">builder</a>.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+          <dt id="$builder" class="property">
+  <span class="name"><a href="../eskema/$builder.html">$builder</a></span>
+  <span class="signature">&#8596; <a href="../builder.type_builders/RootBuilder-class.html">RootBuilder</a></span>
+=======
+  Cached instance of <a href="../validators.type/isBool.html">isBool</a>.
+Validates that the value is a bool.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+          <dt id="$isBoolString" class="property">
+  <span class="name"><a href="../eskema/$isBoolString.html">$isBoolString</a></span>
+  <span class="signature">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+>>>>>>> develop
+  
+
+</dt>
+<dd>
+<<<<<<< HEAD
+  Pre-built builder instance. See <a href="../builder/builder.html">builder</a>.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
           <dt id="$isBool" class="property">
   <span class="name"><a href="../eskema/$isBool.html">$isBool</a></span>
   <span class="signature">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
@@ -465,6 +690,8 @@ Validates that the value is a bool.
 
 </dt>
 <dd>
+=======
+>>>>>>> develop
   Cached instance of <a href="../validators.string/isBoolString.html">isBoolString</a>.
 Validates that the string can be parsed as a boolean.
   <div class="features"><span class="feature">final</span></div>
@@ -930,14 +1157,140 @@ Usage: <code>$optionalNonEmptyString.validate(null)</code> -&gt; valid; <code>.v
     <section class="summary offset-anchor" id="functions">
       <h2>Functions</h2>
       <dl class="callables">
+<<<<<<< HEAD
+          <dt id="$bool" class="callable">
+  <span class="name"><a href="../builder/$bool.html">$bool</a></span><span class="signature">(<wbr>{<span class="parameter" id="$bool-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/BoolBuilder-class.html">BoolBuilder</a></span>
+=======
           <dt id="all" class="callable">
   <span class="name"><a href="../validators.combinator/all.html">all</a></span><span class="signature">(<wbr><span class="parameter" id="all-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator.base/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span>, {</span><span class="parameter" id="all-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+>>>>>>> develop
   </span>
   
 
 </dt>
 <dd>
+<<<<<<< HEAD
+  
+  
+
+</dd>
+
+          <dt id="$double" class="callable">
+  <span class="name"><a href="../builder/$double.html">$double</a></span><span class="signature">(<wbr>{<span class="parameter" id="$double-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/DoubleBuilder-class.html">DoubleBuilder</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+          <dt id="$int" class="callable">
+  <span class="name"><a href="../builder/$int.html">$int</a></span><span class="signature">(<wbr>{<span class="parameter" id="$int-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/IntBuilder-class.html">IntBuilder</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+          <dt id="$iterable" class="callable">
+  <span class="name"><a href="../builder/$iterable.html">$iterable</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>{<span class="parameter" id="$iterable-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/IterableBuilder-class.html">IterableBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+          <dt id="$list" class="callable">
+  <span class="name"><a href="../builder/$list.html">$list</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>{<span class="parameter" id="$list-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/ListBuilder-class.html">ListBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+          <dt id="$map" class="callable">
+  <span class="name"><a href="../builder/$map.html">$map</a></span><span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span><span class="signature">(<wbr>{<span class="parameter" id="$map-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/MapBuilder-class.html">MapBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+          <dt id="$number" class="callable">
+  <span class="name"><a href="../builder/$number.html">$number</a></span><span class="signature">(<wbr>{<span class="parameter" id="$number-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/NumberBuilder-class.html">NumberBuilder</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+          <dt id="$set" class="callable">
+  <span class="name"><a href="../builder/$set.html">$set</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>{<span class="parameter" id="$set-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/SetBuilder-class.html">SetBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+          <dt id="$string" class="callable">
+  <span class="name"><a href="../builder/$string.html">$string</a></span><span class="signature">(<wbr>{<span class="parameter" id="$string-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/StringBuilder-class.html">StringBuilder</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Type specific builders
+  
+
+</dd>
+
+          <dt id="all" class="callable">
+  <span class="name"><a href="../validators.combinator/all.html">all</a></span><span class="signature">(<wbr><span class="parameter" id="all-param-validators"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../validator.base/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">validators</span>, {</span><span class="parameter" id="all-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span>, </span><span class="parameter" id="all-param-collecting"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">collecting</span> = <span class="default-value">false</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../validator.combinators/AllValidator-class.html">AllValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+=======
+>>>>>>> develop
   Passes the test if all of the <a href="../validator.base/Validator-class.html">Validator</a>s are valid, and fails if any of them are invalid
   
 
@@ -956,6 +1309,35 @@ Usage: <code>$optionalNonEmptyString.validate(null)</code> -&gt; valid; <code>.v
 
 </dd>
 
+<<<<<<< HEAD
+          <dt id="b" class="callable">
+  <span class="name"><a href="../builder/b.html">b</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/RootBuilder-class.html">RootBuilder</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Create a new builder instance. See <a href="../builder/builder.html">builder</a>.
+  
+
+</dd>
+
+          <dt id="builder" class="callable">
+  <span class="name"><a href="../builder/builder.html">builder</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/RootBuilder-class.html">RootBuilder</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Create a new builder instance. See <a href="../builder/builder.html">builder</a>.
+  
+
+</dd>
+
+=======
+>>>>>>> develop
           <dt id="buildValidationFailureMessage" class="callable">
   <span class="name"><a href="../error_format/buildValidationFailureMessage.html">buildValidationFailureMessage</a></span><span class="signature">(<wbr><span class="parameter" id="buildValidationFailureMessage-param-result"><span class="type-annotation"><a href="../result/Result-class.html">Result</a></span> <span class="parameter-name">result</span>, {</span><span class="parameter" id="buildValidationFailureMessage-param-maxValueLength"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">maxValueLength</span> = <span class="default-value">120</span>, </span><span class="parameter" id="buildValidationFailureMessage-param-maxErrorsToList"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">maxErrorsToList</span> = <span class="default-value">20</span></span>})
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
@@ -1848,15 +2230,33 @@ For better performance and readability, use the <a href="../eskema/$isSymbol.htm
 
 </dd>
 
+<<<<<<< HEAD
+          <dt id="noop" class="callable">
+  <span class="name"><a href="../validators.comparison/noop.html">noop</a></span><span class="signature">(<wbr>)
+=======
           <dt id="not" class="callable">
   <span class="name"><a href="../validators.combinator/not.html">not</a></span><span class="signature">(<wbr><span class="parameter" id="not-param-validator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span>, {</span><span class="parameter" id="not-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+>>>>>>> develop
     <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
   </span>
   
 
 </dt>
 <dd>
-  Passes the test if the passed in validator is not valid
+  A validator that always returns valid
+  
+
+</dd>
+
+          <dt id="not" class="callable">
+  <span class="name"><a href="../validators.combinator/not.html">not</a></span><span class="signature">(<wbr><span class="parameter" id="not-param-child"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="not-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Passes the test if the child validator is not valid
   
 
 </dd>
@@ -1929,6 +2329,36 @@ It's different from nullable in that it also checks for empty strings
 
 </dd>
 
+<<<<<<< HEAD
+          <dt id="required" class="callable">
+  <span class="name"><a href="../validators.presence/required.html">required</a></span><span class="signature">(<wbr><span class="parameter" id="required-param-validator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Opposite of <a href="../validators.presence/optional.html">optional</a>, it will be considered valid if the field is not null
+and the <code>validator</code> returns valid.
+  
+
+</dd>
+
+          <dt id="resolve" class="callable">
+  <span class="name"><a href="../validators_contextual/resolve.html">resolve</a></span><span class="signature">(<wbr><span class="parameter" id="resolve-param-resolver"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a>?</span> <span class="parameter-name">resolver</span>(<span class="parameter" id="param-parentObject"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a></span> <span class="parameter-name">parentObject</span></span>)</span>)
+    <span class="returntype parameter">&#8594; <a href="../validator_contextual_validators/ResolveValidator-class.html">ResolveValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Creates a provider validator that depends on the parent object.
+  
+
+</dd>
+
+=======
+>>>>>>> develop
           <dt id="split" class="callable">
   <span class="name"><a href="../transformers.string/split.html">split</a></span><span class="signature">(<wbr><span class="parameter" id="split-param-separator"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">separator</span>, </span><span class="parameter" id="split-param-child"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">child</span>, {</span><span class="parameter" id="split-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
@@ -2002,7 +2432,11 @@ It's different from nullable in that it also checks for empty strings
 
 </dt>
 <dd>
+<<<<<<< HEAD
+  Returns a <a href="../validator.base/Validator-class.html">Validator</a> that throws a <a href="../validator_exception/ValidatorFailedException-class.html">ValidatorFailedException</a> instead of returning a result
+=======
   Returns a <a href="../validator.base/Validator-class.html">Validator</a> that throws a <a href="../validator.base/ValidatorFailedException-class.html">ValidatorFailedException</a> instead of returning a result
+>>>>>>> develop
   
 
 </dd>
@@ -2254,6 +2688,8 @@ It's different from nullable in that it also checks for empty strings
 
 </dd>
 
+<<<<<<< HEAD
+=======
           <dt id="v" class="callable">
   <span class="name"><a href="../builder.type_builders/v.html">v</a></span><span class="signature">(<wbr>)
     <span class="returntype parameter">&#8594; <a href="../builder.type_builders/RootBuilder-class.html">RootBuilder</a></span>
@@ -2267,6 +2703,7 @@ It's different from nullable in that it also checks for empty strings
 
 </dd>
 
+>>>>>>> develop
           <dt id="validator" class="callable">
   <span class="name"><a href="../validators/validator.html">validator</a></span><span class="signature">(<wbr><span class="parameter" id="validator-param-comparisonFn"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">comparisonFn</span>(<span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>), </span><span class="parameter" id="validator-param-errorFn"><span class="type-annotation"><a href="../expectation/Expectation-class.html">Expectation</a></span> <span class="parameter-name">errorFn</span>(<span class="parameter" id="param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)</span>)
     <span class="returntype parameter">&#8594; <a href="../validator.base/Validator-class.html">Validator</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/Result-class.html">Result</a></span>&gt;</span></span>
@@ -2281,7 +2718,11 @@ It's different from nullable in that it also checks for empty strings
 </dd>
 
           <dt id="when" class="callable">
+<<<<<<< HEAD
+  <span class="name"><a href="../validators_contextual/when.html">when</a></span><span class="signature">(<wbr><span class="parameter" id="when-param-condition"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">condition</span>, {</span><span class="parameter" id="when-param-then"><span>required</span> <span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">then</span>, </span><span class="parameter" id="when-param-otherwise"><span>required</span> <span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">otherwise</span>, </span><span class="parameter" id="when-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+=======
   <span class="name"><a href="../validators.combinator/when.html">when</a></span><span class="signature">(<wbr><span class="parameter" id="when-param-condition"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">condition</span>, {</span><span class="parameter" id="when-param-then"><span>required</span> <span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">then</span>, </span><span class="parameter" id="when-param-otherwise"><span>required</span> <span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">otherwise</span>, </span><span class="parameter" id="when-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+>>>>>>> develop
     <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -2336,7 +2777,11 @@ See docs/expectation_codes.md.
       <h2>Exceptions / Errors</h2>
       <dl>
           <dt id="AsyncValidatorException">
+<<<<<<< HEAD
+  <span class="name "><a href="../validator_exception/AsyncValidatorException-class.html">AsyncValidatorException</a></span> 
+=======
   <span class="name "><a href="../validator.base/AsyncValidatorException-class.html">AsyncValidatorException</a></span> 
+>>>>>>> develop
 
 </dt>
 <dd>
@@ -2344,7 +2789,11 @@ See docs/expectation_codes.md.
 </dd>
 
           <dt id="ValidatorFailedException">
+<<<<<<< HEAD
+  <span class="name "><a href="../validator_exception/ValidatorFailedException-class.html">ValidatorFailedException</a></span> 
+=======
   <span class="name "><a href="../validator.base/ValidatorFailedException-class.html">ValidatorFailedException</a></span> 
+>>>>>>> develop
 
 </dt>
 <dd>
@@ -2391,11 +2840,20 @@ See docs/expectation_codes.md.
       <li><a href="../validator/">validator</a></li>
       <li><a href="../validator.base/">validator/base_validator</a></li>
       <li><a href="../validator.combinators/">validator/combinator_validators</a></li>
+<<<<<<< HEAD
+      <li><a href="../validator_contextual_validators/">validator/contextual_validators</a></li>
+      <li><a href="../validator_exception/">validator/exception</a></li>
+=======
+>>>>>>> develop
       <li><a href="../validator.map/">validator/map_validators</a></li>
       <li><a href="../validators/">validators</a></li>
       <li><a href="../validators.cached/">validators/cached</a></li>
       <li><a href="../validators.combinator/">validators/combinator</a></li>
       <li><a href="../validators.comparison/">validators/comparison</a></li>
+<<<<<<< HEAD
+      <li><a href="../validators_contextual/">validators/contextual</a></li>
+=======
+>>>>>>> develop
       <li><a href="../validators.date/">validators/date</a></li>
       <li><a href="../validators.json/">validators/json</a></li>
       <li><a href="../validators.list/">validators/list</a></li>
@@ -2415,7 +2873,7 @@ See docs/expectation_codes.md.
 <footer>
   <span class="no-break">
     eskema
-      1.0.0
+      2.0.1
   </span>
   
 </footer>

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="builder library API docs, for the Dart programming language.">
+  <title>builder library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">eskema</a></li>
+    <li class="self-crumb">builder.dart</li>
+  </ol>
+  <div class="self-name">builder</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar=""
+    data-below-sidebar="builder&#47;builder-library-sidebar.html">
+  
+    <div>
+      
+
+      <h1>
+        <span class="kind-library">builder</span>
+        library 
+ 
+
+      </h1>
+    </div>
+
+    
+<section class="desc markdown">
+  <p>Eskema Builder API</p>
+<p>High-level fluent API for assembling complex validation pipelines and schemas
+in a readable, strongly-typed, incremental fashion. The builder pattern lets you
+express shape, normalization, and constraints in a left-to-right chain.</p>
+<h1 id="entrypoints">Entrypoints</h1>
+<ul>
+<li><code>b()</code> or <code>builder()</code> — create a new root builder (see <a href="../builder.type_builders/RootBuilder-class.html">RootBuilder</a>).</li>
+<li><code>$b</code>, <code>$builder</code> — pre-built root builder singletons (stateless, safe to reuse).</li>
+<li>Type-specific helpers: <code>$string()</code>, <code>$int()</code>, <code>$double()</code>, <code>$number()</code>, <code>$bool()</code>, <code>$map()</code>, <code>$list()</code> — shortcut for <code>$b.string()</code>, etc.</li>
+</ul>
+<h1 id="usage">Usage</h1>
+<ul>
+<li>Choose a type: <code>.string()</code>, <code>.int_()</code>, <code>.map()</code>, <code>.list()</code>, etc.</li>
+<li>Chain transformers (e.g. <code>.trim()</code>, <code>.toIntStrict()</code>) and constraints (e.g. <code>.lengthMin(2)</code>, <code>.email()</code>, <code>.gt(0)</code>).</li>
+<li>For maps/lists, use <code>.schema({...})</code> and <code>.each(...)</code> to nest.</li>
+<li>Call <code>.build()</code> to get a reusable validator.</li>
+</ul>
+<h2 id="example">Example</h2>
+<pre class="language-dart"><code class="language-dart">final userValidator = $map().schema({
+  'id': $string().trim().toIntStrict().gt(0).build(),
+  'email': $string().trim().toLowerCase().email().build(),
+  'age': $string().toIntStrict().gte(18).optional().build(),
+}).build();
+
+final result = userValidator.validate({
+  'id': '42',
+  'email': 'someone@example.com',
+  'age': '21',
+});
+if (result.isValid) {
+  print('Valid user');
+} else {
+  print(result.detailed());
+}
+</code></pre>
+<h1 id="features">Features</h1>
+<ul>
+<li>Type-specific builder classes: <code>StringBuilder</code>, <code>IntBuilder</code>, <code>MapBuilder</code>, etc.</li>
+<li>Transformers: <code>.trim()</code>, <code>.toIntStrict()</code>, <code>.toLowerCase()</code>, <code>.toDateTime()</code>, etc.</li>
+<li>Constraints: <code>.lengthMin()</code>, <code>.email()</code>, <code>.gt()</code>, <code>.oneOf([...])</code>, etc.</li>
+<li>Structure: <code>.map().schema({...})</code>, <code>.list().each(...)</code>, <code>.optional()</code>, <code>.nullable()</code></li>
+<li>Custom: add your own via <code>.add(...)</code> or <code>.wrap(...)</code> or extension methods.</li>
+<li>Message override: <code>.error('msg')</code> or <code>&gt; 'msg'</code> after build.</li>
+<li>Operator sugar: <code>&amp;</code>, <code>|</code>, <code>&gt;</code> for AND, OR, message override.</li>
+</ul>
+<h1 id="extensibility">Extensibility</h1>
+<ul>
+<li>Add custom transformers or constraints via extension methods on builder classes.</li>
+<li>Compose with functional validators and combinators.</li>
+</ul>
+<h1 id="performance">Performance</h1>
+<ul>
+<li>Validators are built once and reused.</li>
+<li>Zero-arg cached validators available as <code>$isString</code>, <code>$isEmail</code>, etc.</li>
+</ul>
+<p>See exported files for low-level implementation details.</p>
+</section>
+
+
+    <section class="summary offset-anchor" id="classes">
+      <h2>Classes</h2>
+      <dl>
+          <dt id="BaseBuilder">
+  <span class="name "><a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Base functionality shared by all typed builders.
+</dd>
+
+          <dt id="BoolBuilder">
+  <span class="name "><a href="../builder.type_builders/BoolBuilder-class.html">BoolBuilder</a></span> 
+
+</dt>
+<dd>
+  Builder for boolean validations with boolean-specific methods.
+</dd>
+
+          <dt id="Chain">
+  <span class="name "><a href="../builder.core/Chain-class.html">Chain</a></span> 
+
+</dt>
+<dd>
+  Internal accumulator for a builder chain.
+</dd>
+
+          <dt id="CustomPivot">
+  <span class="name "><a href="../builder.core/CustomPivot-class.html">CustomPivot</a></span> 
+
+</dt>
+<dd>
+  Represents a custom pivot for extensibility.
+</dd>
+
+          <dt id="DateTimeBuilder">
+  <span class="name "><a href="../builder.type_builders/DateTimeBuilder-class.html">DateTimeBuilder</a></span> 
+
+</dt>
+<dd>
+  Builder for DateTime validations with date/time-specific methods.
+</dd>
+
+          <dt id="DoubleBuilder">
+  <span class="name "><a href="../builder.type_builders/DoubleBuilder-class.html">DoubleBuilder</a></span> 
+
+</dt>
+<dd>
+  Builder for double validations, inherits from NumberBuilder.
+</dd>
+
+          <dt id="GenericBuilder">
+  <span class="name "><a href="../builder.type_builders/GenericBuilder-class.html">GenericBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Generic builder that supports all validation methods.
+</dd>
+
+          <dt id="IntBuilder">
+  <span class="name "><a href="../builder.type_builders/IntBuilder-class.html">IntBuilder</a></span> 
+
+</dt>
+<dd>
+  Builder for integer validations, inherits from NumberBuilder.
+</dd>
+
+          <dt id="IterableBuilder">
+  <span class="name "><a href="../builder.type_builders/IterableBuilder-class.html">IterableBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Builder for iterable validations with length and iteration methods.
+</dd>
+
+          <dt id="JsonDecodedBuilder">
+  <span class="name "><a href="../builder.type_builders/JsonDecodedBuilder-class.html">JsonDecodedBuilder</a></span> 
+
+</dt>
+<dd>
+  Builder for JSON-decoded data with both map and iterable methods.
+</dd>
+
+          <dt id="ListBuilder">
+  <span class="name "><a href="../builder.type_builders/ListBuilder-class.html">ListBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Builder for list validations, inherits from IterableBuilder.
+</dd>
+
+          <dt id="MapBuilder">
+  <span class="name "><a href="../builder.type_builders/MapBuilder-class.html">MapBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>, <span class="type-parameter">K</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Builder for map validations with map-specific methods.
+</dd>
+
+          <dt id="NumberBuilder">
+  <span class="name "><a href="../builder.type_builders/NumberBuilder-class.html">NumberBuilder</a></span> 
+
+</dt>
+<dd>
+  Builder for number validations with numeric comparison methods.
+</dd>
+
+          <dt id="RootBuilder">
+  <span class="name "><a href="../builder.type_builders/RootBuilder-class.html">RootBuilder</a></span> 
+
+</dt>
+<dd>
+  Root builder that provides entry points for different data types.
+</dd>
+
+          <dt id="SetBuilder">
+  <span class="name "><a href="../builder.type_builders/SetBuilder-class.html">SetBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Builder for set validations, inherits from IterableBuilder.
+</dd>
+
+          <dt id="StringBuilder">
+  <span class="name "><a href="../builder.type_builders/StringBuilder-class.html">StringBuilder</a></span> 
+
+</dt>
+<dd>
+  Builder for string validations with string-specific methods.
+</dd>
+
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="enums">
+      <h2>Enums</h2>
+      <dl>
+          <dt id="CoercionKind">
+  <span class="name "><a href="../builder.core/CoercionKind.html">CoercionKind</a></span> 
+
+</dt>
+<dd>
+  Kind of coercion applied to the chain (single pivot allowed).
+</dd>
+
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="mixins">
+      <h2>Mixins</h2>
+      <dl>
+          <dt id="BoolMixin">
+  <span class="name "><a href="../builder.mixins/BoolMixin-mixin.html">BoolMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Mixin providing boolean-specific validation methods.
+</dd>
+
+          <dt id="ComparisonMixin">
+  <span class="name "><a href="../builder.mixins/ComparisonMixin-mixin.html">ComparisonMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Mixin providing comparison validation methods.
+</dd>
+
+          <dt id="ContainsMixin">
+  <span class="name "><a href="../builder.mixins/ContainsMixin-mixin.html">ContainsMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Mixin providing contains validation methods.
+</dd>
+
+          <dt id="DateTimeMixin">
+  <span class="name "><a href="../builder.mixins/DateTimeMixin-mixin.html">DateTimeMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Mixin providing DateTime-specific validation methods.
+</dd>
+
+          <dt id="EmptyMixin">
+  <span class="name "><a href="../builder.mixins/EmptyMixin-mixin.html">EmptyMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Mixin providing empty validation methods.
+</dd>
+
+          <dt id="IterableMixin">
+  <span class="name "><a href="../builder.mixins/IterableMixin-mixin.html">IterableMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Mixin providing iterable-specific validation methods.
+</dd>
+
+          <dt id="JsonMixin">
+  <span class="name "><a href="../builder.mixins/JsonMixin-mixin.html">JsonMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Mixin providing JSON-specific validation methods.
+</dd>
+
+          <dt id="LengthMixin">
+  <span class="name "><a href="../builder.mixins/LengthMixin-mixin.html">LengthMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Mixin providing length validation methods.
+</dd>
+
+          <dt id="MapMixin">
+  <span class="name "><a href="../builder.mixins/MapMixin-mixin.html">MapMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Mixin providing map-specific validation methods.
+</dd>
+
+          <dt id="NumberMixin">
+  <span class="name "><a href="../builder.mixins/NumberMixin-mixin.html">NumberMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Mixin providing number-specific validation methods.
+</dd>
+
+          <dt id="StringMixin">
+  <span class="name "><a href="../builder.mixins/StringMixin-mixin.html">StringMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Mixin providing string-specific validation methods.
+</dd>
+
+          <dt id="TransformerMixin">
+  <span class="name "><a href="../builder.mixins/TransformerMixin-mixin.html">TransformerMixin</a><span class="signature">&lt;<wbr><span class="type-parameter">B extends <a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">B</span>, <span class="type-parameter">T</span>&gt;</span></span>, <span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  Mixin providing type transformation methods for builders.
+</dd>
+
+      </dl>
+    </section>
+
+
+
+
+    <section class="summary offset-anchor" id="properties">
+      <h2>Properties</h2>
+      <dl class="properties">
+          <dt id="$b" class="property">
+  <span class="name"><a href="../eskema/$b.html">$b</a></span>
+  <span class="signature">&#8596; <a href="../builder.type_builders/RootBuilder-class.html">RootBuilder</a></span>
+  
+
+</dt>
+<dd>
+  Pre-built builder instance. See <a href="../builder/builder.html">builder</a>.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+          <dt id="$builder" class="property">
+  <span class="name"><a href="../eskema/$builder.html">$builder</a></span>
+  <span class="signature">&#8596; <a href="../builder.type_builders/RootBuilder-class.html">RootBuilder</a></span>
+  
+
+</dt>
+<dd>
+  Pre-built builder instance. See <a href="../builder/builder.html">builder</a>.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="functions">
+      <h2>Functions</h2>
+      <dl class="callables">
+          <dt id="$bool" class="callable">
+  <span class="name"><a href="../builder/$bool.html">$bool</a></span><span class="signature">(<wbr>{<span class="parameter" id="$bool-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/BoolBuilder-class.html">BoolBuilder</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+          <dt id="$double" class="callable">
+  <span class="name"><a href="../builder/$double.html">$double</a></span><span class="signature">(<wbr>{<span class="parameter" id="$double-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/DoubleBuilder-class.html">DoubleBuilder</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+          <dt id="$int" class="callable">
+  <span class="name"><a href="../builder/$int.html">$int</a></span><span class="signature">(<wbr>{<span class="parameter" id="$int-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/IntBuilder-class.html">IntBuilder</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+          <dt id="$iterable" class="callable">
+  <span class="name"><a href="../builder/$iterable.html">$iterable</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>{<span class="parameter" id="$iterable-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/IterableBuilder-class.html">IterableBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+          <dt id="$list" class="callable">
+  <span class="name"><a href="../builder/$list.html">$list</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>{<span class="parameter" id="$list-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/ListBuilder-class.html">ListBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+          <dt id="$map" class="callable">
+  <span class="name"><a href="../builder/$map.html">$map</a></span><span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span><span class="signature">(<wbr>{<span class="parameter" id="$map-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/MapBuilder-class.html">MapBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+          <dt id="$number" class="callable">
+  <span class="name"><a href="../builder/$number.html">$number</a></span><span class="signature">(<wbr>{<span class="parameter" id="$number-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/NumberBuilder-class.html">NumberBuilder</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+          <dt id="$set" class="callable">
+  <span class="name"><a href="../builder/$set.html">$set</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>{<span class="parameter" id="$set-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/SetBuilder-class.html">SetBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+          <dt id="$string" class="callable">
+  <span class="name"><a href="../builder/$string.html">$string</a></span><span class="signature">(<wbr>{<span class="parameter" id="$string-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/StringBuilder-class.html">StringBuilder</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Type specific builders
+  
+
+</dd>
+
+          <dt id="b" class="callable">
+  <span class="name"><a href="../builder/b.html">b</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/RootBuilder-class.html">RootBuilder</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Create a new builder instance. See <a href="../builder/builder.html">builder</a>.
+  
+
+</dd>
+
+          <dt id="builder" class="callable">
+  <span class="name"><a href="../builder/builder.html">builder</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../builder.type_builders/RootBuilder-class.html">RootBuilder</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Create a new builder instance. See <a href="../builder/builder.html">builder</a>.
+  
+
+</dd>
+
+      </dl>
+    </section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">eskema</a></li>
+    <li class="self-crumb">builder.dart</li>
+</ol>
+
+    <h5><span class="package-name">eskema</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="../builder/">builder</a></li>
+      <li><a href="../builder.core/">builder/core</a></li>
+      <li><a href="../builder.mixins/">builder/mixins</a></li>
+      <li><a href="../builder.type_builders/">builder/type_builders</a></li>
+      <li><a href="../error_format/">error_format</a></li>
+      <li><a href="../eskema/">eskema</a></li>
+      <li><a href="../expectation/">expectation</a></li>
+      <li><a href="../expectation_codes/">expectation_codes</a></li>
+      <li><a href="../extensions/">extensions</a></li>
+      <li><a href="../result/">result</a></li>
+      <li><a href="../transformers/">transformers</a></li>
+      <li><a href="../transformers.boolean/">transformers/boolean</a></li>
+      <li><a href="../transformers.core/">transformers/core</a></li>
+      <li><a href="../transformers.datetime/">transformers/datetime</a></li>
+      <li><a href="../transformers.json/">transformers/json</a></li>
+      <li><a href="../transformers.map/">transformers/map</a></li>
+      <li><a href="../transformers.number/">transformers/number</a></li>
+      <li><a href="../transformers.string/">transformers/string</a></li>
+      <li><a href="../transformers.utility/">transformers/utility</a></li>
+      <li><a href="../validator/">validator</a></li>
+      <li><a href="../validator.base/">validator/base_validator</a></li>
+      <li><a href="../validator.combinators/">validator/combinator_validators</a></li>
+      <li><a href="../validator_contextual_validators/">validator/contextual_validators</a></li>
+      <li><a href="../validator_exception/">validator/exception</a></li>
+      <li><a href="../validator.map/">validator/map_validators</a></li>
+      <li><a href="../validators/">validators</a></li>
+      <li><a href="../validators.cached/">validators/cached</a></li>
+      <li><a href="../validators.combinator/">validators/combinator</a></li>
+      <li><a href="../validators.comparison/">validators/comparison</a></li>
+      <li><a href="../validators_contextual/">validators/contextual</a></li>
+      <li><a href="../validators.date/">validators/date</a></li>
+      <li><a href="../validators.json/">validators/json</a></li>
+      <li><a href="../validators.list/">validators/list</a></li>
+      <li><a href="../validators.map/">validators/map</a></li>
+      <li><a href="../validators.number/">validators/number</a></li>
+      <li><a href="../validators.presence/">validators/presence</a></li>
+      <li><a href="../validators.string/">validators/string</a></li>
+      <li><a href="../validators.structure/">validators/structure</a></li>
+      <li><a href="../validators.type/">validators/type</a></li>
+</ol>
+
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+    <h5>builder library</h5>
+  </div><!--/sidebar-offcanvas-right-->
+</main>
+<footer>
+  <span class="no-break">
+    eskema
+      2.0.1
+  </span>
+  
+</footer>
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

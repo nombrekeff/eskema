@@ -46,23 +46,31 @@
   <p><img src="https://github.com/nombrekeff/eskema/raw/main/.github/Eskema.png" alt=""></p>
 <p><a href="https://codecov.io/gh/nombrekeff/eskema"><img src="https://codecov.io/gh/nombrekeff/eskema/branch/main/graph/badge.svg?token=ZF22N0G09J" alt="codecov"></a> <a href="https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml"><img src="https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml/badge.svg?branch=main" alt="build"></a> <a href="https://pub.dev/packages/eskema"><img src="https://img.shields.io/pub/v/eskema?style=flat-square" alt="Pub Version"></a></p>
 <h1 id="eskema">Eskema</h1>
-<p>Eskema is a small, composable runtime validation library for Dart. It helps you validate dynamic values (JSON, Maps, Lists, primitives) with readable validators and clear error messages.</p>
-<h2 id="use-cases">Use cases</h2>
-<p>Here are some common usecases for Eskema:</p>
+<p>Composable runtime validation for Dart. Build readable schemas from tiny validator functions &amp; operators and get precise, structured errors (message, code, path, data) for untyped JSON, configs, and user input. Fast sync path, seamless async, no boilerplate.</p>
+<h2 id="why">Why</h2>
 <ul>
-<li><strong>Validate untyped API JSON</strong> before mapping to models (catch missing/invalid fields early).</li>
-<li><strong>Guard inbound request payloads</strong> (HTTP handlers, jobs) with clear, fail-fast errors.</li>
-<li><strong>Validate runtime config and feature flags</strong> from files or remote sources.</li>
+<li>Validate untyped JSON &amp; config fast</li>
+<li>Concise composition (<code>&amp;</code>, <code>|</code>, <code>not()</code>, <code>nullable()</code>, <code>optional()</code>)</li>
+<li>Sync fast path, auto async when needed</li>
+<li>Rich <code>Expectation</code> objects: message, code, path, data</li>
+<li>Extensively tested</li>
 </ul>
-<hr>
 <h2 id="install">Install</h2>
 <pre class="language-bash"><code class="language-bash">dart pub add eskema
 </code></pre>
-<h2 id="quick-start">Quick start</h2>
-<p>Validate a map using a schema-like validator and get back a detailed result.</p>
-<h3 id="1-create-a-validator">1. Create a validator</h3>
+<h2 id="core-example-from-examplereadme_exampledart">Core example (from <code>example/readme_example.dart</code>)</h2>
 <pre class="language-dart"><code class="language-dart">import 'package:eskema/eskema.dart';
 
+<<<<<<< HEAD
+void main() {
+  final userValidator = eskema({
+    'username': isString(),                  // basic type check
+    'lastname': $isString,                   // cached zero‑arg variant
+    'age': all([isInt(), isGte(0)]),         // multi validator (AND)
+    'theme': isString() &amp; (isEq('light') | isEq('dark')), // operators
+    'premium': nullable($isBool),            // key must exist; value may be null
+    'birthday': optional(isDate()),          // key may be absent
+=======
 final userValidator = eskema({
   // Use built-in validator functions
   'username': all([isString(), isNotEmpty()]),
@@ -340,15 +348,39 @@ class MyCustomValidator extends Validator {
       return Result.valid(value);
     }
     return Result.invalid(value, expectations: [Expectation(message: 'not magic', value: value)]);
+>>>>>>> develop
   });
+
+  final ok = userValidator.validate({
+    'username': 'bob', 'lastname': 'builder', 'theme': 'light', 'age': 42,
+  });
+  print(ok); // missing premium (nullable != optional)
+
+  final res = userValidator.validate({'username': 'alice', 'age': -1});
+  print(res.isValid);        // false
+  print(res.expectations);   // structured reasons (age invalid, missing keys, etc.)
 }
 </code></pre>
-<h3 id="nullable-vs-optional">Nullable vs optional</h3>
-<p>The distinction between <code>nullable</code> and <code>optional</code> is important for map validation.</p>
+<h3 id="how-it-works">How it works</h3>
+<ol>
+<li>Build a schema with <code>eskema({...})</code> (map of field -&gt; validator)</li>
+<li>Compose validators with functions (<code>isString()</code>, <code>isGte(0)</code>, <code>all([...])</code>) or operators (<code>&amp;</code>, <code>|</code>)</li>
+<li>Add modifiers: <code>nullable()</code> (value may be null) vs <code>optional()</code> (key may be absent)</li>
+<li>Call <code>validate(value)</code> (sync chain) or <code>validateAsync(value)</code> if any link is async</li>
+<li>Inspect <code>Result.isValid</code> &amp; <code>Result.expectations</code> or throw via <code>validateOrThrow()</code></li>
+</ol>
+<h3 id="reading-failures">Reading failures</h3>
+<p>Each failure is an <code>Expectation</code> having:</p>
 <ul>
-<li><strong><code>nullable()</code></strong>: The key <strong>must</strong> be present in the map, but its value can be <code>null</code>.</li>
-<li><strong><code>optional()</code></strong>: The key <strong>may be missing</strong> from the map. If it is present, its value must not be <code>null</code> (unless <code>nullable</code> is also used).</li>
+<li>message – human text</li>
+<li>code – stable identifier (see expectation codes doc)</li>
+<li>path – location (e.g. <code>.user.address[0].city</code>)</li>
+<li>data – structured metadata</li>
 </ul>
+<<<<<<< HEAD
+<h2 id="more-examples">More examples</h2>
+<p>See the <code>example/</code> directory for:</p>
+=======
 <pre class="language-dart"><code class="language-dart">final validator = eskema({
   'required_but_nullable': $isString.nullable(),
   'optional_and_not_nullable': $isString.optional(),
@@ -370,38 +402,26 @@ validator.validate({}); // Valid
 </code></pre>
 <h2 id="expectation-codes">Expectation codes</h2>
 <p>Eskema returns a list of <code>Expectation</code> objects on failure. Each carries:</p>
+>>>>>>> develop
 <ul>
-<li><code>message</code> – Human friendly description</li>
-<li><code>code</code> – Namespaced identifier (e.g. <code>type.mismatch</code>, <code>value.range_out_of_bounds</code>)</li>
-<li><code>path</code> – Location within the validated structure (e.g. <code>.user.address[0].city</code>)</li>
-<li><code>data</code> – Structured metadata (e.g. <code>{ "expected": "String", "found": "int" }</code>)</li>
+<li>transformers (<code>toInt</code>, <code>defaultTo</code>, <code>trim</code>)</li>
+<li>conditional validation (<code>when</code> + <code>getField</code>)</li>
+<li>custom validators &amp; builders</li>
+<li>list &amp; strict schema validation</li>
 </ul>
-<p>The full table of built‑in validators → codes lives in <a href="docs/expectation_codes.md"><code>docs/expectation_codes.md</code></a>. Use it to localize, categorize, or branch logic on specific error types. Codes are additive and stable (changes are breaking only in a major release). Always ignore unknown future codes for forward compatibility.</p>
+<h2 id="docs--help">Docs &amp; help</h2>
+<ul>
+<li><a href="https://nombrekeff.github.io/eskema/">Docs &amp; guides</a></li>
+<li><a href="https://pub.dev/documentation/eskema/latest/">API reference</a></li>
+<li><a href="https://github.com/nombrekeff/eskema/wiki">Wiki</a></li>
+<li>Issues / questions: <a href="https://github.com/nombrekeff/eskema/issues">https://github.com/nombrekeff/eskema/issues</a></li>
+</ul>
 <h2 id="contributing">Contributing</h2>
-<p>Contributions are welcome! Whether you've found a bug, have a feature request, or want to contribute code, please feel free to open an issue or a pull request.</p>
-<h3 id="reporting-bugs">Reporting Bugs</h3>
-<p>If you find a bug, please open an issue on the <a href="https://github.com/nombrekeff/eskema/issues">GitHub repository</a>. Include a clear description of the problem, steps to reproduce it, and the expected behavior.</p>
-<h3 id="feature-requests">Feature Requests</h3>
-<p>If you have an idea for a new feature or an improvement to an existing one, please open an issue to start a discussion. This allows us to align on the feature before any code is written.</p>
-<h3 id="pull-requests">Pull Requests</h3>
-<ol>
-<li><strong>Fork</strong> the repository and create your branch from <code>main</code>.</li>
-<li><strong>Install dependencies</strong>: <code>dart pub get</code></li>
-<li><strong>Make your changes</strong>. Please add tests for any new features or bug fixes.</li>
-<li><strong>Run tests</strong>: <code>dart test</code></li>
-<li><strong>Ensure your code is formatted</strong>: <code>dart format .</code></li>
-<li><strong>Submit a pull request</strong> with a clear description of your changes.</li>
-</ol>
-<h3 id="project-specific-guidelines">Project-Specific Guidelines</h3>
-<h4 id="requesting-new-validators">Requesting New Validators</h4>
-<p>Before requesting a new validator, please consider the following:</p>
-<ol>
-<li><strong>Can it be composed?</strong> Many complex validations can be achieved by combining existing validators with <code>&amp;</code>, <code>|</code>, and <code>not()</code>. If it can be easily composed, a new validator might not be necessary.</li>
-<li><strong>Is it a common use case?</strong> We aim to include validators that are widely applicable (e.g., <code>isEmail</code>, <code>isUrl</code>). Provide a real-world example of where the validator would be useful.</li>
-<li><strong>Propose an API.</strong> Suggest a name and signature for the new validator. For example: <code>isCreditCard()</code>, <code>hasMinLength(5)</code>.</li>
-</ol>
-<h4 id="code-style">Code Style</h4>
-<p>This project follows the official <a href="https://dart.dev/guides/language/effective-dart/style">Dart style guide</a>. All code should be formatted with <code>dart format .</code> before committing.</p>
+<p>Open an issue for discussion, then PR with tests. Keep additions composable. (Detailed guidelines live in the wiki / future CONTRIBUTING doc.)</p>
+<h2 id="license">License</h2>
+<p>MIT – see <code>LICENSE</code>.</p>
+<hr>
+<p>Star the repo if it helps you. ⭐</p>
 </section>
 
 
@@ -412,7 +432,11 @@ validator.validate({}); // Valid
   <span class="name"><a href="builder/">builder</a></span> 
 
 </dt>
+<<<<<<< HEAD
+<dd>Eskema Builder API
+=======
 <dd>Builder library
+>>>>>>> develop
 </dd>
 
           <dt id="builder.core">
@@ -563,6 +587,23 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
 <dd>Validators that combine or branch logic (WhenValidator, Field).
 </dd>
 
+<<<<<<< HEAD
+          <dt id="contextual_validators">
+  <span class="name"><a href="validator_contextual_validators/">validator/contextual_validators</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+          <dt id="exception">
+  <span class="name"><a href="validator_exception/">validator/exception</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+=======
+>>>>>>> develop
           <dt id="validator.map">
   <span class="name"><a href="validator.map/">validator/map_validators</a></span> 
 
@@ -598,6 +639,16 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
 <dd>Comparison Validators
 </dd>
 
+<<<<<<< HEAD
+          <dt id="contextual">
+  <span class="name"><a href="validators_contextual/">validators/contextual</a></span> 
+
+</dt>
+<dd>
+</dd>
+
+=======
+>>>>>>> develop
           <dt id="validators.date">
   <span class="name"><a href="validators.date/">validators/date</a></span> 
 
@@ -700,11 +751,20 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
       <li><a href="validator/">validator</a></li>
       <li><a href="validator.base/">validator/base_validator</a></li>
       <li><a href="validator.combinators/">validator/combinator_validators</a></li>
+<<<<<<< HEAD
+      <li><a href="validator_contextual_validators/">validator/contextual_validators</a></li>
+      <li><a href="validator_exception/">validator/exception</a></li>
+=======
+>>>>>>> develop
       <li><a href="validator.map/">validator/map_validators</a></li>
       <li><a href="validators/">validators</a></li>
       <li><a href="validators.cached/">validators/cached</a></li>
       <li><a href="validators.combinator/">validators/combinator</a></li>
       <li><a href="validators.comparison/">validators/comparison</a></li>
+<<<<<<< HEAD
+      <li><a href="validators_contextual/">validators/contextual</a></li>
+=======
+>>>>>>> develop
       <li><a href="validators.date/">validators/date</a></li>
       <li><a href="validators.json/">validators/json</a></li>
       <li><a href="validators.list/">validators/list</a></li>
@@ -723,7 +783,7 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
 <footer>
   <span class="no-break">
     eskema
-      1.0.0
+      2.0.1
   </span>
   
 </footer>

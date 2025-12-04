@@ -12,6 +12,10 @@ migrate_working_dir/
 TODO.md
 coverage/
 benchmarks/
+<<<<<<< HEAD
+bin/
+=======
+>>>>>>> develop
 
 # IntelliJ related
 *.iml

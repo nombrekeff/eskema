@@ -82,6 +82,15 @@ not present.</p>
 
     return Result.invalid(
       value,
+<<<<<<< HEAD
+      expectations: result.expectations.map(
+        (e) =&gt; Expectation(
+          message: e.message,
+          value: e.value,
+          path: &#39;$key${e.path != null ? &#39;.${e.path}&#39; : &#39;&#39;}&#39;,
+        ),
+      ),
+=======
       expectations: result.expectations
           .map(
             (e) =&gt; Expectation(
@@ -90,6 +99,7 @@ not present.</p>
               path: &#39;$key${e.path != null ? &#39;.${e.path}&#39; : &#39;&#39;}&#39;,
             ),
           ),
+>>>>>>> develop
     );
   }
 
@@ -121,7 +131,11 @@ not present.</p>
 <footer>
   <span class="no-break">
     eskema
+<<<<<<< HEAD
+      2.0.1
+=======
       1.0.0
+>>>>>>> develop
   </span>
   
 </footer>

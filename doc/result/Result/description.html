@@ -26,7 +26,7 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../../index.html">eskema</a></li>
     <li><a href="../../result/">result.dart</a></li>
-    <li><a href="../../result/Result-class.html">Result<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+    <li><a href="../../result/Result-class.html">Result</a></li>
     <li class="self-crumb">description property</li>
   </ol>
   <div class="self-name">description</div>
@@ -59,7 +59,7 @@
   <section id="getter">
     <section class="multi-line-signature">
       
-      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
+      <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span>
       get
       <span class="name ">description</span>
       
@@ -70,8 +70,13 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
+<<<<<<< HEAD
+  <pre class="language-dart"><code class="language-dart">String? get description {
+  return isValid ? null : expectations.map((e) =&gt; e.description).join(&#39;, &#39;);
+=======
   <pre class="language-dart"><code class="language-dart">String get description {
   return isValid ? &#39;Valid&#39; : expectations.map((e) =&gt; e.description).join(&#39;, &#39;);
+>>>>>>> develop
 }</code></pre>
 </section>
 
@@ -89,7 +94,7 @@
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../../index.html">eskema</a></li>
     <li><a href="../../result/">result</a></li>
-    <li><a href="../../result/Result-class.html">Result<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></a></li>
+    <li><a href="../../result/Result-class.html">Result</a></li>
     <li class="self-crumb">description property</li>
 </ol>
 
@@ -102,7 +107,7 @@
 <footer>
   <span class="no-break">
     eskema
-      1.0.0
+      2.0.1
   </span>
   
 </footer>

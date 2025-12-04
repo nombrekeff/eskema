@@ -59,9 +59,9 @@ void main() {
       ]);
       final r2 = r.copyWith(isValid: true, value: 11);
       expect(r2.isValid, true);
-      expect(r.description, contains('e1'));
-      expect(r.description, contains('e2'));
-      expect(r.description.contains(', '), true);
+      expect(r.description?.contains('e1'), true);
+      expect(r.description?.contains('e2'), true);
+      expect(r.description?.contains(', '), true);
       expect(r2.value, 11);
     });
   });

@@ -85,6 +85,9 @@ final emailValidator = any([
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IValidator any(List&lt;IValidator&gt; validators, {String? message}) {
+<<<<<<< HEAD
+  return AnyValidator(validators, message: message);
+=======
   return Validator&lt;Result&gt;((value) {
     List&lt;Expectation&gt;? expectations; &#47;&#47; lazily allocate only when needed
 
@@ -107,6 +110,7 @@ final emailValidator = any([
 
     return Result.invalid(value, expectations: expectations ?? const &lt;Expectation&gt;[]);
   });
+>>>>>>> develop
 }</code></pre>
 </section>
 
@@ -134,7 +138,11 @@ final emailValidator = any([
 <footer>
   <span class="no-break">
     eskema
+<<<<<<< HEAD
+      2.0.1
+=======
       1.0.0
+>>>>>>> develop
   </span>
   
 </footer>

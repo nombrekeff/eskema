@@ -65,7 +65,12 @@
     
 <section class="desc markdown">
   <p>Checks whether the given value is equal to the <code>otherValue</code> value of type <code>T</code></p>
+<<<<<<< HEAD
+<p>Even though this function accepts any Type, note that it will not work with Collections.
+For that usecase prefer using <a href="../validators.comparison/isDeepEq.html">isDeepEq</a> instead.</p>
+=======
 <p>Even though this function accepts any Type, note that it will not work with Collections. For that usecase prefer using <a href="../validators.comparison/isDeepEq.html">isDeepEq</a> instead.</p>
+>>>>>>> develop
 </section>
 
 
@@ -73,7 +78,10 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IValidator isEq&lt;T&gt;(T otherValue, {String? message}) =&gt;
+<<<<<<< HEAD
+=======
     isType&lt;T&gt;() &amp;
+>>>>>>> develop
     validator(
       (value) =&gt; value == otherValue,
       (value) =&gt; Expectation(
@@ -113,7 +121,11 @@
 <footer>
   <span class="no-break">
     eskema
+<<<<<<< HEAD
+      2.0.1
+=======
       1.0.0
+>>>>>>> develop
   </span>
   
 </footer>

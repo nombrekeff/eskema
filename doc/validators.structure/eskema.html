@@ -88,6 +88,10 @@
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IValidator eskema(Map&lt;String, IValidator&gt; mapEskema, {String? message}) {
   FutureOr&lt;Result&gt; eskemaPredicate(value) {
+<<<<<<< HEAD
+    final entries = mapEskema.entries.toList();
+    return _loop(entries: entries, errors: [], value: value, index: 0, message: message);
+=======
     final errors = &lt;Expectation&gt;[];
     final entries = mapEskema.entries.toList();
     &#47;&#47; We intentionally implement `loop` returning `FutureOr&lt;Result&gt;`:
@@ -151,6 +155,7 @@
     }
 
     return loop(0);
+>>>>>>> develop
   }
 
   return isMap() &amp; Validator(eskemaPredicate);
@@ -181,7 +186,11 @@
 <footer>
   <span class="no-break">
     eskema
+<<<<<<< HEAD
+      2.0.1
+=======
       1.0.0
+>>>>>>> develop
   </span>
   
 </footer>

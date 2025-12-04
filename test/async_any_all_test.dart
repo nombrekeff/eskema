@@ -36,7 +36,7 @@ void main() {
       ]);
       final r = await v.validateAsync('x');
       expect(r.isValid, false);
-      expect(r.description.contains('B'), true);
+      expect(r.description?.contains('B'), true);
       expect(ran, false);
     });
   });

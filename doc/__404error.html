@@ -40,20 +40,31 @@
   </button>
 </header>
 <main>
-  <div id="dartdoc-main-content" class="main-content">
-    <h1>404: Something's gone wrong :-(</h1>
-    <section class="desc">
-      <p>You've tried to visit a page that doesn't exist.  Luckily this site
-         has other <a href="index.html">pages</a>.</p>
-      <p>If you were looking for something specific, try searching:
+<div id="dartdoc-main-content" class="main-content">
+  <h1>404: Something's gone wrong :-(</h1>
+  <section class="desc">
+    <p>
+      You've tried to visit a page that doesn't exist. Luckily this site has
+      other <a href="index.html">pages</a>.
+    </p>
+    <div>
+      If you were looking for something specific, try searching:
       <form class="search-body" role="search">
-        <input type="text" id="search-body" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+        <input
+          type="text"
+          id="search-body"
+          autocomplete="off"
+          disabled
+          class="form-control typeahead"
+          placeholder="Loading search..."
+        />
       </form>
-      </p>
-    </section>
-  </div> <!-- /.main-content -->
-  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
-    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+    </div>
+  </section>
+</div>
+<!-- /.main-content -->
+<div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+  <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
 <header id="header-search-sidebar" class="hidden-l">
   <form class="search-sidebar" role="search">
     <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
@@ -63,8 +74,11 @@
     <li><a href="https://github.com/nombrekeff/eskema">eskema package</a></li>
 </ol>
 
-    <h5><span class="package-name">eskema</span> <span class="package-kind">package</span></h5>
-    <ol>
+  <h5>
+    <span class="package-name">eskema</span>
+    <span class="package-kind">package</span>
+  </h5>
+  <ol>
       <li class="section-title">Libraries</li>
       <li><a href="builder/">builder</a></li>
       <li><a href="builder.core/">builder/core</a></li>
@@ -88,11 +102,20 @@
       <li><a href="validator/">validator</a></li>
       <li><a href="validator.base/">validator/base_validator</a></li>
       <li><a href="validator.combinators/">validator/combinator_validators</a></li>
+<<<<<<< HEAD
+      <li><a href="validator_contextual_validators/">validator/contextual_validators</a></li>
+      <li><a href="validator_exception/">validator/exception</a></li>
+=======
+>>>>>>> develop
       <li><a href="validator.map/">validator/map_validators</a></li>
       <li><a href="validators/">validators</a></li>
       <li><a href="validators.cached/">validators/cached</a></li>
       <li><a href="validators.combinator/">validators/combinator</a></li>
       <li><a href="validators.comparison/">validators/comparison</a></li>
+<<<<<<< HEAD
+      <li><a href="validators_contextual/">validators/contextual</a></li>
+=======
+>>>>>>> develop
       <li><a href="validators.date/">validators/date</a></li>
       <li><a href="validators.json/">validators/json</a></li>
       <li><a href="validators.list/">validators/list</a></li>
@@ -104,14 +127,13 @@
       <li><a href="validators.type/">validators/type</a></li>
 </ol>
 
-  </div>
-  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
-  </div>
+</div>
+<div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right"></div>
 </main>
 <footer>
   <span class="no-break">
     eskema
-      1.0.0
+      2.0.1
   </span>
   
 </footer>
