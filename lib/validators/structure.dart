@@ -177,7 +177,8 @@ IValidator eskemaStrict(Map<String, IValidator> schema, {String? message}) {
 }
 
 /// Returns a Validator that checks a value against the eskema provided,
-/// the eskema defines a validator for each item in the list
+/// the eskema defines a validator for each item in the list.
+/// Must match, structure and Validators
 ///
 /// Example:
 /// ```dart
@@ -235,7 +236,7 @@ IValidator eskemaList<T>(List<IValidator> eskema) {
 /// Returns a Validator that runs [itemValidator] for each item in the list
 ///
 /// This validator also checks that the value is a list
-IValidator listEach(IValidator itemValidator, {String? message}) {
+IValidator every(IValidator itemValidator, {String? message}) {
   FutureOr<Result> listEachPredicate(value) {
     final errors = <Expectation>[];
 
@@ -285,3 +286,9 @@ void _collectListIndex(Result result, List<Expectation> errors, int index, [Stri
     ));
   }
 }
+
+/// Returns a Validator that runs [itemValidator] for each item in the list
+///
+/// This validator also checks that the value is a list
+@Deprecated('deprecated "listEach" in favor of "every"')
+IValidator Function(IValidator itemValidator, {String? message}) listEach = every;
