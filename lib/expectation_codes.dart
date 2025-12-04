@@ -40,4 +40,6 @@ class ExpectationCodes {
   static const valueRangeOutOfBounds = 'value.range_out_of_bounds';
 
   static const logicPredicateFailed = 'logic.predicate_failed';
+
+  static const valueDateInvalid = 'value.date_invalid';
 }

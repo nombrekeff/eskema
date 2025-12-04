@@ -210,6 +210,20 @@ class EskemaExpectations {
     );
   }
 
+  Expectation dateInvalid(
+    dynamic value, {
+    String? message,
+    Map<String, Object?> data = const {},
+  }) {
+    return _create(
+      code: ExpectationCodes.valueDateInvalid,
+      value: value,
+      defaultMessage: 'Invalid date',
+      data: {'value': value, ...data},
+      overrideMessage: message,
+    );
+  }
+
   Expectation isEmail(
     dynamic value, {
     String? message,

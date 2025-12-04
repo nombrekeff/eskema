@@ -236,9 +236,8 @@ IValidator isBoolString({String? message}) =>
 /// ```
 IValidator isDate({String? message}) => validator(
       (value) => DateTime.tryParse(value) != null,
-      (value) => EskemaConfig.expectations.formatInvalid(
+      (value) => EskemaConfig.expectations.dateInvalid(
         value,
-        'can be parsed as an `DateTime`',
         message: message,
       ),
     );
