@@ -91,7 +91,7 @@ void main() {
   });
 
   group('listEach', () {
-    final ints = listEach(isInt() & isGte(0));
+    final ints = every(isInt() & isGte(0));
 
     test('valid int list passes', () {
       expect(ints.validate([0, 1, 2]).isValid, true);
@@ -235,7 +235,7 @@ void main() {
   });
 
   group('split transformer', () {
-    final validator = split(',', listEach(toInt(isGte(0))));
+    final validator = split(',', every(toInt(isGte(0))));
 
     test('should split and validate a string', () {
       expect(validator.validate('1,2,3').isValid, isTrue);

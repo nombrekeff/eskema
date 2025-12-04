@@ -21,7 +21,7 @@ extension BaseExtensions on Object {
 extension BaseIterableExtensions on Iterable {
   /// Validates [this] value using the provided [validator] for each item in the list.
   Result validate(IValidator validator) {
-    return listEach(validator).validate(this);
+    return every(validator).validate(this);
   }
 }
 

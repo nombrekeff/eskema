@@ -9,7 +9,7 @@ void main() {
   // --- 1. `listEach`: Validating Each Item Uniformly ---
   // Use `listEach` when every item in the list must conform to the same validator.
   print('\n--- `listEach` Example ---');
-  final positiveIntListValidator = isList() & listEach(isInt() & isGte(0));
+  final positiveIntListValidator = isList() & every(isInt() & isGte(0));
 
   final validInts = [1, 2, 3, 10];
   final invalidInts = [1, -2, 3];

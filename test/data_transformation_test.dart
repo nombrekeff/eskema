@@ -104,10 +104,10 @@ void main() {
 
     test('list transformation within eskema', () {
       final validator = eskema({
-        'tags': listEach(trim(isString())),
+        'tags': every(trim(isString())),
       });
 
-      // Note: listEach currently does NOT support transformation of elements in place
+      // Note: every currently does NOT support transformation of elements in place
       // because it validates elements but doesn't reconstruct the list.
       // This test confirms current behavior (no transformation for list elements yet).
       // If we want to support list transformation, we'd need to update listEach/eskemaList.

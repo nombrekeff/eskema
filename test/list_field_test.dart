@@ -27,7 +27,7 @@ void main() {
   test('Nullable list with typed and null fields', () {
     final isListValid = nullable(all([
       listIsOfLength(2),
-      listEach(isTypeOrNull<String>()),
+      every(isTypeOrNull<String>()),
     ]));
 
     final validRes1 = isListValid.validate(null);
@@ -42,7 +42,7 @@ void main() {
   });
 
   test('Basic ListField validates items', () {
-    final isValidList = listEach(isType<int>());
+    final isValidList = every(isType<int>());
 
     final validRes1 = isValidList.validate([1]);
     expect(validRes1.isValid, true);
@@ -57,10 +57,10 @@ void main() {
   });
 
   test('Nested ListField validates items', () {
-    final isListValid = listEach(
+    final isListValid = every(
       all([
         listIsOfLength(2),
-        listEach(isType<int>()),
+        every(isType<int>()),
       ]),
     );
 
@@ -87,7 +87,7 @@ void main() {
   });
 
   test('Map ListField', () {
-    final isValidList = listEach(
+    final isValidList = every(
       eskema({
         'city': isType<String>(),
         'street': isType<String>(),

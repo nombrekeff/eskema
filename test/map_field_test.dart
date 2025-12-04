@@ -92,7 +92,7 @@ void main() {
 
   test('Map with ListField', () {
     final validListField = eskema({
-      'books': listEach(
+      'books': every(
         eskema({
           'name': all([isType<String>()]),
         }),
