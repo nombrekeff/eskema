@@ -77,8 +77,8 @@ abstract class MultiValidatorBase extends IValidator {
       if (_config.chainsValues && result.isValid) currentValue = result.value;
     }
 
-    return _buildFinalResult(
-        _config.chainsValues ? currentValue : originalValue, aggregatedExpectations, originalValue);
+    return _buildFinalResult(_config.chainsValues ? currentValue : originalValue,
+        aggregatedExpectations, originalValue);
   }
 
   /// Processes a validation result and determines if validation should continue.

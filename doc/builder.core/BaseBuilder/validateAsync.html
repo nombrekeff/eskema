@@ -54,6 +54,7 @@
 
     <section class="multi-line-signature">
       
+<<<<<<< HEAD
   <div>
     <ol class="annotation-list">
         <li>@<a href="https://api.flutter.dev/flutter/dart-core/override-constant.html">override</a></li>
@@ -65,6 +66,13 @@
 </ol>})
 
       <div class="features"><span class="feature">override</span></div>
+=======
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../result/Result-class.html">Result</a></span>&gt;</span></span>
+<span class="name ">validateAsync</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="validateAsync-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span></li>
+</ol>)
+
+      
+>>>>>>> develop
 
     </section>
     
@@ -76,10 +84,14 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
+<<<<<<< HEAD
   <pre class="language-dart"><code class="language-dart">@override
 Future&lt;Result&gt; validateAsync(dynamic value, {bool? exists}) {
   return build().validateAsync(value, exists: exists ?? true);
 }</code></pre>
+=======
+  <pre class="language-dart"><code class="language-dart">Future&lt;Result&gt; validateAsync(dynamic value) =&gt; build().validateAsync(value);</code></pre>
+>>>>>>> develop
 </section>
 
 
@@ -107,7 +119,11 @@ Future&lt;Result&gt; validateAsync(dynamic value, {bool? exists}) {
 <footer>
   <span class="no-break">
     eskema
+<<<<<<< HEAD
       2.0.1
+=======
+      1.0.0
+>>>>>>> develop
   </span>
   
 </footer>

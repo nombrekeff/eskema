@@ -336,5 +336,5 @@ mixin JsonMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
 /// Mixin providing iterable-specific validation methods.
 mixin IterableMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   /// Validate that each element in the iterable satisfies the provided validator.
-  B each(IValidator elementValidator) => add(listEach(elementValidator));
+  B each(IValidator elementValidator) => add(every(elementValidator));
 }

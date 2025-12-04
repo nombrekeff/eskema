@@ -54,7 +54,11 @@
 
     <section class="multi-line-signature">
       
+<<<<<<< HEAD
       <span class="name ">Result.invalid</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="invalid-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, {</span></li>
+=======
+      <span class="name ">Result&lt;<wbr><span class="type-parameter">T</span>&gt;.invalid</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="invalid-param-value"><span class="type-annotation">T</span> <span class="parameter-name">value</span>, {</span></li>
+>>>>>>> develop
 <li><span class="parameter" id="invalid-param-expectations"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../expectation/Expectation-class.html">Expectation</a></span>&gt;</span>?</span> <span class="parameter-name">expectations</span>, </span></li>
 <li><span class="parameter" id="invalid-param-expectation"><span class="type-annotation"><a href="../../expectation/Expectation-class.html">Expectation</a>?</span> <span class="parameter-name">expectation</span>, </span></li>
 </ol>})
@@ -68,7 +72,11 @@
   <pre class="language-dart"><code class="language-dart">Result.invalid(this.value, {Iterable&lt;Expectation&gt;? expectations, Expectation? expectation})
     : isValid = false,
       expectations =
+<<<<<<< HEAD
           expectations ?? (expectation == null ? [_defaultExpectation] : [expectation]);</code></pre>
+=======
+          expectations ?? (expectation == null ? _emptyExpectations : [expectation]);</code></pre>
+>>>>>>> develop
 </section>
 
 

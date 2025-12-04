@@ -95,7 +95,7 @@ void main() {
         'unknown keys',
       ),
       _ValidatorCase(
-          'listEach', () => listEach(isInt(), message: 'all int'), [1, 'x', 3], 'all int'),
+          'listEach', () => every(isInt(), message: 'all int'), [1, 'x', 3], 'all int'),
       _ValidatorCase(
           'eskema (field override)',
           () => eskema({'age': isGte(18, message: 'adult')}, message: 'schema fail'),

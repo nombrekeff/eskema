@@ -70,8 +70,13 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
+<<<<<<< HEAD
   <pre class="language-dart"><code class="language-dart">String? get description {
   return isValid ? null : expectations.map((e) =&gt; e.description).join(&#39;, &#39;);
+=======
+  <pre class="language-dart"><code class="language-dart">String get description {
+  return isValid ? &#39;Valid&#39; : expectations.map((e) =&gt; e.description).join(&#39;, &#39;);
+>>>>>>> develop
 }</code></pre>
 </section>
 

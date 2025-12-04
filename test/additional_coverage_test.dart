@@ -204,7 +204,7 @@ void main() {
 
   group('listEach nested path propagation', () {
     test('error path includes list index and nested key', () async {
-      final listValidator = listEach(eskema({'a': isInt()}));
+      final listValidator = every(eskema({'a': isInt()}));
       final r = await listValidator.validateAsync([
         {'a': 'x'}
       ]);
