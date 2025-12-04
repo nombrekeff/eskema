@@ -13,6 +13,8 @@ TODO.md
 coverage/
 benchmarks/
 bin/
+doc/
+docs/
 
 # IntelliJ related
 *.iml
