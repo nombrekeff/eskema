@@ -48,7 +48,7 @@ IValidator any(List<IValidator> validators, {String? message}) {
 ///   stringMatchesPattern(r'[A-Z]'),     // Must contain uppercase
 ///   stringMatchesPattern(r'[0-9]'),     // Must contain number
 /// ], collecting: true);
-/// 
+///
 /// // Will show ALL validation errors, not just the first one
 /// final result = formValidator.validate(123);
 /// // result.expectations will contain errors for type, length, uppercase, and number

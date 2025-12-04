@@ -1,3 +1,10 @@
+## 2.0.1
+### Fix
+- Fixed issue with default expectation not being used when a result is invalid.
+
+### Feature
+- Added `resolve` validator. Which allows you to create a validator based on the parent value.
+- Added `switchBy` validator. Which allows you to create a validator based on the value of a key in the parent map.
 
 ## 2.1.0
 

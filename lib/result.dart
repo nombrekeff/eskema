@@ -20,7 +20,7 @@ class Result {
     Expectation? expectation,
   })  : originalValue = originalValue ?? value,
         expectations =
-            expectations ?? (expectation == null ? _emptyExpectations : [expectation]);
+            expectations ?? (expectation == null ? [_defaultExpectation] : [expectation]);
 
   Result.valid(this.value, {dynamic originalValue})
       : isValid = true,
