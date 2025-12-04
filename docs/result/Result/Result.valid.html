@@ -54,8 +54,9 @@
 
     <section class="multi-line-signature">
       
-      <span class="name ">Result.valid</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="valid-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span></li>
-</ol>)
+      <span class="name ">Result.valid</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="valid-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, {</span></li>
+<li><span class="parameter" id="valid-param-originalValue"><span class="type-annotation">dynamic</span> <span class="parameter-name">originalValue</span>, </span></li>
+</ol>})
     </section>
     
 
@@ -63,8 +64,9 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Result.valid(this.value)
+  <pre class="language-dart"><code class="language-dart">Result.valid(this.value, {dynamic originalValue})
     : isValid = true,
+      originalValue = originalValue ?? value,
       expectations = _emptyExpectations;</code></pre>
 </section>
 

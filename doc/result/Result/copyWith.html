@@ -58,6 +58,7 @@
 <span class="name ">copyWith</span>(<wbr>{<ol class="parameter-list"> <li><span class="parameter" id="copyWith-param-isValid"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">isValid</span>, </span></li>
 <li><span class="parameter" id="copyWith-param-expectations"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../expectation/Expectation-class.html">Expectation</a></span>&gt;</span>?</span> <span class="parameter-name">expectations</span>, </span></li>
 <li><span class="parameter" id="copyWith-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, </span></li>
+<li><span class="parameter" id="copyWith-param-originalValue"><span class="type-annotation">dynamic</span> <span class="parameter-name">originalValue</span>, </span></li>
 </ol>})
 
       
@@ -76,11 +77,13 @@
   bool? isValid,
   List&lt;Expectation&gt;? expectations,
   dynamic value,
+  dynamic originalValue,
 }) {
   return Result(
     isValid: isValid ?? this.isValid,
     expectations: expectations ?? this.expectations,
     value: value ?? this.value,
+    originalValue: originalValue ?? this.originalValue,
   );
 }</code></pre>
 </section>

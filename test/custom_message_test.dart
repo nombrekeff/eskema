@@ -32,7 +32,7 @@ void main() {
     });
 
     t.test('listEach custom message', () {
-      final v = listEach(isInt(), message: 'all items must be int');
+      final v = every(isInt(), message: 'all items must be int');
       final r = v.validate([1, 'a', 3]);
       t.expect(r.isValid, t.isFalse);
       // Wrapped expectations should adopt the custom listEach message.

@@ -75,10 +75,7 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
   <dd>
     <ul class="gt-separated dark clazz-relationships">
       <li><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></li>
-<<<<<<< HEAD
         <li><a href="../validator.base/IValidator-class.html">IValidator</a></li>
-=======
->>>>>>> develop
         <li><a href="../builder.core/BaseBuilder-class.html">BaseBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../builder.type_builders/NumberBuilder-class.html">NumberBuilder</a></span>, <span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span>&gt;</span></li>
         <li><a href="../builder.type_builders/NumberBuilder-class.html">NumberBuilder</a></li>
       <li>DoubleBuilder</li>
@@ -90,13 +87,12 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 
 
         
-<<<<<<< HEAD
   <dt>Available extensions</dt>
   <dd><ul class="comma-separated clazz-relationships">
       <li><a href="../extensions/EskemaEskValidatorOperations.html">EskemaEskValidatorOperations</a></li>
+      <li><a href="../extensions_operator_extensions/EskemaIValidatorOperators.html">EskemaIValidatorOperators</a></li>
+      <li><a href="../extensions_base_extensions/ValidatorExtensions.html">ValidatorExtensions</a></li>
   </ul></dd>
-=======
->>>>>>> develop
         
 
 
@@ -145,7 +141,6 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 
 </dd>
 
-<<<<<<< HEAD
         <dt id="isNullable" class="property inherited">
   <span class="name"><a href="../validator.base/IValidator/isNullable.html">isNullable</a></span>
   <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
@@ -170,8 +165,6 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 
 </dd>
 
-=======
->>>>>>> develop
         <dt id="negated" class="property inherited">
   <span class="name"><a href="../builder.core/BaseBuilder/negated.html">negated</a></span>
   <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
@@ -194,6 +187,54 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
   Return a negated version of the builder
 (the negation flag is consumed by the next added validator)
   <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="nullable" class="property">
+  <span class="name"><a href="../extensions_base_extensions/ValidatorExtensions/nullable.html">nullable</a></span>
+  <span class="signature">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
+        provided by the <a href="../extensions_base_extensions/ValidatorExtensions.html">ValidatorExtensions</a> extension</span>
+      </p>
+  Returns a nullable version of this validator.
+  <div class="features"><span class="feature">no setter</span></div>
+
+</dd>
+
+        <dt id="optional" class="property">
+  <span class="name"><a href="../extensions_base_extensions/ValidatorExtensions/optional.html">optional</a></span>
+  <span class="signature">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
+        provided by the <a href="../extensions_base_extensions/ValidatorExtensions.html">ValidatorExtensions</a> extension</span>
+      </p>
+  Returns an optional version of this validator.
+  <div class="features"><span class="feature">no setter</span></div>
+
+</dd>
+
+        <dt id="required" class="property">
+  <span class="name"><a href="../extensions_base_extensions/ValidatorExtensions/required.html">required</a></span>
+  <span class="signature">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
+        provided by the <a href="../extensions_base_extensions/ValidatorExtensions.html">ValidatorExtensions</a> extension</span>
+      </p>
+  
+  <div class="features"><span class="feature">no setter</span></div>
 
 </dd>
 
@@ -243,6 +284,24 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 
 </dd>
 
+        <dt id="and" class="callable">
+  <span class="name"><a href="../extensions_base_extensions/ValidatorExtensions/and.html">and</a></span><span class="signature">(<wbr><span class="parameter" id="and-param-validator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
+        provided by the <a href="../extensions_base_extensions/ValidatorExtensions.html">ValidatorExtensions</a> extension</span>
+      </p>
+  Combines this validator with another validator using the <code>and</code> operator.
+Similar to <code>&amp;</code> and <code>all</code>, but with a more readable syntax.
+  
+
+</dd>
+
         <dt id="between" class="callable inherited">
   <span class="name"><a href="../builder.mixins/NumberMixin/between.html">between</a></span><span class="signature">(<wbr><span class="parameter" id="between-param-min"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">min</span>, </span><span class="parameter" id="between-param-max"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">max</span>, {</span><span class="parameter" id="between-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../builder.type_builders/NumberBuilder-class.html">NumberBuilder</a></span>
@@ -269,7 +328,6 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 
 </dd>
 
-<<<<<<< HEAD
         <dt id="copyWith" class="callable inherited">
   <span class="name"><a href="../builder.core/BaseBuilder/copyWith.html">copyWith</a></span><span class="signature">(<wbr>{<span class="parameter" id="copyWith-param-nullable"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">nullable</span>, </span><span class="parameter" id="copyWith-param-optional"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">optional</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
@@ -283,8 +341,6 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 
 </dd>
 
-=======
->>>>>>> develop
         <dt id="deepEq" class="callable inherited">
   <span class="name"><a href="../builder.core/BaseBuilder/deepEq.html">deepEq</a></span><span class="signature">(<wbr><span class="parameter" id="deepEq-param-value"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">value</span>, {</span><span class="parameter" id="deepEq-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../builder.type_builders/NumberBuilder-class.html">NumberBuilder</a></span>
@@ -350,7 +406,6 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 
 </dd>
 
-<<<<<<< HEAD
         <dt id="isNotValid" class="callable inherited">
   <span class="name"><a href="../validator.base/IValidator/isNotValid.html">isNotValid</a></span><span class="signature">(<wbr><span class="parameter" id="isNotValid-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
@@ -403,8 +458,6 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 
 </dd>
 
-=======
->>>>>>> develop
         <dt id="lt" class="callable inherited">
   <span class="name"><a href="../builder.mixins/NumberMixin/lt.html">lt</a></span><span class="signature">(<wbr><span class="parameter" id="lt-param-n"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/num-class.html">num</a></span> <span class="parameter-name">n</span>, {</span><span class="parameter" id="lt-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../builder.type_builders/NumberBuilder-class.html">NumberBuilder</a></span>
@@ -445,11 +498,7 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 </dd>
 
         <dt id="nullable" class="callable inherited">
-<<<<<<< HEAD
   <span class="name"><a href="../builder.core/BaseBuilder/nullable.html">nullable</a></span><span class="signature">&lt;<wbr><span class="type-parameter">_</span>&gt;</span><span class="signature">(<wbr>{<span class="parameter" id="nullable-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
-=======
-  <span class="name"><a href="../builder.core/BaseBuilder/nullable.html">nullable</a></span><span class="signature">(<wbr>{<span class="parameter" id="nullable-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
->>>>>>> develop
     <span class="returntype parameter">&#8594; <a href="../builder.type_builders/NumberBuilder-class.html">NumberBuilder</a></span>
   </span>
   
@@ -475,11 +524,7 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 </dd>
 
         <dt id="optional" class="callable inherited">
-<<<<<<< HEAD
   <span class="name"><a href="../builder.core/BaseBuilder/optional.html">optional</a></span><span class="signature">&lt;<wbr><span class="type-parameter">_</span>&gt;</span><span class="signature">(<wbr>)
-=======
-  <span class="name"><a href="../builder.core/BaseBuilder/optional.html">optional</a></span><span class="signature">(<wbr>{<span class="parameter" id="optional-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
->>>>>>> develop
     <span class="returntype parameter">&#8594; <a href="../builder.type_builders/NumberBuilder-class.html">NumberBuilder</a></span>
   </span>
   
@@ -488,6 +533,24 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 <dd class="inherited">
   Mark current chain optional (skipped when key absent).
   <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="or" class="callable">
+  <span class="name"><a href="../extensions_base_extensions/ValidatorExtensions/or.html">or</a></span><span class="signature">(<wbr><span class="parameter" id="or-param-validator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
+        provided by the <a href="../extensions_base_extensions/ValidatorExtensions.html">ValidatorExtensions</a> extension</span>
+      </p>
+  Combines this validator with another validator using the <code>or</code> operator.
+Similar to <code>|</code> and <code>any</code>, but with a more readable syntax.
+  
 
 </dd>
 
@@ -674,11 +737,7 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 </dd>
 
         <dt id="validate" class="callable inherited">
-<<<<<<< HEAD
   <span class="name"><a href="../builder.core/BaseBuilder/validate.html">validate</a></span><span class="signature">(<wbr><span class="parameter" id="validate-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, {</span><span class="parameter" id="validate-param-exists"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">exists</span></span>})
-=======
-  <span class="name"><a href="../builder.core/BaseBuilder/validate.html">validate</a></span><span class="signature">(<wbr><span class="parameter" id="validate-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)
->>>>>>> develop
     <span class="returntype parameter">&#8594; <a href="../result/Result-class.html">Result</a></span>
   </span>
   
@@ -691,11 +750,7 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 </dd>
 
         <dt id="validateAsync" class="callable inherited">
-<<<<<<< HEAD
   <span class="name"><a href="../builder.core/BaseBuilder/validateAsync.html">validateAsync</a></span><span class="signature">(<wbr><span class="parameter" id="validateAsync-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, {</span><span class="parameter" id="validateAsync-param-exists"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">exists</span></span>})
-=======
-  <span class="name"><a href="../builder.core/BaseBuilder/validateAsync.html">validateAsync</a></span><span class="signature">(<wbr><span class="parameter" id="validateAsync-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)
->>>>>>> develop
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../result/Result-class.html">Result</a></span>&gt;</span></span>
   </span>
   
@@ -707,7 +762,6 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 
 </dd>
 
-<<<<<<< HEAD
         <dt id="validateOrThrow" class="callable inherited">
   <span class="name"><a href="../validator.base/IValidator/validateOrThrow.html">validateOrThrow</a></span><span class="signature">(<wbr><span class="parameter" id="validateOrThrow-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)
     <span class="returntype parameter">&#8594; <a href="../result/Result-class.html">Result</a></span>
@@ -734,8 +788,6 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 
 </dd>
 
-=======
->>>>>>> develop
         <dt id="wrap" class="callable inherited">
   <span class="name"><a href="../builder.core/BaseBuilder/wrap.html">wrap</a></span><span class="signature">(<wbr><span class="parameter" id="wrap-param-fn"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">fn</span>(<span class="parameter" id="param-"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span></span>), {</span><span class="parameter" id="wrap-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../builder.type_builders/NumberBuilder-class.html">NumberBuilder</a></span>
@@ -757,7 +809,6 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
       id="operators">
     <h2>Operators</h2>
     <dl class="callables">
-<<<<<<< HEAD
         <dt id="operator &amp;" class="callable">
   <span class="name"><a href="../extensions/EskemaEskValidatorOperations/operator_bitwise_and.html">operator &</a></span><span class="signature">(<wbr><span class="parameter" id="&-param-other"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">other</span></span>)
     <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
@@ -775,8 +826,23 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 
 </dd>
 
-=======
->>>>>>> develop
+        <dt id="operator &amp;" class="callable">
+  <span class="name"><a href="../extensions_operator_extensions/EskemaIValidatorOperators/operator_bitwise_and.html">operator &</a></span><span class="signature">(<wbr><span class="parameter" id="&-param-other"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
+        provided by the <a href="../extensions_operator_extensions/EskemaIValidatorOperators.html">EskemaIValidatorOperators</a> extension</span>
+      </p>
+  Combines two validators with a logical AND, same as using <a href="../validators.combinator/all.html">all</a>
+  
+
+</dd>
+
         <dt id="operator ==" class="callable inherited">
   <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
@@ -790,7 +856,6 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 
 </dd>
 
-<<<<<<< HEAD
         <dt id="operator &gt;" class="callable">
   <span class="name"><a href="../extensions/EskemaEskValidatorOperations/operator_greater.html">operator ></a></span><span class="signature">(<wbr><span class="parameter" id=">-param-error"><span class="type-annotation"><a href="../expectation/Expectation-class.html">Expectation</a></span> <span class="parameter-name">error</span></span>)
     <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
@@ -802,6 +867,23 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
       <p class="from-extension">
         <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
         provided by the <a href="../extensions/EskemaEskValidatorOperations.html">EskemaEskValidatorOperations</a> extension</span>
+      </p>
+  Returns a new validator that will return the <code>error</code> message if the validation fails
+  
+
+</dd>
+
+        <dt id="operator &gt;" class="callable">
+  <span class="name"><a href="../extensions_operator_extensions/EskemaIValidatorOperators/operator_greater.html">operator ></a></span><span class="signature">(<wbr><span class="parameter" id=">-param-error"><span class="type-annotation"><a href="../expectation/Expectation-class.html">Expectation</a></span> <span class="parameter-name">error</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
+        provided by the <a href="../extensions_operator_extensions/EskemaIValidatorOperators.html">EskemaIValidatorOperators</a> extension</span>
       </p>
   Returns a new validator that will return the <code>error</code> message if the validation fails
   
@@ -825,8 +907,23 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 
 </dd>
 
-=======
->>>>>>> develop
+        <dt id="operator |" class="callable">
+  <span class="name"><a href="../extensions_operator_extensions/EskemaIValidatorOperators/operator_bitwise_or.html">operator |</a></span><span class="signature">(<wbr><span class="parameter" id="|-param-other"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
+        provided by the <a href="../extensions_operator_extensions/EskemaIValidatorOperators.html">EskemaIValidatorOperators</a> extension</span>
+      </p>
+  Combines two validators with a logical OR, same as using <a href="../validators.combinator/any.html">any</a>
+  
+
+</dd>
+
     </dl>
   </section>
     
@@ -856,11 +953,7 @@ final percentageValidator = v().double_().gte(0).lte(100).build();
 <footer>
   <span class="no-break">
     eskema
-<<<<<<< HEAD
       2.0.1
-=======
-      1.0.0
->>>>>>> develop
   </span>
   
 </footer>

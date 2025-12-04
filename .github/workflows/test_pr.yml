@@ -9,11 +9,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
       - run: dart pub get
-<<<<<<< HEAD
       - run: dart analyze 
-=======
-      - run: dart analyze
->>>>>>> develop
       - run: dart test --coverage=./coverage
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5

@@ -64,7 +64,8 @@
     
 <section class="desc markdown">
   <p>Returns a Validator that checks a value against the eskema provided,
-the eskema defines a validator for each item in the list</p>
+the eskema defines a validator for each item in the list.
+Must match, structure and Validators</p>
 <p>Example:</p>
 <pre class="language-dart"><code class="language-dart">final isValidList = eskemaList([isType&lt;String&gt;(), isType&lt;int&gt;()]);
 isValidList(["1", 2]).isValid;   // true
@@ -148,11 +149,7 @@ isValidList([1, "2"]).isValid;   // false
 <footer>
   <span class="no-break">
     eskema
-<<<<<<< HEAD
       2.0.1
-=======
-      1.0.0
->>>>>>> develop
   </span>
   
 </footer>

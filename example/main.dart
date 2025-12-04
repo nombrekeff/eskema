@@ -32,10 +32,10 @@ void main() {
     'email': isEmail.nullable(),
 
     // you can keep it functional by using the `nullable` validator function
-    'purchases': nullable(listEach(purchaseEskema)),
+    'purchases': nullable(every(purchaseEskema)),
 
     // You can also use optional to allow missing keys, null, and empty strings
-    'accounts': optional(listEach(accountEskema)),
+    'accounts': optional(every(accountEskema)),
   });
 
   // Validate user data and get a result

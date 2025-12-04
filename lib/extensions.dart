@@ -36,7 +36,7 @@ extension EskemaListExtension on List {
   ///
   /// This validator also checks that the value is a list
   Result validate(IValidator eskema) {
-    return listEach(eskema).validate(this);
+    return every(eskema).validate(this);
   }
 }
 

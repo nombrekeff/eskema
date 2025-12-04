@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ## 2.0.1
 ### Fix
 - Fixed issue with default expectation not being used when a result is invalid.
@@ -6,8 +5,23 @@
 ### Feature
 - Added `resolve` validator. Which allows you to create a validator based on the parent value.
 - Added `switchBy` validator. Which allows you to create a validator based on the value of a key in the parent map.
-=======
->>>>>>> develop
+
+## 2.1.0
+
+### Fix
+- Fixed issue with `eskema` not preserving original value when using transformers.
+  
+### Feature
+- Added `originalValue` to `Result` to track untransformed data, and update `eskema` and combinator validators to propagate it.
+- Added more extensions, check [./lib/extensions](./lib/extensions) for more info.
+
+## 2.0.1
+### Fix
+- Fixed issue with default expectation not being used when a result is invalid.
+
+### Feature
+- Added `resolve` validator. Which allows you to create a validator based on the parent value.
+- Added `switchBy` validator. Which allows you to create a validator based on the value of a key in the parent map.
 
 ## 2.0.0
 ## feat: Fluent Builder API and Comprehensive Validation Overhaul

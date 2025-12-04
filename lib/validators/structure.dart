@@ -29,7 +29,16 @@ import 'package:eskema/expectation_codes.dart';
 IValidator eskema(Map<String, IValidator> mapEskema, {String? message}) {
   FutureOr<Result> eskemaPredicate(value) {
     final entries = mapEskema.entries.toList();
-    return _loop(entries: entries, errors: [], value: value, index: 0, message: message);
+    // Create a shallow copy to store transformed values
+    final transformed = Map.of(value as Map);
+    return _loop(
+      entries: entries,
+      errors: [],
+      value: value,
+      transformed: transformed,
+      index: 0,
+      message: message,
+    );
   }
 
   return isMap() & Validator(eskemaPredicate);
@@ -50,11 +59,14 @@ FutureOr<Result> _loop({
   required List<MapEntry<String, IValidator>> entries,
   required List<Expectation> errors,
   required dynamic value,
+  required Map<dynamic, dynamic> transformed,
   required int index,
   required String? message,
 }) {
   if (index >= entries.length) {
-    return errors.isEmpty ? Result.valid(value) : Result.invalid(value, expectations: errors);
+    return errors.isEmpty
+        ? Result.valid(transformed, originalValue: value)
+        : Result.invalid(transformed, expectations: errors, originalValue: value);
   }
 
   final entry = entries[index];
@@ -63,8 +75,13 @@ FutureOr<Result> _loop({
   final fieldValue = value[key];
   final exists = value.containsKey(key);
 
-  FutureOr<Result> next() =>
-      _loop(entries: entries, errors: errors, value: value, index: index + 1, message: message);
+  FutureOr<Result> next() => _loop(
+      entries: entries,
+      errors: errors,
+      value: value,
+      transformed: transformed,
+      index: index + 1,
+      message: message);
 
   FutureOr<Result> res;
   if (validator is IWhenValidator) {
@@ -95,11 +112,17 @@ FutureOr<Result> _loop({
   if (res is Future<Result>) {
     return res.then((r) {
       _collectEskema(r, errors, key, message);
+      if (r.isValid) {
+        transformed[key] = r.value;
+      }
       return next();
     });
   }
 
   _collectEskema(res, errors, key, message);
+  if (res.isValid) {
+    transformed[key] = res.value;
+  }
 
   return next();
 }
@@ -130,7 +153,7 @@ void _collectEskema(Result result, List<Expectation> errors, String key, [String
 /// ```
 IValidator eskemaStrict(Map<String, IValidator> schema, {String? message}) {
   FutureOr<Result> strictEskemaPredicate(value) {
-    final map = value as Map<String, dynamic>;
+    final map = value;
     final unknownKeys = map.keys.where((key) => !schema.containsKey(key)).toList();
 
     if (unknownKeys.isEmpty) {
@@ -154,7 +177,8 @@ IValidator eskemaStrict(Map<String, IValidator> schema, {String? message}) {
 }
 
 /// Returns a Validator that checks a value against the eskema provided,
-/// the eskema defines a validator for each item in the list
+/// the eskema defines a validator for each item in the list.
+/// Must match, structure and Validators
 ///
 /// Example:
 /// ```dart
@@ -212,7 +236,7 @@ IValidator eskemaList<T>(List<IValidator> eskema) {
 /// Returns a Validator that runs [itemValidator] for each item in the list
 ///
 /// This validator also checks that the value is a list
-IValidator listEach(IValidator itemValidator, {String? message}) {
+IValidator every(IValidator itemValidator, {String? message}) {
   FutureOr<Result> listEachPredicate(value) {
     final errors = <Expectation>[];
 
@@ -262,3 +286,9 @@ void _collectListIndex(Result result, List<Expectation> errors, int index, [Stri
     ));
   }
 }
+
+/// Returns a Validator that runs [itemValidator] for each item in the list
+///
+/// This validator also checks that the value is a list
+@Deprecated('deprecated "listEach" in favor of "every"')
+IValidator Function(IValidator itemValidator, {String? message}) listEach = every;

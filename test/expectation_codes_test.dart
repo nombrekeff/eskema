@@ -50,7 +50,7 @@ void main() {
 
     test('structure.list_item_failed default code when child has none', () {
       final custom = validator((_) => false, (v) => Expectation(message: 'bad', value: v));
-      final r = listEach(custom).validate(['a']);
+      final r = every(custom).validate(['a']);
       expect(r.isValid, false);
       expect(r.firstExpectation.code, anyOf('structure.list_item_failed', isNull));
     });

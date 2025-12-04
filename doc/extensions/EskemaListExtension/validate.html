@@ -85,7 +85,7 @@ isValidList([1, "2"]).isValid;   // false
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Result validate(IValidator eskema) {
-  return listEach(eskema).validate(this);
+  return every(eskema).validate(this);
 }</code></pre>
 </section>
 

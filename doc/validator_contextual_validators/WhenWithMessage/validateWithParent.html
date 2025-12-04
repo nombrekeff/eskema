@@ -79,10 +79,14 @@ FutureOr&lt;Result&gt; validateWithParent(
   dynamic value,
   Map&lt;String, dynamic&gt; map, {
   bool exists = true,
-}) async {
-  final res = await inner.validateWithParent(value, map, exists: exists);
-  if (res.isValid) return res;
-  return _failWithMsg(value, message);
+}) {
+  final res = inner.validateWithParent(value, map, exists: exists);
+
+  if (res is Future&lt;Result&gt;) {
+    return res.then((r) =&gt; _processResult(r, value));
+  }
+
+  return _processResult(res, value);
 }</code></pre>
 </section>
 

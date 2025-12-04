@@ -84,6 +84,8 @@
   <dt>Available extensions</dt>
   <dd><ul class="comma-separated clazz-relationships">
       <li><a href="../extensions/EskemaEskValidatorOperations.html">EskemaEskValidatorOperations</a></li>
+      <li><a href="../extensions_operator_extensions/EskemaIValidatorOperators.html">EskemaIValidatorOperators</a></li>
+      <li><a href="../extensions_base_extensions/ValidatorExtensions.html">ValidatorExtensions</a></li>
   </ul></dd>
         
 
@@ -157,6 +159,54 @@
 
 </dd>
 
+        <dt id="nullable" class="property">
+  <span class="name"><a href="../extensions_base_extensions/ValidatorExtensions/nullable.html">nullable</a></span>
+  <span class="signature">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
+        provided by the <a href="../extensions_base_extensions/ValidatorExtensions.html">ValidatorExtensions</a> extension</span>
+      </p>
+  Returns a nullable version of this validator.
+  <div class="features"><span class="feature">no setter</span></div>
+
+</dd>
+
+        <dt id="optional" class="property">
+  <span class="name"><a href="../extensions_base_extensions/ValidatorExtensions/optional.html">optional</a></span>
+  <span class="signature">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
+        provided by the <a href="../extensions_base_extensions/ValidatorExtensions.html">ValidatorExtensions</a> extension</span>
+      </p>
+  Returns an optional version of this validator.
+  <div class="features"><span class="feature">no setter</span></div>
+
+</dd>
+
+        <dt id="required" class="property">
+  <span class="name"><a href="../extensions_base_extensions/ValidatorExtensions/required.html">required</a></span>
+  <span class="signature">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
+        provided by the <a href="../extensions_base_extensions/ValidatorExtensions.html">ValidatorExtensions</a> extension</span>
+      </p>
+  
+  <div class="features"><span class="feature">no setter</span></div>
+
+</dd>
+
         <dt id="runtimeType" class="property inherited">
   <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
   <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Type-class.html">Type</a></span>
@@ -178,6 +228,24 @@
       id="instance-methods">
     <h2>Methods</h2>
     <dl class="callables">
+        <dt id="and" class="callable">
+  <span class="name"><a href="../extensions_base_extensions/ValidatorExtensions/and.html">and</a></span><span class="signature">(<wbr><span class="parameter" id="and-param-validator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
+        provided by the <a href="../extensions_base_extensions/ValidatorExtensions.html">ValidatorExtensions</a> extension</span>
+      </p>
+  Combines this validator with another validator using the <code>and</code> operator.
+Similar to <code>&amp;</code> and <code>all</code>, but with a more readable syntax.
+  
+
+</dd>
+
         <dt id="copyWith" class="callable inherited">
   <span class="name"><a href="../validator.base/Validator/copyWith.html">copyWith</a></span><span class="signature">(<wbr>{<span class="parameter" id="copyWith-param-nullable"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">nullable</span>, </span><span class="parameter" id="copyWith-param-optional"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">optional</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
@@ -282,6 +350,24 @@
 
 </dd>
 
+        <dt id="or" class="callable">
+  <span class="name"><a href="../extensions_base_extensions/ValidatorExtensions/or.html">or</a></span><span class="signature">(<wbr><span class="parameter" id="or-param-validator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
+        provided by the <a href="../extensions_base_extensions/ValidatorExtensions.html">ValidatorExtensions</a> extension</span>
+      </p>
+  Combines this validator with another validator using the <code>or</code> operator.
+Similar to <code>|</code> and <code>any</code>, but with a more readable syntax.
+  
+
+</dd>
+
         <dt id="toString" class="callable inherited">
   <span class="name"><a href="../validator.base/Validator/toString.html">toString</a></span><span class="signature">(<wbr>)
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>
@@ -372,6 +458,23 @@
 
 </dd>
 
+        <dt id="operator &amp;" class="callable">
+  <span class="name"><a href="../extensions_operator_extensions/EskemaIValidatorOperators/operator_bitwise_and.html">operator &</a></span><span class="signature">(<wbr><span class="parameter" id="&-param-other"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
+        provided by the <a href="../extensions_operator_extensions/EskemaIValidatorOperators.html">EskemaIValidatorOperators</a> extension</span>
+      </p>
+  Combines two validators with a logical AND, same as using <a href="../validators.combinator/all.html">all</a>
+  
+
+</dd>
+
         <dt id="operator ==" class="callable inherited">
   <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a></span> <span class="parameter-name">other</span></span>)
     <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
@@ -402,6 +505,23 @@
 
 </dd>
 
+        <dt id="operator &gt;" class="callable">
+  <span class="name"><a href="../extensions_operator_extensions/EskemaIValidatorOperators/operator_greater.html">operator ></a></span><span class="signature">(<wbr><span class="parameter" id=">-param-error"><span class="type-annotation"><a href="../expectation/Expectation-class.html">Expectation</a></span> <span class="parameter-name">error</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
+        provided by the <a href="../extensions_operator_extensions/EskemaIValidatorOperators.html">EskemaIValidatorOperators</a> extension</span>
+      </p>
+  Returns a new validator that will return the <code>error</code> message if the validation fails
+  
+
+</dd>
+
         <dt id="operator |" class="callable">
   <span class="name"><a href="../extensions/EskemaEskValidatorOperations/operator_bitwise_or.html">operator |</a></span><span class="signature">(<wbr><span class="parameter" id="|-param-other"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">other</span></span>)
     <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
@@ -413,6 +533,23 @@
       <p class="from-extension">
         <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
         provided by the <a href="../extensions/EskemaEskValidatorOperations.html">EskemaEskValidatorOperations</a> extension</span>
+      </p>
+  Combines two validators with a logical OR, same as using <a href="../validators.combinator/any.html">any</a>
+  
+
+</dd>
+
+        <dt id="operator |" class="callable">
+  <span class="name"><a href="../extensions_operator_extensions/EskemaIValidatorOperators/operator_bitwise_or.html">operator |</a></span><span class="signature">(<wbr><span class="parameter" id="|-param-other"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../validator.base/IValidator-class.html">IValidator</a>,
+        provided by the <a href="../extensions_operator_extensions/EskemaIValidatorOperators.html">EskemaIValidatorOperators</a> extension</span>
       </p>
   Combines two validators with a logical OR, same as using <a href="../validators.combinator/any.html">any</a>
   

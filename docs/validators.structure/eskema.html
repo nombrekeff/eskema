@@ -89,7 +89,16 @@
   <pre class="language-dart"><code class="language-dart">IValidator eskema(Map&lt;String, IValidator&gt; mapEskema, {String? message}) {
   FutureOr&lt;Result&gt; eskemaPredicate(value) {
     final entries = mapEskema.entries.toList();
-    return _loop(entries: entries, errors: [], value: value, index: 0, message: message);
+    &#47;&#47; Create a shallow copy to store transformed values
+    final transformed = Map.of(value as Map);
+    return _loop(
+      entries: entries,
+      errors: [],
+      value: value,
+      transformed: transformed,
+      index: 0,
+      message: message,
+    );
   }
 
   return isMap() &amp; Validator(eskemaPredicate);

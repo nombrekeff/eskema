@@ -80,7 +80,7 @@ validator.validate({ 'name': 'test', 'age': 25 }); // invalid
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">IValidator eskemaStrict(Map&lt;String, IValidator&gt; schema, {String? message}) {
   FutureOr&lt;Result&gt; strictEskemaPredicate(value) {
-    final map = value as Map&lt;String, dynamic&gt;;
+    final map = value;
     final unknownKeys = map.keys.where((key) =&gt; !schema.containsKey(key)).toList();
 
     if (unknownKeys.isEmpty) {
@@ -128,11 +128,7 @@ validator.validate({ 'name': 'test', 'age': 25 }); // invalid
 <footer>
   <span class="no-break">
     eskema
-<<<<<<< HEAD
       2.0.1
-=======
-      1.0.0
->>>>>>> develop
   </span>
   
 </footer>

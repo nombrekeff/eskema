@@ -8,11 +8,12 @@ library builder.core;
 
 import 'dart:async';
 
+import 'package:eskema/extensions/operator_extensions.dart';
+
 import '../validators.dart';
 import '../validator.dart';
 import '../expectation.dart';
 import '../result.dart';
-import '../extensions.dart';
 import '../validators.dart' as esk;
 
 /// Internal accumulator for a builder chain.

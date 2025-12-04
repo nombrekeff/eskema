@@ -4,11 +4,12 @@
 /// methods for different data types in the fluent builder pattern.
 library builder.mixins;
 
+import 'package:eskema/validators/json.dart';
+
 import '../validators.dart';
 import '../validator.dart';
 import '../transformers.dart' as tr;
 import '../validators.dart' as esk;
-import '../validators/json.dart';
 import 'core.dart';
 import 'type_builders.dart';
 
@@ -335,5 +336,5 @@ mixin JsonMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
 /// Mixin providing iterable-specific validation methods.
 mixin IterableMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   /// Validate that each element in the iterable satisfies the provided validator.
-  B each(IValidator elementValidator) => add(listEach(elementValidator));
+  B each(IValidator elementValidator) => add(every(elementValidator));
 }

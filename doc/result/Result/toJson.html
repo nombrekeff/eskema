@@ -69,6 +69,7 @@
   <pre class="language-dart"><code class="language-dart">Map&lt;String, Object?&gt; toJson() =&gt; {
       &#39;isValid&#39;: isValid,
       if (value != null) &#39;value&#39;: value,
+      if (originalValue != value) &#39;originalValue&#39;: originalValue,
       if (!isValid) &#39;errors&#39;: expectations.map((e) =&gt; e.toJson()).toList(growable: false),
     };</code></pre>
 </section>

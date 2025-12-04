@@ -69,6 +69,7 @@
         
   <dt>Available extensions</dt>
   <dd><ul class="comma-separated clazz-relationships">
+      <li><a href="../extensions_base_extensions/ResultExtensions.html">ResultExtensions</a></li>
       <li><a href="../error_format/ResultFormatting.html">ResultFormatting</a></li>
   </ul></dd>
         
@@ -82,19 +83,19 @@
     <h2>Constructors</h2>
     <dl class="constructor-summary-list">
         <dt id="Result.new" class="callable">
-          <span class="name"><a href="../result/Result/Result.html">Result.new</a></span><span class="signature">({<span class="parameter" id="-param-isValid"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">isValid</span>, </span><span class="parameter" id="-param-value"><span>required</span> <span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, </span><span class="parameter" id="-param-expectations"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../expectation/Expectation-class.html">Expectation</a></span>&gt;</span>?</span> <span class="parameter-name">expectations</span>, </span><span class="parameter" id="-param-expectation"><span class="type-annotation"><a href="../expectation/Expectation-class.html">Expectation</a>?</span> <span class="parameter-name">expectation</span></span>})</span>
+          <span class="name"><a href="../result/Result/Result.html">Result.new</a></span><span class="signature">({<span class="parameter" id="-param-isValid"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">isValid</span>, </span><span class="parameter" id="-param-value"><span>required</span> <span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, </span><span class="parameter" id="-param-originalValue"><span class="type-annotation">dynamic</span> <span class="parameter-name">originalValue</span>, </span><span class="parameter" id="-param-expectations"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../expectation/Expectation-class.html">Expectation</a></span>&gt;</span>?</span> <span class="parameter-name">expectations</span>, </span><span class="parameter" id="-param-expectation"><span class="type-annotation"><a href="../expectation/Expectation-class.html">Expectation</a>?</span> <span class="parameter-name">expectation</span></span>})</span>
         </dt>
         <dd>
           
         </dd>
         <dt id="Result.invalid" class="callable">
-          <span class="name"><a href="../result/Result/Result.invalid.html">Result.invalid</a></span><span class="signature">(<span class="parameter" id="invalid-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, {</span><span class="parameter" id="invalid-param-expectations"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../expectation/Expectation-class.html">Expectation</a></span>&gt;</span>?</span> <span class="parameter-name">expectations</span>, </span><span class="parameter" id="invalid-param-expectation"><span class="type-annotation"><a href="../expectation/Expectation-class.html">Expectation</a>?</span> <span class="parameter-name">expectation</span></span>})</span>
+          <span class="name"><a href="../result/Result/Result.invalid.html">Result.invalid</a></span><span class="signature">(<span class="parameter" id="invalid-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, {</span><span class="parameter" id="invalid-param-expectations"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../expectation/Expectation-class.html">Expectation</a></span>&gt;</span>?</span> <span class="parameter-name">expectations</span>, </span><span class="parameter" id="invalid-param-expectation"><span class="type-annotation"><a href="../expectation/Expectation-class.html">Expectation</a>?</span> <span class="parameter-name">expectation</span>, </span><span class="parameter" id="invalid-param-originalValue"><span class="type-annotation">dynamic</span> <span class="parameter-name">originalValue</span></span>})</span>
         </dt>
         <dd>
           
         </dd>
         <dt id="Result.valid" class="callable">
-          <span class="name"><a href="../result/Result/Result.valid.html">Result.valid</a></span><span class="signature">(<span class="parameter" id="valid-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>)</span>
+          <span class="name"><a href="../result/Result/Result.valid.html">Result.valid</a></span><span class="signature">(<span class="parameter" id="valid-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, {</span><span class="parameter" id="valid-param-originalValue"><span class="type-annotation">dynamic</span> <span class="parameter-name">originalValue</span></span>})</span>
         </dt>
         <dd>
           
@@ -216,6 +217,34 @@ It will contain expectations independent of the validation result.
 
 </dd>
 
+        <dt id="originalValue" class="property">
+  <span class="name"><a href="../result/Result/originalValue.html">originalValue</a></span>
+  <span class="signature">&#8594; dynamic</span>
+  
+
+</dt>
+<dd>
+  The original value before any transformation.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="orThrow" class="property">
+  <span class="name"><a href="../extensions_base_extensions/ResultExtensions/orThrow.html">orThrow</a></span>
+  <span class="signature">&#8594; dynamic</span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../result/Result-class.html">Result</a>,
+        provided by the <a href="../extensions_base_extensions/ResultExtensions.html">ResultExtensions</a> extension</span>
+      </p>
+  Returns the value if valid, otherwise throws a <code>ValidationException</code>.
+  <div class="features"><span class="feature">no setter</span></div>
+
+</dd>
+
         <dt id="runtimeType" class="property inherited">
   <span class="name"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></span>
   <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/Type-class.html">Type</a></span>
@@ -250,7 +279,7 @@ It will contain expectations independent of the validation result.
     <h2>Methods</h2>
     <dl class="callables">
         <dt id="copyWith" class="callable">
-  <span class="name"><a href="../result/Result/copyWith.html">copyWith</a></span><span class="signature">(<wbr>{<span class="parameter" id="copyWith-param-isValid"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">isValid</span>, </span><span class="parameter" id="copyWith-param-expectations"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../expectation/Expectation-class.html">Expectation</a></span>&gt;</span>?</span> <span class="parameter-name">expectations</span>, </span><span class="parameter" id="copyWith-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span></span>})
+  <span class="name"><a href="../result/Result/copyWith.html">copyWith</a></span><span class="signature">(<wbr>{<span class="parameter" id="copyWith-param-isValid"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">isValid</span>, </span><span class="parameter" id="copyWith-param-expectations"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../expectation/Expectation-class.html">Expectation</a></span>&gt;</span>?</span> <span class="parameter-name">expectations</span>, </span><span class="parameter" id="copyWith-param-value"><span class="type-annotation">dynamic</span> <span class="parameter-name">value</span>, </span><span class="parameter" id="copyWith-param-originalValue"><span class="type-annotation">dynamic</span> <span class="parameter-name">originalValue</span></span>})
     <span class="returntype parameter">&#8594; <a href="../result/Result-class.html">Result</a></span>
   </span>
   
@@ -315,6 +344,23 @@ It will contain expectations independent of the validation result.
 <dd>
   A string representation of this object.
   <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="valueOr" class="callable">
+  <span class="name"><a href="../extensions_base_extensions/ResultExtensions/valueOr.html">valueOr</a></span><span class="signature">(<wbr><span class="parameter" id="valueOr-param-defaultValue"><span class="type-annotation">dynamic</span> <span class="parameter-name">defaultValue</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../result/Result-class.html">Result</a>,
+        provided by the <a href="../extensions_base_extensions/ResultExtensions.html">ResultExtensions</a> extension</span>
+      </p>
+  Returns the value if valid, otherwise returns <code>defaultValue</code>.
+  
 
 </dd>
 

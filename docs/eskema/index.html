@@ -267,6 +267,14 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
   Builder for number validations with numeric comparison methods.
 </dd>
 
+          <dt id="ResolveValidator">
+  <span class="name "><a href="../validator_contextual_validators/ResolveValidator-class.html">ResolveValidator</a></span> 
+
+</dt>
+<dd>
+  Resolves a validator based on the parent object.
+</dd>
+
           <dt id="Result">
   <span class="name "><a href="../result/Result-class.html">Result</a></span> 
 
@@ -313,6 +321,22 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
 </dt>
 <dd>
   Generic implementation wrapper for a validator.
+</dd>
+
+          <dt id="WhenValidator">
+  <span class="name "><a href="../validator_contextual_validators/WhenValidator-class.html">WhenValidator</a></span> 
+
+</dt>
+<dd>
+  Conditional validator. It's conditional based on some other field in the eskema.
+</dd>
+
+          <dt id="WhenWithMessage">
+  <span class="name "><a href="../validator_contextual_validators/WhenWithMessage-class.html">WhenWithMessage</a></span> 
+
+</dt>
+<dd>
+  Adds a custom error message to a <code>when</code> validator.
 </dd>
 
       </dl>
@@ -438,8 +462,28 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
     <section class="summary offset-anchor" id="extensions">
       <h2>Extensions</h2>
       <dl>
-          <dt id="EskemaEskValidatorOperations">
-  <span class="name "><a href="../extensions/EskemaEskValidatorOperations.html">EskemaEskValidatorOperations</a></span>
+          <dt id="BaseExtensions">
+  <span class="name "><a href="../extensions_base_extensions/BaseExtensions.html">BaseExtensions</a></span>
+  on <a href="https://api.flutter.dev/flutter/dart-core/Object-class.html">Object</a>
+  
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="BaseIterableExtensions">
+  <span class="name "><a href="../extensions_base_extensions/BaseIterableExtensions.html">BaseIterableExtensions</a></span>
+  on <a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a>
+  
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="EskemaIValidatorOperators">
+  <span class="name "><a href="../extensions_operator_extensions/EskemaIValidatorOperators.html">EskemaIValidatorOperators</a></span>
   on <a href="../validator.base/IValidator-class.html">IValidator</a>
   
 
@@ -448,19 +492,9 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
   
 </dd>
 
-          <dt id="EskemaListExtension">
-  <span class="name "><a href="../extensions/EskemaListExtension.html">EskemaListExtension</a></span>
-  on <a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a>
-  
-
-</dt>
-<dd>
-  
-</dd>
-
-          <dt id="EskemaMapExtension">
-  <span class="name "><a href="../extensions/EskemaMapExtension.html">EskemaMapExtension</a></span>
-  on <a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a>
+          <dt id="ResultExtensions">
+  <span class="name "><a href="../extensions_base_extensions/ResultExtensions.html">ResultExtensions</a></span>
+  on <a href="../result/Result-class.html">Result</a>
   
 
 </dt>
@@ -476,6 +510,16 @@ dynamic values (JSON, Maps, Lists, primitives) with readable validators and clea
 </dt>
 <dd>
   Extension to access detailed formatting directly on <a href="../result/Result-class.html">Result</a>.
+</dd>
+
+          <dt id="ValidatorExtensions">
+  <span class="name "><a href="../extensions_base_extensions/ValidatorExtensions.html">ValidatorExtensions</a></span>
+  on <a href="../validator.base/IValidator-class.html">IValidator</a>
+  
+
+</dt>
+<dd>
+  
 </dd>
 
       </dl>
@@ -976,6 +1020,18 @@ Usage: <code>$optionalNonEmptyString.validate(null)</code> -&gt; valid; <code>.v
 
 </dd>
 
+          <dt id="listEach" class="property">
+  <span class="name"><a class="deprecated" href="../eskema/listEach.html">listEach</a></span>
+  <span class="signature">&#8596; <a href="../validator.base/IValidator-class.html">IValidator</a> Function<span class="signature">(<span class="parameter" id="param-itemValidator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">itemValidator</span>, {</span><span class="parameter" id="param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})</span></span>
+  
+
+</dt>
+<dd>
+  Returns a Validator that runs <code>itemValidator</code> for each item in the list
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
           <dt id="uuidRegex" class="property">
   <span class="name"><a href="../eskema/uuidRegex.html">uuidRegex</a></span>
   <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/RegExp-class.html">RegExp</a></span>
@@ -1291,7 +1347,8 @@ For invalid results: delegates to <a href="../error_format/buildValidationFailur
 </dt>
 <dd>
   Returns a Validator that checks a value against the eskema provided,
-the eskema defines a validator for each item in the list
+the eskema defines a validator for each item in the list.
+Must match, structure and Validators
   
 
 </dd>
@@ -1306,6 +1363,19 @@ the eskema defines a validator for each item in the list
 <dd>
   Returns a Validator that checks a value against a Map eskema and fails if
 any keys exist in the map that are not defined in the <code>schema</code>.
+  
+
+</dd>
+
+          <dt id="every" class="callable">
+  <span class="name"><a href="../validators.structure/every.html">every</a></span><span class="signature">(<wbr><span class="parameter" id="every-param-itemValidator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">itemValidator</span>, {</span><span class="parameter" id="every-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Returns a Validator that runs <code>itemValidator</code> for each item in the list
   
 
 </dd>
@@ -1990,19 +2060,6 @@ For better performance and readability, use the <a href="../eskema/$isSymbol.htm
 
 </dd>
 
-          <dt id="listEach" class="callable">
-  <span class="name"><a href="../validators.structure/listEach.html">listEach</a></span><span class="signature">(<wbr><span class="parameter" id="listEach-param-itemValidator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">itemValidator</span>, {</span><span class="parameter" id="listEach-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
-    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
-  </span>
-  
-
-</dt>
-<dd>
-  Returns a Validator that runs <code>itemValidator</code> for each item in the list
-  
-
-</dd>
-
           <dt id="listEmpty" class="callable">
   <span class="name"><a href="../validators.list/listEmpty.html">listEmpty</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr>{<span class="parameter" id="listEmpty-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
@@ -2150,7 +2207,7 @@ It's different from nullable in that it also checks for empty strings
 </dd>
 
           <dt id="required" class="callable">
-  <span class="name"><a href="../validators.presence/required.html">required</a></span><span class="signature">(<wbr><span class="parameter" id="required-param-validator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span></span>)
+  <span class="name"><a href="../validators.presence/required.html">required</a></span><span class="signature">(<wbr><span class="parameter" id="required-param-validator"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span>, {</span><span class="parameter" id="required-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">message</span> = <span class="default-value">&#39;is required&#39;</span></span>})
     <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
   </span>
   
@@ -2159,6 +2216,19 @@ It's different from nullable in that it also checks for empty strings
 <dd>
   Opposite of <a href="../validators.presence/optional.html">optional</a>, it will be considered valid if the field is not null
 and the <code>validator</code> returns valid.
+  
+
+</dd>
+
+          <dt id="requiredWhen" class="callable">
+  <span class="name"><a href="../validators_contextual/requiredWhen.html">requiredWhen</a></span><span class="signature">(<wbr><span class="parameter" id="requiredWhen-param-condition"><span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">condition</span>, {</span><span class="parameter" id="requiredWhen-param-validator"><span>required</span> <span class="type-annotation"><a href="../validator.base/IValidator-class.html">IValidator</a></span> <span class="parameter-name">validator</span>, </span><span class="parameter" id="requiredWhen-param-message"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">message</span></span>})
+    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Make a validator required when a condition is met.
   
 
 </dd>
@@ -2237,6 +2307,19 @@ and the <code>validator</code> returns valid.
 </dt>
 <dd>
   Validates that the String matches the provided pattern
+  
+
+</dd>
+
+          <dt id="switchBy" class="callable">
+  <span class="name"><a href="../validators_contextual/switchBy.html">switchBy</a></span><span class="signature">(<wbr><span class="parameter" id="switchBy-param-key"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">key</span>, </span><span class="parameter" id="switchBy-param-by"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter"><a href="../validator.base/IValidator-class.html">IValidator</a></span>&gt;</span></span> <span class="parameter-name">by</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../validator.base/IValidator-class.html">IValidator</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Creates a polymorphic (switch-case) validator that depends on the value of a key in the parent map.
   
 
 </dd>
@@ -2612,6 +2695,8 @@ See docs/expectation_codes.md.
       <li><a href="../expectation/">expectation</a></li>
       <li><a href="../expectation_codes/">expectation_codes</a></li>
       <li><a href="../extensions/">extensions</a></li>
+      <li><a href="../extensions_base_extensions/">extensions/base_extensions</a></li>
+      <li><a href="../extensions_operator_extensions/">extensions/operator_extensions</a></li>
       <li><a href="../result/">result</a></li>
       <li><a href="../transformers/">transformers</a></li>
       <li><a href="../transformers.boolean/">transformers/boolean</a></li>

@@ -93,7 +93,7 @@ FutureOr&lt;Result&gt; validator(dynamic value) {
   }
 
   return _buildFinalResult(
-      _config.chainsValues ? currentValue : value, aggregatedExpectations);
+      _config.chainsValues ? currentValue : value, aggregatedExpectations, value);
 }</code></pre>
 </section>
 
