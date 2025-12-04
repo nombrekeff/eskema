@@ -20,3 +20,4 @@ export 'expectation.dart';
 export 'error_format.dart';
 export 'extensions/base_extensions.dart';
 export 'extensions/operator_extensions.dart';
+export 'enum/case.dart';

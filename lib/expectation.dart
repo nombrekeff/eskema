@@ -26,6 +26,28 @@ class Expectation {
     this.data,
   });
 
+  /// "Smart" Factory: Prioritizes user override -> Configured Expectation -> Default
+  factory Expectation.fromCode({
+    required String code,
+    required dynamic value,
+    Map<String, Object?>? data,
+    String? message,
+    String? defaultMessage,
+  }) {
+    final finalData = data ?? const {};
+
+    // 1. Use user override if provided
+    // 2. Or use the library default (which might be localized via EskemaConfig)
+    final resolvedMessage = message ?? defaultMessage ?? 'Validation failed ($code)';
+
+    return Expectation(
+      message: resolvedMessage,
+      value: value,
+      code: code,
+      data: finalData,
+    );
+  }
+
   /// Get a detailed description of the expectation.
   String get description {
     if (path != null && path!.isNotEmpty) {

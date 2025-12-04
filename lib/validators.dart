@@ -43,18 +43,19 @@ import 'package:eskema/expectation.dart';
 import 'package:eskema/result.dart';
 import 'package:eskema/validator.dart';
 
-export 'package:eskema/validators/structure.dart';
-export 'package:eskema/validators/presence.dart';
+export 'package:eskema/validators/cached.dart';
 export 'package:eskema/validators/combinator.dart';
-export 'package:eskema/validators/number.dart';
-export 'package:eskema/validators/string.dart';
-export 'package:eskema/validators/type.dart';
 export 'package:eskema/validators/comparison.dart';
+export 'package:eskema/validators/contextual.dart';
+export 'package:eskema/validators/date.dart';
 export 'package:eskema/validators/list.dart';
 export 'package:eskema/validators/map.dart';
-export 'package:eskema/validators/cached.dart';
-export 'package:eskema/validators/date.dart';
-export 'package:eskema/validators/contextual.dart';
+export 'package:eskema/validators/number.dart';
+export 'package:eskema/validators/presence.dart';
+export 'package:eskema/validators/string.dart';
+export 'package:eskema/validators/string_patterns.dart';
+export 'package:eskema/validators/structure.dart';
+export 'package:eskema/validators/type.dart';
 
 Validator validator(
   bool Function(dynamic value) comparisonFn,

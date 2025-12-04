@@ -13,6 +13,7 @@ import 'package:eskema/validator.dart';
 import 'package:eskema/validators/combinator.dart';
 import 'package:eskema/validators/list.dart';
 import 'package:eskema/validators/string.dart';
+import 'package:eskema/validators/string_patterns.dart';
 import 'package:eskema/validators/type.dart';
 
 // Type validators

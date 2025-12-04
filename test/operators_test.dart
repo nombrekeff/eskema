@@ -7,7 +7,7 @@ void main() {
 
     expect(username.validate('valid_username').isValid, true);
     expect(username.validate('').isValid, false);
-    expect(username.validate('').description, 'not String to be empty');
+    expect(username.validate('').description, 'not passed');
   });
 
   test('| works', () {

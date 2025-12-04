@@ -27,9 +27,12 @@ class Result {
         originalValue = originalValue ?? value,
         expectations = _emptyExpectations;
 
-  Result.invalid(this.value,
-      {Iterable<Expectation>? expectations, Expectation? expectation, dynamic originalValue})
-      : isValid = false,
+  Result.invalid(
+    this.value, {
+    Iterable<Expectation>? expectations,
+    Expectation? expectation,
+    dynamic originalValue,
+  })  : isValid = false,
         originalValue = originalValue ?? value,
         expectations =
             expectations ?? (expectation == null ? [_defaultExpectation] : [expectation]);

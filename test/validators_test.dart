@@ -240,7 +240,7 @@ void main() {
       expect(res2.isValid, false);
       expect(
         res2.description,
-        'String to match "RegExp: pattern=[\\d] flags="',
+        'Must match pattern "RegExp: pattern=[\\d] flags="',
       );
     });
 
@@ -268,7 +268,7 @@ void main() {
     test('not(\$isStringEmpty)', () {
       final field = not($isStringEmpty);
       expect(field.validate('').isValid, false);
-      expect(field.validate('').description, 'not String to be empty');
+      expect(field.validate('').description, 'not passed');
       expect(field.validate('1').isValid, true);
     });
   });

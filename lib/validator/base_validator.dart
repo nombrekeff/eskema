@@ -10,12 +10,15 @@ typedef ValidatorFunction<T extends Result> = FutureOr<T> Function(dynamic value
 
 /// Immutable base class from which all validators inherit.
 abstract class IValidator {
-  const IValidator({bool nullable = false, bool optional = false})
+  const IValidator({bool nullable = false, bool optional = false, bool not = false})
       : isNullable = nullable,
-        isOptional = optional;
+        isOptional = optional,
+        isNot = not;
 
   final bool isNullable;
   final bool isOptional;
+  /// Whether the validator is negated (e.g. `not(isStringEmpty)`)
+  final bool isNot;
 
   FutureOr<Result> validator(dynamic value);
 

@@ -4,9 +4,14 @@
 
 library validators.string;
 
-import 'package:eskema/eskema.dart';
+import 'package:eskema/config/eskema_config.dart';
+import 'package:eskema/enum/case.dart';
+import 'package:eskema/expectation.dart';
 import 'package:eskema/expectation_codes.dart';
+import 'package:eskema/extensions/operator_extensions.dart';
 import 'package:eskema/src/util.dart';
+import 'package:eskema/validator/base_validator.dart';
+import 'package:eskema/validators.dart';
 
 /// Validates that the String's length matches the validators
 ///
@@ -84,11 +89,10 @@ IValidator stringMatchesPattern(Pattern pattern, {String? message}) {
   return isType<String>() &
       validator(
         (value) => pattern.allMatches(value).isNotEmpty,
-        (value) => Expectation(
-          message: message ?? 'String to match "$pattern"',
-          value: value,
-          code: ExpectationCodes.valuePatternMismatch,
-          data: {'pattern': pattern.toString()},
+        (value) => EskemaConfig.expectations.patternMismatch(
+          value,
+          pattern,
+          message: message,
         ),
       );
 }
@@ -98,10 +102,10 @@ IValidator isLowerCase({String? message}) =>
     isString() &
     validator(
       (value) => value.toLowerCase() == value,
-      (value) => Expectation(
-        message: message ?? 'lowercase string',
-        code: ExpectationCodes.valueCaseMismatch,
-        data: {'expected_case': 'lower'},
+      (value) => EskemaConfig.expectations.caseMismatch(
+        value,
+        Case.lower,
+        message: message,
       ),
     );
 
@@ -110,100 +114,16 @@ IValidator isUpperCase({String? message}) =>
     isString() &
     validator(
       (value) => value.toUpperCase() == value,
-      (value) => Expectation(
-        message: message ?? 'uppercase string',
-        code: ExpectationCodes.valueCaseMismatch,
-        data: {'expected_case': 'upper'},
+      (value) => EskemaConfig.expectations.caseMismatch(
+        value,
+        Case.upper,
+        message: message,
       ),
     );
 
-final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-
-/// Validates that the String is a valid email address.
-///
-/// **Usage Examples:**
-/// ```dart
-/// final emailValidator = isEmail();
-/// emailValidator.validate("user@example.com");    // Valid
-/// emailValidator.validate("invalid-email");       // Invalid
-/// emailValidator.validate("user@.com");           // Invalid
-///
-/// // Combined with other validators
-/// final strictEmail = all([$isString, isEmail()]);
-/// ```
-IValidator isEmail({String? message}) {
-  return isString() &
-      stringMatchesPattern(emailRegex, message: message ?? 'a valid email address');
-}
-
 /// Checks whether the given string is empty
 IValidator isStringEmpty({String? message}) {
-  return stringLength([isLte(0)]) >
-      Expectation(
-        message: message ?? 'String to be empty',
-        code: ExpectationCodes.valueLengthOutOfRange,
-        data: {'expected': 0},
-      );
-}
-
-/// Validates that the String is a valid URL. By it uses non-strict validation (like "example.com").
-///
-/// If you want to enforce strict validation (must include scheme), set [strict] to true or use [isStrictUrl].
-///
-/// **Usage Examples:**
-/// ```dart
-/// final urlValidator = isUrl();
-/// urlValidator.validate("https://example.com");     // Valid
-/// urlValidator.validate("example.com");             // Valid (non-strict)
-/// urlValidator.validate("not-a-url");               // Invalid
-///
-/// // Strict validation (requires scheme)
-/// final strictUrl = isUrl(strict: true);
-/// strictUrl.validate("https://example.com");        // Valid
-/// strictUrl.validate("example.com");                // Invalid
-///
-/// // Or use the convenience method
-/// final strictUrl2 = isStrictUrl();
-/// ```
-IValidator isUrl({bool strict = false, String? message}) {
-  return isString() &
-      validator(
-        (value) {
-          return strict
-              ? Uri.tryParse(value)?.isAbsolute ?? false
-              : Uri.tryParse(value) != null;
-        },
-        (value) => Expectation(
-          message: message ?? 'a valid URL',
-          value: value,
-          code: ExpectationCodes.valueFormatInvalid,
-          data: {'format': 'url'},
-        ),
-      );
-}
-
-IValidator isStrictUrl({String? message}) => isUrl(strict: true, message: message);
-
-final uuidRegex = RegExp(
-    r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
-
-/// Validates that the String is a valid UUID (v4).
-///
-/// **Usage Examples:**
-/// ```dart
-/// final uuidValidator = isUuidV4();
-/// uuidValidator.validate("550e8400-e29b-41d4-a716-446655440000"); // Valid
-/// uuidValidator.validate("not-a-uuid");                        // Invalid
-/// uuidValidator.validate("550e8400-e29b-41d4-a716");            // Invalid
-///
-/// // Combined with other validations
-/// final entityValidator = eskema({
-///   'id': all([$isString, isUuidV4()]),
-///   'name': $isString,
-/// });
-/// ```
-IValidator isUuidV4({String? message}) {
-  return isString() & stringMatchesPattern(uuidRegex, message: message ?? 'a valid UUID v4');
+  return stringLength([isLte(0)], message: message ?? 'String to be empty');
 }
 
 /// Validates that the String can be parsed as an `int` (e.g. '123', '-42')
@@ -223,11 +143,10 @@ IValidator isIntString({String? message}) =>
     isType<String>() &
     validator(
       (value) => int.tryParse(value.trim()) != null,
-      (value) => Expectation(
-        message: message ?? 'a valid formatted int String',
-        value: value,
-        code: ExpectationCodes.valueFormatInvalid,
-        data: {'format': 'int'},
+      (value) => EskemaConfig.expectations.formatInvalid(
+        value,
+        'can be parsed as an `int`',
+        message: message,
       ),
     );
 
@@ -248,11 +167,10 @@ IValidator isDoubleString({String? message}) =>
     isType<String>() &
     validator(
       (value) => double.tryParse(value.trim()) != null,
-      (value) => Expectation(
-        message: message ?? 'a valid formatted double String',
-        value: value,
-        code: ExpectationCodes.valueFormatInvalid,
-        data: {'format': 'double'},
+      (value) => EskemaConfig.expectations.formatInvalid(
+        value,
+        'can be parsed as an `double`',
+        message: message,
       ),
     );
 
@@ -261,11 +179,10 @@ IValidator isNumString({String? message}) =>
     isType<String>() &
     validator(
       (value) => num.tryParse(value.trim()) != null,
-      (value) => Expectation(
-        message: message ?? 'a valid formatted number String',
-        value: value,
-        code: ExpectationCodes.valueFormatInvalid,
-        data: {'format': 'num'},
+      (value) => EskemaConfig.expectations.formatInvalid(
+        value,
+        'can be parsed as an `num`',
+        message: message,
       ),
     );
 
@@ -293,11 +210,10 @@ IValidator isBoolString({String? message}) =>
         final lower = value.toLowerCase().trim();
         return lower == 'true' || lower == 'false';
       },
-      (value) => Expectation(
-        message: message ?? 'a valid formatted boolean String',
-        value: value,
-        code: ExpectationCodes.valueFormatInvalid,
-        data: {'format': 'bool'},
+      (value) => EskemaConfig.expectations.formatInvalid(
+        value,
+        'can be parsed as an `bool`',
+        message: message,
       ),
     );
 
@@ -320,10 +236,9 @@ IValidator isBoolString({String? message}) =>
 /// ```
 IValidator isDate({String? message}) => validator(
       (value) => DateTime.tryParse(value) != null,
-      (value) => Expectation(
-        message: message ?? 'a valid DateTime formatted String',
-        value: value,
-        code: ExpectationCodes.valueFormatInvalid,
-        data: {'format': 'date_time'},
+      (value) => EskemaConfig.expectations.formatInvalid(
+        value,
+        'can be parsed as an `DateTime`',
+        message: message,
       ),
     );
