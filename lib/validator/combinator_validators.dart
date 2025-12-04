@@ -6,6 +6,7 @@ import 'package:eskema/expectation.dart';
 import 'package:eskema/result.dart';
 import 'package:eskema/validator/exception.dart';
 import 'package:eskema/validators/combinator.dart';
+import 'package:eskema/validator/async_loop.dart';
 import 'base_validator.dart';
 
 // Internal micro-helper to reduce duplication.
@@ -28,57 +29,79 @@ abstract class MultiValidatorBase extends IValidator {
 
   @override
   FutureOr<Result> validator(dynamic value) {
-    var currentValue = value;
-    final aggregatedExpectations = <Expectation>[];
+    final initialState = (
+      currentValue: value,
+      expectations: <Expectation>[],
+      stopResult: null as Result?,
+    );
 
-    for (var i = 0; i < validators.length; i++) {
-      final inputValue = _config.chainsValues ? currentValue : value;
-      final result = validators.elementAt(i).validator(inputValue);
+    FutureOr<({dynamic currentValue, List<Expectation> expectations, Result? stopResult})>
+        reducer(
+      ({dynamic currentValue, List<Expectation> expectations, Result? stopResult}) state,
+      IValidator validator,
+    ) {
+      final inputValue = _config.chainsValues ? state.currentValue : value;
+      final result = validator.validator(inputValue);
 
       if (result is Future<Result>) {
-        return _continueAsync(result, i + 1, currentValue, value, aggregatedExpectations);
+        return result.then((r) => _processStep(r, inputValue, state, validator));
       }
 
-      final (shouldStop, stopResult) =
-          _processResult(result, inputValue, aggregatedExpectations);
-      if (shouldStop) return stopResult!;
-
-      if (_config.chainsValues && result.isValid) currentValue = result.value;
+      return _processStep(result, inputValue, state, validator);
     }
 
-    return _buildFinalResult(
-        _config.chainsValues ? currentValue : value, aggregatedExpectations, value);
+    final result = asyncFold(
+      validators,
+      initialState,
+      reducer,
+      shouldStop: (state) => state.stopResult != null,
+    );
+
+    if (result is Future<({dynamic currentValue, List<Expectation> expectations, Result? stopResult})>) {
+      return result.then((finalState) => finalState.stopResult ?? 
+          _buildFinalResult(
+            _config.chainsValues ? finalState.currentValue : value,
+            finalState.expectations,
+            value,
+          ));
+    }
+
+    final finalState = result;
+    return finalState.stopResult ??
+        _buildFinalResult(
+          _config.chainsValues ? finalState.currentValue : value,
+          finalState.expectations,
+          value,
+        );
   }
 
-  Future<Result> _continueAsync(
-    Future<Result> pending,
-    int nextIndex,
-    dynamic currentValue,
-    dynamic originalValue,
-    List<Expectation> aggregatedExpectations,
-  ) async {
-    final firstResult = await pending;
-    final inputValue = _config.chainsValues ? currentValue : originalValue;
-
+  ({dynamic currentValue, List<Expectation> expectations, Result? stopResult}) _processStep(
+    Result result,
+    dynamic inputValue,
+    ({dynamic currentValue, List<Expectation> expectations, Result? stopResult}) state,
+    IValidator validator,
+  ) {
     final (shouldStop, stopResult) =
-        _processResult(firstResult, inputValue, aggregatedExpectations);
-    if (shouldStop) return stopResult!;
-
-    if (_config.chainsValues && firstResult.isValid) currentValue = firstResult.value;
-
-    for (var i = nextIndex; i < validators.length; i++) {
-      final nextInputValue = _config.chainsValues ? currentValue : originalValue;
-      final result = await validators.elementAt(i).validator(nextInputValue);
-
-      final (shouldStop2, stopResult2) =
-          _processResult(result, nextInputValue, aggregatedExpectations);
-      if (shouldStop2) return stopResult2!;
-
-      if (_config.chainsValues && result.isValid) currentValue = result.value;
+        _processResult(result, inputValue, state.expectations);
+    
+    if (shouldStop) {
+      return (
+        currentValue: state.currentValue,
+        expectations: state.expectations,
+        stopResult: stopResult,
+      );
     }
 
-    return _buildFinalResult(_config.chainsValues ? currentValue : originalValue,
-        aggregatedExpectations, originalValue);
+    var nextValue = state.currentValue;
+    if (_config.chainsValues && result.isValid) {
+      nextValue = result.value;
+    }
+
+    return (
+      currentValue: nextValue,
+      expectations: state.expectations,
+      stopResult: null,
+    );
   }
 
   /// Processes a validation result and determines if validation should continue.

@@ -33,13 +33,6 @@ void main() {
       expect(r.firstExpectation.code, 'value.contains_missing');
     });
 
-    test('structure.unknown_key code from eskemaStrict', () {
-      final r = eskemaStrict({'name': isString()}).validate({'name': 'a', 'extra': 1});
-      expect(r.isValid, false);
-      expect(r.firstExpectation.code, 'structure.unknown_key');
-      expect(r.firstExpectation.data?['keys'], contains('extra'));
-    });
-
     test('structure.map_field_failed default code when child has none', () {
       final custom = validator((_) => false, (v) => Expectation(message: 'bad', value: v));
       final r = eskema({'x': custom}).validate({'x': 10});

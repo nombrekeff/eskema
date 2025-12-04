@@ -10,6 +10,7 @@ String prettifyValue(dynamic value) {
   return value.toString();
 }
 
+
 /// Check if a value has a length property.
 bool hasLengthProperty(dynamic value) {
   return value is String || value is Iterable || value is Map || value is Set;

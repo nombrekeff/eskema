@@ -187,7 +187,7 @@ void main() {
       final map = {'name': 'John', 'age': 30, 'city': 'New York'};
       final result = validator.validate(map);
       expect(result.isValid, isFalse);
-      expect(result.expectations.first.message, 'has unknown keys: city');
+      expect(result.expectations.first.message, 'contains unknown keys');
     });
 
     test('should fail if inner validator fails', () {

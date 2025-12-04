@@ -35,9 +35,9 @@ class ExpectationCodes {
   // Logic domain
   static const logicNotExpected = 'logic.not_expected';
 
-  static var typeMismatch = 'value.type_mismatch';
+  static const typeMismatch = 'value.type_mismatch';
 
-  static var valueRangeOutOfBounds = 'value.range_out_of_bounds';
+  static const valueRangeOutOfBounds = 'value.range_out_of_bounds';
 
-  static var logicPredicateFailed = 'logic.predicate_failed';
+  static const logicPredicateFailed = 'logic.predicate_failed';
 }
