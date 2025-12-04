@@ -105,22 +105,34 @@
   buffer.writeln(valueRepr);
 
   final toShow = result.expectations.take(maxErrorsToList).toList(growable: false);
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
   for (var i = 0; i &lt; toShow.length; i++) {
     final e = toShow[i];
     buffer.write(&#39;  ${i + 1}) &#39;);
     buffer.write(e.description);
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
     if (e.code != null) buffer.write(&#39; [code=${e.code}]&#39;);
     if (e.data != null &amp;&amp; e.data!.isNotEmpty) buffer.write(&#39; {data=${e.data}}&#39;);
     buffer.writeln();
   }
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
   final remaining = result.expectationCount - toShow.length;
   if (remaining &gt; 0) {
     buffer.writeln(&#39;  … ($remaining more not shown)&#39;);
   }
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
   return buffer.toString().trimRight();
 }</code></pre>
 </section>
@@ -149,7 +161,11 @@
 <footer>
   <span class="no-break">
     eskema
+<<<<<<< HEAD
       2.0.1
+=======
+      1.0.0
+>>>>>>> develop
   </span>
   
 </footer>

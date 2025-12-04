@@ -1,7 +1,11 @@
 name: eskema
 description: Eskema is a small, composable runtime validation library for Dart. It helps you validate dynamic values (JSON, Maps, Lists, primitives) with readable validators and clear error messages.
 
+<<<<<<< HEAD
 version: 2.0.1
+=======
+version: 2.0.0
+>>>>>>> develop
 homepage: https://github.com/nombrekeff/eskema
 
 environment:

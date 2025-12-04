@@ -69,8 +69,8 @@ class Result {
   }
 
   Map<String, Object?> toJson() => {
-        'isValid': isValid,
-        if (value != null) 'value': value,
-        if (!isValid) 'errors': expectations.map((e) => e.toJson()).toList(growable: false),
-      };
+    'isValid': isValid,
+    if (value != null) 'value': value,
+    if (!isValid) 'errors': expectations.map((e) => e.toJson()).toList(growable: false),
+  };
 }

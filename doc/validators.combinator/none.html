@@ -88,9 +88,37 @@ final notForbidden = none([
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
+<<<<<<< HEAD
   <pre class="language-dart"><code class="language-dart">IValidator none(List&lt;IValidator&gt; validators, {String? message}) {
   return NoneValidator(validators, message: message);
 }</code></pre>
+=======
+  <pre class="language-dart"><code class="language-dart">IValidator none(List&lt;IValidator&gt; validators, {String? message}) =&gt; Validator&lt;Result&gt;((value) {
+      List&lt;Expectation&gt;? expectations;
+
+      for (var i = 0; i &lt; validators.length; i++) {
+        final result = not(validators[i]).validator(value);
+
+        if (result is Future&lt;Result&gt;) {
+          return _noneAsync(value, validators, expectations, i, result, message: message);
+        }
+
+        if (result.isNotValid) {
+          if (message == null &amp;&amp; result.expectations.isNotEmpty) {
+            (expectations ??= &lt;Expectation&gt;[]).addAll(result.expectations);
+          } else if (message != null) {
+            return _failWithMsg(value, message);
+          }
+        }
+      }
+
+      if (message != null) return Result.valid(value);
+
+      return (expectations != null &amp;&amp; expectations.isNotEmpty)
+          ? Result.invalid(value, expectations: expectations)
+          : Result.valid(value);
+    });</code></pre>
+>>>>>>> develop
 </section>
 
 
@@ -117,7 +145,11 @@ final notForbidden = none([
 <footer>
   <span class="no-break">
     eskema
+<<<<<<< HEAD
       2.0.1
+=======
+      1.0.0
+>>>>>>> develop
   </span>
   
 </footer>
