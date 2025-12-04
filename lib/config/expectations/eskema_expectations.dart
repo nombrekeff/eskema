@@ -131,6 +131,20 @@ class EskemaExpectations {
     );
   }
 
+  Expectation empty<T>(
+    dynamic value, {
+    String? message,
+    Map<String, Object?> data = const {},
+  }) {
+    return _create(
+      code: ExpectationCodes.valueEmpty,
+      value: value,
+      defaultMessage: '${value.runtimeType} to be empty',
+      data: {'value': value, ...data},
+      overrideMessage: message,
+    );
+  }
+
   // --- Date Domain ---
 
   Expectation dateOutOfRange(

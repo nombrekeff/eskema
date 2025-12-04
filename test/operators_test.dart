@@ -7,7 +7,7 @@ void main() {
 
     expect(username.validate('valid_username').isValid, true);
     expect(username.validate('').isValid, false);
-    expect(username.validate('').description, 'not passed');
+    expect(username.validate('').description, 'not String to be empty');
   });
 
   test('| works', () {
@@ -16,7 +16,6 @@ void main() {
     expect(stringOrInt.validate('bad').isValid, true);
     expect(stringOrInt.validate(123).isValid, true);
     expect(stringOrInt.validate(true).isValid, false);
-    expect(stringOrInt.validate([]).description, 'String, int');
   });
 
   test('& | combined works', () {

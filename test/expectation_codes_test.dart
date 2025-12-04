@@ -8,7 +8,7 @@ void main() {
       final r = isString().validate(123);
       expect(r.isValid, false);
       final e = r.firstExpectation;
-      expect(e.code, 'type.mismatch');
+      expect(e.code, 'value.type_mismatch');
       expect(e.data?['expected'], 'String');
       expect(e.data?['found'], 'int');
     });

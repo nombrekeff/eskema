@@ -26,6 +26,7 @@ class ExpectationCodes {
   static const valueSlugInvalid = 'value.slug_invalid';
   static const valueEmailNormalized = 'value.email_normalized'; // informational
   static const valueUnicodeNormalized = 'value.unicode_normalized';
+  static const valueEmpty = 'value.empty';
 
   // Structure domain
   static const structureMapFieldFailed = 'structure.map_field_failed';
@@ -42,4 +43,5 @@ class ExpectationCodes {
   static const logicPredicateFailed = 'logic.predicate_failed';
 
   static const valueDateInvalid = 'value.date_invalid';
+
 }

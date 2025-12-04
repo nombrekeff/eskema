@@ -5,9 +5,9 @@
 library validators.comparison;
 
 import 'package:collection/collection.dart';
+import 'package:eskema/config/eskema_config.dart';
 import 'package:eskema/src/util.dart';
 import '../eskema.dart';
-import 'package:eskema/expectation_codes.dart';
 
 Function _collectionEquals = const DeepCollectionEquality().equals;
 
@@ -21,12 +21,11 @@ IValidator noop() => Validator((value) => Result.valid(value));
 IValidator isEq<T>(T otherValue, {String? message}) =>
     validator(
       (value) => value == otherValue,
-      (value) => Expectation(
-        message: message ?? 'equal to ${prettifyValue(otherValue)}',
-        value: value,
-        code: ExpectationCodes.valueEqualMismatch,
+      (value) => EskemaConfig.expectations.equalMismatch(
+        value,
+        otherValue,
+        message: message,
         data: {
-          'expected': prettifyValue(otherValue),
           'found': prettifyValue(value),
           'mode': 'shallow'
         },
@@ -38,12 +37,11 @@ IValidator isDeepEq<T>(T otherValue, {String? message}) =>
     isType<T>() &
     validator(
       (value) => _collectionEquals(value, otherValue),
-      (value) => Expectation(
-        message: message ?? 'equal to ${prettifyValue(otherValue)}',
-        value: value,
-        code: ExpectationCodes.valueDeepEqualMismatch,
+      (value) => EskemaConfig.expectations.deepEqualMismatch(
+        value,
+        otherValue,
+        message: message,
         data: {
-          'expected': prettifyValue(otherValue),
           'found': prettifyValue(value),
           'mode': 'deep'
         },
@@ -63,18 +61,29 @@ IValidator length(List<IValidator> validators, {String? message}) {
       // Child messages (e.g. 'equal to 2') are wrapped in square brackets like prior behavior.
       final joined = result.expectations.map((e) => e.message).join(' & ');
 
-      return Expectation(
+      return EskemaConfig.expectations.lengthOutOfRange(
+        value,
+        len, // passing len as expected? No, lengthOutOfRange expects 'expected'.
+             // But here we don't know the expected length, we just know it failed.
+             // The message 'length [$joined]' implies we are aggregating errors.
+             // Maybe we should use a generic expectation or update lengthOutOfRange?
+             // lengthOutOfRange(value, expected).
+             // Here we are wrapping child expectations.
+             // The original code used valueLengthOutOfRange code.
+             // Let's use lengthOutOfRange with len as expected (which is weird but matches data 'length': len?)
+             // Wait, original data was {'length': len}.
+             // lengthOutOfRange puts {'expected': expected}.
+             // So if I pass len as expected, data will be {'expected': len}.
+             // But we want {'length': len}.
+             // I can override data.
         message: message ?? 'length [$joined]',
-        value: value,
-        code: ExpectationCodes.valueLengthOutOfRange,
         data: {'length': len},
       ).toInvalidResult();
     }
 
-    return Expectation(
+    return EskemaConfig.expectations.predicateFailed(
+      value,
       message: message ?? '${value.runtimeType} does not have a length property',
-      value: value,
-      code: ExpectationCodes.logicPredicateFailed,
     ).toInvalidResult();
   });
 }
@@ -87,20 +96,20 @@ IValidator contains<T>(T item, {String? message}) {
     if (hasContainsProperty(value)) {
       return Result(
         isValid: value.contains(item),
-        expectation: Expectation(
-          message: message ?? 'contains ${prettifyValue(item)}',
-          value: value,
-          code: ExpectationCodes.valueContainsMissing,
+        expectation: EskemaConfig.expectations.containsMissing(
+          value,
+          item,
+          message: message,
           data: {'needle': prettifyValue(item)},
         ),
         value: value,
       );
     }
 
-    return Expectation(
+    return EskemaConfig.expectations.containsMissing(
+      value,
+      'contains property',
       message: '${value.runtimeType} does not have a contains property',
-      value: value,
-      code: ExpectationCodes.valueContainsMissing,
     ).toInvalidResult();
   });
 }
@@ -110,10 +119,10 @@ IValidator isOneOf<T>(Iterable<T> options, {String? message}) {
   return Validator(
     (value) => Result(
       isValid: options.contains(value),
-      expectation: Expectation(
-        message: message ?? 'one of: ${prettifyValue(options)}',
-        value: value,
-        code: ExpectationCodes.valueMembershipMismatch,
+      expectation: EskemaConfig.expectations.membershipMismatch(
+        value,
+        options,
+        message: message,
         data: {'options': options.map((e) => e.toString()).toList()},
       ),
       value: value,

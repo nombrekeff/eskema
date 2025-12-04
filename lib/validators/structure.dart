@@ -98,12 +98,10 @@ void _collectEskema(Result result, List<Expectation> errors, String key, [String
   if (result.isValid) return;
 
   for (final error in result.expectations) {
-    errors.add(Expectation(
+    errors.add(error.copyWith(
       message: message ?? error.message,
-      value: error.value,
       path: '.$key${error.path != null ? '${error.path}' : ''}',
       code: error.code ?? ExpectationCodes.structureMapFieldFailed,
-      data: error.data,
     ));
   }
 }
@@ -233,12 +231,10 @@ void _collectListIndex(Result result, List<Expectation> errors, int index, [Stri
   if (result.isValid) return;
 
   for (var error in result.expectations) {
-    errors.add(Expectation(
+    errors.add(error.copyWith(
       message: message ?? error.message,
-      value: error.value,
       path: '[$index]${error.path != null ? '${error.path}' : ''}',
       code: error.code ?? ExpectationCodes.structureListItemFailed,
-      data: error.data,
     ));
   }
 }

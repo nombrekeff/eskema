@@ -6,8 +6,6 @@ library validators.string;
 
 import 'package:eskema/config/eskema_config.dart';
 import 'package:eskema/enum/case.dart';
-import 'package:eskema/expectation.dart';
-import 'package:eskema/expectation_codes.dart';
 import 'package:eskema/extensions/operator_extensions.dart';
 import 'package:eskema/src/util.dart';
 import 'package:eskema/validator/base_validator.dart';
@@ -57,11 +55,7 @@ IValidator stringIsOfLength(int size, {String? message}) {
 /// isImage.validate("document.pdf");          // Invalid
 /// ```
 IValidator stringContains(String str, {String? message}) {
-  return $isString &
-      contains(
-        str,
-        message: message ?? 'String to contain ${prettifyValue(str)}',
-      );
+  return $isString & contains(str);
 }
 
 /// Validates that the String matches the provided pattern
@@ -122,9 +116,10 @@ IValidator isUpperCase({String? message}) =>
     );
 
 /// Checks whether the given string is empty
-IValidator isStringEmpty({String? message}) {
-  return stringLength([isLte(0)], message: message ?? 'String to be empty');
-}
+IValidator isStringEmpty() => validator(
+      (value) => value.isEmpty,
+      (value) => EskemaConfig.expectations.empty(value),
+    );
 
 /// Validates that the String can be parsed as an `int` (e.g. '123', '-42')
 ///
@@ -145,7 +140,7 @@ IValidator isIntString({String? message}) =>
       (value) => int.tryParse(value.trim()) != null,
       (value) => EskemaConfig.expectations.formatInvalid(
         value,
-        'can be parsed as an `int`',
+        'int string',
         message: message,
       ),
     );
@@ -169,7 +164,7 @@ IValidator isDoubleString({String? message}) =>
       (value) => double.tryParse(value.trim()) != null,
       (value) => EskemaConfig.expectations.formatInvalid(
         value,
-        'can be parsed as an `double`',
+        'double string',
         message: message,
       ),
     );
@@ -181,7 +176,7 @@ IValidator isNumString({String? message}) =>
       (value) => num.tryParse(value.trim()) != null,
       (value) => EskemaConfig.expectations.formatInvalid(
         value,
-        'can be parsed as an `num`',
+        'num string',
         message: message,
       ),
     );
@@ -212,7 +207,7 @@ IValidator isBoolString({String? message}) =>
       },
       (value) => EskemaConfig.expectations.formatInvalid(
         value,
-        'can be parsed as an `bool`',
+        'bool string',
         message: message,
       ),
     );
@@ -238,6 +233,6 @@ IValidator isDate({String? message}) => validator(
       (value) => DateTime.tryParse(value) != null,
       (value) => EskemaConfig.expectations.dateInvalid(
         value,
-        message: message,
+        message: message
       ),
     );

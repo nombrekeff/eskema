@@ -24,7 +24,7 @@ void main() {
       final v = eskemaStrict({'id': isInt(), 'name': isString().optional()});
       final r = v.validate({'id': 1, 'name': 2});
       expect(r.isValid, false);
-      expect(r.description, '.name: String');
+      expect(r.description, '.name: Expected type String but found int');
     });
 
     test('sync unknown key invalid', () {

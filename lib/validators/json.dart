@@ -3,15 +3,16 @@
 /// This file contains validators for working with JSON data.
 library validators.json;
 
+import 'package:eskema/config/eskema_config.dart';
 import 'package:eskema/eskema.dart';
-import 'package:eskema/expectation_codes.dart';
 
 /// Validates that value is a JSON container (Map or List).
 IValidator isJsonContainer({String? message}) =>
     ($isMap | $isList) >
-    Expectation(
+    EskemaConfig.expectations.typeMismatch(
+      null, // value will be overwritten by > operator
+      'Map|List',
       message: message ?? 'a JSON Map or List',
-      code: ExpectationCodes.typeMismatch,
       data: {'expected': 'Map|List'},
     );
 
@@ -24,12 +25,12 @@ IValidator isJsonObject({String? message}) =>
       return Result(
         isValid: ok,
         value: value,
-        expectation: Expectation(
-          message: message ?? 'a JSON object',
-          value: value,
-          code: ExpectationCodes.typeMismatch,
-          data: {'expected': 'Map<String,dynamic>'},
-        ),
+          expectation: EskemaConfig.expectations.typeMismatch(
+            value,
+            'Map<String,dynamic>',
+            message: message ?? 'a JSON object',
+            data: {'expected': 'Map<String,dynamic>'},
+          ),
       );
     });
 
@@ -39,12 +40,12 @@ IValidator isJsonArray({String? message}) => Validator((value) {
       return Result(
         isValid: ok,
         value: value,
-        expectation: Expectation(
-          message: message ?? 'a JSON array',
-          value: value,
-          code: ExpectationCodes.typeMismatch,
-          data: {'expected': 'List'},
-        ),
+          expectation: EskemaConfig.expectations.typeMismatch(
+            value,
+            'List',
+            message: message ?? 'a JSON array',
+            data: {'expected': 'List'},
+          ),
       );
     });
 
@@ -56,10 +57,10 @@ IValidator jsonHasKeys(Iterable<String> keys, {String? message}) =>
       return Result(
         isValid: ok,
         value: value,
-        expectation: Expectation(
+        expectation: EskemaConfig.expectations.typeMismatch(
+          value,
+          'JSON object with keys: ${keys.join(', ')}',
           message: message ?? 'JSON object has keys: ${keys.join(', ')}',
-          value: value,
-          code: ExpectationCodes.typeMismatch,
           data: {'keys': keys.toList()},
         ),
       );
@@ -73,11 +74,11 @@ IValidator jsonArrayLength({int? min, int? max, String? message}) =>
       return Result(
         isValid: ok,
         value: value,
-        expectation: Expectation(
+        expectation: EskemaConfig.expectations.lengthOutOfRange(
+          value,
+          '${min ?? 0}-${max ?? 'infinity'}', // expected length range
           message: message ??
               'array length${min != null ? ' >= $min' : ''}${max != null ? ' <= $max' : ''}',
-          value: value,
-          code: ExpectationCodes.valueLengthOutOfRange,
           data: {'min': min, 'max': max, 'length': value is List ? value.length : null},
         ),
       );

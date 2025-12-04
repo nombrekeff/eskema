@@ -9,11 +9,11 @@ void main() {
 
       final res2 = isNull().validate(123);
       expect(res2.isValid, false);
-      expect(res2.description, 'Null');
+      expect(res2.description, 'Expected type Null but found int');
 
       final res3 = isNull().validate(true);
       expect(res3.isValid, false);
-      expect(res3.description, 'Null');
+      expect(res3.description, 'Expected type Null but found bool');
 
       final res4 = isNull().validate(null);
       expect(res4.isValid, true);
@@ -25,11 +25,11 @@ void main() {
 
       final res2 = isType<String>().validate(123);
       expect(res2.isValid, false);
-      expect(res2.description, 'String');
+      expect(res2.description, 'Expected type String but found int');
 
       final res3 = isType<String>().validate(true);
       expect(res3.isValid, false);
-      expect(res3.description, 'String');
+      expect(res3.description, 'Expected type String but found bool');
     });
 
     test('isType<int> works', () {
@@ -38,11 +38,11 @@ void main() {
 
       final res2 = isType<int>().validate('123');
       expect(res2.isValid, false);
-      expect(res2.description, 'int');
+      expect(res2.description, 'Expected type int but found String');
 
       final res3 = isType<int>().validate(true);
       expect(res3.isValid, false);
-      expect(res3.description, 'int');
+      expect(res3.description, 'Expected type int but found bool');
     });
 
     test('isType<num> works', () {
@@ -51,11 +51,11 @@ void main() {
 
       final res2 = isType<num>().validate('123');
       expect(res2.isValid, false);
-      expect(res2.description, 'num');
+      expect(res2.description, 'Expected type num but found String');
 
       final res3 = isType<num>().validate(true);
       expect(res3.isValid, false);
-      expect(res3.description, 'num');
+      expect(res3.description, 'Expected type num but found bool');
     });
 
     test('isType<double> works', () {
@@ -64,15 +64,15 @@ void main() {
 
       final res2 = isType<double>().validate('123');
       expect(res2.isValid, false);
-      expect(res2.description, 'double');
+      expect(res2.description, 'Expected type double but found String');
 
       final res3 = isType<double>().validate(true);
       expect(res3.isValid, false);
-      expect(res3.description, 'double');
+      expect(res3.description, 'Expected type double but found bool');
 
       final res4 = isType<double>().validate(123);
       expect(res4.isValid, false);
-      expect(res4.description, 'double');
+      expect(res4.description, 'Expected type double but found int');
     });
 
     test('isType<bool> works', () {
@@ -81,11 +81,11 @@ void main() {
 
       final res2 = isType<bool>().validate('123');
       expect(res2.isValid, false);
-      expect(res2.description, 'bool');
+      expect(res2.description, 'Expected type bool but found String');
 
       final res3 = isType<bool>().validate(123);
       expect(res3.isValid, false);
-      expect(res3.description, 'bool');
+      expect(res3.description, 'Expected type bool but found int');
     });
 
     test('isType<Map> works', () {
@@ -94,11 +94,11 @@ void main() {
 
       final res2 = isType<Map>().validate('123');
       expect(res2.isValid, false);
-      expect(res2.description, 'Map<dynamic, dynamic>');
+      expect(res2.description, 'Expected type Map<dynamic, dynamic> but found String');
 
       final res3 = isType<Map>().validate(123);
       expect(res3.isValid, false);
-      expect(res3.description, 'Map<dynamic, dynamic>');
+      expect(res3.description, 'Expected type Map<dynamic, dynamic> but found int');
     });
 
     test('isType<List> works', () {
@@ -107,11 +107,11 @@ void main() {
 
       final res2 = isType<List>().validate('123');
       expect(res2.isValid, false);
-      expect(res2.description, 'List<dynamic>');
+      expect(res2.description, 'Expected type List<dynamic> but found String');
 
       final res3 = isType<List>().validate(123);
       expect(res3.isValid, false);
-      expect(res3.description, 'List<dynamic>');
+      expect(res3.description, 'Expected type List<dynamic> but found int');
     });
   });
 
@@ -124,7 +124,7 @@ void main() {
 
       final res2 = validator.validate(10);
       expect(res2.isValid, false);
-      expect(res2.description, 'less than 10');
+      expect(res2.description, 'Number less than 10');
     });
 
     test('isLte works', () {
@@ -136,7 +136,7 @@ void main() {
 
       final res2 = validator.validate(11);
       expect(res2.isValid, false);
-      expect(res2.description, 'less than or equal to 10');
+      expect(res2.description, 'Number less than or equal to 10');
     });
 
     test('isGt works', () {
@@ -147,7 +147,7 @@ void main() {
 
       final res2 = validator.validate(10);
       expect(res2.isValid, false);
-      expect(res2.description, 'greater than 10');
+      expect(res2.description, 'Number greater than 10');
     });
 
     test('isGte works', () {
@@ -159,7 +159,7 @@ void main() {
 
       final res2 = validator.validate(9);
       expect(res2.isValid, false);
-      expect(res2.description, 'greater than or equal to 10');
+      expect(res2.description, 'Number greater than or equal to 10');
     });
 
     test('isEq works', () {
@@ -169,11 +169,11 @@ void main() {
 
       final res2 = validator.validate(11);
       expect(res2.isValid, false);
-      expect(res2.description, 'equal to 10');
+      expect(res2.description, 'Must be equal to 10');
 
       final res3 = validator.validate('11');
       expect(res3.isValid, false);
-      expect(res3.description, 'equal to 10');
+      expect(res3.description, 'Must be equal to 10');
     });
   });
 
@@ -195,7 +195,7 @@ void main() {
 
       final res3 = validator.validate(1232);
       expect(res3.isValid, false);
-      expect(res3.description, 'String');
+      expect(res3.description, 'Expected type String but found int');
     });
 
     test('stringLength works', () {
@@ -205,7 +205,7 @@ void main() {
       expect(stringLengthEq5.validate('12345').isValid, true);
       expect(stringLengthEq5.validate('1234').isValid, false);
       expect(stringLengthEq5.validate('123456').isValid, false);
-      expect(stringLengthEq5.validate(12345).description, 'String');
+      expect(stringLengthEq5.validate(12345).description, 'Expected type String but found int');
 
       expect(stringLengthGt10.validate('12345678901').isValid, true);
       expect(stringLengthGt10.validate('123456789012').isValid, true);
@@ -221,14 +221,11 @@ void main() {
 
       final res1 = validator.validate('this is a useless string');
       expect(res1.isValid, false);
-      expect(
-        res1.description,
-        'String to contain "needle"',
-      );
+      expect(res1.description, 'Must contain needle');
 
       final res2 = validator.validate(1232);
       expect(res2.isValid, false);
-      expect(res2.description, 'String');
+      expect(res2.description, 'Expected type String but found int');
     });
 
     test('stringMatchesPattern works', () {
@@ -257,7 +254,7 @@ void main() {
       expect(res2.description, 'Incorrect numerical string');
     });
 
-    test('stringEmpty', () {
+    test('isStringEmpty', () {
       final field = isStringEmpty();
 
       expect(field.validate('').isValid, true);
@@ -268,7 +265,7 @@ void main() {
     test('not(\$isStringEmpty)', () {
       final field = not($isStringEmpty);
       expect(field.validate('').isValid, false);
-      expect(field.validate('').description, 'not passed');
+      expect(field.validate('').description, 'not String to be empty');
       expect(field.validate('1').isValid, true);
     });
   });
@@ -294,7 +291,7 @@ void main() {
         final listContainsNeedle = listContains('abc');
         final res1 = listContainsNeedle.validate({});
         expect(res1.isValid, false);
-        expect(res1.description, 'List<dynamic>');
+        expect(res1.description, 'Expected type List<dynamic> but found _Map<dynamic, dynamic>');
       });
 
       test('list wit needle, needle found', () {
@@ -325,15 +322,15 @@ void main() {
 
       final res1 = validator.validate([]);
       expect(res1.isValid, false);
-      expect(res1.description, 'length [equal to 2]');
+      expect(res1.description, 'length [Must be equal to 2]');
 
       final res2 = validator.validate([1, 2]);
       expect(res2.isValid, false);
-      expect(res2.description, '[0]: String');
+      expect(res2.description, '[0]: Expected type String but found int');
 
       final res3 = validator.validate([1, 2, 3]);
       expect(res3.isValid, false);
-      expect(res3.description, 'length [equal to 2]');
+      expect(res3.description, 'length [Must be equal to 2]');
 
       final res4 = validator.validate(['1', 2]);
       expect(res4.isValid, true);
@@ -348,7 +345,7 @@ void main() {
       expect(validator.validate(true).isValid, true);
 
       final res = validator.validate('false');
-      expect(res.description, 'not String');
+      expect(res.description, 'not Expected type String but found String');
     });
 
     test('any', () {
@@ -358,7 +355,7 @@ void main() {
       expect(field.validate([]).isValid, true);
       expect(
         field.validate('').description,
-        'Map<dynamic, dynamic>, List<dynamic>',
+        'Expected type Map<dynamic, dynamic> but found String, Expected type List<dynamic> but found String',
       );
     });
 
@@ -369,7 +366,7 @@ void main() {
       expect(field.validate(345).isValid, true);
 
       expect(field.validate('345').isValid, false);
-      expect(field.validate('345').description, 'int');
+      expect(field.validate('345').description, 'Expected type int but found String');
     });
 
     test('none', () {
@@ -382,15 +379,15 @@ void main() {
       expect(field.validate(false).isValid, false);
 
       final res = field.validate(false);
-      expect(res.description, 'not bool');
+      expect(res.description, 'not Expected type bool but found bool');
     });
 
     test('isEq for "primitives"', () {
       final field = isEq<int>(2);
       expect(field.validate({}).isValid, false);
-      expect(field.validate({}).description, 'equal to 2');
+      expect(field.validate({}).description, 'Must be equal to 2');
       expect(field.validate([]).isValid, false);
-      expect(field.validate(1).description, 'equal to 2');
+      expect(field.validate(1).description, 'Must be equal to 2');
 
       expect(field.validate(2).isValid, true);
     });
@@ -402,11 +399,11 @@ void main() {
       });
 
       expect(isEquals.validate({}).isValid, false);
-      expect(isEquals.validate({}).description, 'equal to {"a":"b","c":{"c1":"aaaa"}}');
+      expect(isEquals.validate({}).description, 'Must be deeply equal to {a: b, c: {c1: aaaa}}');
       expect(isEquals.validate([]).isValid, false);
       expect(
         isEquals.validate(1).description,
-        'Map<dynamic, dynamic>',
+        'Expected type Map<dynamic, dynamic> but found int',
       );
       expect(
         isEquals.validate({
@@ -423,18 +420,18 @@ void main() {
       expect(oneOf.validate('abc').isValid, true);
       expect(oneOf.validate('def').isValid, true);
       expect(oneOf.validate('xyz').isValid, false);
-      expect(oneOf.validate('xyz').description, 'one of: ["abc","def"]');
+      expect(oneOf.validate('xyz').description, 'Must be one of [abc, def]');
     });
 
     test('isDeepEq for lists', () {
       final isEquals = isDeepEq<List>([1, 2]);
 
       expect(isEquals.validate([]).isValid, false);
-      expect(isEquals.validate([]).description, 'equal to [1,2]');
+      expect(isEquals.validate([]).description, 'Must be deeply equal to [1, 2]');
       expect(isEquals.validate({}).isValid, false);
       expect(
         isEquals.validate(1).description,
-        'List<dynamic>',
+        'Expected type List<dynamic> but found int',
       );
       expect(
         isEquals.validate([1, 2]).isValid,
@@ -446,11 +443,11 @@ void main() {
       final isEquals = isDeepEq<Set>({1, 2});
 
       expect(isEquals.validate({1}).isValid, false);
-      expect(isEquals.validate({1}).description, 'equal to {1, 2}');
+      expect(isEquals.validate({1}).description, 'Must be deeply equal to {1, 2}');
       expect(isEquals.validate({1}).isValid, false);
       expect(
         isEquals.validate(1).description,
-        'Set<dynamic>',
+        'Expected type Set<dynamic> but found int',
       );
       expect(
         isEquals.validate({1, 2}).isValid,
@@ -487,11 +484,11 @@ void main() {
 
       final res2 = validator.validate(11);
       expect(res2.isValid, false);
-      expect(res2.description, 'equal to "10"');
+      expect(res2.description, 'Must be equal to 10');
 
       final res3 = validator.validate('11');
       expect(res3.isValid, false);
-      expect(res3.description, 'equal to "10"');
+      expect(res3.description, 'Must be equal to 10');
     });
 
     test('isEq<Map> works', () {
@@ -503,11 +500,11 @@ void main() {
 
       final res2 = validator.validate(11);
       expect(res2.isValid, false);
-      expect(res2.description, 'equal to {"test":"aaa"}');
+      expect(res2.description, 'Must be equal to {test: aaa}');
 
       final res3 = validator.validate({});
       expect(res3.isValid, false);
-      expect(res3.description, 'equal to {"test":"aaa"}');
+      expect(res3.description, 'Must be equal to {test: aaa}');
     });
 
     test('validateOrThrow', () {
@@ -533,7 +530,7 @@ void main() {
 
       final res2 = isString().validate(123);
       expect(res2.isValid, false);
-      expect(res2.description, 'String');
+      expect(res2.description, 'Expected type String but found int');
     });
 
     test('\$isString works', () {
@@ -542,13 +539,13 @@ void main() {
 
       final res2 = $isString.validate(123);
       expect(res2.isValid, false);
-      expect(res2.description, 'String');
+      expect(res2.description, 'Expected type String but found int');
     });
 
     test('isInt works', () {
       final res1 = isInt().validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'int');
+      expect(res1.description, 'Expected type int but found String');
 
       final res2 = isInt().validate(123);
       expect(res2.isValid, true);
@@ -560,13 +557,13 @@ void main() {
 
       final res2 = $isInt.validate('123');
       expect(res2.isValid, false);
-      expect(res2.description, 'int');
+      expect(res2.description, 'Expected type int but found String');
     });
 
     test('isBool works', () {
       final res1 = isBool().validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'bool');
+      expect(res1.description, 'Expected type bool but found String');
 
       final res2 = isBool().validate(true);
       expect(res2.isValid, true);
@@ -575,7 +572,7 @@ void main() {
     test('\$isBool works', () {
       final res1 = $isBool.validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'bool');
+      expect(res1.description, 'Expected type bool but found String');
 
       final res2 = $isBool.validate(true);
       expect(res2.isValid, true);
@@ -584,7 +581,7 @@ void main() {
     test('isDouble works', () {
       final res1 = isDouble().validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'double');
+      expect(res1.description, 'Expected type double but found String');
 
       final res2 = isDouble().validate(1.23);
       expect(res2.isValid, true);
@@ -593,7 +590,7 @@ void main() {
     test('\$isDouble works', () {
       final res1 = $isDouble.validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'double');
+      expect(res1.description, 'Expected type double but found String');
 
       final res2 = $isDouble.validate(1.23);
       expect(res2.isValid, true);
@@ -602,7 +599,7 @@ void main() {
     test('isNum works', () {
       final res1 = isNumber().validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'num');
+      expect(res1.description, 'Expected type num but found String');
 
       final res2 = isNumber().validate(1.23);
       expect(res2.isValid, true);
@@ -614,7 +611,7 @@ void main() {
     test('\$isNumber works', () {
       final res1 = $isNumber.validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'num');
+      expect(res1.description, 'Expected type num but found String');
 
       final res2 = $isNumber.validate(1.23);
       expect(res2.isValid, true);
@@ -626,7 +623,7 @@ void main() {
     test('isFuture works', () {
       final res1 = isFuture().validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'Future<dynamic>');
+      expect(res1.description, 'Expected type Future<dynamic> but found String');
 
       final res2 = isFuture().validate(Future.value(1.23));
       expect(res2.isValid, true);
@@ -635,7 +632,7 @@ void main() {
     test('\$isFuture works', () {
       final res1 = $isFuture.validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'Future<dynamic>');
+      expect(res1.description, 'Expected type Future<dynamic> but found String');
 
       final res2 = $isFuture.validate(Future.value(1.23));
       expect(res2.isValid, true);
@@ -644,7 +641,7 @@ void main() {
     test('isEnum works', () {
       final res1 = isEnum().validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'Enum');
+      expect(res1.description, 'Expected type Enum but found String');
 
       final res2 = isEnum().validate(EnumA.value1);
       expect(res2.isValid, true);
@@ -653,7 +650,7 @@ void main() {
     test('\$isEnum works', () {
       final res1 = $isEnum.validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'Enum');
+      expect(res1.description, 'Expected type Enum but found String');
 
       final res2 = $isEnum.validate(EnumA.value1);
       expect(res2.isValid, true);
@@ -662,7 +659,7 @@ void main() {
     test('isList works', () {
       final res1 = isList<int>().validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'List<int>');
+      expect(res1.description, 'Expected type List<int> but found String');
 
       final res2 = isList<int>().validate([1, 2, 3]);
       expect(res2.isValid, true);
@@ -671,7 +668,7 @@ void main() {
     test('\$isList works', () {
       final res1 = $isList.validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'List<dynamic>');
+      expect(res1.description, 'Expected type List<dynamic> but found String');
 
       final res2 = $isList.validate([1, 2, 3]);
       expect(res2.isValid, true);
@@ -680,7 +677,7 @@ void main() {
     test('isSet works', () {
       final res1 = isSet<int>().validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'Set<int>');
+      expect(res1.description, 'Expected type Set<int> but found String');
 
       final res2 = isSet<int>().validate({1, 2, 3});
       expect(res2.isValid, true);
@@ -689,7 +686,7 @@ void main() {
     test('\$isSet works', () {
       final res1 = $isSet.validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'Set<dynamic>');
+      expect(res1.description, 'Expected type Set<dynamic> but found String');
 
       final res2 = $isSet.validate({1, 2, 3});
       expect(res2.isValid, true);
@@ -698,7 +695,7 @@ void main() {
     test('isRecord works', () {
       final res1 = isRecord().validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'Record');
+      expect(res1.description, 'Expected type Record but found String');
 
       final res2 = isRecord().validate(('first', a: 2, b: true, 'last'));
       expect(res2.isValid, true);
@@ -707,7 +704,7 @@ void main() {
     test('\$isRecord works', () {
       final res1 = $isRecord.validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'Record');
+      expect(res1.description, 'Expected type Record but found String');
 
       final res2 = $isRecord.validate(('first', a: 2, b: true, 'last'));
       expect(res2.isValid, true);
@@ -716,7 +713,7 @@ void main() {
     test('isIterable works', () {
       final res1 = isIterable<int>().validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'Iterable<int>');
+      expect(res1.description, 'Expected type Iterable<int> but found String');
 
       final res2 = isIterable<int>().validate([1, 2, 3]);
       expect(res2.isValid, true);
@@ -725,7 +722,7 @@ void main() {
     test('\$isIterable works', () {
       final res1 = $isIterable.validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'Iterable<dynamic>');
+      expect(res1.description, 'Expected type Iterable<dynamic> but found String');
 
       final res2 = $isIterable.validate([1, 2, 3]);
       expect(res2.isValid, true);
@@ -734,7 +731,7 @@ void main() {
     test('isSymbol works', () {
       final res1 = isSymbol().validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'Symbol');
+      expect(res1.description, 'Expected type Symbol but found String');
 
       final res2 = isSymbol().validate(#mySymbol);
       expect(res2.isValid, true);
@@ -743,7 +740,7 @@ void main() {
     test('\$isSymbol works', () {
       final res1 = $isSymbol.validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'Symbol');
+      expect(res1.description, 'Expected type Symbol but found String');
 
       final res2 = $isSymbol.validate(#mySymbol);
       expect(res2.isValid, true);
@@ -752,7 +749,7 @@ void main() {
     test('isFunction works', () {
       final res1 = isFunction().validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'Function');
+      expect(res1.description, 'Expected type Function but found String');
 
       final res2 = isFunction().validate(() {});
       expect(res2.isValid, true);
@@ -761,7 +758,7 @@ void main() {
     test('\$isFunction works', () {
       final res1 = $isFunction.validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'Function');
+      expect(res1.description, 'Expected type Function but found String');
 
       final res2 = $isFunction.validate(() {});
       expect(res2.isValid, true);
@@ -770,7 +767,7 @@ void main() {
     test('\$isMap works', () {
       final res1 = $isMap.validate('');
       expect(res1.isValid, false);
-      expect(res1.description, 'Map<dynamic, dynamic>');
+      expect(res1.description, 'Expected type Map<dynamic, dynamic> but found String');
 
       final res2 = $isMap.validate({'key': 'value'});
       expect(res2.isValid, true);

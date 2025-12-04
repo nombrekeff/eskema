@@ -23,7 +23,7 @@ void main() {
         final validator = containsKey('name');
         final result = validator.validate('not a map');
         expect(result.isValid, false);
-        expect(result.firstExpectation.code, 'type.mismatch');
+        expect(result.firstExpectation.code, 'value.type_mismatch');
       });
     });
 
@@ -55,7 +55,7 @@ void main() {
         final validator = containsKeys(['name']);
         final result = validator.validate('not a map');
         expect(result.isValid, false);
-        expect(result.firstExpectation.code, 'type.mismatch');
+        expect(result.firstExpectation.code, 'value.type_mismatch');
       });
 
       test('passes with empty keys list', () {
@@ -94,7 +94,7 @@ void main() {
         final validator = containsValues(['Alice']);
         final result = validator.validate('not a map');
         expect(result.isValid, false);
-        expect(result.firstExpectation.code, 'type.mismatch');
+        expect(result.firstExpectation.code, 'value.type_mismatch');
       });
 
       test('passes with empty values list', () {

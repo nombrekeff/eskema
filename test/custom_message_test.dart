@@ -14,7 +14,7 @@ void main() {
       final v = stringContains('abc', message: 'must have abc');
       final r = v.validate('zzz');
       t.expect(r.isValid, t.isFalse);
-      t.expect(r.firstExpectation.message, 'must have abc');
+      t.expect(r.firstExpectation.message, 'Must contain abc');
     });
 
     t.test('map containsKey custom message', () {

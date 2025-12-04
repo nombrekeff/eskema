@@ -1,3 +1,4 @@
+import 'package:eskema/config/eskema_config.dart';
 import 'package:eskema/eskema.dart';
 
 /// Creates a conditional validator. It's conditional based on some other field in the eskema.
@@ -101,7 +102,11 @@ IValidator switchBy(String key, Map<String, IValidator> by) {
         if (r == null) {
           return Result.invalid(
             value,
-            expectation: const Expectation(message: 'unknown type'),
+            expectation: EskemaConfig.expectations.membershipMismatch(
+              type,
+              by.keys,
+              message: 'unknown type',
+            ),
           );
         }
 
