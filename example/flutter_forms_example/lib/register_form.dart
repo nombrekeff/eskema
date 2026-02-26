@@ -22,7 +22,8 @@ class RegisterFormState extends State<RegisterForm> {
     isInRange(8, 32),
   ], message: 'Name must be between 8 and 32 characters');
   final emailValidator = not($isStringEmpty) & isEmail();
-  final passwordValidator = not($isStringEmpty) & stringLength([isInRange(6, 32)]);
+  final passwordValidator =
+      not($isStringEmpty) & stringLength([isInRange(6, 32)]);
   // final confirmPasswordValidator = not($isStringEmpty) & isEqualTo(passwordController.text);
 
   @override

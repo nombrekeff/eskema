@@ -83,5 +83,6 @@ Expectation expectation(
   String? code,
   Map<String, Object?>? data,
 ]) {
-  return Expectation(path: path, message: message, value: value, code: code, data: data);
+  return Expectation(
+      path: path, message: message, value: value, code: code, data: data);
 }

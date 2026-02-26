@@ -1,4 +1,5 @@
-import 'package:eskema/eskema.dart' hide contains; // hide validator contains to avoid clash
+import 'package:eskema/eskema.dart'
+    hide contains; // hide validator contains to avoid clash
 import 'package:test/test.dart' as t;
 
 void main() {
@@ -25,7 +26,8 @@ void main() {
     });
 
     t.test('structure eskemaStrict custom message for unknown keys', () {
-      final v = eskemaStrict({'id': isInt()}, message: 'unexpected keys present');
+      final v =
+          eskemaStrict({'id': isInt()}, message: 'unexpected keys present');
       final r = v.validate({'id': 1, 'extra': true});
       t.expect(r.isValid, t.isFalse);
       t.expect(r.firstExpectation.message, 'unexpected keys present');

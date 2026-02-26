@@ -108,8 +108,8 @@ void main() {
     ]);
 
     expect(dateValidator.validate('1969-07-20 20:18:04Z').isValid, true);
-    expect(
-        dateValidator.validate('sadasd').description, 'a valid DateTime formatted String');
+    expect(dateValidator.validate('sadasd').description,
+        'a valid DateTime formatted String');
     expect(dateValidator.validate(123).description, 'String');
     expect(dateValidator.validate(true).description, 'String');
   });

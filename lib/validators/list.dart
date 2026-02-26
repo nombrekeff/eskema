@@ -23,7 +23,8 @@ IValidator listIsOfLength(int size, {String? message}) {
 /// So there's no need to add the [isList] validator when using this validator
 IValidator listContains<T>(dynamic item, {String? message}) =>
     isList<T>() &
-    (contains(item, message: message ?? 'List to contain ${prettifyValue(item)}'));
+    (contains(item,
+        message: message ?? 'List to contain ${prettifyValue(item)}'));
 
 /// Validate that the list is empty
 IValidator listEmpty<T>({String? message}) {

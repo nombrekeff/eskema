@@ -16,7 +16,8 @@ IValidator asyncPass([String msg = 'ok']) => Validator((v) async {
 // Helper creating an async failing validator
 IValidator asyncFail(String message) => Validator((v) async {
       await Future.microtask(() {});
-      return Result.invalid(v, expectation: Expectation(message: message, value: v));
+      return Result.invalid(v,
+          expectation: Expectation(message: message, value: v));
     });
 
 class InnerMapValidator extends MapValidator<Map<String, dynamic>> {
@@ -77,7 +78,8 @@ void main() {
       expect(r.expectationCount, 2);
     });
 
-    test('none with passing validators becomes invalid collecting expectations (async + sync)',
+    test(
+        'none with passing validators becomes invalid collecting expectations (async + sync)',
         () async {
       final v = none([
         asyncPass('p1'),
@@ -89,7 +91,8 @@ void main() {
     });
 
     test('withError wraps async child', () async {
-      final v = withExpectation(asyncFail('inner'), const Expectation(message: 'outer'));
+      final v = withExpectation(
+          asyncFail('inner'), const Expectation(message: 'outer'));
       final r = await v.validateAsync('z');
       expect(r.isValid, false);
       expect(r.firstExpectation.message, 'outer');
@@ -113,18 +116,22 @@ void main() {
       expect(r.isValid, true);
     });
 
-    test('all validator collects expectations from all failing child validators', () async {
+    test(
+        'all validator collects expectations from all failing child validators',
+        () async {
       // Use AllValidator with collecting=true for collecting all failures without value chaining
       final v = AllValidator([
         asyncFail('failure1'),
-        validator((v) => false, (v) => Expectation(message: 'failure2', value: v)),
+        validator(
+            (v) => false, (v) => Expectation(message: 'failure2', value: v)),
         asyncFail('failure3'),
       ], collecting: true);
       final r = await v.validateAsync('x');
       expect(r.isValid, false);
       // AllValidator with collecting=true should collect expectations from ALL failing validators
       expect(r.expectationCount, 3);
-      expect(r.expectations.map((e) => e.message), containsAll(['failure1', 'failure2', 'failure3']));
+      expect(r.expectations.map((e) => e.message),
+          containsAll(['failure1', 'failure2', 'failure3']));
     });
   });
 
@@ -151,10 +158,12 @@ void main() {
     test('inside eskema async condition selects otherwise', () async {
       final cond = Validator((map) async {
         await Future<void>.delayed(const Duration(milliseconds: 1));
-        return Result.invalid(map, expectation: Expectation(message: 'cond', value: map));
+        return Result.invalid(map,
+            expectation: Expectation(message: 'cond', value: map));
       });
       final v = eskema({
-        'value': when(cond, then: asyncFail('should not run'), otherwise: asyncPass()),
+        'value': when(cond,
+            then: asyncFail('should not run'), otherwise: asyncPass()),
       });
       final r = await v.validateAsync({'value': 1});
       expect(r.isValid, true); // otherwise asyncPass
@@ -186,7 +195,8 @@ void main() {
   });
 
   group('cached validators unused types', () {
-    test('record / symbol / enum / future / iterable / dateTime validators', () async {
+    test('record / symbol / enum / future / iterable / dateTime validators',
+        () async {
       // Expect failures
       expect($isRecord.validate(1).isValid, false);
       expect($isSymbol.validate(1).isValid, false);

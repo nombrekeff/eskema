@@ -1,4 +1,4 @@
-import 'package:eskema/eskema.dart' hide contains;
+import 'package:eskema/eskema.dart' hide contains, isTrue, isFalse;
 import 'package:test/test.dart';
 
 void main() {
@@ -33,7 +33,10 @@ void main() {
 
       final invalidAdmin = {
         'role': 'admin',
-        'data': {'role': 'admin', 'bio': 'I am admin'} // 'bio' not in adminSchema
+        'data': {
+          'role': 'admin',
+          'bio': 'I am admin'
+        } // 'bio' not in adminSchema
       };
       expect(schema.validate(invalidAdmin).isValid, isFalse);
     });
@@ -63,7 +66,8 @@ void main() {
       final v = resolve((p) => isString());
       final result = v.validate('test');
       expect(result.isValid, isFalse);
-      expect(result.description, contains('can only be used inside an `eskema` map validator'));
+      expect(result.description,
+          contains('can only be used inside an `eskema` map validator'));
     });
 
     test('async validation in resolved validator', () async {

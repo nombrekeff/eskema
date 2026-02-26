@@ -14,7 +14,8 @@ void main() {
   final validInts = [1, 2, 3, 10];
   final invalidInts = [1, -2, 3];
 
-  print('Validating $validInts: ${positiveIntListValidator.validate(validInts)}'); // Valid
+  print(
+      'Validating $validInts: ${positiveIntListValidator.validate(validInts)}'); // Valid
   print(
       'Validating $invalidInts: ${positiveIntListValidator.validate(invalidInts)}'); // Invalid
 
@@ -29,26 +30,30 @@ void main() {
   ]);
 
   final validTuple = ['user_profile', 123, true];
-    final invalidTuple = ['user_profile', '123', true]; // '123' is not an int (second position fails)
+  final invalidTuple = [
+    'user_profile',
+    '123',
+    true
+  ]; // '123' is not an int (second position fails)
 
-  print('Validating $validTuple: ${tupleValidator.validate(validTuple)}'); // Valid
+  print(
+      'Validating $validTuple: ${tupleValidator.validate(validTuple)}'); // Valid
   print(
       'Validating $invalidTuple: ${tupleValidator.validate(invalidTuple)}'); // Invalid
 
   // --- 3. `listIsOfLength` and `contains`: Other List Checks ---
   // You can also validate the properties of the list itself.
   print('\n--- Other List Checks ---');
-  final listPropertiesValidator = isList() &
-      listIsOfLength(3) &
-      listContains('admin');
+  final listPropertiesValidator =
+      isList() & listIsOfLength(3) & listContains('admin');
 
   final validList = ['guest', 'user', 'admin'];
   final invalidList = ['guest', 'user']; // Fails length and contains checks.
 
   print(
       'Validating $validList: ${listPropertiesValidator.validate(validList)}'); // Valid
-    print(
-            'Validating $invalidList: ${listPropertiesValidator.validate(invalidList)}'); // Invalid (fails length & contains)
+  print(
+      'Validating $invalidList: ${listPropertiesValidator.validate(invalidList)}'); // Invalid (fails length & contains)
 
   print('-' * 20);
 }

@@ -1,10 +1,10 @@
-import 'package:eskema/eskema.dart';
+import 'package:eskema/eskema.dart' as eskema;
 import 'package:test/test.dart';
 
 void main() {
   group('Additional String Format Validators', () {
     group('isEmail', () {
-      final validator = isEmail();
+      final validator = eskema.isEmail();
       test('should pass for a valid email', () {
         expect(validator.validate('test@example.com').isValid, isTrue);
       });
@@ -14,22 +14,22 @@ void main() {
         expect(validator.validate('test.example.com').isValid, isFalse);
       });
       test('should fail for non-string input', () {
-        expect($isEmail.validate(123).isValid, isFalse);
+        expect(eskema.$isEmail.validate(123).isValid, isFalse);
       });
     });
 
     group('isUrl', () {
-      final strictUrl = isUrl(strict: true);
+      final strictUrl = eskema.isUrl(strict: true);
 
       test('should pass for a valid strict URL', () {
-        expect($isStrictUrl.validate('http://example.com').isValid, isTrue);
-        expect($isStrictUrl.validate('https://example.com/path').isValid, isTrue);
-        expect($isStrictUrl.validate('example.com').isValid, isFalse);
+        expect(strictUrl.validate('http://example.com').isValid, isTrue);
+        expect(strictUrl.validate('https://example.com/path').isValid, isTrue);
+        expect(strictUrl.validate('example.com').isValid, isFalse);
       });
 
       test('should pass for non-strict URL', () {
-        expect($isUrl.validate('123').isValid, isTrue);
-        expect($isUrl.validate('example.com').isValid, isTrue);
+        expect(eskema.$isUrl.validate('123').isValid, isTrue);
+        expect(eskema.$isUrl.validate('example.com').isValid, isTrue);
       });
 
       test('should fail for non-string input', () {
@@ -39,21 +39,30 @@ void main() {
 
     group('isUuid', () {
       test('should pass for a valid UUID v4', () {
-        expect(isUuidV4().validate('123e4567-e89b-42d3-a456-556642440000').isValid, isTrue);
+        expect(
+            eskema
+                .isUuidV4()
+                .validate('123e4567-e89b-42d3-a456-556642440000')
+                .isValid,
+            isTrue);
       });
       test('should fail for an invalid UUID', () {
-        expect($isUuidV4.validate('not-a-uuid').isValid, isFalse);
+        expect(eskema.$isUuidV4.validate('not-a-uuid').isValid, isFalse);
         // Not a v4 UUID
-        expect($isUuidV4.validate('123e4567-e89b-12d3-a456-556642440000').isValid, isFalse);
+        expect(
+            eskema.$isUuidV4
+                .validate('123e4567-e89b-12d3-a456-556642440000')
+                .isValid,
+            isFalse);
       });
       test('should fail for non-string input', () {
-        expect($isUuidV4.validate(123).isValid, isFalse);
+        expect(eskema.$isUuidV4.validate(123).isValid, isFalse);
       });
     });
   });
 
   group('isInRange Validator', () {
-    final validator = isInRange(10, 20);
+    final validator = eskema.isInRange(10, 20);
     test('should pass for a number within the range', () {
       expect(validator.validate(15).isValid, isTrue);
       expect(validator.validate(10).isValid, isTrue);

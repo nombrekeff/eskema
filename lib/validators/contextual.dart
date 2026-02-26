@@ -45,7 +45,8 @@ IValidator when(
   required IValidator otherwise,
   String? message,
 }) {
-  final base = WhenValidator(condition: condition, then: then, otherwise: otherwise);
+  final base =
+      WhenValidator(condition: condition, then: then, otherwise: otherwise);
 
   // Wrap with a proxy that intercepts misuse (validate()) and parent usage (validateWithParent)
   return message == null ? base : WhenWithMessage(base, message);
@@ -82,7 +83,7 @@ IValidator switchBy(String key, Map<String, IValidator> by) {
         }
 
         return r.isValid ? Result.valid(value) : r;
-      });
+      }).copyWith(name: 'switchBy', arguments: [key, by]);
 }
 
 /// Creates a provider validator that depends on the parent object.

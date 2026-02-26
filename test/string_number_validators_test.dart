@@ -13,7 +13,8 @@ void main() {
 
     test('invalid integers', () {
       expect(v.validate('3.14').isValid, false); // decimal
-      expect(v.validate('1e3').isValid, false); // scientific notation not pure int
+      expect(
+          v.validate('1e3').isValid, false); // scientific notation not pure int
       expect(v.validate('abc').isValid, false);
       expect(v.validate(123).isValid, false); // non-string
     });

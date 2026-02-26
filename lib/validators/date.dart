@@ -19,7 +19,7 @@ IValidator _datePredicate({
   return Validator((value) {
     final isDt = value is DateTime;
     final valid = isDt && test(value);
-    
+
     return Result(
       isValid: valid,
       value: value,
@@ -34,7 +34,8 @@ IValidator _datePredicate({
 }
 
 /// DateTime must be before (or equal if inclusive) given bound.
-IValidator isDateBefore(DateTime dt, {bool inclusive = false, String? message}) {
+IValidator isDateBefore(DateTime dt,
+    {bool inclusive = false, String? message}) {
   return _datePredicate(
     defaultMessage:
         'a DateTime before${inclusive ? ' or equal to' : ''} ${dt.toIso8601String()}',
@@ -46,7 +47,7 @@ IValidator isDateBefore(DateTime dt, {bool inclusive = false, String? message}) 
       'inclusive': inclusive,
     },
     message: message,
-  );
+  ).copyWith(name: 'isDateBefore', arguments: [dt, inclusive]);
 }
 
 /// DateTime must be after (or equal if inclusive) given bound.
@@ -62,7 +63,7 @@ IValidator isDateAfter(DateTime dt, {bool inclusive = false, String? message}) {
       'inclusive': inclusive,
     },
     message: message,
-  );
+  ).copyWith(name: 'isDateAfter', arguments: [dt, inclusive]);
 }
 
 /// DateTime must fall within the interval.
@@ -87,18 +88,19 @@ IValidator isDateBetween(
       'inclusiveEnd': inclusiveEnd,
     },
     message: message,
-  );
+  ).copyWith(name: 'isDateBetween', arguments: [start, end, inclusiveStart, inclusiveEnd]);
 }
 
 /// DateTime must be same calendar day.
 IValidator isDateSameDay(DateTime dt, {String? message}) {
   return _datePredicate(
-    defaultMessage: 'a DateTime on the same day as ${dt.toIso8601String().substring(0, 10)}',
+    defaultMessage:
+        'a DateTime on the same day as ${dt.toIso8601String().substring(0, 10)}',
     test: (v) => v.year == dt.year && v.month == dt.month && v.day == dt.day,
     code: ExpectationCodes.valueDateMismatch,
     dataBuilder: () => {'targetDay': dt.toIso8601String().substring(0, 10)},
     message: message,
-  );
+  ).copyWith(name: 'isDateSameDay', arguments: [dt]);
 }
 
 /// DateTime must be in the past.
@@ -111,7 +113,7 @@ IValidator isDateInPast({bool allowNow = true, String? message}) {
     code: ExpectationCodes.valueDateNotPast,
     dataBuilder: () => {'now': now.toIso8601String(), 'allowNow': allowNow},
     message: message,
-  );
+  ).copyWith(name: 'isDateInPast', arguments: [allowNow]);
 }
 
 /// DateTime must be in the future.
@@ -124,5 +126,5 @@ IValidator isDateInFuture({bool allowNow = true, String? message}) {
     code: ExpectationCodes.valueDateNotFuture,
     dataBuilder: () => {'now': now.toIso8601String(), 'allowNow': allowNow},
     message: message,
-  );
+  ).copyWith(name: 'isDateInFuture', arguments: [allowNow]);
 }

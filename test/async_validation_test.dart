@@ -10,10 +10,12 @@ IValidator asyncPass([Duration delay = const Duration(milliseconds: 5)]) {
   });
 }
 
-IValidator asyncFail(String message, {Duration delay = const Duration(milliseconds: 5)}) {
+IValidator asyncFail(String message,
+    {Duration delay = const Duration(milliseconds: 5)}) {
   return Validator((value) async {
     await Future.delayed(delay);
-    return Result.invalid(value, expectations: [Expectation(message: message, value: value)]);
+    return Result.invalid(value,
+        expectations: [Expectation(message: message, value: value)]);
   });
 }
 
@@ -23,7 +25,8 @@ void main() {
       final v = all([
         isString(),
         asyncPass(),
-        validator((v) => v == 'ok', (v) => Expectation(message: '== ok', value: v)),
+        validator(
+            (v) => v == 'ok', (v) => Expectation(message: '== ok', value: v)),
       ]);
 
       // validate() should throw because chain contains async

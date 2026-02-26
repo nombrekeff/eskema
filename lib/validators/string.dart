@@ -31,7 +31,8 @@ IValidator stringLength(List<IValidator> validators, {String? message}) {
 /// This validator also validates that the value is a String first
 /// So there's no need to add the [isString] validator when using this validator
 IValidator stringIsOfLength(int size, {String? message}) {
-  return stringLength([isEq(size)], message: message ?? 'String length [to be $size]');
+  return stringLength([isEq(size)],
+      message: message ?? 'String length [to be $size]');
 }
 
 /// Validates that the String contains [str]
@@ -90,7 +91,7 @@ IValidator stringMatchesPattern(Pattern pattern, {String? message}) {
           code: ExpectationCodes.valuePatternMismatch,
           data: {'pattern': pattern.toString()},
         ),
-      );
+      ).copyWith(name: 'stringMatchesPattern', arguments: [pattern]);
 }
 
 /// Validates that it's a String and it's lowecase
@@ -103,7 +104,7 @@ IValidator isLowerCase({String? message}) =>
         code: ExpectationCodes.valueCaseMismatch,
         data: {'expected_case': 'lower'},
       ),
-    );
+    ).copyWith(name: 'isLowerCase', arguments: []);
 
 /// Validates that it's a String and it's uppercase
 IValidator isUpperCase({String? message}) =>
@@ -115,7 +116,7 @@ IValidator isUpperCase({String? message}) =>
         code: ExpectationCodes.valueCaseMismatch,
         data: {'expected_case': 'upper'},
       ),
-    );
+    ).copyWith(name: 'isUpperCase', arguments: []);
 
 final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
@@ -133,7 +134,8 @@ final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 /// ```
 IValidator isEmail({String? message}) {
   return isString() &
-      stringMatchesPattern(emailRegex, message: message ?? 'a valid email address');
+      stringMatchesPattern(emailRegex,
+          message: message ?? 'a valid email address');
 }
 
 /// Checks whether the given string is empty
@@ -179,10 +181,11 @@ IValidator isUrl({bool strict = false, String? message}) {
           code: ExpectationCodes.valueFormatInvalid,
           data: {'format': 'url'},
         ),
-      );
+      ).copyWith(name: 'isUrl', arguments: [strict]);
 }
 
-IValidator isStrictUrl({String? message}) => isUrl(strict: true, message: message);
+IValidator isStrictUrl({String? message}) =>
+    isUrl(strict: true, message: message);
 
 final uuidRegex = RegExp(
     r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
@@ -203,7 +206,8 @@ final uuidRegex = RegExp(
 /// });
 /// ```
 IValidator isUuidV4({String? message}) {
-  return isString() & stringMatchesPattern(uuidRegex, message: message ?? 'a valid UUID v4');
+  return isString() &
+      stringMatchesPattern(uuidRegex, message: message ?? 'a valid UUID v4');
 }
 
 /// Validates that the String can be parsed as an `int` (e.g. '123', '-42')
@@ -326,4 +330,4 @@ IValidator isDate({String? message}) => validator(
         code: ExpectationCodes.valueFormatInvalid,
         data: {'format': 'date_time'},
       ),
-    );
+    ).copyWith(name: 'isDate', arguments: []);

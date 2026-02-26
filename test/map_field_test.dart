@@ -1,18 +1,18 @@
 import 'package:test/test.dart' hide isNull;
-import 'package:eskema/eskema.dart';
+import 'package:eskema/eskema.dart' as eskema;
 
 void main() {
   test('Basic MapField validates correctly', () {
-    final mapField = all([
-      eskema({
-        'name': all([isType<String>()]),
-        'vat': any([
-          $isNull,
-          isGte(0),
+    final mapField = eskema.all([
+      eskema.eskema({
+        'name': eskema.all([eskema.isType<String>()]),
+        'vat': eskema.any([
+          eskema.$isNull,
+          eskema.isGte(0),
         ]),
-        'age': all([
-          isType<int>(),
-          isGte(0),
+        'age': eskema.all([
+          eskema.isType<int>(),
+          eskema.isGte(0),
         ]),
       }),
     ]);
@@ -27,29 +27,29 @@ void main() {
 
     final invalidRes3 = mapField.validate({'name': 'test', 'age': -12});
     expect(invalidRes3.isValid, false);
-    expect(invalidRes3.description,
-        '.age: greater than or equal to 0');
+    expect(invalidRes3.description, '.age: greater than or equal to 0');
 
     final invalidRes4 = mapField.validate(null);
     expect(invalidRes4.isValid, false);
     expect(invalidRes4.description, 'Map<dynamic, dynamic>');
 
-    final validRes1 = mapField.validate({'name': 'test', 'age': 12, 'vat': null});
+    final validRes1 =
+        mapField.validate({'name': 'test', 'age': 12, 'vat': null});
     expect(validRes1.isValid, true);
   });
 
   test('Nested MapFields validates correctly', () {
-    final isValidMap = eskema({
-      'address': eskema({
-        'city': all([$isString]),
-        'street': all([isString()]),
-        'number': all([
-          isType<int>(),
-          isGte(0),
+    final isValidMap = eskema.eskema({
+      'address': eskema.eskema({
+        'city': eskema.all([eskema.$isString]),
+        'street': eskema.all([eskema.isString()]),
+        'number': eskema.all([
+          eskema.isType<int>(),
+          eskema.isGte(0),
         ]),
-        'additional': nullable(
-          eskema({
-            'doorbel_number': all([isInt()])
+        'additional': eskema.nullable(
+          eskema.eskema({
+            'doorbel_number': eskema.all([eskema.isInt()])
           }),
         ),
       }),
@@ -91,10 +91,10 @@ void main() {
   });
 
   test('Map with ListField', () {
-    final validListField = eskema({
-      'books': listEach(
-        eskema({
-          'name': all([isType<String>()]),
+    final validListField = eskema.eskema({
+      'books': eskema.listEach(
+        eskema.eskema({
+          'name': eskema.all([eskema.isType<String>()]),
         }),
       ),
     });
@@ -117,8 +117,8 @@ void main() {
   });
 
   test('optional works', () {
-    final validListField = eskema({
-      'optional': optional(isString()),
+    final validListField = eskema.eskema({
+      'optional': eskema.optional(eskema.isString()),
     });
 
     expect(validListField.validate({'optional': 'test'}).isValid, true);
@@ -130,8 +130,8 @@ void main() {
   });
 
   test('optional and nullable works', () {
-    final validListField = eskema({
-      'optional': optional(nullable(isString())),
+    final validListField = eskema.eskema({
+      'optional': eskema.optional(eskema.nullable(eskema.isString())),
     });
 
     expect(validListField.validate({'optional': 'test'}).isValid, true);
@@ -143,8 +143,8 @@ void main() {
   });
 
   test('nullable works', () {
-    final validListField = eskema({
-      'nullable': nullable(isString()),
+    final validListField = eskema.eskema({
+      'nullable': eskema.nullable(eskema.isString()),
     });
 
     expect(validListField.validate({'nullable': 'test'}).isValid, true);
@@ -157,7 +157,7 @@ void main() {
   });
 
   test('nullable single fields works', () {
-    final field = nullable(isString());
+    final field = eskema.nullable(eskema.isString());
 
     expect(field.validate('').isValid, true);
     expect(field.validate(null, exists: true).isValid, true);
@@ -165,7 +165,7 @@ void main() {
   });
 
   test('optional single fields works', () {
-    final field = optional(isString());
+    final field = eskema.optional(eskema.isString());
 
     expect(field.isValid(''), true);
     expect(field.isValid(false), false);
@@ -173,9 +173,9 @@ void main() {
   });
 
   group('eskemaStrict Validator', () {
-    final validator = eskemaStrict({
-      'name': isString(),
-      'age': isInt(),
+    final validator = eskema.eskemaStrict({
+      'name': eskema.isString(),
+      'age': eskema.isInt(),
     });
 
     test('should pass for a map with exact keys', () {

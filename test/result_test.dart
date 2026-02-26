@@ -17,18 +17,22 @@ void main() {
       expect(r.expectations.first.message, 'fail');
     });
 
-    test('Main constructor: isValid=true without errors triggers assertion', () {
+    test('Main constructor: isValid=true without errors triggers assertion',
+        () {
       expect(
         () => Result(isValid: true, value: 10),
         returnsNormally,
       );
     });
 
-    test('Main constructor: isValid=true WITH error passes (though semantically odd)', () {
+    test(
+        'Main constructor: isValid=true WITH error passes (though semantically odd)',
+        () {
       final r = Result(
         isValid: true,
         value: 10,
-        expectation: const Expectation(message: 'should not be here', value: 10),
+        expectation:
+            const Expectation(message: 'should not be here', value: 10),
       );
       expect(r.isValid, true);
       expect(r.expectations, isNotEmpty); // Illustrates current inconsistency.
@@ -44,7 +48,8 @@ void main() {
       expect(r.expectations.single.message, 'bad');
     });
 
-    test('Main constructor: isValid=false WITH non-empty errors list passes', () {
+    test('Main constructor: isValid=false WITH non-empty errors list passes',
+        () {
       final r = Result(
         isValid: false,
         value: 10,

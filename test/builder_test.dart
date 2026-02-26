@@ -4,7 +4,8 @@ import 'package:eskema/eskema.dart';
 void main() {
   group('Builder basic type selection', () {
     test('string builder basic chain passes', () {
-      final validator = builder().string().lengthMin(2).lengthMax(5).not.empty().build();
+      final validator =
+          builder().string().lengthMin(2).lengthMax(5).not.empty().build();
       expect(validator.validate('hey').isValid, true);
       expect(validator.validate('h').isValid, false); // too short
       expect(validator.validate('toolong').isValid, false); // too long
@@ -28,11 +29,14 @@ void main() {
     test('negation flag consumed correctly', () {
       final validator = builder().string().not.matches(RegExp(r'^abc')).build();
       expect(validator.validate('xyz').isValid, true); // does not match pattern
-      expect(validator.validate('abc').isValid, false); // matches => negated fails
+      expect(
+          validator.validate('abc').isValid, false); // matches => negated fails
       // Ensure subsequent additions are not negated accidentally
       final validator2 = builder().string().not.empty().lengthMin(1).build();
-      expect(validator2.validate('a').isValid, true); // not(empty) passes, lengthMin ok
-      expect(validator2.validate('').isValid, false); // empty triggers not(empty) failure first
+      expect(validator2.validate('a').isValid,
+          true); // not(empty) passes, lengthMin ok
+      expect(validator2.validate('').isValid,
+          false); // empty triggers not(empty) failure first
     });
   });
 
@@ -54,7 +58,10 @@ void main() {
 
   group('Builder list.each + contains', () {
     test('list each string min length', () {
-      final validator = builder().list().each(builder().string().lengthMin(2).build()).build();
+      final validator = builder()
+          .list()
+          .each(builder().string().lengthMin(2).build())
+          .build();
       expect(validator.validate(['aa', 'bbb']).isValid, true);
       expect(validator.validate(['a']).isValid, false);
     });
@@ -74,7 +81,8 @@ void main() {
     });
 
     test('deepEq list', () {
-      final validator = builder().type<List<String>>().deepEq(['a', 'b']).build();
+      final validator =
+          builder().type<List<String>>().deepEq(['a', 'b']).build();
       expect(validator.validate(['a', 'b']).isValid, true);
       expect(validator.validate(['b', 'a']).isValid, false);
     });
@@ -123,14 +131,16 @@ void main() {
     test('coercion override drops previous post-coercion constraints', () {
       // gte(10) is added after first toInt, but a later toDouble overrides
       // the transform and clears earlier post-coercion constraints.
-      final validator = builder().string().toInt().gte(10).toDouble().lt(10.5).build();
+      final validator =
+          builder().string().toInt().gte(10).toDouble().lt(10.5).build();
       // '9' would have failed gte(10) if it remained; passes because only lt(10.5) applies now.
       expect(validator.validate('9').isValid, true);
       expect(validator.validate('12').isValid, false); // 12.0 not < 10.5
     });
 
     test('repeated same coercion keeps existing constraints (idempotent)', () {
-      final validator = builder().string().toInt().gte(5).toInt().lt(10).build();
+      final validator =
+          builder().string().toInt().gte(5).toInt().lt(10).build();
       expect(validator.validate('7').isValid, true); // within both bounds
       expect(validator.validate('4').isValid, false); // fails gte(5)
       expect(validator.validate('12').isValid, false); // fails lt(10)
@@ -164,16 +174,20 @@ void main() {
       expect(vBefore.validate(now).isValid, true);
       final vAfter = builder().dateTime().after(earlier).build();
       expect(vAfter.validate(now).isValid, true);
-      expect(vAfter.validate(earlier.subtract(const Duration(seconds: 1))).isValid, false);
+      expect(
+          vAfter.validate(earlier.subtract(const Duration(seconds: 1))).isValid,
+          false);
     });
 
     test('DateTimeBuilder betweenDates / sameDay / inPast/inFuture', () {
       final today = DateTime.now();
       final tomorrow = today.add(const Duration(days: 1));
       final yesterday = today.subtract(const Duration(days: 1));
-      final between = builder().dateTime().betweenDates(yesterday, tomorrow).build();
+      final between =
+          builder().dateTime().betweenDates(yesterday, tomorrow).build();
       expect(between.validate(today).isValid, true);
-      expect(between.validate(tomorrow.add(const Duration(seconds: 1))).isValid, false);
+      expect(between.validate(tomorrow.add(const Duration(seconds: 1))).isValid,
+          false);
       final same = builder().dateTime().sameDay(today).build();
       expect(same.validate(today).isValid, true);
       expect(same.validate(tomorrow).isValid, false);
@@ -192,12 +206,21 @@ void main() {
           .jsonRequiresKeys(['a', 'b']).build();
       expect(vJsonObj.validate('{"a":1,"b":2}').isValid, true);
       expect(vJsonObj.validate('{"a":1}').isValid, false);
-      final vJsonArr = builder().string().toJson().jsonArray().jsonArrayLen(min: 2, max: 3).build();
+      final vJsonArr = builder()
+          .string()
+          .toJson()
+          .jsonArray()
+          .jsonArrayLen(min: 2, max: 3)
+          .build();
       expect(vJsonArr.validate('[1,2]').isValid, true);
       expect(vJsonArr.validate('[1]').isValid, false);
       expect(vJsonArr.validate('[1,2,3,4]').isValid, false);
-      final vJsonArrEach =
-          builder().string().toJson().jsonArray().jsonArrayEach(builder().number().gte(0).build()).build();
+      final vJsonArrEach = builder()
+          .string()
+          .toJson()
+          .jsonArray()
+          .jsonArrayEach(builder().number().gte(0).build())
+          .build();
       expect(vJsonArrEach.validate('[1,2,3]').isValid, true);
       expect(vJsonArrEach.validate('[1,-2,3]').isValid, false);
     });
@@ -205,12 +228,24 @@ void main() {
 
   group('Builder string mixin extras', () {
     test('email / lowerCase / upperCase', () {
-      expect(builder().string().email().build().validate('user@example.com').isValid, true);
-      expect(builder().string().email().build().validate('not-email').isValid, false);
-      expect(builder().string().lowerCase().build().validate('abc').isValid, true);
-      expect(builder().string().lowerCase().build().validate('Abc').isValid, false);
-      expect(builder().string().upperCase().build().validate('ABC').isValid, true);
-      expect(builder().string().upperCase().build().validate('AbC').isValid, false);
+      expect(
+          builder()
+              .string()
+              .email()
+              .build()
+              .validate('user@example.com')
+              .isValid,
+          true);
+      expect(builder().string().email().build().validate('not-email').isValid,
+          false);
+      expect(
+          builder().string().lowerCase().build().validate('abc').isValid, true);
+      expect(builder().string().lowerCase().build().validate('Abc').isValid,
+          false);
+      expect(
+          builder().string().upperCase().build().validate('ABC').isValid, true);
+      expect(builder().string().upperCase().build().validate('AbC').isValid,
+          false);
     });
 
     test('url strict vs non-strict', () {
@@ -222,13 +257,25 @@ void main() {
     });
 
     test('intString / doubleString / numString / boolString / isDate', () {
-      expect(builder().string().intString().build().validate('42').isValid, true);
-      expect(builder().string().intString().build().validate('42.1').isValid, false);
-      expect(builder().string().doubleString().build().validate('42.1').isValid, true);
-      expect(builder().string().numString().build().validate('3e2').isValid, true);
-      expect(builder().string().boolString().build().validate('true').isValid, true);
-      expect(builder().string().boolString().build().validate('yes').isValid, false);
-      expect(builder().string().isDate().build().validate(DateTime.now().toIso8601String()).isValid,
+      expect(
+          builder().string().intString().build().validate('42').isValid, true);
+      expect(builder().string().intString().build().validate('42.1').isValid,
+          false);
+      expect(builder().string().doubleString().build().validate('42.1').isValid,
+          true);
+      expect(
+          builder().string().numString().build().validate('3e2').isValid, true);
+      expect(builder().string().boolString().build().validate('true').isValid,
+          true);
+      expect(builder().string().boolString().build().validate('yes').isValid,
+          false);
+      expect(
+          builder()
+              .string()
+              .isDate()
+              .build()
+              .validate(DateTime.now().toIso8601String())
+              .isValid,
           true);
     });
   });
@@ -243,8 +290,10 @@ void main() {
       }).build();
       expect(schemaValidator.validate({'id': 1, 'extra': true}).isValid,
           true); // non-strict ignores
-      expect(strictValidator.validate({'id': 1, 'extra': true}).isValid, false); // strict fails
-      expect(strictValidator.validate({'id': -1}).isValid, false); // id constraint fails
+      expect(strictValidator.validate({'id': 1, 'extra': true}).isValid,
+          false); // strict fails
+      expect(strictValidator.validate({'id': -1}).isValid,
+          false); // id constraint fails
     });
   });
 
@@ -282,7 +331,8 @@ void main() {
 
   group('Builder error() override & generic type', () {
     test('error override preserves code', () {
-      final validator = builder().number().gte(10).error('custom message').build();
+      final validator =
+          builder().number().gte(10).error('custom message').build();
       final r = validator.validate(5);
       expect(r.isValid, false);
       expect(r.expectations.first.message, 'custom message');
@@ -300,7 +350,8 @@ void main() {
   group('Builder edge cases & odd scenarios', () {
     test('stray not without following validator is ignored safely', () {
       final validator = builder().string().not.build();
-      expect(validator.validate('ok').isValid, true); // acts like plain string validator
+      expect(validator.validate('ok').isValid,
+          true); // acts like plain string validator
     });
 
     test('double coercion idempotent', () {
@@ -309,13 +360,15 @@ void main() {
       expect(validator.validate('4').isValid, false);
     });
     test('negated pattern validator triggers failure on match', () {
-      final validator = builder().string().not.matches(RegExp(r'^fail')).build();
+      final validator =
+          builder().string().not.matches(RegExp(r'^fail')).build();
       expect(validator.validate('ok').isValid, true);
       expect(validator.validate('failCase').isValid, false);
     });
 
     test('stacked error overrides keep last', () {
-      final validator = builder().number().gte(10).error('first').error('second').build();
+      final validator =
+          builder().number().gte(10).error('first').error('second').build();
       final r = validator.validate(5);
       expect(r.isValid, false);
       expect(r.expectations.first.message, 'second');
@@ -339,7 +392,8 @@ void main() {
     });
 
     test('optional applied last (otherwise earlier optional lost)', () {
-      final validator = builder().string().lengthMin(2).nullable().optional().build();
+      final validator =
+          builder().string().lengthMin(2).nullable().optional().build();
       final schema = eskema({'name': validator});
       expect(schema.validate({}).isValid, true); // optional skip now works
       expect(validator.validate(null).isValid, true); // nullable accepted
@@ -359,7 +413,9 @@ void main() {
     });
 
     test('map strict missing key fails', () {
-      final validator = builder().map().strict({'id': builder().int_().gte(0).build()}).build();
+      final validator = builder()
+          .map()
+          .strict({'id': builder().int_().gte(0).build()}).build();
       expect(validator.validate({}).isValid, false);
     });
 
@@ -372,7 +428,10 @@ void main() {
     });
 
     test('list each with optional validator: null element fails', () {
-      final validator = builder().list().each(builder().string().lengthMin(2).optional().build()).build();
+      final validator = builder()
+          .list()
+          .each(builder().string().lengthMin(2).optional().build())
+          .build();
       expect(validator.validate(['ab', 'cd']).isValid, true);
       expect(validator.validate(['a']).isValid, false); // lengthMin
       expect(validator.validate(['ab', null]).isValid,
@@ -400,7 +459,8 @@ void main() {
         kind: 'uppercase',
       );
 
-      final validator = builder().string().use(uppercasePivot).lengthMin(3).build();
+      final validator =
+          builder().string().use(uppercasePivot).lengthMin(3).build();
 
       // 'hi' becomes 'HI' and fails lengthMin(3)
       expect(validator.validate('hi').isValid, false);
@@ -424,10 +484,12 @@ void main() {
         kind: 'toInt',
       );
 
-      final validator = builder().string().lengthMin(2).use(toIntPivot).gte(10).build();
+      final validator =
+          builder().string().lengthMin(2).use(toIntPivot).gte(10).build();
 
       // String pre-validator passes, then toInt pivot, then numeric validator
-      expect(validator.validate('123').isValid, true); // '123'.length >= 2, then int(123) >= 10
+      expect(validator.validate('123').isValid,
+          true); // '123'.length >= 2, then int(123) >= 10
       expect(validator.validate('123').value, 123);
 
       // String pre-validator fails
@@ -448,7 +510,8 @@ void main() {
         kind: 'toInt',
       );
 
-      final validator = builder().string().lengthMin(2).use(toIntPivot).gte(10).build();
+      final validator =
+          builder().string().lengthMin(2).use(toIntPivot).gte(10).build();
 
       // Pre-validators are dropped, so '1' passes string check but fails numeric
       expect(validator.validate('1').isValid, false); // int(1) < 10
@@ -468,7 +531,8 @@ void main() {
         kind: 'parseDouble',
       );
 
-      final validator = builder().string().use(parseDoublePivot).toInt().gte(5).build();
+      final validator =
+          builder().string().use(parseDoublePivot).toInt().gte(5).build();
 
       // '10.0' -> double 10.0 -> int 10 -> passes
       expect(validator.validate('10.0').isValid, true);
@@ -490,7 +554,8 @@ void main() {
         kind: 'multiplyByTwo',
       );
 
-      final validator = builder().number().use(multiplyByTwoPivot).lt(10).build();
+      final validator =
+          builder().number().use(multiplyByTwoPivot).lt(10).build();
 
       // 3 * 2 = 6 < 10, passes
       expect(validator.validate(3).isValid, true);
@@ -504,7 +569,8 @@ void main() {
       final failingPivot = CustomPivot(
         (child) => Validator((value) {
           // Always fail with custom message
-          return Result.invalid(value, expectation: const Expectation(message: 'Custom pivot failed'));
+          return Result.invalid(value,
+              expectation: const Expectation(message: 'Custom pivot failed'));
         }),
         dropPre: true,
         kind: 'failing',
@@ -530,7 +596,12 @@ void main() {
         kind: 'toUpper',
       );
 
-      final validator = builder().string().use(addPrefixPivot).use(toUpperPivot).lengthMin(10).build();
+      final validator = builder()
+          .string()
+          .use(addPrefixPivot)
+          .use(toUpperPivot)
+          .lengthMin(10)
+          .build();
 
       // 'test' -> 'prefix_test' -> 'PREFIX_TEST' -> length check
       expect(validator.validate('test').isValid, true);

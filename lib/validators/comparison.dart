@@ -16,10 +16,9 @@ IValidator noop() => Validator((value) => Result.valid(value));
 
 /// Checks whether the given value is equal to the [otherValue] value of type [T]
 ///
-/// Even though this function accepts any Type, note that it will not work with Collections. 
+/// Even though this function accepts any Type, note that it will not work with Collections.
 /// For that usecase prefer using [isDeepEq] instead.
-IValidator isEq<T>(T otherValue, {String? message}) =>
-    validator(
+IValidator isEq<T>(T otherValue, {String? message}) => validator(
       (value) => value == otherValue,
       (value) => Expectation(
         message: message ?? 'equal to ${prettifyValue(otherValue)}',
@@ -31,24 +30,31 @@ IValidator isEq<T>(T otherValue, {String? message}) =>
           'mode': 'shallow'
         },
       ),
+      name: 'isEq',
+      arguments: [otherValue],
     );
 
+/// Checks whether the given value is true
+IValidator isTrue() => isEq(true, message: 'equal to true').copyWith(name: 'isTrue', arguments: []);
+
+/// Checks whether the given value is false
+IValidator isFalse() => isEq(false, message: 'equal to false').copyWith(name: 'isFalse', arguments: []);
+
 /// Checks whether the given value is equal to the [otherValue] value of type [T]
-IValidator isDeepEq<T>(T otherValue, {String? message}) =>
-    isType<T>() &
-    validator(
-      (value) => _collectionEquals(value, otherValue),
-      (value) => Expectation(
-        message: message ?? 'equal to ${prettifyValue(otherValue)}',
-        value: value,
-        code: ExpectationCodes.valueDeepEqualMismatch,
-        data: {
-          'expected': prettifyValue(otherValue),
-          'found': prettifyValue(value),
-          'mode': 'deep'
-        },
-      ),
-    );
+IValidator isDeepEq<T>(T otherValue, {String? message}) => (isType<T>() &
+        validator(
+          (value) => _collectionEquals(value, otherValue),
+          (value) => Expectation(
+            message: message ?? 'equal to ${prettifyValue(otherValue)}',
+            value: value,
+            code: ExpectationCodes.valueDeepEqualMismatch,
+            data: {
+              'expected': prettifyValue(otherValue),
+              'found': prettifyValue(value),
+              'mode': 'deep'
+            },
+          ),
+        )).copyWith(name: 'isDeepEq', arguments: [otherValue]);
 
 /// Checks whether the given value has a length property and the length matches the validators
 IValidator length(List<IValidator> validators, {String? message}) {
@@ -102,7 +108,7 @@ IValidator contains<T>(T item, {String? message}) {
       value: value,
       code: ExpectationCodes.valueContainsMissing,
     ).toInvalidResult();
-  });
+  }).copyWith(name: 'contains', arguments: [item]);
 }
 
 /// Checks whether the given value is one of the [options] values of type [T]
@@ -118,5 +124,5 @@ IValidator isOneOf<T>(Iterable<T> options, {String? message}) {
       ),
       value: value,
     ),
-  );
+  ).copyWith(name: 'isOneOf', arguments: [options]);
 }

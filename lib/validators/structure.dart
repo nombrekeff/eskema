@@ -29,10 +29,11 @@ import 'package:eskema/expectation_codes.dart';
 IValidator eskema(Map<String, IValidator> mapEskema, {String? message}) {
   FutureOr<Result> eskemaPredicate(value) {
     final entries = mapEskema.entries.toList();
-    return _loop(entries: entries, errors: [], value: value, index: 0, message: message);
+    return _loop(
+        entries: entries, errors: [], value: value, index: 0, message: message);
   }
 
-  return isMap() & Validator(eskemaPredicate);
+  return isMap() & Validator(eskemaPredicate).copyWith(name: 'eskema', arguments: [mapEskema]);
 }
 
 // We intentionally implement `loop` returning `FutureOr<Result>`:
@@ -54,7 +55,9 @@ FutureOr<Result> _loop({
   required String? message,
 }) {
   if (index >= entries.length) {
-    return errors.isEmpty ? Result.valid(value) : Result.invalid(value, expectations: errors);
+    return errors.isEmpty
+        ? Result.valid(value)
+        : Result.invalid(value, expectations: errors);
   }
 
   final entry = entries[index];
@@ -63,8 +66,12 @@ FutureOr<Result> _loop({
   final fieldValue = value[key];
   final exists = value.containsKey(key);
 
-  FutureOr<Result> next() =>
-      _loop(entries: entries, errors: errors, value: value, index: index + 1, message: message);
+  FutureOr<Result> next() => _loop(
+      entries: entries,
+      errors: errors,
+      value: value,
+      index: index + 1,
+      message: message);
 
   FutureOr<Result> res;
   if (validator is IWhenValidator) {
@@ -104,7 +111,8 @@ FutureOr<Result> _loop({
   return next();
 }
 
-void _collectEskema(Result result, List<Expectation> errors, String key, [String? message]) {
+void _collectEskema(Result result, List<Expectation> errors, String key,
+    [String? message]) {
   if (result.isValid) return;
 
   for (final error in result.expectations) {
@@ -131,7 +139,8 @@ void _collectEskema(Result result, List<Expectation> errors, String key, [String
 IValidator eskemaStrict(Map<String, IValidator> schema, {String? message}) {
   FutureOr<Result> strictEskemaPredicate(value) {
     final map = value as Map<String, dynamic>;
-    final unknownKeys = map.keys.where((key) => !schema.containsKey(key)).toList();
+    final unknownKeys =
+        map.keys.where((key) => !schema.containsKey(key)).toList();
 
     if (unknownKeys.isEmpty) {
       return Result.valid(value);
@@ -150,7 +159,7 @@ IValidator eskemaStrict(Map<String, IValidator> schema, {String? message}) {
     );
   }
 
-  return eskema(schema) & Validator(strictEskemaPredicate);
+  return eskema(schema) & Validator(strictEskemaPredicate).copyWith(name: 'eskemaStrict', arguments: [schema]);
 }
 
 /// Returns a Validator that checks a value against the eskema provided,
@@ -206,7 +215,9 @@ IValidator eskemaList<T>(List<IValidator> eskema) {
     return loop(0);
   }
 
-  return isType<List>() & listIsOfLength(eskema.length) & Validator(listPredicate);
+  return isType<List>() &
+      listIsOfLength(eskema.length) &
+      Validator(listPredicate).copyWith(name: 'eskemaList', arguments: [eskema]);
 }
 
 /// Returns a Validator that runs [itemValidator] for each item in the list
@@ -246,10 +257,11 @@ IValidator listEach(IValidator itemValidator, {String? message}) {
     return loop(0);
   }
 
-  return $isList & Validator(listEachPredicate);
+  return $isList & Validator(listEachPredicate).copyWith(name: 'listEach', arguments: [itemValidator]);
 }
 
-void _collectListIndex(Result result, List<Expectation> errors, int index, [String? message]) {
+void _collectListIndex(Result result, List<Expectation> errors, int index,
+    [String? message]) {
   if (result.isValid) return;
 
   for (var error in result.expectations) {

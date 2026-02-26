@@ -12,7 +12,6 @@ IValidator handleReturnPreserveValue(IValidator validator, String? message) {
       : validator;
 }
 
-
 /// Transforms a value using a provided function.
 ///
 /// The [fn] function is applied to the input value, and the result is then

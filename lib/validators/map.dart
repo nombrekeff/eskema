@@ -37,7 +37,8 @@ IValidator containsKey(String key, {String? message}) => _mapPredicateValidator(
     );
 
 /// Validator that checks if a map contains a specific set of keys.
-IValidator containsKeys(Iterable<String> keys, {String? message}) => _mapPredicateValidator(
+IValidator containsKeys(Iterable<String> keys, {String? message}) =>
+    _mapPredicateValidator(
       message: message ?? 'contains keys: ${prettifyValue(keys)}',
       test: (m) => !keys.any((key) => !m.containsKey(key)),
       code: ExpectationCodes.valueContainsMissing,

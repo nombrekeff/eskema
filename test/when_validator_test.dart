@@ -1,4 +1,4 @@
-import 'package:eskema/eskema.dart';
+import 'package:eskema/eskema.dart' hide isTrue, isFalse;
 import 'package:eskema/validators.dart' as v;
 import 'package:test/test.dart';
 
@@ -10,7 +10,8 @@ void main() {
       'postal_code': when(
         getField('country', v.isEq('USA')),
         then: v.stringIsOfLength(5, message: 'a 5-digit US zip code'),
-        otherwise: v.stringIsOfLength(6, message: 'a 6-character Canadian postal code'),
+        otherwise: v.stringIsOfLength(6,
+            message: 'a 6-character Canadian postal code'),
       ),
     });
 
@@ -54,7 +55,8 @@ void main() {
       };
       final result = addressValidator.validate(address);
       expect(result.isValid, isFalse);
-      expect(result.description, '.postal_code: a 6-character Canadian postal code');
+      expect(result.description,
+          '.postal_code: a 6-character Canadian postal code');
     });
 
     test('should fail if when is used outside of an eskema map validator', () {

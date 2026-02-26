@@ -19,11 +19,14 @@ IValidator isType<T>({String? message}) {
         'found': value.runtimeType.toString(),
       },
     ),
+    name: 'isType',
+    arguments: [T.toString()],
   );
 }
 
 /// Returns a [Validator] that checks if the given value is the correct type
-IValidator isTypeOrNull<T>({String? message}) => isType<T>(message: message).nullable();
+IValidator isTypeOrNull<T>({String? message}) =>
+    isType<T>(message: message).nullable();
 
 /// Returns a [IValidator] that checks if the given value is `null`
 /// For better performance and readability, use the [$isNull] variable directly.
@@ -59,14 +62,16 @@ IValidator isList<T>({String? message}) => isType<List<T>>(message: message);
 
 /// Returns a [IValidator] that checks if the given value is a `Map`
 /// For better performance and readability, use the [$isMap] variable directly.
-IValidator isMap<K, V>({String? message}) => isType<Map<K, V>>(message: message);
+IValidator isMap<K, V>({String? message}) =>
+    isType<Map<K, V>>(message: message);
 
 /// Returns a [IValidator] that checks if the given value is a `Set`
 /// For better performance and readability, use the [$isSet] variable directly.
 IValidator isSet<T>({String? message}) => isType<Set<T>>(message: message);
 
 /// Returns a [IValidator] that checks if the given value is a `Record`
-IValidator isRecord({String? message}) => isType<Record>(message: message);
+IValidator isRecord({String? message}) =>
+    isType<Record>(message: message).copyWith(name: 'record');
 
 /// Returns a [IValidator] that checks if the given value is a `Symbol`
 /// For better performance and readability, use the [$isSymbol] variable directly.
@@ -78,11 +83,13 @@ IValidator isEnum({String? message}) => isType<Enum>(message: message);
 
 /// Returns a [IValidator] that checks if the given value is a `Future`
 /// For better performance and readability, use the [$isFuture] variable directly.
-IValidator isFuture<T>({String? message}) => isType<Future<T>>(message: message);
+IValidator isFuture<T>({String? message}) =>
+    isType<Future<T>>(message: message);
 
 /// Returns a [IValidator] that checks if the given value is a `Iterable`
 /// For better performance and readability, use the [$isIterable] variable directly.
-IValidator isIterable<T>({String? message}) => isType<Iterable<T>>(message: message);
+IValidator isIterable<T>({String? message}) =>
+    isType<Iterable<T>>(message: message);
 
 /// Returns a [IValidator] that checks if the given value is a `DateTime`
 /// For better performance and readability, use the [$isDateTime] variable directly.

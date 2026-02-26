@@ -17,7 +17,8 @@ import 'package:eskema/eskema.dart';
 void main() {
   final seed = int.tryParse(const String.fromEnvironment('FUZZ_SEED')) ??
       DateTime.now().millisecondsSinceEpoch;
-  final iterations = int.tryParse(const String.fromEnvironment('FUZZ_ITER')) ?? 120;
+  final iterations =
+      int.tryParse(const String.fromEnvironment('FUZZ_ITER')) ?? 120;
   final rnd = Random(seed);
 
   print('Monkey fuzz seed: $seed iterations: $iterations');
@@ -79,7 +80,8 @@ void main() {
 
         // Nullable spec should accept null.
         if (spec.nullableApplied && value == null) {
-          expect(result.isValid, true, reason: 'nullable chain should accept null');
+          expect(result.isValid, true,
+              reason: 'nullable chain should accept null');
         }
       });
     }
@@ -94,7 +96,8 @@ class _ValidatorSpec {
   final bool nullableApplied;
   _ValidatorSpec(this.validator, this.kind, this.nullableApplied);
 
-  String debug() => 'kind=$kind nullable=$nullableApplied runtime=${validator.runtimeType}';
+  String debug() =>
+      'kind=$kind nullable=$nullableApplied runtime=${validator.runtimeType}';
 }
 
 _ValidatorSpec _randomValidatorSpec(Random rnd, {required int depth}) {
@@ -127,15 +130,18 @@ _ValidatorSpec _leaf(Random rnd) {
 
 _ValidatorSpec _allSpec(Random rnd, int depth) {
   final count = 2 + rnd.nextInt(3);
-  final children = List.generate(count, (_) => _randomValidatorSpec(rnd, depth: depth + 1));
-  final v = all(children.map((c) => c.validator).toList(), collecting: rnd.nextBool());
+  final children =
+      List.generate(count, (_) => _randomValidatorSpec(rnd, depth: depth + 1));
+  final v = all(children.map((c) => c.validator).toList(),
+      collecting: rnd.nextBool());
   final nullable = rnd.nextBool();
   return _ValidatorSpec(nullable ? v.nullable() : v, _Kind.all, nullable);
 }
 
 _ValidatorSpec _anySpec(Random rnd, int depth) {
   final count = 2 + rnd.nextInt(3);
-  final children = List.generate(count, (_) => _randomValidatorSpec(rnd, depth: depth + 1));
+  final children =
+      List.generate(count, (_) => _randomValidatorSpec(rnd, depth: depth + 1));
   final v = any(children.map((c) => c.validator).toList());
   final nullable = rnd.nextBool();
   return _ValidatorSpec(nullable ? v.nullable() : v, _Kind.any, nullable);
@@ -143,7 +149,8 @@ _ValidatorSpec _anySpec(Random rnd, int depth) {
 
 _ValidatorSpec _noneSpec(Random rnd, int depth) {
   final count = 2 + rnd.nextInt(3);
-  final children = List.generate(count, (_) => _randomValidatorSpec(rnd, depth: depth + 1));
+  final children =
+      List.generate(count, (_) => _randomValidatorSpec(rnd, depth: depth + 1));
   final v = none(children.map((c) => c.validator).toList());
   final nullable = rnd.nextBool();
   return _ValidatorSpec(nullable ? v.nullable() : v, _Kind.none, nullable);
@@ -204,7 +211,8 @@ dynamic _randomValue(Random rnd, {required int maxDepth, int depth = 0}) {
   if (roll < 60) return _randomLeafValue(rnd); // primitive bias
   if (roll < 80) {
     final len = rnd.nextInt(4);
-    return List.generate(len, (_) => _randomValue(rnd, maxDepth: maxDepth, depth: depth + 1));
+    return List.generate(
+        len, (_) => _randomValue(rnd, maxDepth: maxDepth, depth: depth + 1));
   }
   // map
   final len = rnd.nextInt(4);

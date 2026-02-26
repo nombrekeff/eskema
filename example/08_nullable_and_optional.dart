@@ -36,12 +36,17 @@ void main() {
 
   // --- `optional()` Behavior ---
   print('\n--- Testing `optional_and_not_nullable` ---');
-    // NOTE: Output includes the missing required_but_nullable error because each call
-    // validates an isolated map missing that required key. This illustrates interplay
-    // of independent keys: missing required key still reports alongside optional logic.
-    print("Validating {'optional_and_not_nullable': 'hello'}: ${validator.validate({'optional_and_not_nullable': 'hello'})}");
-    print('Validating {}: ${validator.validate({})}');
-    print("Validating {'optional_and_not_nullable': null}: ${validator.validate({'optional_and_not_nullable': null})}");
+  // NOTE: Output includes the missing required_but_nullable error because each call
+  // validates an isolated map missing that required key. This illustrates interplay
+  // of independent keys: missing required key still reports alongside optional logic.
+  print(
+      "Validating {'optional_and_not_nullable': 'hello'}: ${validator.validate({
+        'optional_and_not_nullable': 'hello'
+      })}");
+  print('Validating {}: ${validator.validate({})}');
+  print("Validating {'optional_and_not_nullable': null}: ${validator.validate({
+        'optional_and_not_nullable': null
+      })}");
 
   // --- Chained Behavior ---
   print('\n--- Testing `optional_and_nullable` ---');

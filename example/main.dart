@@ -2,8 +2,8 @@
 
 import 'package:eskema/eskema.dart';
 
-final emailRegexp =
-    RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+final emailRegexp = RegExp(
+    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
 void main() {
   final isEmail = stringMatchesPattern(
@@ -52,9 +52,11 @@ void main() {
 
   // Check if the validator is valid or not
   final userResult = userEskema.validate({});
-  print(userResult.isValid);     // should be false
-  print(userResult.expectations);      // [.username: String (value: null), .age: int (value: null), .email: String (value: null), .purchases: List<dynamic> (value: null)]
-  print(userResult.description); // .username: String, .age: int, .email: String, .purchases: List<dynamic> (value: {})
+  print(userResult.isValid); // should be false
+  print(userResult
+      .expectations); // [.username: String (value: null), .age: int (value: null), .email: String (value: null), .purchases: List<dynamic> (value: null)]
+  print(userResult
+      .description); // .username: String, .age: int, .email: String, .purchases: List<dynamic> (value: {})
 
   // You can also use the 'validate' extension method
   final mapData = {
@@ -66,5 +68,5 @@ void main() {
     ],
   };
 
-  mapData.validate(userEskema); // 
+  mapData.validate(userEskema); //
 }

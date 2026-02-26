@@ -30,7 +30,8 @@ void main() {
     group('containsKeys', () {
       test('passes when map contains all keys', () {
         final validator = containsKeys(['name', 'age']);
-        final result = validator.validate({'name': 'Alice', 'age': 30, 'city': 'NY'});
+        final result =
+            validator.validate({'name': 'Alice', 'age': 30, 'city': 'NY'});
         expect(result.isValid, true);
         expect(result.expectations, isEmpty);
       });
@@ -40,7 +41,8 @@ void main() {
         final result = validator.validate({'name': 'Alice'});
         expect(result.isValid, false);
         expect(result.firstExpectation.code, 'value.contains_missing');
-        expect(result.firstExpectation.message, 'contains keys: ["name","age"]');
+        expect(
+            result.firstExpectation.message, 'contains keys: ["name","age"]');
       });
 
       test('fails when map is missing all keys', () {
@@ -48,7 +50,8 @@ void main() {
         final result = validator.validate({'city': 'NY'});
         expect(result.isValid, false);
         expect(result.firstExpectation.code, 'value.contains_missing');
-        expect(result.firstExpectation.message, 'contains keys: ["name","age"]');
+        expect(
+            result.firstExpectation.message, 'contains keys: ["name","age"]');
       });
 
       test('fails when value is not a map', () {
@@ -69,7 +72,8 @@ void main() {
     group('containsValues', () {
       test('passes when map contains all values', () {
         final validator = containsValues(['Alice', 30]);
-        final result = validator.validate({'name': 'Alice', 'age': 30, 'city': 'NY'});
+        final result =
+            validator.validate({'name': 'Alice', 'age': 30, 'city': 'NY'});
         expect(result.isValid, true);
         expect(result.expectations, isEmpty);
       });
@@ -79,7 +83,8 @@ void main() {
         final result = validator.validate({'name': 'Alice', 'age': 30});
         expect(result.isValid, false);
         expect(result.firstExpectation.code, 'value.contains_missing');
-        expect(result.firstExpectation.message, 'contains values: ["Alice",25]');
+        expect(
+            result.firstExpectation.message, 'contains values: ["Alice",25]');
       });
 
       test('fails when map is missing all values', () {
@@ -87,7 +92,8 @@ void main() {
         final result = validator.validate({'name': 'Bob', 'age': 30});
         expect(result.isValid, false);
         expect(result.firstExpectation.code, 'value.contains_missing');
-        expect(result.firstExpectation.message, 'contains values: ["Alice",25]');
+        expect(
+            result.firstExpectation.message, 'contains values: ["Alice",25]');
       });
 
       test('fails when value is not a map', () {

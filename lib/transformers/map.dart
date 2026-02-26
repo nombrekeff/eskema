@@ -11,7 +11,8 @@ import 'core.dart' as core;
 
 /// Picks a subset of keys from a Map, producing a new Map with only those keys present
 /// (if they existed). Fails if input is not a Map.
-IValidator pickKeys(Iterable<String> keys, IValidator child, {String? message}) {
+IValidator pickKeys(Iterable<String> keys, IValidator child,
+    {String? message}) {
   return core.pivotValue(
     (value) {
       if (value is! Map) return null;
@@ -43,8 +44,10 @@ IValidator pluckKey(String key, IValidator child, {String? message}) {
 
 /// Flattens a nested Map structure into a single-level Map using the provided [delimiter].
 /// Only flattens nested Maps (non-Map values become leaves). Arrays/lists are left as-is.
-IValidator flattenMapKeys(String delimiter, IValidator child, {String? message}) {
-  Map<String, dynamic> walk(Map<String, dynamic> flat, dynamic node, String prefix) {
+IValidator flattenMapKeys(String delimiter, IValidator child,
+    {String? message}) {
+  Map<String, dynamic> walk(
+      Map<String, dynamic> flat, dynamic node, String prefix) {
     if (node is Map) {
       node.forEach((k, val) {
         final newPrefix = prefix.isEmpty ? '$k' : '$prefix$delimiter$k';
@@ -57,7 +60,7 @@ IValidator flattenMapKeys(String delimiter, IValidator child, {String? message})
     } else {
       if (prefix.isNotEmpty) flat[prefix] = node;
     }
-    
+
     return flat;
   }
 

@@ -48,11 +48,13 @@ void main() {
   print('Validating {}: ${settingsValidator.validate({})}'); // Valid
 
   // The 'theme' key is present, so its value is used.
-  print(
-      "Validating {'theme': 'dark'}: ${settingsValidator.validate({'theme': 'dark'})}"); // Valid
+  print("Validating {'theme': 'dark'}: ${settingsValidator.validate({
+        'theme': 'dark'
+      })}"); // Valid
 
   // The provided theme is invalid.
-  print(
-      "Validating {'theme': 'blue'}: ${settingsValidator.validate({'theme': 'blue'})}"); // Invalid
+  print("Validating {'theme': 'blue'}: ${settingsValidator.validate({
+        'theme': 'blue'
+      })}"); // Invalid
   print('-' * 20);
 }

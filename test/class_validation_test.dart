@@ -3,12 +3,12 @@ import 'package:eskema/validators.dart';
 import 'package:test/test.dart';
 
 class EskMapTest extends MapValidator {
-  final name = Field(validators: [isType<String>()], id: 'name');
+  final Field nameField = Field(validators: [isType<String>()], id: 'name');
 
-  EskMapTest({super.nullable});
+  EskMapTest({bool nullable = false}) : super(nullable: nullable);
 
   @override
-  get fields => [name];
+  List<IdValidator> get fields => [nameField];
 }
 
 void main() {

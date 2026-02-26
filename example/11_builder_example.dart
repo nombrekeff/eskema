@@ -5,7 +5,8 @@ Validator<Result> isValidName = Validator((value) async {
 });
 
 void simpleExample() async {
-  final nameValidator = $string().lengthRange(3, 10).not.empty().add(isValidName);
+  final nameValidator =
+      $string().lengthRange(3, 10).not.empty().add(isValidName);
 
   final nameRes = await nameValidator.validateAsync('123');
   print(nameRes.detailed());
@@ -20,7 +21,8 @@ void complexExample() async {
   final userValidator = $map().schema({
     'name': $string().lengthRange(3, 10).not.empty().add(isValidName),
     'age': $int().eq(0).nullable(),
-    'status': $string().oneOf(['active', 'inactive', 'banned']).error('Invalid status'),
+    'status': $string()
+        .oneOf(['active', 'inactive', 'banned']).error('Invalid status'),
 
     // If status is banned, banned_reason is required
     'banned_reason': resolve((parent) {

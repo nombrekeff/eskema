@@ -23,16 +23,17 @@ import 'core.dart' as core;
 ///  * [toBoolStrict] – strict literal parsing only
 ///  * [toBoolLenient] – permissive parsing of many textual toggles
 IValidator toBool(IValidator child, {String? message}) {
-  final validator =
-      (($isBool | isOneOf([0, 1]) | toLowerCase(isString() & isOneOf(['true', 'false'])))) &
-          core.transform((v) {
-            return switch (v) {
-              final bool b => b,
-              final int i => i == 1,
-              final String s => s.toLowerCase().trim() == 'true',
-              _ => null,
-            };
-          }, child);
+  final validator = (($isBool |
+          isOneOf([0, 1]) |
+          toLowerCase(isString() & isOneOf(['true', 'false'])))) &
+      core.transform((v) {
+        return switch (v) {
+          final bool b => b,
+          final int i => i == 1,
+          final String s => s.toLowerCase().trim() == 'true',
+          _ => null,
+        };
+      }, child);
 
   return handleReturnPreserveValue(validator, message);
 }
@@ -50,14 +51,15 @@ IValidator toBool(IValidator child, {String? message}) {
 ///  * [toBool] – standard (bool + 1/0 + 'true'/'false')
 ///  * [toBoolLenient] – very permissive variants
 IValidator toBoolStrict(IValidator child, {String? message}) {
-  final validator = (($isBool | toLowerCase(isString() & isOneOf(['true', 'false'])))) &
-      core.transform((v) {
-        return switch (v) {
-          final bool b => b,
-          final String s => s.toLowerCase().trim() == 'true',
-          _ => null,
-        };
-      }, child);
+  final validator =
+      (($isBool | toLowerCase(isString() & isOneOf(['true', 'false'])))) &
+          core.transform((v) {
+            return switch (v) {
+              final bool b => b,
+              final String s => s.toLowerCase().trim() == 'true',
+              _ => null,
+            };
+          }, child);
 
   return handleReturnPreserveValue(validator, message);
 }
@@ -86,7 +88,20 @@ IValidator toBoolLenient(IValidator child, {String? message}) {
       isOneOf([0, 1]) |
       toLowerCase(
         isString() &
-            isOneOf(['true', 'false', 't', 'f', 'yes', 'no', 'y', 'n', 'on', 'off', '1', '0']),
+            isOneOf([
+              'true',
+              'false',
+              't',
+              'f',
+              'yes',
+              'no',
+              'y',
+              'n',
+              'on',
+              'off',
+              '1',
+              '0'
+            ]),
       ));
   final transformToBool = core.transform(
     (v) {

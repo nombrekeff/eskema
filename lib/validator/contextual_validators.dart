@@ -6,8 +6,8 @@ import 'package:eskema/validator/base_validator.dart';
 
 // Internal micro-helper to reduce duplication.
 @pragma('vm:prefer-inline')
-Result _failWithMsg(dynamic value, String message) =>
-    Result.invalid(value, expectation: Expectation(message: message, value: value));
+Result _failWithMsg(dynamic value, String message) => Result.invalid(value,
+    expectation: Expectation(message: message, value: value));
 
 class ResolveValidator extends IWhenValidator {
   final IValidator? Function(Map parentObject) resolver;
@@ -22,7 +22,8 @@ class ResolveValidator extends IWhenValidator {
   Result validate(dynamic value, {bool exists = true}) => Result.invalid(
         value,
         expectation: Expectation(
-          message: '`resolve` validator can only be used inside an `eskema` map validator',
+          message:
+              '`resolve` validator can only be used inside an `eskema` map validator',
           value: value,
         ),
       );
@@ -53,6 +54,8 @@ class ResolveValidator extends IWhenValidator {
   IValidator copyWith({
     bool? nullable,
     bool? optional,
+    String? name,
+    List<dynamic>? arguments,
     IValidator Function(Map parentObject)? resolver,
   }) =>
       ResolveValidator(
@@ -82,7 +85,8 @@ class WhenValidator extends IWhenValidator {
   Result validate(dynamic value, {bool exists = true}) => Result.invalid(
         value,
         expectation: Expectation(
-          message: '`when` validator can only be used inside an `eskema` map validator',
+          message:
+              '`when` validator can only be used inside an `eskema` map validator',
           value: value,
         ),
       );
@@ -94,17 +98,22 @@ class WhenValidator extends IWhenValidator {
     bool exists = true,
   }) {
     final cond = condition.validator(map);
-    if (cond is Future<Result>) return cond.then((cr) => _evalBranch(cr, value));
+    if (cond is Future<Result>)
+      return cond.then((cr) => _evalBranch(cr, value));
     return _evalBranch(cond, value);
   }
 
   FutureOr<Result> _evalBranch(Result conditionResult, dynamic value) =>
-      conditionResult.isValid ? then.validator(value) : otherwise.validator(value);
+      conditionResult.isValid
+          ? then.validator(value)
+          : otherwise.validator(value);
 
   @override
   IValidator copyWith({
     bool? nullable,
     bool? optional,
+    String? name,
+    List<dynamic>? arguments,
     IValidator? condition,
     IValidator? then,
     IValidator? otherwise,
@@ -138,10 +147,16 @@ class WhenWithMessage extends IWhenValidator {
   }
 
   @override
-  Result validate(dynamic value, {bool exists = true}) => _failWithMsg(value, message);
+  Result validate(dynamic value, {bool exists = true}) =>
+      _failWithMsg(value, message);
 
   @override
-  IValidator copyWith({bool? nullable, bool? optional}) => WhenWithMessage(
+  IValidator copyWith(
+          {bool? nullable,
+          bool? optional,
+          String? name,
+          List<dynamic>? arguments}) =>
+      WhenWithMessage(
         inner.copyWith(nullable: nullable, optional: optional) as WhenValidator,
         message,
       );

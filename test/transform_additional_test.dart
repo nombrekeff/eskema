@@ -42,11 +42,12 @@ void main() {
     test('int passes', () => expect(v.validate(5).isValid, true));
     test('double passes', () => expect(v.validate(5.2).isValid, true));
     test('numeric string passes', () => expect(v.validate('42').isValid, true));
-    test('invalid string fails', () => expect(v.validate('NaN!').isValid, false));
+    test('invalid string fails',
+        () => expect(v.validate('NaN!').isValid, false));
     test(
         'invalid string fails',
-        () => expect(
-            v.validate('NaN!').description, 'num, a valid formatted number String'));
+        () => expect(v.validate('NaN!').description,
+            'num, a valid formatted number String'));
   });
 
   group('trim transformer', () {
@@ -64,7 +65,9 @@ void main() {
   });
 
   group('toDateTime', () {
-    final v = toDateTime($isDateTime, message: 'a valid DateTime formatted String'); // explicit message to preserve previous expectation
+    final v = toDateTime($isDateTime,
+        message:
+            'a valid DateTime formatted String'); // explicit message to preserve previous expectation
 
     test('parses ISO string', () {
       expect(v.validate('2024-01-02T03:04:05Z').isValid, true);
@@ -72,7 +75,8 @@ void main() {
 
     test('rejects invalid string', () {
       expect(v.validate('not-a-date').isValid, false);
-      expect(v.validate('not-a-date').description, 'a valid DateTime formatted String');
+      expect(v.validate('not-a-date').description,
+          'a valid DateTime formatted String');
     });
 
     test('accepts DateTime object', () {

@@ -213,7 +213,8 @@ class CustomPivot {
 /// final optionalField = v().string().optional().lengthMin(2).build();
 /// ```
 class BaseBuilder<B extends BaseBuilder<B, T>, T> extends IValidator {
-  BaseBuilder({bool negated = false, Chain? chain, bool? optional, bool? nullable})
+  BaseBuilder(
+      {bool negated = false, Chain? chain, bool? optional, bool? nullable})
       : chain = chain ?? Chain(),
         _negated = negated,
         _optional = optional ?? false,
@@ -329,7 +330,12 @@ class BaseBuilder<B extends BaseBuilder<B, T>, T> extends IValidator {
   }
 
   @override
-  IValidator copyWith({bool? nullable, bool? optional}) {
+  IValidator copyWith({
+    bool? nullable,
+    bool? optional,
+    String? name,
+    List<dynamic>? arguments,
+  }) {
     return BaseBuilder<B, T>(
       negated: negated,
       chain: chain.copyWith(),

@@ -74,7 +74,8 @@ mixin TransformerMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
 
   /// Transform the value to a number (int or double).
   NumberBuilder toNum() {
-    if (chain.coercedToDouble || chain.coercedToInt) return NumberBuilder(chain: chain);
+    if (chain.coercedToDouble || chain.coercedToInt)
+      return NumberBuilder(chain: chain);
     chain.setTransform(CoercionKind.double_, (child) => tr.toNum(child));
     return NumberBuilder(chain: chain);
   }
@@ -103,7 +104,8 @@ mixin TransformerMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
 
   /// Apply a custom transformation using the provided pivot.
   GenericBuilder<dynamic> use(CustomPivot pivot) {
-    chain.setTransform(CoercionKind.custom, pivot.transformer, dropPre: pivot.dropPre);
+    chain.setTransform(CoercionKind.custom, pivot.transformer,
+        dropPre: pivot.dropPre);
     return GenericBuilder<dynamic>(chain: chain);
   }
 }
@@ -116,10 +118,12 @@ mixin LengthMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   }
 
   /// Validate that the length is at least the specified minimum.
-  B lengthMin(int min, {String? message}) => length([isGte(min)], message: message);
+  B lengthMin(int min, {String? message}) =>
+      length([isGte(min)], message: message);
 
   /// Validate that the length is at most the specified maximum.
-  B lengthMax(int max, {String? message}) => length([isLte(max)], message: message);
+  B lengthMax(int max, {String? message}) =>
+      length([isLte(max)], message: message);
 
   /// Validate that the length is within the specified range.
   B lengthRange(int min, int max, {String? message}) {
@@ -140,7 +144,8 @@ mixin ComparisonMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {}
 mixin ContainsMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   /// Validate that the value contains the specified element.
   B contains(value, {String? message}) {
-    return add(esk.contains(value), message: message ?? 'A value that contains value: $value');
+    return add(esk.contains(value),
+        message: message ?? 'A value that contains value: $value');
   }
 }
 
@@ -165,7 +170,8 @@ mixin NumberMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   B gte(num n, {String? message}) => add(isGte(n), message: message);
 
   /// Validate that the number is within the specified range.
-  B between(num min, num max, {String? message}) => add(isInRange(min, max), message: message);
+  B between(num min, num max, {String? message}) =>
+      add(isInRange(min, max), message: message);
 }
 
 /// Mixin providing string-specific validation methods.
@@ -185,7 +191,8 @@ mixin StringMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   B upperCase({String? message}) => add(isUpperCase(), message: message);
 
   /// Validate that the string is a valid URL.
-  B url({String? message, bool strict = false}) => add(isUrl(strict: strict), message: message);
+  B url({String? message, bool strict = false}) =>
+      add(isUrl(strict: strict), message: message);
 
   /// Validate that the string is a valid URL with strict requirements.
   B strictUrl({String? message}) => url(message: message, strict: true);
@@ -228,7 +235,8 @@ mixin MapMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
 
   /// Validate that the map contains the specified key.
   B containsKey(key, {String? message}) {
-    return add(esk.containsKey(key), message: message ?? 'A value that contains key: $key');
+    return add(esk.containsKey(key),
+        message: message ?? 'A value that contains key: $key');
   }
 
   /// Extract only the specified keys from the map.
@@ -254,7 +262,8 @@ mixin MapMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   }
 
   /// Flatten nested map keys using the specified delimiter.
-  B flattenKeys([String delimiter = '.']) => wrap((c) => tr.flattenMapKeys(delimiter, c));
+  B flattenKeys([String delimiter = '.']) =>
+      wrap((c) => tr.flattenMapKeys(delimiter, c));
 }
 
 /// Mixin providing DateTime-specific validation methods.
@@ -280,13 +289,15 @@ mixin DateTimeMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   }) {
     assert(!end.isBefore(start), 'end must be >= start');
     return add(
-      isDateBetween(start, end, inclusiveStart: inclusiveStart, inclusiveEnd: inclusiveEnd),
+      isDateBetween(start, end,
+          inclusiveStart: inclusiveStart, inclusiveEnd: inclusiveEnd),
       message: message,
     );
   }
 
   /// Validate that the DateTime is on the same day as the specified date.
-  B sameDay(DateTime dt, {String? message}) => add(isDateSameDay(dt), message: message);
+  B sameDay(DateTime dt, {String? message}) =>
+      add(isDateSameDay(dt), message: message);
 
   /// Validate that the DateTime is in the past.
   B inPast({bool allowNow = true, String? message}) {
@@ -302,7 +313,8 @@ mixin DateTimeMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
 /// Mixin providing JSON-specific validation methods.
 mixin JsonMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
   /// Validate that the value is a valid JSON container (object or array).
-  B jsonContainer({String? message}) => add(isJsonContainer(), message: message);
+  B jsonContainer({String? message}) =>
+      add(isJsonContainer(), message: message);
 
   /// Validate that the value is a valid JSON object.
   B jsonObject({String? message}) => add(isJsonObject(), message: message);

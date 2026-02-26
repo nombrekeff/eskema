@@ -10,7 +10,9 @@ void main() {
       expect(r.firstExpectation.message, 'int or bool required');
     });
 
-    test('all custom message forces failure even if all pass (documented behavior change)', () {
+    test(
+        'all custom message forces failure even if all pass (documented behavior change)',
+        () {
       final v = all([isInt(), isGte(0)], message: 'must satisfy all (forced)');
       final r = v.validate(5);
       expect(r.isValid, false);
@@ -18,7 +20,8 @@ void main() {
     });
 
     test('none custom message on collected failure', () {
-      final v = none([isInt(), isBool()], message: 'must be neither int nor bool');
+      final v =
+          none([isInt(), isBool()], message: 'must be neither int nor bool');
       final r = v.validate(1);
       expect(r.isValid, false);
       expect(r.firstExpectation.message, 'must be neither int nor bool');
@@ -33,14 +36,18 @@ void main() {
 
     test('withExpectation extra message param override', () {
       final base = isInt();
-      final wrapped = withExpectation(base, const Expectation(message: 'orig'), message: 'override');
+      final wrapped = withExpectation(base, const Expectation(message: 'orig'),
+          message: 'override');
       final r = wrapped.validate('x');
       expect(r.isValid, false);
       expect(r.firstExpectation.message, 'override');
     });
 
-    test('when with custom message outside eskema (usage error still overridden)', () {
-      final w = when(isInt(), then: isString(), otherwise: isBool(), message: 'conditional fail');
+    test(
+        'when with custom message outside eskema (usage error still overridden)',
+        () {
+      final w = when(isInt(),
+          then: isString(), otherwise: isBool(), message: 'conditional fail');
       final r = w.validate(1); // misuse, but message should be overridden
       expect(r.isValid, false);
       expect(r.firstExpectation.message, 'conditional fail');

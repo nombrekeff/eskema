@@ -17,7 +17,10 @@ class MainApp extends StatelessWidget {
             padding: const EdgeInsets.all(32),
             child: Column(
               children: [
-                Text('Register', style: Theme.of(context).textTheme.headlineMedium),
+                Text(
+                  'Register',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
                 const SizedBox(height: 16),
                 const RegisterForm(),
               ],

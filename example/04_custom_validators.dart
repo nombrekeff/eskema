@@ -15,7 +15,8 @@ void main() {
   IValidator isPositiveInt() => isInt() & isGte(0);
 
   final composedValidator = isPositiveInt();
-  print('Validating 10 with composed validator: ${composedValidator.validate(10)}'); // Valid
+  print(
+      'Validating 10 with composed validator: ${composedValidator.validate(10)}'); // Valid
   print(
       'Validating -5 with composed validator: ${composedValidator.validate(-5)}'); // Invalid
 

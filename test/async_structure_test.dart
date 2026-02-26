@@ -9,7 +9,8 @@ IValidator asyncValid([String? tag]) => Validator((v) async {
 
 IValidator asyncInvalid(String msg) => Validator((v) async {
       await Future.delayed(const Duration(milliseconds: 5));
-      return Result.invalid(v, expectations: [Expectation(message: msg, value: v)]);
+      return Result.invalid(v,
+          expectations: [Expectation(message: msg, value: v)]);
     });
 
 void main() {
@@ -22,7 +23,8 @@ void main() {
       'country': isOneOf(['USA', 'CA']).optional(),
     });
 
-    test('valid object with nullable name null + missing optional age', () async {
+    test('valid object with nullable name null + missing optional age',
+        () async {
       final m = {'id': 1, 'name': null, 'email': 'x', 'country': 'USA'};
       final r = await schema.validateAsync(m);
       expect(r.isValid, true, reason: r.description);

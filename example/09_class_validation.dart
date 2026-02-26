@@ -1,7 +1,7 @@
 import 'package:eskema/eskema.dart';
 
 class TestClassValidator extends MapValidator {
-  final name = Field(
+  final Field nameField = Field(
     id: 'name',
     validators: [
       $isString,
@@ -14,20 +14,20 @@ class TestClassValidator extends MapValidator {
   );
 
   @override
-  get fields => [name, settings];
+  List<IdValidator> get fields => [nameField, settings];
 }
 
 enum Theme { light, dark }
 
 class SettingsValidator extends MapValidator {
-  final theme = Field(
+  final Field theme = Field(
     id: 'theme',
     validators: [
       isOneOf(Theme.values),
     ],
   );
 
-  final notificationsEnabled = Field(
+  final Field notificationsEnabled = Field(
     id: 'notificationsEnabled',
     nullable: true,
     validators: [$isBool],
@@ -36,7 +36,7 @@ class SettingsValidator extends MapValidator {
   SettingsValidator({required super.id, super.nullable});
 
   @override
-  get fields => [theme, notificationsEnabled];
+  List<IdValidator> get fields => [theme, notificationsEnabled];
 }
 
 void main() {

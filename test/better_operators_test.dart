@@ -27,7 +27,7 @@ void main() {
         final validator1 = isType<String>();
         final validator2 = isGte(5);
         final validator3 = isLte(100);
-        
+
         final firstCombined = validator1 & validator2;
         final finalCombined = firstCombined & validator3;
 
@@ -42,7 +42,7 @@ void main() {
         final validator1 = isType<String>();
         final validator2 = isGte(5);
         final validator3 = isLte(100);
-        
+
         final allValidator = validator2 & validator3;
         final finalCombined = validator1 & allValidator;
 
@@ -73,7 +73,7 @@ void main() {
 
       test('combined validator validates correctly - success case', () {
         final combined = isType<int>() & isGte(5) & isLte(100);
-        
+
         final result = combined.validate(50);
         expect(result.isValid, true);
         expect(result.value, equals(50));
@@ -81,17 +81,19 @@ void main() {
 
       test('combined validator validates correctly - failure cases', () {
         final combined = isType<int>() & isGte(5) & isLte(100);
-        
+
         // Wrong type
         final result1 = combined.validate('hello');
         expect(result1.isValid, false);
-        expect(result1.expectationCount, 1); // Should short-circuit on first failure
-        
+        expect(result1.expectationCount,
+            1); // Should short-circuit on first failure
+
         // Right type, too small
         final result2 = combined.validate(3);
         expect(result2.isValid, false);
-        expect(result2.expectationCount, 1); // Should short-circuit on second validator
-        
+        expect(result2.expectationCount,
+            1); // Should short-circuit on second validator
+
         // Right type, too large
         final result3 = combined.validate(150);
         expect(result3.isValid, false);
@@ -99,9 +101,12 @@ void main() {
       });
 
       test('combined validator with collecting mode', () {
-        final combined = isType<String>() & isGte(10) & isLte(5); // Impossible: gte 10 and lte 5
+        final combined = isType<String>() &
+            isGte(10) &
+            isLte(5); // Impossible: gte 10 and lte 5
         // Convert to collecting mode
-        final collecting = AllValidator((combined as AllValidator).validators, collecting: true);
+        final collecting = AllValidator((combined as AllValidator).validators,
+            collecting: true);
 
         final result = collecting.validate('hello'); // String, length 5
         expect(result.isValid, false);
@@ -121,70 +126,73 @@ void main() {
       });
 
       test('chaining multiple & operations', () {
-        final validator = isType<int>() 
-            & isGte(0) 
-            & isLte(100) 
-            & isEq(50);
+        final validator = isType<int>() & isGte(0) & isLte(100) & isEq(50);
 
         expect(validator, isA<AllValidator>());
         expect((validator as AllValidator).validators.length, 4);
-        
+
         final result = validator.validate(50);
         expect(result.isValid, true);
-        
+
         final failResult = validator.validate(75);
         expect(failResult.isValid, false);
       });
 
       test('mixed operator usage with | and &', () {
-        final validator = (isType<String>() & stringIsOfLength(5)) 
-            | (isType<int>() & isGte(100));
+        final validator = (isType<String>() & stringIsOfLength(5)) |
+            (isType<int>() & isGte(100));
 
         // Should accept valid string
         final result1 = validator.validate('Hello');
         expect(result1.isValid, true);
-        
+
         // Should accept valid int
         final result2 = validator.validate(150);
         expect(result2.isValid, true);
-        
+
         // Should reject invalid cases
         final result3 = validator.validate('Hi'); // String too short
         expect(result3.isValid, false);
-        
+
         final result4 = validator.validate(50); // Int too small
         expect(result4.isValid, false);
-        
+
         final result5 = validator.validate(true); // Wrong type entirely
         expect(result5.isValid, false);
       });
 
       test('& operator with complex validation logic', () async {
-        final complexValidator = validator((v) => v.toString().length > 5 && v.toString().contains('test'), (v) => Expectation(message: 'must be long and contain test', value: v));
+        final complexValidator = validator(
+            (v) => v.toString().length > 5 && v.toString().contains('test'),
+            (v) => Expectation(
+                message: 'must be long and contain test', value: v));
 
         final combined = isType<String>() & complexValidator;
-        
+
         expect(combined, isA<AllValidator>());
         expect((combined as AllValidator).validators.length, 2);
 
         final result1 = combined.validate('hello test world');
         expect(result1.isValid, true);
-        
+
         final result2 = combined.validate('test');
         expect(result2.isValid, false); // Too short
-        
+
         final result3 = combined.validate('hello world');
         expect(result3.isValid, false); // Doesn't contain 'test'
-        
+
         final result4 = combined.validate(123);
         expect(result4.isValid, false); // Wrong type
       });
 
       test('& operator maintains correct order of validators', () {
-        final v1 = validator((v) => v == 'first', (v) => Expectation(message: 'first', value: v));
-        final v2 = validator((v) => v == 'second', (v) => Expectation(message: 'second', value: v));
-        final v3 = validator((v) => v == 'third', (v) => Expectation(message: 'third', value: v));
-        
+        final v1 = validator((v) => v == 'first',
+            (v) => Expectation(message: 'first', value: v));
+        final v2 = validator((v) => v == 'second',
+            (v) => Expectation(message: 'second', value: v));
+        final v3 = validator((v) => v == 'third',
+            (v) => Expectation(message: 'third', value: v));
+
         final combined = v1 & v2 & v3;
 
         expect((combined as AllValidator).validators.length, 3);
@@ -192,7 +200,8 @@ void main() {
         // Test that validators are called in order by checking short-circuit behavior
         final result = combined.validate('test');
         expect(result.isValid, false);
-        expect(result.firstExpectation.message, 'first'); // Should fail on first validator
+        expect(result.firstExpectation.message,
+            'first'); // Should fail on first validator
       });
     });
   });

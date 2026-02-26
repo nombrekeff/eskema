@@ -90,7 +90,9 @@ DoubleBuilder $double({String? message}) => $b.double_(message: message);
 NumberBuilder $number({String? message}) => $b.number(message: message);
 BoolBuilder $bool({String? message}) => $b.bool(message: message);
 
-MapBuilder<K, V> $map<K, V>({String? message}) => $b.map<K, V>(message: message);
-IterableBuilder<T> $iterable<T>({String? message}) => $b.iterable<T>(message: message);
+MapBuilder<K, V> $map<K, V>({String? message}) =>
+    $b.map<K, V>(message: message);
+IterableBuilder<T> $iterable<T>({String? message}) =>
+    $b.iterable<T>(message: message);
 ListBuilder<T> $list<T>({String? message}) => $b.list<T>(message: message);
 SetBuilder<T> $set<T>({String? message}) => $b.set<T>(message: message);

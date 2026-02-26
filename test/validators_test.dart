@@ -402,7 +402,8 @@ void main() {
       });
 
       expect(isEquals.validate({}).isValid, false);
-      expect(isEquals.validate({}).description, 'equal to {"a":"b","c":{"c1":"aaaa"}}');
+      expect(isEquals.validate({}).description,
+          'equal to {"a":"b","c":{"c1":"aaaa"}}');
       expect(isEquals.validate([]).isValid, false);
       expect(
         isEquals.validate(1).description,
@@ -466,7 +467,8 @@ void main() {
 
       expect(field.validate(1).isValid, false);
       expect(field.validate(false).isValid, false);
-      expect(field.validate(false).description, 'bool does not have a length property');
+      expect(field.validate(false).description,
+          'bool does not have a length property');
     });
 
     test('contains', () {
@@ -477,7 +479,8 @@ void main() {
 
       expect(field.validate([1]).isValid, false);
       expect(field.validate(false).isValid, false);
-      expect(field.validate(false).description, 'bool does not have a contains property');
+      expect(field.validate(false).description,
+          'bool does not have a contains property');
     });
 
     test('isEq<String> works', () {
@@ -513,7 +516,8 @@ void main() {
     test('validateOrThrow', () {
       final isEquals = isDeepEq<Set>({1, 2});
 
-      expect(() => isEquals.validateOrThrow({1}), throwsA(isA<ValidatorFailedException>()));
+      expect(() => isEquals.validateOrThrow({1}),
+          throwsA(isA<ValidatorFailedException>()));
 
       expect(() => isEquals.validateOrThrow({1, 2}),
           isNot(throwsA(isA<ValidatorFailedException>())));
@@ -521,8 +525,10 @@ void main() {
 
     test('throwInstead', () {
       final isEquals = throwInstead(isDeepEq<Set>({1, 2}));
-      expect(() => isEquals.validate({1}), throwsA(isA<ValidatorFailedException>()));
-      expect(() => isEquals.validate({1, 2}), isNot(throwsA(isA<ValidatorFailedException>())));
+      expect(() => isEquals.validate({1}),
+          throwsA(isA<ValidatorFailedException>()));
+      expect(() => isEquals.validate({1, 2}),
+          isNot(throwsA(isA<ValidatorFailedException>())));
     });
   });
 

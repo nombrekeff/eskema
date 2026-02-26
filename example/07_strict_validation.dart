@@ -42,7 +42,8 @@ void main() {
   };
 
   print('\n--- `eskemaStrict` ---');
-  print('Validating map with exact keys: ${strictValidator.validate(validMap)}'); // Valid
+  print(
+      'Validating map with exact keys: ${strictValidator.validate(validMap)}'); // Valid
   print(
       'Validating map with extra keys: ${strictValidator.validate(mapWithExtraKeys)}'); // Invalid
 

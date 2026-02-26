@@ -6,27 +6,38 @@ import 'package:eskema/result.dart';
 import 'package:eskema/validator/exception.dart';
 
 /// Type representing a validator function (may be sync or async).
-typedef ValidatorFunction<T extends Result> = FutureOr<T> Function(dynamic value);
+typedef ValidatorFunction<T extends Result> = FutureOr<T> Function(
+    dynamic value);
 
 /// Immutable base class from which all validators inherit.
 abstract class IValidator {
-  const IValidator({bool nullable = false, bool optional = false})
-      : isNullable = nullable,
+  const IValidator({
+    bool nullable = false,
+    bool optional = false,
+    this.name = 'custom',
+    this.arguments = const [],
+  })  : isNullable = nullable,
         isOptional = optional;
 
   final bool isNullable;
   final bool isOptional;
+  final String name;
+  final List<dynamic> arguments;
 
   FutureOr<Result> validator(dynamic value);
 
   Result validate(dynamic value, {bool exists = true}) {
-    if ((value == null && isNullable && exists) || (value == null && isOptional && !exists)) {
+    if ((value == null && isNullable && exists) ||
+        (value == null && isOptional && !exists)) {
       return Result.valid(value);
     }
+
     final result = validator(value);
+
     if (result is Future<Result>) {
       throw AsyncValidatorException();
     }
+
     return result;
   }
 
@@ -34,22 +45,29 @@ abstract class IValidator {
     if ((value == null && isNullable && exists) || (!exists && isOptional)) {
       return Result.valid(value);
     }
+
     final result = await validator(value);
+
     return result;
   }
 
   Result validateOrThrow(dynamic value) {
     final result = validate(value);
+
     if (result.isNotValid) throw ValidatorFailedException(result);
+
     return result;
   }
 
   bool isValid(dynamic value) => validate(value).isValid;
-  FutureOr<bool> isValidAsync(dynamic value) async => (await validateAsync(value)).isValid;
+  FutureOr<bool> isValidAsync(dynamic value) async =>
+      (await validateAsync(value)).isValid;
   bool isNotValid(dynamic value) => !validate(value).isValid;
-  FutureOr<bool> isNotValidAsync(dynamic value) async => !(await isValidAsync(value));
+  FutureOr<bool> isNotValidAsync(dynamic value) async =>
+      !(await isValidAsync(value));
 
-  IValidator copyWith({bool? nullable, bool? optional});
+  IValidator copyWith(
+      {bool? nullable, bool? optional, String? name, List? arguments});
 
   IValidator nullable<T>() => copyWith(nullable: true);
   IValidator optional<T>() => copyWith(optional: true);
@@ -57,24 +75,49 @@ abstract class IValidator {
 
 /// A special type of validator that can operate on a parent map context.
 abstract class IWhenValidator extends IValidator {
-  IWhenValidator({super.nullable, super.optional});
-  FutureOr<Result> validateWithParent(dynamic value, Map<String, dynamic> map, {bool exists = true});
+  IWhenValidator({
+    super.nullable,
+    super.optional,
+    super.name,
+    super.arguments,
+  });
+
+  FutureOr<Result> validateWithParent(
+    dynamic value,
+    Map<String, dynamic> map, {
+    bool exists = true,
+  });
 }
 
 /// Generic implementation wrapper for a validator.
 class Validator<T extends Result> extends IValidator {
   static final Validator valid = Validator((v) => Result.valid(v));
   final ValidatorFunction<T> _validator;
-  Validator(this._validator, {super.nullable, super.optional});
+
+  Validator(
+    this._validator, {
+    super.nullable,
+    super.optional,
+    super.name,
+    super.arguments,
+  });
 
   @override
   FutureOr<T> validator(dynamic value) => _validator.call(value);
 
   @override
-  IValidator copyWith({bool? nullable, bool? optional}) => Validator(
+  IValidator copyWith({
+    bool? nullable,
+    bool? optional,
+    String? name,
+    List<dynamic>? arguments,
+  }) =>
+      Validator(
         _validator,
         nullable: nullable ?? isNullable,
         optional: optional ?? isOptional,
+        name: name ?? this.name,
+        arguments: arguments ?? this.arguments,
       );
 
   @override
@@ -84,6 +127,19 @@ class Validator<T extends Result> extends IValidator {
 /// Base class that adds an identifier to a validator (used by map/field validators).
 class IdValidator<T extends Result> extends Validator<T> {
   final String? id;
-  IdValidator({required ValidatorFunction<T> validator, this.id = '', super.nullable, super.optional})
-      : super(validator);
+
+  IdValidator({
+    required ValidatorFunction<T> validator,
+    this.id = '',
+    bool? nullable,
+    bool? optional,
+    String? name,
+    List<dynamic>? arguments,
+  }) : super(
+          validator,
+          nullable: nullable ?? false,
+          optional: optional ?? false,
+          name: name ?? 'custom',
+          arguments: arguments ?? const [],
+        );
 }

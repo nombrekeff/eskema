@@ -3,10 +3,11 @@ import 'package:eskema/eskema.dart';
 
 // Simulate async validator on plucked value
 IValidator asyncGte(int min) => Validator((value) async {
-  await Future<void>.delayed(const Duration(milliseconds: 1));
-  if (value is num && value >= min) return Result.valid(value);
-  return Result.invalid(value, expectation: Expectation(message: '>= $min', value: value));
-});
+      await Future<void>.delayed(const Duration(milliseconds: 1));
+      if (value is num && value >= min) return Result.valid(value);
+      return Result.invalid(value,
+          expectation: Expectation(message: '>= $min', value: value));
+    });
 
 void main() {
   group('pluckValue async + missing key', () {
@@ -18,7 +19,8 @@ void main() {
     });
 
     test('present key async success', () async {
-      final v2 = builder().map().pluckValue('count').toIntStrict().gte(2).build();
+      final v2 =
+          builder().map().pluckValue('count').toIntStrict().gte(2).build();
       final ok = await v2.validateAsync({'count': '3'});
       expect(ok.isValid, true);
       final bad = await v2.validateAsync({'count': '1'});

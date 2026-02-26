@@ -1,5 +1,5 @@
 import 'package:test/test.dart' hide isMap, isNotEmpty;
-import 'package:eskema/eskema.dart';
+import 'package:eskema/eskema.dart' hide isTrue, isFalse;
 import 'package:eskema/validators.dart' as v;
 
 void main() {
@@ -218,7 +218,8 @@ void main() {
   });
 
   group('defaultTo transformer', () {
-    final validator = defaultTo('default', v.isString() & v.not(v.$isStringEmpty));
+    final validator =
+        defaultTo('default', v.isString() & v.not(v.$isStringEmpty));
 
     test('should use default value for null', () {
       expect(validator.validate(null).isValid, isTrue);
@@ -229,7 +230,8 @@ void main() {
     });
 
     test('should fail if value after default is invalid', () {
-      final failingValidator = defaultTo('', v.isString() & v.not(v.$isStringEmpty));
+      final failingValidator =
+          defaultTo('', v.isString() & v.not(v.$isStringEmpty));
       expect(failingValidator.validate(null).isValid, isFalse);
     });
   });

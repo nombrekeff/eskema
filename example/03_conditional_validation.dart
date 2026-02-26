@@ -24,7 +24,8 @@ void main() {
 
       // 3. `otherwise`: If the condition is false, this validator is applied instead.
       otherwise: isString() & stringIsOfLength(6) >
-          const Expectation(message: 'must be a 6-character Canadian postal code'),
+          const Expectation(
+              message: 'must be a 6-character Canadian postal code'),
     ),
   });
 
@@ -36,17 +37,20 @@ void main() {
   print('USA Address (Valid): ${addressValidator.validate(validUsaAddress)}');
 
   final validCanadaAddress = {'country': 'Canada', 'postal_code': 'M5H2N2'};
-  print('Canada Address (Valid): ${addressValidator.validate(validCanadaAddress)}');
+  print(
+      'Canada Address (Valid): ${addressValidator.validate(validCanadaAddress)}');
 
   // --- Failure Cases ---
 
   // The postal code does not match the format for 'USA'.
   final invalidUsaAddress = {'country': 'USA', 'postal_code': 'M5H2N2'};
-  print('USA Address (Invalid): ${addressValidator.validate(invalidUsaAddress)}');
+  print(
+      'USA Address (Invalid): ${addressValidator.validate(invalidUsaAddress)}');
 
   // The postal code does not match the format for 'Canada'.
   final invalidCanadaAddress = {'country': 'Canada', 'postal_code': '90210'};
-  print('Canada Address (Invalid): ${addressValidator.validate(invalidCanadaAddress)}');
+  print(
+      'Canada Address (Invalid): ${addressValidator.validate(invalidCanadaAddress)}');
 
   print('-' * 20);
 }

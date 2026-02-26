@@ -9,7 +9,8 @@ IValidator asyncPass() => Validator((v) async {
 
 IValidator asyncFail(String msg) => Validator((v) async {
       await Future.delayed(const Duration(milliseconds: 5));
-      return Result.invalid(v, expectations: [Expectation(message: msg, value: v)]);
+      return Result.invalid(v,
+          expectations: [Expectation(message: msg, value: v)]);
     });
 
 void main() {
@@ -52,7 +53,8 @@ void main() {
 
     test('validate() throws on async schema', () {
       final v = eskemaStrict({'id': asyncPass()});
-      expect(() => v.validate({'id': 1}), throwsA(isA<AsyncValidatorException>()));
+      expect(
+          () => v.validate({'id': 1}), throwsA(isA<AsyncValidatorException>()));
     });
   });
 }

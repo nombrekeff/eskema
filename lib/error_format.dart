@@ -24,7 +24,8 @@ String buildValidationFailureMessage(
   int maxValueLength = 120,
   int maxErrorsToList = 20,
 }) {
-  assert(!result.isValid, 'Only call buildValidationFailureMessage on invalid results');
+  assert(!result.isValid,
+      'Only call buildValidationFailureMessage on invalid results');
 
   final value = result.value;
   var valueRepr = _safeValueString(value);
@@ -37,8 +38,9 @@ String buildValidationFailureMessage(
   buffer.write(' for value (${value.runtimeType}): ');
   buffer.writeln(valueRepr);
 
-  final toShow = result.expectations.take(maxErrorsToList).toList(growable: false);
-  
+  final toShow =
+      result.expectations.take(maxErrorsToList).toList(growable: false);
+
   for (var i = 0; i < toShow.length; i++) {
     final e = toShow[i];
     buffer.write('  ${i + 1}) ');

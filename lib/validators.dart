@@ -55,16 +55,21 @@ export 'package:eskema/validators/map.dart';
 export 'package:eskema/validators/cached.dart';
 export 'package:eskema/validators/date.dart';
 export 'package:eskema/validators/contextual.dart';
+export 'package:eskema/validators/json.dart';
 
 Validator validator(
   bool Function(dynamic value) comparisonFn,
-  Expectation Function(dynamic value) errorFn,
-) {
+  Expectation Function(dynamic value) errorFn, {
+  String name = 'custom',
+  List<dynamic> arguments = const [],
+}) {
   return Validator(
     (value) => Result(
       isValid: comparisonFn(value),
       expectation: errorFn(value),
       value: value,
     ),
+    name: name,
+    arguments: arguments,
   );
 }

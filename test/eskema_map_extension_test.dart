@@ -15,7 +15,8 @@ void main() {
       ]),
     });
 
-    final result = {'name': 'test', 'age': 12, 'vat': null}.validate(testEskema);
+    final result =
+        {'name': 'test', 'age': 12, 'vat': null}.validate(testEskema);
     expect(result.isValid, true);
   });
 

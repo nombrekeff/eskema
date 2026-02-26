@@ -152,7 +152,8 @@ final IValidator $isNonEmptyString = all([$isString, not($isStringEmpty)]);
 
 /// Cached instance for optional (nullable) non-empty string: accepts null OR a non-empty string.
 /// Usage: `$optionalNonEmptyString.validate(null)` -> valid; `.validate('')` -> invalid.
-final IValidator $optionalNonEmptyString = $isNonEmptyString.optional().nullable();
+final IValidator $optionalNonEmptyString =
+    $isNonEmptyString.optional().nullable();
 
 /// Cached instance for a present (non-null AND non-empty) list.
 /// Equivalent to: `all([$isList, $listNotEmpty])`.
@@ -160,4 +161,3 @@ final IValidator $isNonEmptyList = all([$isList, $listNotEmpty]);
 
 /// Cached instance for a nullable non-empty list (null passes, empty list fails).
 final IValidator $optionalNonEmptyList = $isNonEmptyList.optional().nullable();
-

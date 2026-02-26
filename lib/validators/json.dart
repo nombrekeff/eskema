@@ -31,7 +31,7 @@ IValidator isJsonObject({String? message}) =>
           data: {'expected': 'Map<String,dynamic>'},
         ),
       );
-    });
+    }).copyWith(name: 'isJsonObject', arguments: []);
 
 /// Validates that value is a JSON array (List).
 IValidator isJsonArray({String? message}) => Validator((value) {
@@ -46,7 +46,7 @@ IValidator isJsonArray({String? message}) => Validator((value) {
           data: {'expected': 'List'},
         ),
       );
-    });
+    }).copyWith(name: 'isJsonArray', arguments: []);
 
 /// Ensures object has all specified keys (string).
 IValidator jsonHasKeys(Iterable<String> keys, {String? message}) =>
@@ -63,13 +63,14 @@ IValidator jsonHasKeys(Iterable<String> keys, {String? message}) =>
           data: {'keys': keys.toList()},
         ),
       );
-    });
+    }).copyWith(name: 'jsonHasKeys', arguments: [keys]);
 
 /// Ensures array length within bounds.
 IValidator jsonArrayLength({int? min, int? max, String? message}) =>
     $isList &
     Validator((value) {
-      final ok = (min == null || value.length >= min) && (max == null || value.length <= max);
+      final ok = (min == null || value.length >= min) &&
+          (max == null || value.length <= max);
       return Result(
         isValid: ok,
         value: value,
@@ -78,10 +79,14 @@ IValidator jsonArrayLength({int? min, int? max, String? message}) =>
               'array length${min != null ? ' >= $min' : ''}${max != null ? ' <= $max' : ''}',
           value: value,
           code: ExpectationCodes.valueLengthOutOfRange,
-          data: {'min': min, 'max': max, 'length': value is List ? value.length : null},
+          data: {
+            'min': min,
+            'max': max,
+            'length': value is List ? value.length : null
+          },
         ),
       );
-    });
+    }).copyWith(name: 'jsonArrayLength', arguments: [min, max]);
 
 /// Ensures every element of array satisfies inner validator.
 IValidator jsonArrayEvery(IValidator elementValidator, {String? message}) =>
@@ -100,4 +105,4 @@ IValidator jsonArrayEvery(IValidator elementValidator, {String? message}) =>
       }
 
       return Result.valid(value);
-    });
+    }).copyWith(name: 'jsonArrayEvery', arguments: [elementValidator]);

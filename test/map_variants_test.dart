@@ -82,7 +82,8 @@ void main() {
     });
 
     test('builder pluck + numeric constraint', () {
-      final validator2 = builder().map().pluckValue('id').toIntStrict().gte(1).build();
+      final validator2 =
+          builder().map().pluckValue('id').toIntStrict().gte(1).build();
       final ok = validator2.validate({'id': 2, 'x': 3});
       expect(ok.value, 2);
       expect(ok.isValid, true);

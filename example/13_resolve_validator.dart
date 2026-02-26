@@ -40,14 +40,22 @@ void main() {
     'role': 'admin',
     'username': 'john_doe',
     'status': 'active',
-    'config': {'theme': 'dark', 'notifications': true, 'required_admin_setting': 'value'}
+    'config': {
+      'theme': 'dark',
+      'notifications': true,
+      'required_admin_setting': 'value'
+    }
   };
 
   final validData2 = {
     'role': 'user',
     'username': 'test',
     'status': 'active',
-    'config': {'theme': 'dark', 'notifications': true, 'required_user_setting': 'value'}
+    'config': {
+      'theme': 'dark',
+      'notifications': true,
+      'required_user_setting': 'value'
+    }
   };
 
   final invalidData1 = {

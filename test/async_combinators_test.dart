@@ -6,7 +6,8 @@ IValidator asyncPassBool(bool pass) => Validator((v) async {
       await Future.delayed(const Duration(milliseconds: 5));
       return pass
           ? Result.valid(v)
-          : Result.invalid(v, expectations: [Expectation(message: 'fail', value: v)]);
+          : Result.invalid(v,
+              expectations: [Expectation(message: 'fail', value: v)]);
     });
 
 void main() {
@@ -21,12 +22,14 @@ void main() {
     });
 
     test('then branch async condition', () async {
-      final r = await schema.validateAsync({'country': 'USA', 'postal': '12345'});
+      final r =
+          await schema.validateAsync({'country': 'USA', 'postal': '12345'});
       expect(r.isValid, true);
     });
 
     test('then branch async condition fail length', () async {
-      final r = await schema.validateAsync({'country': 'USA', 'postal': '1234'});
+      final r =
+          await schema.validateAsync({'country': 'USA', 'postal': '1234'});
       expect(r.isValid, false);
       expect(r.description?.contains('len5'), true);
     });

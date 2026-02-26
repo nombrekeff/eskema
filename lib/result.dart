@@ -17,17 +17,18 @@ class Result {
     required this.value,
     Iterable<Expectation>? expectations,
     Expectation? expectation,
-  }) : expectations =
-            expectations ?? (expectation == null ? _emptyExpectations : [expectation]);
+  }) : expectations = expectations ??
+            (expectation == null ? _emptyExpectations : [expectation]);
 
   Result.valid(this.value)
       : isValid = true,
         expectations = _emptyExpectations;
 
-  Result.invalid(this.value, {Iterable<Expectation>? expectations, Expectation? expectation})
+  Result.invalid(this.value,
+      {Iterable<Expectation>? expectations, Expectation? expectation})
       : isValid = false,
-        expectations =
-            expectations ?? (expectation == null ? [_defaultExpectation] : [expectation]);
+        expectations = expectations ??
+            (expectation == null ? [_defaultExpectation] : [expectation]);
 
   final bool isValid;
 
@@ -71,6 +72,7 @@ class Result {
   Map<String, Object?> toJson() => {
         'isValid': isValid,
         if (value != null) 'value': value,
-        if (!isValid) 'errors': expectations.map((e) => e.toJson()).toList(growable: false),
+        if (!isValid)
+          'errors': expectations.map((e) => e.toJson()).toList(growable: false),
       };
 }

@@ -17,7 +17,8 @@ void main() {
     'username': all([isString(), not($isStringEmpty)]),
 
     // For 'age', it must be an integer AND greater than or equal to 0.
-    'age': isInt() & isGte(0, message: 'All validators can specify a custom message!'),
+    'age': isInt() &
+        isGte(0, message: 'All validators can specify a custom message!'),
 
     // For 'status', the value must be one of the strings in the provided list.
     'status': isString() & isOneOf(['active', 'inactive', 'pending']),
