@@ -65,12 +65,12 @@ class Result {
   String toString() {
     // Keep valid results concise; invalid use joined expectation descriptions (legacy behavior).
     // Callers needing structured formatting should use error_format.dart helpers.
-    return description ?? 'Valid';
+    return description ?? '';
   }
 
   Map<String, Object?> toJson() => {
-    'isValid': isValid,
-    if (value != null) 'value': value,
-    if (!isValid) 'errors': expectations.map((e) => e.toJson()).toList(growable: false),
-  };
+        'isValid': isValid,
+        if (value != null) 'value': value,
+        if (!isValid) 'errors': expectations.map((e) => e.toJson()).toList(growable: false),
+      };
 }

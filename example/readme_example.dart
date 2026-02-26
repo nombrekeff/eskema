@@ -1,40 +1,56 @@
 import 'package:eskema/eskema.dart';
 
 void main() {
-  final userValidator = eskema({
-    // use built-in validator funtions
-    'username': isString(),
+  final userSchema = eskema({
+    // Transformers clean and coerce data before validation
+    'username': trim(toLowerCase(isString() & not($isStringEmpty, message: 'Username cannot be empty'))),
+    'age': toInt(isGte(18, message: 'Age must be greater than or equal to 18')),
+    
+    // Default values
+    'theme': defaultTo('light', isOneOf(['light', 'dark'])),
 
-    // Some zero-arg validators also have aliases: e.g. `$isBool`, `$isString` - prefer for zero-arg validators
-    'lastname': $isString,
+    // Contextual validation cleans up if/else logic easily
+    'postal_code': when(
+       getField('country', isEq('USA')),
+       then: isString() & stringLength([isEq(5)]),
+       otherwise: isString(),
+    ),
 
-    // Combine validators using `all`, `any` and `none`
-    'age': all([isInt(), isGte(0)]),
-
-    // or use operators for simplicity, same as using `all`, `any` and `none`, but shorter!!
-    'theme': (isString() & (isEq('light') | isEq('dark'))),
-
-    // Make validators nullable, if the field is missing it's considered invalid, use `optional` instead
-    // This will be valid if 'premium' exists in the map and is null or returns the result of the child validator
-    'premium': nullable($isBool),
-
-    // If you want to allow the field to not exist in the map, and accept null or empty strings
-    // You can use the `optional` validator
-    'birthday': optional(isDate()),
+    // switchBy enables clean polymorphic validation based on a field's value
+    'account': switchBy('type', {
+      'business': eskema({
+        'taxId': required(isString() & stringLength([isGte(9)])),
+      }),
+      'personal': eskema({
+        'ssn': required(isString()),
+      }),
+    }),
   });
 
-  // Validate a mostly complete user (premium missing => reported because nullable() only allows null, not absence)
-  final ok = userValidator.validate({
-    'username': 'bob',
-    'lastname': 'builder',
-    'theme': 'light',
-    'age': 42,
+  // Validating a complex untyped payload
+  final result = userSchema.validate({
+    'username': '  Alice  ',      // Trims and lowercases to 'alice'
+    'age': '24',                 // Coerced to int 24
+    'country': 'USA',
+    'postal_code': '12345',
+    'account': {
+      'type': 'business',
+      'taxId': '123456789'
+    }
   });
-  print('Partial user validation (missing premium): $ok');
 
-  final res = userValidator.validate({
-    'username': 'alice',
-    'age': -1,
+  print(result.isValid); // true (All transformations and conditional logic passed!)
+  
+  // Example of a failing case highlighting expectations
+  final badResult = userSchema.validate({
+    'username': '   ',
+    'age': '17',
+    'country': 'USA',
+    'postal_code': '1234'
   });
-  print(res); // Shows multiple expectations for missing/invalid fields
+  
+  print(badResult.isValid); // false
+  
+  print(badResult);  
+  // .username: not String to be empty, .age: greater than or equal to 18, .postal_code: length [equal to 5], .account: Map<dynamic, dynamic>
 }

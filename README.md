@@ -17,57 +17,84 @@ Composable runtime validation for Dart. Build readable schemas from tiny validat
 dart pub add eskema
 ```
 
-## Core example (from `example/readme_example.dart`)
+## Showcasing the Power of Eskema
+
+Eskema shines when dealing with complex, real-world data shapes—allowing you to replace messy `if`/`else` validation logic with readable, composable flows. Here is a short but comprehensive example combining **transformers**, **contextual logic**, and **polymorphic validation**:
 
 ```dart
 import 'package:eskema/eskema.dart';
 
 void main() {
-  final userValidator = eskema({
-    'username': isString(),                  // basic type check
-    'lastname': $isString,                   // cached zero‑arg variant
-    'age': all([isInt(), isGte(0)]),         // multi validator (AND)
-    'theme': isString() & (isEq('light') | isEq('dark')), // operators
-    'premium': nullable($isBool),            // key must exist; value may be null
-    'birthday': optional(isDate()),          // key may be absent
+  final userSchema = eskema({
+    // Transformers clean and coerce data before validation
+    'username': trim(toLowerCase(isString() & not($isStringEmpty, message: 'Username cannot be empty'))),
+    'age': toInt(isGte(18, message: 'Age must be greater than or equal to 18')),
+    
+    // Default values
+    'theme': defaultTo('light', isOneOf(['light', 'dark'])),
+
+    // Contextual validation cleans up if/else logic easily
+    'postal_code': when(
+       getField('country', isEq('USA')),
+       then: isString() & stringLength([isEq(5)]),
+       otherwise: isString(),
+    ),
+
+    // switchBy enables clean polymorphic validation based on a field's value
+    'account': switchBy('type', {
+      'business': eskema({
+        'taxId': required(isString() & stringLength([isGte(9)])),
+      }),
+      'personal': eskema({
+        'ssn': required(isString()),
+      }),
+    }),
   });
 
-  final ok = userValidator.validate({
-    'username': 'bob', 'lastname': 'builder', 'theme': 'light', 'age': 42,
+  // Validating a complex untyped payload
+  final result = userSchema.validate({
+    'username': '  Alice  ',      // Trims and lowercases to 'alice'
+    'age': '24',                 // Coerced to int 24
+    'country': 'USA',
+    'postal_code': '12345',
+    'account': {
+      'type': 'business',
+      'taxId': '123456789'
+    }
   });
-  print(ok); // missing premium (nullable != optional)
 
-  final res = userValidator.validate({'username': 'alice', 'age': -1});
-  print(res.isValid);        // false
-  print(res.expectations);   // structured reasons (age invalid, missing keys, etc.)
+  print(result.isValid); // true (All transformations and conditional logic passed!)
+  
+  // Example of a failing case highlighting expectations
+  final badResult = userSchema.validate({
+    'username': '   ',
+    'age': '17',
+    'country': 'USA',
+    'postal_code': '1234'
+  });
+  
+  print(badResult.isValid); 
+  // > false
+  
+  print(badResult);  
+  // > .username: not String to be empty, .age: greater than or equal to 18, .postal_code: length [equal to 5], .account: Map<dynamic, dynamic>
 }
 ```
 
-### How it works
-1. Build a schema with `eskema({...})` (map of field -> validator)
-2. Compose validators with functions (`isString()`, `isGte(0)`, `all([...])`) or operators (`&`, `|`)
-3. Add modifiers: `nullable()` (value may be null) vs `optional()` (key may be absent)
-4. Call `validate(value)` (sync chain) or `validateAsync(value)` if any link is async
-5. Inspect `Result.isValid` & `Result.expectations` or throw via `validateOrThrow()`
-
-### Reading failures
-Each failure is an `Expectation` having:
-* message – human text
-* code – stable identifier (see expectation codes doc)
-* path – location (e.g. `.user.address[0].city`)
-* data – structured metadata
-
-## More examples
-See the `example/` directory for:
-* transformers (`toInt`, `defaultTo`, `trim`)
-* contextual & polymorphic validation (`resolve`, `when`, `switchBy`)
-* custom validators & builders
-* list & strict schema validation
+### 🌟 Key Features
+* **Transformers**: Coerce and clean up data (`toInt`, `trim`, `defaultTo`, `toLowerCase`) on the fly.
+* **Contextual Validation**: Use `when` to conditionally validate fields based on siblings' values.
+* **Polymorphic Schemas**: Clean up `if`/`else` structures with `switchBy`, seamlessly routing validation based on a discriminator field.
+* **Operators & Composition**: Intuitively chain operations (`&`, `|`, `not()`).
+* **Modifiers**: Precise control over existence and nullability (`optional()`, `nullable()`, `required()`).
+* **Detailed Errors**: Structured `Expectation` objects detailing exact failure paths, codes, and data.
+* **Sync & Async**: Blazingly fast sync execution with seamless async support when needed.
 
 ## Docs & help
 * [Docs & guides](https://nombrekeff.github.io/eskema/)
 * [API reference](https://pub.dev/documentation/eskema/latest/)
 * [Wiki](https://github.com/nombrekeff/eskema/wiki)
+* [Example Directory](https://github.com/nombrekeff/eskema/tree/main/example) - Check out transformers, conditional validation, and more.
 * Issues / questions: https://github.com/nombrekeff/eskema/issues
 
 ## Contributing
