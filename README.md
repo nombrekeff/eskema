@@ -1,6 +1,8 @@
 ![](https://github.com/nombrekeff/eskema/raw/main/.github/Eskema.png)
 
-[![codecov](https://codecov.io/gh/nombrekeff/eskema/branch/main/graph/badge.svg?token=ZF22N0G09J)](https://codecov.io/gh/nombrekeff/eskema) [![build](https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml/badge.svg?branch=main)](https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml) [![Pub Version](https://img.shields.io/pub/v/eskema?style=flat-square)](https://pub.dev/packages/eskema)
+[![codecov](https://codecov.io/gh/nombrekeff/eskema/branch/main/graph/badge.svg?token=ZF22N0G09J)](https://codecov.io/gh/nombrekeff/eskema) [![build](https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml/badge.svg?branch=main)](https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml) [![Pub Version](https://img.shields.io/pub/v/eskema?style=flat-square)](https://pub.dev/packages/eskema) [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/nombrekeff/eskema)
+
+
 
 # Eskema
 Composable runtime validation for Dart. Build readable schemas from tiny validator functions & operators and get precise, structured errors (message, code, path, data) for untyped JSON, configs, and user input. Fast sync path, seamless async, no boilerplate.
