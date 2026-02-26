@@ -1,29 +1,35 @@
 import 'package:eskema/validator.dart';
-import 'package:eskema/validator/combinator_validators.dart';
-import 'symbols.dart';
+import 'default_registry.dart';
+import 'registry.dart';
 
 /// Serializes an Eskema IValidator into its compact string representation.
 class EskemaSerializer {
   /// Converts a validator instance to a string representation.
-  static String serialize(IValidator validator) {
-    if (validator is Field || validator is MapValidator) {
-      return _serializeMap(validator as IdValidator);
-    }
-
-    if (standardValidatorSymbols.containsKey(validator.name)) {
-      final symbol = standardValidatorSymbols[validator.name]!;
-      return _serializeBuiltIn(symbol, validator);
-    }
-
-    return _serializeCustom(validator);
+  /// Uses [defaultRegistry] if [registry] is not provided.
+  static String serialize(IValidator validator, {ValidatorRegistry? registry}) {
+    final activeRegistry = registry ?? defaultRegistry;
+    return _serializeInternal(validator, activeRegistry);
   }
 
-  static String _serializeMap(IdValidator field) {
+  static String _serializeInternal(IValidator validator, ValidatorRegistry registry) {
+    if (validator is Field || validator is MapValidator) {
+      return _serializeMap(validator as IdValidator, registry);
+    }
+
+    final symbol = registry.getSymbolByName(validator.name);
+    if (symbol != null) {
+      return _serializeBuiltIn(symbol, validator, registry);
+    }
+
+    return _serializeCustom(validator, registry);
+  }
+
+  static String _serializeMap(IdValidator field, ValidatorRegistry registry) {
     if (field is MapValidator) {
       final buffer = StringBuffer('{');
       for (var i = 0; i < field.fields.length; i++) {
         final f = field.fields[i];
-        buffer.write('${f.id}: ${_serializeFieldModifiers(f, _serializeMap(f))}');
+        buffer.write('${f.id}: ${_serializeFieldModifiers(f, _serializeMap(f, registry))}');
         if (i < field.fields.length - 1) buffer.write(', ');
       }
       buffer.write('}');
@@ -31,11 +37,11 @@ class EskemaSerializer {
     }
 
     if (field is Field) {
-      final innerSer = field.validators.map(serialize).join(' & ');
+      final innerSer = field.validators.map((v) => _serializeInternal(v, registry)).join(' & ');
       return innerSer;
     }
 
-    return serialize(field);
+    return _serializeInternal(field, registry);
   }
 
   static String _serializeFieldModifiers(IValidator validator, String serialized) {
@@ -45,7 +51,8 @@ class EskemaSerializer {
     return mod;
   }
 
-  static String _serializeBuiltIn(String symbol, IValidator validator) {
+  static String _serializeBuiltIn(
+      String symbol, IValidator validator, ValidatorRegistry registry) {
     if (validator.arguments.isEmpty) {
       return symbol;
     }
@@ -53,29 +60,33 @@ class EskemaSerializer {
     if (symbol == '&' || symbol == '|') {
       final subs = validator.arguments.cast<IValidator>();
       if (subs.isEmpty) return symbol;
-      final joined = subs.map(serialize).join(' $symbol ');
+      final joined = subs.map((v) => _serializeInternal(v, registry)).join(' $symbol ');
       return '($joined)';
     }
 
-    final argsStr = validator.arguments.map((v) {
+    final customSerializer = registry.serializers[validator.name];
+    final argsToSerialize =
+        customSerializer != null ? customSerializer(validator) : validator.arguments;
+
+    final argsStr = argsToSerialize.map((v) {
       if (symbol == 'type') return v.toString();
-      return _serializeValue(v);
+      return _serializeValue(v, registry);
     }).join(', ');
     return '$symbol($argsStr)';
   }
 
-  static String _serializeCustom(IValidator validator) {
-    final argsStr = validator.arguments.map(_serializeValue).join(', ');
+  static String _serializeCustom(IValidator validator, ValidatorRegistry registry) {
+    final argsStr = validator.arguments.map((v) => _serializeValue(v, registry)).join(', ');
     if (argsStr.isEmpty) return '@${validator.name}';
     return '@${validator.name}($argsStr)';
   }
 
-  static String _serializeValue(dynamic value) {
+  static String _serializeValue(dynamic value, ValidatorRegistry registry) {
     if (value is String) return "'$value'";
     if (value is Iterable) {
-      return '[${value.map(_serializeValue).join(', ')}]';
+      return '[${value.map((v) => _serializeValue(v, registry)).join(', ')}]';
     }
-    if (value is IValidator) return serialize(value);
+    if (value is IValidator) return _serializeInternal(value, registry);
     return value.toString();
   }
 }
