@@ -3,7 +3,7 @@ import 'package:eskema/eskema.dart';
 void main() {
   final userSchema = eskema({
     // Transformers clean and coerce data before validation
-    'username': trim(toLowerCase(isString() & not($isStringEmpty, message: 'Username cannot be empty'))),
+    'username': trim(toLowerCase(isString() & not($isStringEmpty))),
     'age': toInt(isGte(18, message: 'Age must be greater than or equal to 18')),
     
     // Default values

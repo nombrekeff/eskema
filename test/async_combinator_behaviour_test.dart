@@ -79,7 +79,7 @@ void main() {
       final v = not(asyncPass('inner ok'));
       final r = await v.validateAsync('x');
       expect(r.isValid, false);
-      expect(r.description?.contains('not inner ok'), true);
+      expect(r.description?.contains('Not inner ok'), true);
     });
 
     test('not with async failing child => success', () async {

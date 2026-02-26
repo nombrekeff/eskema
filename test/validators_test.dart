@@ -262,13 +262,13 @@ void main() {
 
       expect(field.validate('').isValid, true);
       expect(field.validate('1').isValid, false);
-      expect(field.validate('1').description, 'String to be empty');
+      expect(field.validate('1').description, 'To be empty');
     });
 
     test('not(\$isStringEmpty)', () {
       final field = not($isStringEmpty);
       expect(field.validate('').isValid, false);
-      expect(field.validate('').description, 'not String to be empty');
+      expect(field.validate('').description, 'Not To be empty');
       expect(field.validate('1').isValid, true);
     });
   });
@@ -348,7 +348,7 @@ void main() {
       expect(validator.validate(true).isValid, true);
 
       final res = validator.validate('false');
-      expect(res.description, 'not String');
+      expect(res.description, 'Not String');
     });
 
     test('any', () {

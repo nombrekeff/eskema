@@ -140,7 +140,7 @@ IValidator isEmail({String? message}) {
 IValidator isStringEmpty({String? message}) {
   return stringLength([isLte(0)]) >
       Expectation(
-        message: message ?? 'String to be empty',
+        message: message ?? 'To be empty',
         code: ExpectationCodes.valueLengthOutOfRange,
         data: {'expected': 0},
       );

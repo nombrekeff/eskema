@@ -10,6 +10,11 @@ String prettifyValue(dynamic value) {
   return value.toString();
 }
 
+String capitalize(String value) {
+  if (value.isEmpty) return value;
+  return value[0].toUpperCase() + value.substring(1);
+}
+
 /// Check if a value has a length property.
 bool hasLengthProperty(dynamic value) {
   return value is String || value is Iterable || value is Map || value is Set;

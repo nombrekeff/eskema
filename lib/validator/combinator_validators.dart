@@ -4,6 +4,7 @@ library validator.combinators;
 import 'dart:async';
 import 'package:eskema/expectation.dart';
 import 'package:eskema/result.dart';
+import 'package:eskema/src/util.dart' as Util;
 import 'package:eskema/validator/exception.dart';
 import 'package:eskema/validators/combinator.dart';
 import 'base_validator.dart';
@@ -355,7 +356,7 @@ class NotValidator extends _SingleChildValidator {
             : result.expectations;
 
         final notExpectations =
-            source.map((exp) => exp.copyWith(message: 'not ${exp.message}', value: value));
+            source.map((exp) => exp.copyWith(message: Util.capitalize('not ${exp.message}'), value: value));
         return Result.invalid(value, expectations: notExpectations);
       }
     }
