@@ -18,13 +18,9 @@ part 'parser/json_decoder_values.dart';
 /// final validator = const JsonDecoder().decode('{"name": "String", "age": [">", 0]}');
 /// ```
 class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
-  final Map<String, String>? customSymbols;
-  final bool strictUnknownValidators;
-  SymbolResolver get _resolver => SymbolResolver(customSymbolToName: customSymbols);
-
   const JsonDecoder({
-    this.customSymbols,
-    this.strictUnknownValidators = false,
+    super.customSymbols,
+    super.strictUnknownValidators = false,
   });
 
   @override
@@ -35,12 +31,7 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
   }) {
     final activeRegistry = registry ?? defaultRegistry;
     final parsed = input is String ? convert.jsonDecode(input) : input;
-    final context = DecoderResolutionContext(
-      registry: activeRegistry,
-      symbolResolver: _resolver,
-      customFactories: customFactories ?? {},
-      strictUnknownValidators: strictUnknownValidators,
-    );
+    final context = createResolutionContext(activeRegistry, customFactories);
 
     return _decodeNode(parsed, context);
   }

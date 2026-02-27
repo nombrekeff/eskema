@@ -4,37 +4,13 @@ import 'package:eskema/eskema.dart';
 
 /// Encodes an Eskema IValidator into a JSON string representation.
 class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
-  final Map<String, String>? customSymbols;
-  final Map<String, ArgumentEncoder>? customEncoders;
-  SymbolResolver get _resolver => SymbolResolver(customNameToSymbol: customSymbols);
-
-  const JsonEncoder({this.customSymbols, this.customEncoders});
+  const JsonEncoder({super.customSymbols, super.customEncoders});
 
   @override
   String encode(IValidator validator, {ValidatorRegistry? registry}) {
     final activeRegistry = registry ?? defaultRegistry;
-    return convert.jsonEncode(encodeInternal(validator, activeRegistry));
+    return convert.jsonEncode(super.encodeInternal(validator, activeRegistry));
   }
-
-  @override
-  dynamic encodeInternal(IValidator validator, ValidatorRegistry? registry) {
-    if (validator is Field || validator is MapValidator) {
-      return encodeMap(validator as IdValidator, registry);
-    }
-
-    final simpleTypeName = extractSimpleTypeName(validator);
-    if (simpleTypeName != null) {
-      return simpleTypeName;
-    }
-
-    if (_resolver.hasSymbolForName(validator.name)) {
-      final symbol = _resolver.symbolOfName(validator.name);
-      return encodeBuiltIn(symbol, validator, registry);
-    }
-
-    return encodeCustom(validator, registry);
-  }
-
   @override
   dynamic encodeMap(IdValidator field, ValidatorRegistry? registry) {
     if (field is MapValidator) {
@@ -53,7 +29,7 @@ class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
       if (field.validators.length == 1) {
         return encodeInternal(field.validators.first, registry);
       }
-      final symbol = _resolver.symbolOfName('all');
+      final symbol = resolver.symbolOfName('all');
       return encodeBuiltIn(symbol, all(field.validators), registry);
     }
 

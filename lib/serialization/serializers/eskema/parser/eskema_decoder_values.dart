@@ -120,7 +120,7 @@ extension _DecoderParserValueMethods on _DecoderParser {
       return literal;
     }
 
-    final mapped = _resolver.nameOfSymbol(id);
+    final mapped = _resolutionContext.symbolResolver.nameOfSymbol(id);
     if (mapped == null) {
       return id;
     }

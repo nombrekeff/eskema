@@ -60,14 +60,13 @@ extension _DecoderParserTokenMethods on _DecoderParser {
   }
 
   bool _isKnownValidator(String sym) {
-    if (customSymbols?.containsKey(sym) ?? false) return true;
-    if (defaultSymbolToName.containsKey(sym)) return true;
-    if (registry.factories.containsKey(sym)) return true;
+    if (_resolutionContext.symbolResolver.nameOfSymbol(sym) != null) return true;
+    if (_resolutionContext.registry.factories.containsKey(sym)) return true;
     return false;
   }
 
   bool _isNoArgSymbol(String sym) {
-    final name = _resolver.nameOfSymbol(sym) ?? sym;
+    final name = _resolutionContext.symbolResolver.nameOfSymbol(sym) ?? sym;
     return noArgValidators.contains(name);
   }
 

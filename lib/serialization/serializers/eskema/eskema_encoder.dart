@@ -2,40 +2,8 @@ import 'package:eskema/eskema.dart';
 
 /// Encodes an Eskema IValidator into its compact string representation.
 class EskemaEncoder extends DelegateValidatorEncoder<String> {
-  final Map<String, String>? customSymbols;
-  final Map<String, ArgumentEncoder>? customEncoders;
+  const EskemaEncoder({super.customSymbols, super.customEncoders});
 
-  // TODO: Allow passing a custom SymbolResolver directly for more flexibility?
-  SymbolResolver get _resolver => SymbolResolver(customNameToSymbol: customSymbols);
-
-  const EskemaEncoder({this.customSymbols, this.customEncoders});
-
-  @override
-  String encode(IValidator validator, {ValidatorRegistry? registry}) {
-    final activeRegistry = registry ?? defaultRegistry;
-
-    return encodeInternal(validator, activeRegistry);
-  }
-
-  @override
-  String encodeInternal(IValidator validator, ValidatorRegistry? registry) {
-    if (validator is Field || validator is MapValidator) {
-      return encodeMap(validator as IdValidator, registry);
-    }
-
-    final simpleTypeName = extractSimpleTypeName(validator);
-    if (simpleTypeName != null) {
-      return simpleTypeName;
-    }
-
-    if (_resolver.hasSymbolForName(validator.name)) {
-      final symbol = _resolver.symbolOfName(validator.name);
-
-      return encodeBuiltIn(symbol, validator, registry);
-    }
-
-    return encodeCustom(validator, registry);
-  }
 
   @override
   String encodeMap(IdValidator field, ValidatorRegistry? registry) {

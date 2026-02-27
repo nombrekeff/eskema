@@ -22,12 +22,9 @@ class EskemaDecoder extends DelegateValidatorDecoder<String> {
   /// // same as
   /// final validator = all([isInt, isEq(5)]);
   /// ```
-  final Map<String, String>? customSymbols;
-  final bool strictUnknownValidators;
-
   const EskemaDecoder({
-    this.customSymbols,
-    this.strictUnknownValidators = false,
+    super.customSymbols,
+    super.strictUnknownValidators = false,
   });
 
   /// Decodes an eskema string into a validator.
@@ -47,13 +44,12 @@ class EskemaDecoder extends DelegateValidatorDecoder<String> {
     ValidatorRegistry? registry,
   }) {
     final activeRegistry = registry ?? defaultRegistry;
-    final parser = _DecoderParser(
-      input,
-      customFactories ?? {},
+    final context = createResolutionContext(
       activeRegistry,
-      customSymbols,
-      strictUnknownValidators,
+      customFactories,
+      allowUnknownCustomFallback: (name) => name == 'custom',
     );
+    final parser = _DecoderParser(input, context);
 
     return parser.parseTopLevel();
   }
@@ -61,30 +57,11 @@ class EskemaDecoder extends DelegateValidatorDecoder<String> {
 
 class _DecoderParser {
   final String input;
-  final Map<String, Function> customFactories;
-  final ValidatorRegistry registry;
-  final Map<String, String>? customSymbols;
-  final bool strictUnknownValidators;
-
-  SymbolResolver get _resolver => SymbolResolver(customSymbolToName: customSymbols);
-
-  late final DecoderResolutionContext _resolutionContext = DecoderResolutionContext(
-    registry: registry,
-    symbolResolver: _resolver,
-    customFactories: customFactories,
-    strictUnknownValidators: strictUnknownValidators,
-    allowUnknownCustomFallback: (name) => name == 'custom',
-  );
+  final DecoderResolutionContext _resolutionContext;
 
   int pos = 0;
 
-  _DecoderParser(
-    this.input,
-    this.customFactories,
-    this.registry,
-    this.customSymbols,
-    this.strictUnknownValidators,
-  );
+  _DecoderParser(this.input, this._resolutionContext);
 
   void skipWhitespace() {
     while (pos < input.length && input.codeUnitAt(pos) <= 32) {
