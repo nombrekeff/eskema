@@ -2,6 +2,62 @@
 ///
 /// Used by both [EskemaEncoder] and [JsonEncoder] to produce short, readable output.
 /// The reverse map [defaultSymbolToName] is used by decoders.
+const Set<String> simpleTypeNames = {
+  'int',
+  'String',
+  'double',
+  'num',
+  'bool',
+  'List',
+  'Map',
+  'Set',
+};
+
+const Set<String> noArgValidators = {
+  'isTrue',
+  'isFalse',
+  'isLowerCase',
+  'isUpperCase',
+  'isEmail',
+  'isStringEmpty',
+  'isStrictUrl',
+  'isUuidV4',
+  'isIntString',
+  'isDoubleString',
+  'isNumString',
+  'isBoolString',
+  'isDate',
+  'isDateInPast',
+  'isDateInFuture',
+  'isJsonContainer',
+  'isJsonObject',
+  'isJsonArray',
+  'String',
+  'int',
+  'double',
+  'num',
+  'bool',
+  'List',
+  'Map',
+};
+
+const Set<String> combinatorSymbols = {'&', '|'};
+const Set<String> comparisonSymbols = {'=', '>', '>=', '<', '<=', '<>', '~', 'in'};
+
+const Set<String> eskemaSymbolExtraChars = {
+  '!',
+  '=',
+  '<',
+  '>',
+  '~',
+  '&',
+  '|',
+  '[',
+  ']',
+  '/',
+  '-',
+};
+
 const defaultNameToSymbol = <String, String>{
   'all': '&',
   'any': '|',

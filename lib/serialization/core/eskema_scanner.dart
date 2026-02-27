@@ -1,16 +1,4 @@
-const Set<String> defaultEskemaSymbolExtraChars = {
-  '!',
-  '=',
-  '<',
-  '>',
-  '~',
-  '&',
-  '|',
-  '[',
-  ']',
-  '/',
-  '-',
-};
+import 'symbols.dart';
 
 bool isAsciiIdentifierCodeUnit(int codeUnit) {
   return (codeUnit >= 48 && codeUnit <= 57) ||
@@ -40,7 +28,7 @@ bool isEskemaValueStartCodeUnit(int codeUnit) {
   required String input,
   required int startPos,
   required bool Function(String) isKnownValidator,
-  Set<String> symbolExtraChars = defaultEskemaSymbolExtraChars,
+  Set<String> symbolExtraChars = eskemaSymbolExtraChars,
 }) {
   var scanPos = startPos;
   var longestSymbolMatch = -1;

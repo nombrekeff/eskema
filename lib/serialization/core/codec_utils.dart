@@ -16,48 +16,6 @@ class ParsedModifiers {
   String applyToString(String value) => value.substring(offset);
 }
 
-const Set<String> simpleTypeNames = {
-  'int',
-  'String',
-  'double',
-  'num',
-  'bool',
-  'List',
-  'Map',
-  'Set',
-};
-
-const noArgValidators = {
-  'isTrue',
-  'isFalse',
-  'isLowerCase',
-  'isUpperCase',
-  'isEmail',
-  'isStringEmpty',
-  'isStrictUrl',
-  'isUuidV4',
-  'isIntString',
-  'isDoubleString',
-  'isNumString',
-  'isBoolString',
-  'isDate',
-  'isDateInPast',
-  'isDateInFuture',
-  'isJsonContainer',
-  'isJsonObject',
-  'isJsonArray',
-  'String',
-  'int',
-  'double',
-  'num',
-  'bool',
-  'List',
-  'Map',
-};
-
-const Set<String> combinatorSymbols = {'&', '|'};
-const Set<String> comparisonSymbols = {'=', '>', '>=', '<', '<=', '<>', '~', 'in'};
-
 class SymbolResolver {
   final SymbolMap customNameToSymbol;
   final SymbolMap customSymbolToName;
