@@ -7,6 +7,9 @@ export 'core/decode_exception.dart';
 export 'core/symbols.dart';
 export 'core/argument_encoder.dart';
 export 'core/validator_resolution.dart';
+export 'core/decoder_models.dart';
+export 'core/codec_utils.dart';
+export 'core/eskema_scanner.dart';
 export 'default_registry.dart';
 
 export 'serializers/eskema/eskema_encoder.dart';

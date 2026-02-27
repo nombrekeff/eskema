@@ -1,5 +1,4 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/serialization/core/codec_utils.dart';
 
 /// Encodes an Eskema IValidator into its compact string representation.
 class EskemaEncoder extends DelegateValidatorEncoder<String> {

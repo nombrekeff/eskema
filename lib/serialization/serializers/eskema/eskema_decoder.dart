@@ -1,6 +1,4 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/serialization/core/codec_utils.dart';
-import 'package:eskema/serialization/core/validator_resolution.dart';
 
 /// Decodes an eskema string into a validator.
 ///
@@ -64,15 +62,17 @@ class _DecoderParser {
   final ValidatorRegistry registry;
   final Map<String, String>? customSymbols;
   final bool strictUnknownValidators;
-  
+
   SymbolResolver get _resolver => SymbolResolver(customSymbolToName: customSymbols);
-  DecoderResolutionContext get _resolutionContext => DecoderResolutionContext(
-        registry: registry,
-        symbolResolver: _resolver,
-        customFactories: customFactories,
-        strictUnknownValidators: strictUnknownValidators,
-        allowUnknownCustomFallback: (name) => name == 'custom',
-      );
+
+  late final DecoderResolutionContext _resolutionContext = DecoderResolutionContext(
+    registry: registry,
+    symbolResolver: _resolver,
+    customFactories: customFactories,
+    strictUnknownValidators: strictUnknownValidators,
+    allowUnknownCustomFallback: (name) => name == 'custom',
+  );
+
   int pos = 0;
 
   _DecoderParser(
@@ -118,81 +118,103 @@ class _DecoderParser {
       throw DecodeException.unexpectedEndOfInput(input, pos);
     }
 
-    bool optional = false;
-    bool nullable = false;
+    final modifiers = _readStreamModifiers();
 
-    if (match('*')) optional = true;
+    var val = _parseComposedValidator();
+    val = _parseImplicitCombinatorChain(val);
 
-    if (match('?')) nullable = true;
+    return _applyStreamModifiers(val, modifiers);
+  }
 
-    IValidator val;
-
+  IValidator _parseComposedValidator() {
     if (match('(')) {
-      final terms = <IValidator>[];
-      terms.add(parseValidator());
-
-      // we assume it"s something like (A & B) or (A | B)
-      skipWhitespace();
-      String combinator = '';
-
-      if (match('&')) {
-        combinator = '&';
-      } else if (match('|')) {
-        combinator = '|';
-      }
-
-      if (combinator.isNotEmpty) {
-        terms.add(parseValidator());
-
-        while (match(combinator)) {
-          terms.add(parseValidator());
-        }
-      }
-
-      if (!match(')')) {
-        throw DecodeException.missingClosingParenthesis(input, pos);
-      }
-
-      if (combinator == '&') {
-        val = all(terms);
-      } else if (combinator == '|') {
-        val = any(terms);
-      } else {
-        val = terms[0];
-      }
-    } else if (match('{')) {
-      val = parseMap();
-    } else {
-      val = parseCall();
+      return _parseParenthesizedValidator();
     }
 
-    // handle implicit & without parens if applicable or chaining?
+    if (match('{')) {
+      return parseMap();
+    }
+
+    return parseCall();
+  }
+
+  IValidator _parseParenthesizedValidator() {
+    final terms = <IValidator>[parseValidator()];
+    final combinator = _readCombinatorToken();
+
+    if (combinator != null) {
+      terms.add(parseValidator());
+      while (match(combinator)) {
+        terms.add(parseValidator());
+      }
+    }
+
+    if (!match(')')) {
+      throw DecodeException.missingClosingParenthesis(input, pos);
+    }
+
+    if (combinator == '&') {
+      return all(terms);
+    }
+
+    if (combinator == '|') {
+      return any(terms);
+    }
+
+    return terms.first;
+  }
+
+  String? _readCombinatorToken() {
+    skipWhitespace();
+    if (match('&')) {
+      return '&';
+    }
+
+    if (match('|')) {
+      return '|';
+    }
+
+    return null;
+  }
+
+  IValidator _parseImplicitCombinatorChain(IValidator first) {
     skipWhitespace();
 
     if (pos < input.length && peek('&') && !peek('&&')) {
-      // We read `&` here and chain it
-      final terms = <IValidator>[val];
-
-      while (match('&')) {
-        terms.add(parseValidatorCore());
-      }
-
-      val = all(terms);
-    } else if (pos < input.length && peek('|') && !peek('||')) {
-      final terms = <IValidator>[val];
-
-      while (match('|')) {
-        terms.add(parseValidatorCore());
-      }
-
-      val = any(terms);
+      return _readImplicitChain(first, '&');
     }
 
-    if (nullable) val = val.nullable();
+    if (pos < input.length && peek('|') && !peek('||')) {
+      return _readImplicitChain(first, '|');
+    }
 
-    if (optional) val = val.optional();
+    return first;
+  }
 
-    return val;
+  IValidator _readImplicitChain(IValidator first, String op) {
+    final terms = <IValidator>[first];
+    while (match(op)) {
+      terms.add(parseValidatorCore());
+    }
+
+    return op == '&' ? all(terms) : any(terms);
+  }
+
+  IValidator _applyStreamModifiers(
+    IValidator validator,
+    ({bool isOptional, bool isNullable}) modifiers,
+  ) {
+    var result = validator;
+
+    if (modifiers.isNullable) {
+      result = result.nullable();
+    }
+
+    if (modifiers.isOptional) {
+      result = result.optional();
+    }
+
+    return result;
   }
 
   IValidator parseValidatorCore() {
@@ -225,12 +247,7 @@ class _DecoderParser {
         throw DecodeException.missingColon(key, input, pos);
       }
 
-      bool optional = false;
-      bool nullable = false;
-
-      if (match('*')) optional = true;
-
-      if (match('?')) nullable = true;
+      final modifiers = _readStreamModifiers();
 
       // field value could be a chain of & operators without parens
       final valStart = pos;
@@ -246,21 +263,20 @@ class _DecoderParser {
       final field = Field(
         id: key,
         validators: fieldValidators,
-        optional: optional,
-        nullable: nullable,
+        optional: modifiers.isOptional,
+        nullable: modifiers.isNullable,
       );
       fields.add(field);
 
       match(','); // optional trailing comma
     }
-    return _DecodedMapValidator(fields, name: 'eskema');
+    return DecodedMapValidator(fields, name: 'eskema');
   }
 
   String parseIdentifier() {
     skipWhitespace();
     final start = pos;
-    // can be simple words
-    while (pos < input.length && RegExp(r'[a-zA-Z0-9_]').hasMatch(input[pos])) {
+    while (pos < input.length && isAsciiIdentifierCodeUnit(input.codeUnitAt(pos))) {
       pos++;
     }
     if (start == pos) {
@@ -278,72 +294,8 @@ class _DecoderParser {
 
     final start = pos;
     final isCustom = match('@');
-    final nameStart = pos;
-
-    String sym = '';
-    int longestSymbolMatch = -1;
-
-    // Scan Ahead to find the longest known symbol match
-    // This handles cases like >= vs > and correctly stops before values (e.g. >0)
-    int scanPos = pos;
-    while (scanPos < input.length &&
-        RegExp(r'[a-zA-Z0-9_!=\<\>~&\|\[\]\/\-]').hasMatch(input[scanPos])) {
-      // Stop scanning if we hit something that looks like the start of arguments
-      // or other structures, but ONLY if we haven't already formed a symbol that
-      // specifically includes these characters (unlikely for built-ins).
-      if (input[scanPos] == '(' || input[scanPos] == '{' || input[scanPos] == ' ') {
-        break;
-      }
-
-      scanPos++;
-      final current = input.substring(nameStart, scanPos);
-      if (_isKnownValidator(current)) {
-        longestSymbolMatch = scanPos;
-      }
-    }
-
-    if (longestSymbolMatch != -1) {
-      pos = longestSymbolMatch;
-      sym = input.substring(nameStart, pos);
-    } else {
-      // No known symbol, fallback to standard identifier rules
-      final startPosBeforeId = pos;
-      while (pos < input.length && RegExp(r'[a-zA-Z0-9_]').hasMatch(input[pos])) {
-        pos++;
-      }
-      sym = input.substring(nameStart, pos);
-
-      if (pos == startPosBeforeId && !isCustom && sym.isEmpty) {
-        // We failed to advance with both symbol scan and identifier scan.
-        // To prevent infinite loop, we must throw if we're not at EOF
-        if (pos < input.length) {
-          throw DecodeException.missingIdentifier(input, pos);
-        }
-      }
-    }
-
-    final args = <dynamic>[];
-
-    if (match('(')) {
-      while (!match(')')) {
-        if (pos >= input.length) {
-          throw DecodeException.missingClosingParenthesis(input, pos);
-        }
-
-        args.add(parseValue());
-        match(',');
-      }
-    } else if (!isCustom && sym.isNotEmpty) {
-      // Check if we should try to parse a single value argument if no ( ) are present.
-      // We allow this for known symbols that are NOT no-arg markers (like T, F, etc.)
-      // and are followed by something that looks like a value.
-      if (!_isNoArgSymbol(sym)) {
-        skipWhitespace();
-        if (pos < input.length && _isPossibleValueStart(input[pos])) {
-          args.add(parseValue());
-        }
-      }
-    }
+    final sym = _readSymbolToken(isCustom: isCustom);
+    final args = _readCallArgs(isCustom: isCustom, symbol: sym);
 
     if (isCustom) {
       return resolveDecodedValidator(
@@ -386,64 +338,20 @@ class _DecoderParser {
       return list;
     }
 
-    // Check if it's a number
-    final start = pos;
-    bool isNum = false;
-
-    if (input[pos] == '-') {
-      pos++;
-      isNum = true;
+    final numeric = _tryReadNumericValue();
+    if (numeric != null) {
+      return numeric;
     }
 
-    while (pos < input.length && RegExp(r'[0-9\.]').hasMatch(input[pos])) {
-      pos++;
-      isNum = true;
+    final literalOrIdentifier = _tryReadLiteralIdentifier();
+    if (literalOrIdentifier case final value?) {
+      return value;
     }
 
-    // Wait, if it didn't match any digits
-    if (isNum && pos > start && start != pos - (input[start] == '-' ? 1 : 0)) {
-      final strNode = input.substring(start, pos);
-
-      if (strNode.contains('.')) return double.parse(strNode);
-
-      return int.parse(strNode);
+    final primitive = _matchPrimitiveKeyword();
+    if (primitive case final value?) {
+      return value;
     }
-
-    // reset pos if not num
-    pos = start;
-
-    final startId = pos;
-
-    while (pos < input.length && RegExp(r'[a-zA-Z0-9_]').hasMatch(input[pos])) {
-      pos++;
-    }
-
-    if (pos > startId) {
-      final id = input.substring(startId, pos);
-
-      if (id == 'true') return true;
-
-      if (id == 'false') return false;
-
-      if (id == 'null') return null;
-
-      final mapped = _resolver.nameOfSymbol(id);
-
-      if (mapped == null) {
-        // It's not a known validator symbol, treat as bare string argument
-        return id;
-      }
-
-      // If it IS a known validator symbol, reset and fall through
-      pos = startId;
-    }
-
-    // Check built-in boolean or null again just in case (we handled them above)
-    if (match('true')) return true;
-
-    if (match('false')) return false;
-
-    if (match('null')) return null;
 
     // Could be an inner validator?
     return parseValidatorCore();
@@ -476,6 +384,118 @@ class _DecoderParser {
     return str.replaceAll("\\'", "'").replaceAll('\\"', '"');
   }
 
+  String _readSymbolToken({required bool isCustom}) {
+    final startPosBeforeId = pos;
+    final tokenResult = readEskemaSymbolToken(
+      input: input,
+      startPos: pos,
+      isKnownValidator: _isKnownValidator,
+    );
+    pos = tokenResult.nextPos;
+    final sym = tokenResult.token;
+
+    if (pos == startPosBeforeId && !isCustom && sym.isEmpty && pos < input.length) {
+      throw DecodeException.missingIdentifier(input, pos);
+    }
+
+    return sym;
+  }
+
+  List<dynamic> _readCallArgs({required bool isCustom, required String symbol}) {
+    final args = <dynamic>[];
+
+    if (match('(')) {
+      while (!match(')')) {
+        if (pos >= input.length) {
+          throw DecodeException.missingClosingParenthesis(input, pos);
+        }
+
+        args.add(parseValue());
+        match(',');
+      }
+
+      return args;
+    }
+
+    if (!isCustom && symbol.isNotEmpty && !_isNoArgSymbol(symbol)) {
+      skipWhitespace();
+      if (pos < input.length && isEskemaValueStartCodeUnit(input.codeUnitAt(pos))) {
+        args.add(parseValue());
+      }
+    }
+
+    return args;
+  }
+
+  num? _tryReadNumericValue() {
+    final start = pos;
+    var isNum = false;
+
+    if (input[pos] == '-') {
+      pos++;
+      isNum = true;
+    }
+
+    while (pos < input.length && isAsciiNumericOrDotCodeUnit(input.codeUnitAt(pos))) {
+      pos++;
+      isNum = true;
+    }
+
+    if (isNum && pos > start && start != pos - (input[start] == '-' ? 1 : 0)) {
+      final strNode = input.substring(start, pos);
+      if (strNode.contains('.')) {
+        return double.parse(strNode);
+      }
+
+      return int.parse(strNode);
+    }
+
+    pos = start;
+    return null;
+  }
+
+  dynamic _tryReadLiteralIdentifier() {
+    final startId = pos;
+
+    while (pos < input.length && isAsciiIdentifierCodeUnit(input.codeUnitAt(pos))) {
+      pos++;
+    }
+
+    if (pos == startId) {
+      return null;
+    }
+
+    final id = input.substring(startId, pos);
+    final literal = tryParsePrimitiveLiteral(id);
+    if (literal is! String) {
+      return literal;
+    }
+
+    final mapped = _resolver.nameOfSymbol(id);
+    if (mapped == null) {
+      return id;
+    }
+
+    pos = startId;
+    return null;
+  }
+
+  dynamic _matchPrimitiveKeyword() {
+    if (match('true')) {
+      return true;
+    }
+
+    if (match('false')) {
+      return false;
+    }
+
+    if (match('null')) {
+      return null;
+    }
+
+    return null;
+  }
+
   bool _isKnownValidator(String sym) {
     if (customSymbols?.containsKey(sym) ?? false) return true;
     if (defaultSymbolToName.containsKey(sym)) return true;
@@ -485,48 +505,21 @@ class _DecoderParser {
 
   bool _isNoArgSymbol(String sym) {
     final name = _resolver.nameOfSymbol(sym) ?? sym;
-    // These validators are known to take no arguments.
-    const noArgValidators = {
-      'isTrue',
-      'isFalse',
-      'isLowerCase',
-      'isUpperCase',
-      'isEmail',
-      'isStringEmpty',
-      'isStrictUrl',
-      'isUuidV4',
-      'isIntString',
-      'isDoubleString',
-      'isNumString',
-      'isBoolString',
-      'isDate',
-      'isDateInPast',
-      'isDateInFuture',
-      'isJsonContainer',
-      'isJsonObject',
-      'isJsonArray',
-      'String',
-      'int',
-      'double',
-      'num',
-      'bool',
-      'List',
-      'Map',
-    };
     return noArgValidators.contains(name);
   }
 
-  bool _isPossibleValueStart(String char) {
-    // Digits, signs, quotes, brackets, braces, or letters (for true/false/null/nested validators)
-    return RegExp(r'''[0-9\-\.\'"\[\{\(a-zA-Z]''').hasMatch(char);
+  ({bool isOptional, bool isNullable}) _readStreamModifiers() {
+    var optional = false;
+    var nullable = false;
+
+    if (match('*')) {
+      optional = true;
+    }
+
+    if (match('?')) {
+      nullable = true;
+    }
+
+    return (isOptional: optional, isNullable: nullable);
   }
-}
-
-class _DecodedMapValidator extends MapValidator {
-  final List<IdValidator> _fields;
-
-  _DecodedMapValidator(this._fields, {super.name = 'eskema'}) : super(id: '');
-
-  @override
-  List<IdValidator> get fields => _fields;
 }

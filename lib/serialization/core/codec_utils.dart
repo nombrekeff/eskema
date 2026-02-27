@@ -2,6 +2,20 @@ import 'package:eskema/eskema.dart';
 
 typedef SymbolMap = Map<String, String>;
 
+class ParsedModifiers {
+  final bool isNullable;
+  final bool isOptional;
+  final int offset;
+
+  const ParsedModifiers({
+    required this.isNullable,
+    required this.isOptional,
+    required this.offset,
+  });
+
+  String applyToString(String value) => value.substring(offset);
+}
+
 const Set<String> simpleTypeNames = {
   'int',
   'String',
@@ -11,6 +25,34 @@ const Set<String> simpleTypeNames = {
   'List',
   'Map',
   'Set',
+};
+
+const noArgValidators = {
+  'isTrue',
+  'isFalse',
+  'isLowerCase',
+  'isUpperCase',
+  'isEmail',
+  'isStringEmpty',
+  'isStrictUrl',
+  'isUuidV4',
+  'isIntString',
+  'isDoubleString',
+  'isNumString',
+  'isBoolString',
+  'isDate',
+  'isDateInPast',
+  'isDateInFuture',
+  'isJsonContainer',
+  'isJsonObject',
+  'isJsonArray',
+  'String',
+  'int',
+  'double',
+  'num',
+  'bool',
+  'List',
+  'Map',
 };
 
 const Set<String> combinatorSymbols = {'&', '|'};
@@ -106,4 +148,78 @@ bool isComparisonSymbol(String symbol) {
 
 bool isSimpleValue(dynamic value) {
   return value == null || value is num || value is bool || value is String;
+}
+
+dynamic tryParsePrimitiveLiteral(String token) {
+  if (token == 'true') {
+    return true;
+  }
+
+  if (token == 'false') {
+    return false;
+  }
+
+  if (token == 'null') {
+    return null;
+  }
+
+  return token;
+}
+
+ParsedModifiers parsePrefixModifiers(String source) {
+  var offset = 0;
+  var nullable = false;
+  var optional = false;
+
+  while (offset < source.length) {
+    final ch = source[offset];
+    if (ch == '?') {
+      nullable = true;
+      offset++;
+      continue;
+    }
+
+    if (ch == '*') {
+      optional = true;
+      offset++;
+      continue;
+    }
+
+    break;
+  }
+
+  return ParsedModifiers(
+    isNullable: nullable,
+    isOptional: optional,
+    offset: offset,
+  );
+}
+
+IValidator applyDecodedModifiers(IValidator validator, ParsedModifiers modifiers) {
+  var result = validator;
+
+  if (modifiers.isNullable) {
+    result = result.nullable();
+  }
+
+  if (modifiers.isOptional) {
+    result = result.optional();
+  }
+
+  return result;
+}
+
+bool isModifierPrefixToken(String token) {
+  if (token.isEmpty) {
+    return false;
+  }
+
+  for (var i = 0; i < token.length; i++) {
+    final ch = token[i];
+    if (ch != '?' && ch != '*') {
+      return false;
+    }
+  }
+
+  return true;
 }

@@ -1,7 +1,6 @@
 import 'dart:convert' as convert;
 
 import 'package:eskema/eskema.dart';
-import 'package:eskema/serialization/core/codec_utils.dart';
 
 /// Encodes an Eskema IValidator into a JSON string representation.
 class JsonEncoder extends DelegateValidatorEncoder<dynamic> {

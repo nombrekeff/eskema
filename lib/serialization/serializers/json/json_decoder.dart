@@ -1,7 +1,6 @@
 import 'dart:convert' as convert;
 
 import 'package:eskema/eskema.dart';
-import 'package:eskema/serialization/core/codec_utils.dart';
 
 /// Decodes a JSON string into an IValidator.
 ///
@@ -33,22 +32,17 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
   }) {
     final activeRegistry = registry ?? defaultRegistry;
     final parsed = input is String ? convert.jsonDecode(input) : input;
-
-    return _decodeNode(parsed, customFactories ?? {}, activeRegistry);
-  }
-
-  IValidator _decodeNode(
-    dynamic node,
-    Map<String, Function> customFactories,
-    ValidatorRegistry registry,
-  ) {
     final context = DecoderResolutionContext(
-      registry: registry,
+      registry: activeRegistry,
       symbolResolver: _resolver,
-      customFactories: customFactories,
+      customFactories: customFactories ?? {},
       strictUnknownValidators: strictUnknownValidators,
     );
 
+    return _decodeNode(parsed, context);
+  }
+
+  IValidator _decodeNode(dynamic node, DecoderResolutionContext context) {
     if (node is String) {
       return _decodeString(node, context);
     }
@@ -68,28 +62,11 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
     String str,
     DecoderResolutionContext context,
   ) {
-    // Handle modifier prefixes
-    bool nullable = false;
-    bool optional = false;
-    int offset = 0;
+    final modifiers = parsePrefixModifiers(str);
+    final symbol = modifiers.applyToString(str);
 
-    while (offset < str.length) {
-      if (str[offset] == '?') {
-        nullable = true;
-        offset++;
-      } else if (str[offset] == '*') {
-        optional = true;
-        offset++;
-      } else {
-        break;
-      }
-    }
-
-    final symbol = str.substring(offset);
-
-    // Handle custom validators
     if (symbol.startsWith('@')) {
-      var val = resolveDecodedValidator(
+      final val = resolveDecodedValidator(
         context: context,
         token: symbol.substring(1),
         args: const [],
@@ -98,18 +75,10 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
         offset: null,
       );
 
-      if (nullable) {
-        val = val.nullable();
-      }
-
-      if (optional) {
-        val = val.optional();
-      }
-
-      return val;
+      return applyDecodedModifiers(val, modifiers);
     }
 
-    var val = resolveDecodedValidator(
+    final val = resolveDecodedValidator(
       context: context,
       token: symbol,
       args: const [],
@@ -118,15 +87,7 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
       offset: null,
     );
 
-    if (nullable) {
-      val = val.nullable();
-    }
-
-    if (optional) {
-      val = val.optional();
-    }
-
-    return val;
+    return applyDecodedModifiers(val, modifiers);
   }
 
   IValidator _decodeMap(
@@ -139,67 +100,53 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
       final key = entry.key;
       final value = entry.value;
 
-      // Check if the value IS a string with modifier prefixes
-      bool nullable = false;
-      bool optional = false;
-
       if (value is String) {
-        int offset = 0;
+        final modifiers = parsePrefixModifiers(value);
+        final cleanStr = modifiers.applyToString(value);
+        final validator = _decodeString(cleanStr, context);
+        fields.add(createDecodedField(
+          id: key,
+          validator: validator,
+          nullable: modifiers.isNullable,
+          optional: modifiers.isOptional,
+        ));
+      } else if (value is List) {
+        if (value.isNotEmpty && value.first is String) {
+          final prefix = value.first as String;
 
-        while (offset < value.length) {
-          if (value[offset] == '?') {
-            nullable = true;
-            offset++;
-          } else if (value[offset] == '*') {
-            optional = true;
-            offset++;
-          } else {
-            break;
+          if (isModifierPrefixToken(prefix)) {
+            final modifiers = parsePrefixModifiers(prefix);
+            final innerNode = value.length == 2 ? value[1] : value.sublist(1);
+            final validator = _decodeNode(innerNode, context);
+            fields.add(createDecodedField(
+              id: key,
+              validator: validator,
+              nullable: modifiers.isNullable,
+              optional: modifiers.isOptional,
+            ));
+            continue;
           }
         }
 
-        final cleanStr = value.substring(offset);
-        final validator = _decodeString(cleanStr, context);
-        fields.add(
-            Field(id: key, validators: [validator], nullable: nullable, optional: optional));
-      } else if (value is List) {
-        // Check if the list starts with a modifier prefix string like ["?", ...] or ["*", ...]  or ["?*", ...]
-        if (value.isNotEmpty &&
-            value.first is String &&
-            _isModifierPrefix(value.first as String)) {
-          final prefix = value.first as String;
-
-          if (prefix.contains('?')) nullable = true;
-
-          if (prefix.contains('*')) optional = true;
-
-          final innerNode = value.length == 2 ? value[1] : value.sublist(1);
-          final validator = _decodeNode(
-            innerNode,
-            context.customFactories,
-            context.registry,
-          );
-          fields.add(
-              Field(id: key, validators: [validator], nullable: nullable, optional: optional));
-        } else {
-          final validator = _decodeList(value, context);
-          fields.add(Field(id: key, validators: [validator]));
-        }
+        final validator = _decodeList(value, context);
+        fields.add(createDecodedField(
+          id: key,
+          validator: validator,
+          nullable: false,
+          optional: false,
+        ));
       } else {
-        final validator = _decodeNode(
-          value,
-          context.customFactories,
-          context.registry,
-        );
-        fields.add(Field(id: key, validators: [validator]));
+        final validator = _decodeNode(value, context);
+        fields.add(createDecodedField(
+          id: key,
+          validator: validator,
+          nullable: false,
+          optional: false,
+        ));
       }
     }
 
-    return _DecodedMapValidator(fields, name: 'eskema');
-  }
-
-  bool _isModifierPrefix(String str) {
-    return RegExp(r'^[?*]+$').hasMatch(str);
+    return DecodedMapValidator(fields, name: 'eskema');
   }
 
   IValidator _decodeList(
@@ -269,11 +216,7 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
 
     for (var i = 0; i < list.length; i++) {
       if (i.isEven) {
-        operands.add(_decodeNode(
-          list[i],
-          context.customFactories,
-          context.registry,
-        ));
+        operands.add(_decodeNode(list[i], context));
       } else {
         final op = list[i];
 
@@ -324,11 +267,7 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
         final name = context.symbolResolver.nameOfSymbol(first) ?? first;
 
         if (context.registry.factories.containsKey(name) || first.startsWith('@')) {
-          return _decodeNode(
-            value,
-            context.customFactories,
-            context.registry,
-          );
+          return _decodeNode(value, context);
         }
       }
 
@@ -338,11 +277,7 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
 
     if (value is Map<String, dynamic>) {
       try {
-        return _decodeNode(
-          value,
-          context.customFactories,
-          context.registry,
-        );
+        return _decodeNode(value, context);
       } catch (e) {
         return value.map((k, v) => MapEntry(k, _resolveValue(v, context)));
       }
@@ -351,13 +286,4 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
     // primitives: int, double, bool, null
     return value;
   }
-}
-
-class _DecodedMapValidator extends MapValidator {
-  final List<IdValidator> _fields;
-
-  _DecodedMapValidator(this._fields, {super.name = 'eskema'}) : super(id: '');
-
-  @override
-  List<IdValidator> get fields => _fields;
 }
