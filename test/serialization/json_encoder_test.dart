@@ -4,27 +4,27 @@ import 'package:test/test.dart' as test;
 void main() {
   test.group('JsonEncoder', () {
     test.test('encodes no-arg built-ins as single-element lists', () {
-      test.expect(const JsonEncoder().encode(isTrue()), test.equals(['T']));
-      test.expect(const JsonEncoder().encode(isFalse()), test.equals(['F']));
+      test.expect(const JsonEncoder().encode(isTrue()), test.equals('["T"]'));
+      test.expect(const JsonEncoder().encode(isFalse()), test.equals('["F"]'));
     });
 
     test.test('encodes parameterized built-ins as lists', () {
-      test.expect(const JsonEncoder().encode(isEq(5)), test.equals(['=', 5]));
-      test.expect(const JsonEncoder().encode(isGt(10)), test.equals(['>', 10]));
-      test.expect(const JsonEncoder().encode(isType<String>()), test.equals('String'));
+      test.expect(const JsonEncoder().encode(isEq(5)), test.equals('["=",5]'));
+      test.expect(const JsonEncoder().encode(isGt(10)), test.equals('[">",10]'));
+      test.expect(const JsonEncoder().encode(isType<String>()), test.equals('"String"'));
     });
 
     test.test('encodes logical operators with infix style', () {
       final val = all([isTrue(), isGt(5), isLt(10)]);
       test.expect(
         const JsonEncoder().encode(val),
-        test.equals([['T'], '&', ['>', 5], '&', ['<', 10]]),
+        test.equals('[["T"],"&",[">",5],"&",["<",10]]'),
       );
 
       final anyVal = any([isEq('A'), isEq('B')]);
       test.expect(
         const JsonEncoder().encode(anyVal),
-        test.equals([['=', "'A'"], '|', ['=', "'B'"]]),
+        test.equals('[["=","\'A\'"],"|",["=","\'B\'"]]'),
       );
     });
 
@@ -33,10 +33,7 @@ void main() {
       final encoded = const JsonEncoder().encode(map);
       test.expect(
         encoded,
-        test.equals({
-          'age': ['int', '&', ['>', 18]],
-          'status': 'String',
-        }),
+        test.equals('{"age":["int","&",[">",18]],"status":"String"}'),
       );
     });
 
@@ -45,18 +42,14 @@ void main() {
       final encoded = const JsonEncoder().encode(map);
       test.expect(
         encoded,
-        test.equals({
-          'name': ['*', 'String'],
-          'age': ['?', 'int'],
-          'complex': ['?*', ['int', '&', ['>', 0]]],
-        }),
+        test.equals('{"name":["*","String"],"age":["?","int"],"complex":["?*",["int","&",[">",0]]]}'),
       );
     });
 
     test.test('encodes string literal arguments with single quotes', () {
       test.expect(
         const JsonEncoder().encode(isEq('int')),
-        test.equals(['=', "'int'"]),
+        test.equals('["=","\'int\'"]'),
       );
     });
 
@@ -64,8 +57,28 @@ void main() {
       final custom = Validator((v) => Result.valid(v), name: 'myCustom', arguments: [1, 'val']);
       test.expect(
         const JsonEncoder().encode(custom),
-        test.equals(['@myCustom', 1, "'val'"]),
+        test.equals('["@myCustom",1,"\'val\'"]'),
       );
+    });
+    test.test('encodes eskema validators with map arguments', () {
+      final schema = eskema({
+        'name': isString(),
+        'age': all([isInt(), isGt(0)]),
+      });
+      final encoded = const JsonEncoder().encode(schema);
+
+      // Should not throw, and should produce valid JSON
+      test.expect(encoded, test.isNotEmpty);
+      test.expect(encoded, test.contains('"name"'));
+      test.expect(encoded, test.contains('"age"'));
+    });
+
+    test.test('encodes validators with RegExp arguments', () {
+      final val = stringMatchesPattern(RegExp(r'^[a-z]+$'));
+      final encoded = const JsonEncoder().encode(val);
+
+      test.expect(encoded, test.isNotEmpty);
+      test.expect(encoded, test.contains('s~/'));
     });
   });
 }

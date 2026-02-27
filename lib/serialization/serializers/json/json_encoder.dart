@@ -1,7 +1,8 @@
+import 'dart:convert' as convert;
+
 import 'package:eskema/eskema.dart';
 
-/// Encodes an Eskema IValidator into a standard Dart representation (Maps, Lists, Strings)
-/// that can be directly passed to `jsonEncode()`.
+/// Encodes an Eskema IValidator into a JSON string representation.
 class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
   final Map<String, String>? customSymbols;
   final Map<String, ArgumentEncoder>? customEncoders;
@@ -16,13 +17,14 @@ class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
   }
 
   bool _hasSymbolMap(String name) {
-     return (customSymbols != null && customSymbols!.containsKey(name)) || defaultNameToSymbol.containsKey(name);
+    return (customSymbols != null && customSymbols!.containsKey(name)) ||
+        defaultNameToSymbol.containsKey(name);
   }
 
   @override
-  dynamic encode(IValidator validator, {ValidatorRegistry? registry}) {
+  String encode(IValidator validator, {ValidatorRegistry? registry}) {
     final activeRegistry = registry ?? defaultRegistry;
-    return encodeInternal(validator, activeRegistry);
+    return convert.jsonEncode(encodeInternal(validator, activeRegistry));
   }
 
   @override
@@ -74,7 +76,7 @@ class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
   @override
   dynamic encodeFieldModifiers(IValidator validator, dynamic encoded) {
     String prefix = '';
-    
+
     if (validator.isNullable) prefix += '?';
     if (validator.isOptional) prefix += '*';
 
@@ -135,12 +137,22 @@ class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
     // Without this, the json-string "int" would map to the numeric integer validator implicitly.
     if (value is String) return "'$value'";
 
+    if (value is RegExp) return "'${value.pattern}'";
+
+    if (value is Map) {
+      return value.map((k, v) => MapEntry(k, encodeValue(v, registry)));
+    }
+
     if (value is Iterable) {
       return value.map((v) => encodeValue(v, registry)).toList();
     }
-    
+
     if (value is IValidator) return encodeInternal(value, registry);
 
-    return value;
+    // JSON-safe primitives pass through directly
+    if (value is num || value is bool || value == null) return value;
+
+    // Anything else (RegExp, DateTime, Type, etc.) → quoted string
+    return "'$value'";
   }
 }

@@ -1,9 +1,10 @@
+import 'dart:convert' as convert;
+
 import 'package:eskema/eskema.dart';
-import 'package:eskema/serialization/core/decode_exception.dart';
 
 final _defaultSymbolToName = defaultNameToSymbol.map((k, v) => MapEntry(v, k));
 
-/// Decodes a JSON-compatible Dart structure (Map, List, String) into an IValidator.
+/// Decodes a JSON string into an IValidator.
 ///
 /// The JSON format uses:
 /// - `String` for no-argument validators (e.g. `"T"`, `"F"`, `"s_mail"`)
@@ -13,7 +14,7 @@ final _defaultSymbolToName = defaultNameToSymbol.map((k, v) => MapEntry(v, k));
 ///
 /// Example:
 /// ```dart
-/// final validator = const JsonDecoder().decode({"name": ["type", "String"], "age": [">", 0]});
+/// final validator = const JsonDecoder().decode('{"name": "String", "age": [">", 0]}');
 /// ```
 class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
   final Map<String, String>? customSymbols;
@@ -35,8 +36,9 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
     ValidatorRegistry? registry,
   }) {
     final activeRegistry = registry ?? defaultRegistry;
+    final parsed = input is String ? convert.jsonDecode(input) : input;
 
-    return _decodeNode(input, customFactories ?? {}, activeRegistry);
+    return _decodeNode(parsed, customFactories ?? {}, activeRegistry);
   }
 
   IValidator _decodeNode(
