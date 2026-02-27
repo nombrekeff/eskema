@@ -3,6 +3,7 @@ import 'package:eskema/serialization/default_registry.dart';
 import 'package:eskema/serialization/core/registry.dart';
 import 'package:eskema/serialization/serializers/eskema/eskema_encoder.dart';
 import 'package:eskema/serialization/serializers/eskema/eskema_decoder.dart';
+import 'package:test/test.dart';
 
 void main() {
   // 1. Define a brand new custom validator
@@ -25,13 +26,15 @@ void main() {
 
   // 3. Serializing our strange custom logic works!
   final serialized = const EskemaEncoder(customSymbols: {'isPalindrome': 'palin'}).encode(myPalindromeValidator, registry: customRegistry);
-  print('Serialized: $serialized'); // Outputs: palin
+  test('Custom functionality successfully tested! Registry injected flawlessly.', () {
+    expect(serialized, 'palin');
+  });
 
   // 4. Deserializing brings it right back as our proper logic!
   final deserialized = const EskemaDecoder(customSymbols: {'palin': 'isPalindrome'}).decode(serialized, registry: customRegistry);
-  
-  print('Validating "racecar" -> ${deserialized.validate("racecar").isValid}'); // Outputs true
-  print('Validating "hello" -> ${deserialized.validate("hello").isValid}');   // Outputs false
-
-  print('Custom functionality successfully tested! Registry injected flawlessly.');
+  test('Custom functionality successfully tested! Registry injected flawlessly.', () {
+    expect(deserialized, myPalindromeValidator);
+    expect(deserialized.validate('racecar').isValid, true);
+    expect(deserialized.validate('hello').isValid, false);
+  });
 }
