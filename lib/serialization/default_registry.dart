@@ -80,7 +80,7 @@ extension _ValidatorRegistryDefaults on ValidatorRegistry {
     register(name: 'eskemaList', factory: (args) => eskemaList(args[0] as List<IValidator>));
     register(name: 'listEach', factory: (args) => listEach(args[0] as IValidator));
 
-    // Dynamic 'type' handling
+    // Dynamic 'type' handling (kept for backward compat with type(...) format)
     register(name: 'isType', factory: (args) {
       final typeName = args.isNotEmpty ? args[0].toString() : '';
 
@@ -100,5 +100,15 @@ extension _ValidatorRegistryDefaults on ValidatorRegistry {
 
       return isType<dynamic>().copyWith(name: 'isType', arguments: [typeName]);
     });
+
+    // Bare type names for simplified encoding (e.g. `int` instead of `type(int)`)
+    register(name: 'String', factory: (args) => isString());
+    register(name: 'int', factory: (args) => isInt());
+    register(name: 'double', factory: (args) => isDouble());
+    register(name: 'num', factory: (args) => isNumber());
+    register(name: 'bool', factory: (args) => isBool());
+    register(name: 'List', factory: (args) => isList());
+    register(name: 'Map', factory: (args) => isMap());
+
   }
 }

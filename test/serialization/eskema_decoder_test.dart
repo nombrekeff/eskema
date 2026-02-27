@@ -23,7 +23,7 @@ void main() {
       test.expect(tVal.validate(true).isValid, test.isTrue);
       test.expect(tVal.validate(false).isValid, test.isFalse);
 
-      final typeStr = 'type(String)';
+      final typeStr = 'String';
       final typeVal = const EskemaDecoder().decode(typeStr);
       test.expect(const EskemaEncoder().encode(typeVal), typeStr);
       test.expect(typeVal.validate('hello').isValid, test.isTrue);
@@ -47,7 +47,7 @@ void main() {
     });
 
     test.test('deserializes maps and fields', () {
-      final str = '{age: >(0), name: type(String) & ~(\'B\')}';
+      final str = '{age: >(0), name: String & ~(\'B\')}';
       final val = const EskemaDecoder().decode(str);
       test.expect(const EskemaEncoder().encode(val), str);
       test.expect(val.validate({'age': 10, 'name': 'Bob'}).isValid, test.isTrue);
@@ -57,7 +57,7 @@ void main() {
     });
 
     test.test('deserializes optional/nullable fields', () {
-      final str = '{age: ?>(0), name: *type(String)}';
+      final str = '{age: ?>(0), name: *String}';
       final val = const EskemaDecoder().decode(str);
       test.expect(const EskemaEncoder().encode(val), str);
       // Optional/nullable logic testing
@@ -87,9 +87,9 @@ void main() {
         '': DecodeExceptionType.unexpectedEndOfInput,
         '>(5': DecodeExceptionType.missingClosingParenthesis,
         '(>(5)': DecodeExceptionType.missingClosingParenthesis, // missing combinator or parenthesis
-        '{name type(String)}': DecodeExceptionType.missingColon, // missing colon
-        '{name: type(String)': DecodeExceptionType.missingClosingBrace, // missing closing brace
-        '{: type(String)}': DecodeExceptionType.missingIdentifier, // missing identifier
+        '{name String}': DecodeExceptionType.missingColon, // missing colon
+        '{name: String': DecodeExceptionType.missingClosingBrace, // missing closing brace
+        '{: String}': DecodeExceptionType.missingIdentifier, // missing identifier
         '@unknown(1)': DecodeExceptionType.unknownCustomValidator, // unknown custom validator
         '>("unclosed string)': DecodeExceptionType.unclosedString, // unclosed string
       };

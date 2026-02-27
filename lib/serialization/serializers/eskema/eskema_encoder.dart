@@ -60,7 +60,6 @@ const defaultNameToSymbol = <String, String>{
   'eskemaStrict': 'eskema!',
   'eskemaList': 'eskema[]',
   'listEach': '[]each',
-  'isType': 'type',
 };
 
 /// Encodes an Eskema IValidator into its compact string representation.
@@ -95,6 +94,11 @@ class EskemaEncoder extends DelegateValidatorEncoder<String> {
     // but the symbols are handled internally here now.
     if (validator is Field || validator is MapValidator) {
       return encodeMap(validator as IdValidator, registry);
+    }
+
+    // isType validators encode as bare type names (e.g. int, String)
+    if (validator.name == 'isType' && validator.arguments.isNotEmpty) {
+      return validator.arguments[0].toString();
     }
 
     if (_hasSymbolMap(validator.name)) {
@@ -160,8 +164,6 @@ class EskemaEncoder extends DelegateValidatorEncoder<String> {
     final argsToEncode = customEncoder != null ? customEncoder(validator) : validator.arguments;
 
     final argsStr = argsToEncode.map((v) {
-      if (symbol == 'type') return v.toString();
-
       return encodeValue(v, registry);
     }).join(', ');
 

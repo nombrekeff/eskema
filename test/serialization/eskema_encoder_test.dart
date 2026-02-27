@@ -1,5 +1,4 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/serialization/serializers/eskema/eskema_encoder.dart';
 import 'package:test/test.dart' as test;
 
 void main() {
@@ -8,7 +7,7 @@ void main() {
       test.expect(const EskemaEncoder().encode(isEq(5)), '=(5)');
       test.expect(const EskemaEncoder().encode(isGt(10)), '>(10)');
       test.expect(const EskemaEncoder().encode(isTrue()), 'T');
-      test.expect(const EskemaEncoder().encode(isType<String>()), 'type(String)');
+      test.expect(const EskemaEncoder().encode(isType<String>()), 'String');
     });
 
     test.test('serializes combinators', () {
@@ -22,13 +21,13 @@ void main() {
     test.test('serializes maps and fields', () {
       final map = EskemaMapValidator();
       final str = const EskemaEncoder().encode(map);
-      test.expect(str, '{age: >(0), name: type(String) & ~(\'B\')}');
+      test.expect(str, '{age: >(0), name: String & ~(\'B\')}');
     });
 
     test.test('serializes optional/nullable fields', () {
       final map = EskemaOptionalMapValidator();
       final str = const EskemaEncoder().encode(map);
-      test.expect(str, '{age: ?>(0), name: *type(String)}');
+      test.expect(str, '{age: ?>(0), name: *String}');
     });
 
     test.test('serializes custom validators', () {

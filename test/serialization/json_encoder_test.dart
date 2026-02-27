@@ -1,5 +1,4 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/serialization/serializers/json/json_encoder.dart';
 import 'package:test/test.dart' as test;
 
 void main() {
@@ -12,7 +11,7 @@ void main() {
     test.test('encodes parameterized built-ins as lists', () {
       test.expect(const JsonEncoder().encode(isEq(5)), test.equals(['=', 5]));
       test.expect(const JsonEncoder().encode(isGt(10)), test.equals(['>', 10]));
-      test.expect(const JsonEncoder().encode(isType<String>()), test.equals(['type', 'String']));
+      test.expect(const JsonEncoder().encode(isType<String>()), test.equals('String'));
     });
 
     test.test('encodes logical operators with infix style', () {
@@ -35,8 +34,8 @@ void main() {
       test.expect(
         encoded,
         test.equals({
-          'age': [['type', 'int'], '&', ['>', 18]],
-          'status': ['type', 'String'],
+          'age': ['int', '&', ['>', 18]],
+          'status': 'String',
         }),
       );
     });
@@ -47,9 +46,9 @@ void main() {
       test.expect(
         encoded,
         test.equals({
-          'name': ['*', ['type', 'String']],
-          'age': ['?', ['type', 'int']],
-          'complex': ['?*', [['type', 'int'], '&', ['>', 0]]],
+          'name': ['*', 'String'],
+          'age': ['?', 'int'],
+          'complex': ['?*', ['int', '&', ['>', 0]]],
         }),
       );
     });

@@ -31,6 +31,11 @@ class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
       return encodeMap(validator as IdValidator, registry);
     }
 
+    // isType validators encode as bare type name strings (e.g. 'int', 'String')
+    if (validator.name == 'isType' && validator.arguments.isNotEmpty) {
+      return validator.arguments[0].toString();
+    }
+
     if (_hasSymbolMap(validator.name)) {
       final symbol = _getSymbol(validator.name);
       return encodeBuiltIn(symbol, validator, registry);
@@ -108,11 +113,7 @@ class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
 
     final list = <dynamic>[symbol];
     for (final v in argsToEncode) {
-      if (symbol == 'type') {
-        list.add(v.toString());
-      } else {
-        list.add(encodeValue(v, registry));
-      }
+      list.add(encodeValue(v, registry));
     }
 
     return list;
