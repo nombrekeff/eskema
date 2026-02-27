@@ -94,7 +94,7 @@ void main() {
 
 class CustomValidator extends Validator {
   CustomValidator(List<dynamic> args)
-      : super((v) => Result.valid(v), name: 'myCustom', arguments: args);
+      : super((v) => Result.valid(v), name: 'myCustom', args: args);
 }
 
 class RoundtripMap extends MapValidator {

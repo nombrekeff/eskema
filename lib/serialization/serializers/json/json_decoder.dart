@@ -2,8 +2,6 @@ import 'dart:convert' as convert;
 
 import 'package:eskema/eskema.dart';
 
-final _defaultSymbolToName = defaultNameToSymbol.map((k, v) => MapEntry(v, k));
-
 /// Decodes a JSON string into an IValidator.
 ///
 /// The JSON format uses:
@@ -26,7 +24,7 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
       return customSymbols![symbol]!;
     }
 
-    return _defaultSymbolToName[symbol];
+    return defaultSymbolToName[symbol];
   }
 
   @override
@@ -89,17 +87,13 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
     if (symbol.startsWith('@')) {
       final name = symbol.substring(1);
 
-      if (!customFactories.containsKey(name)) {
-        throw DecodeException.unknownCustomValidator(name, str, null);
+      if (customFactories.containsKey(name)) {
+        IValidator val = customFactories[name]!(<dynamic>[]) as IValidator;
+        if (nullable) val = val.nullable();
+        if (optional) val = val.optional();
+        return val;
       }
-
-      IValidator val = customFactories[name]!(<dynamic>[]) as IValidator;
-
-      if (nullable) val = val.nullable();
-
-      if (optional) val = val.optional();
-
-      return val;
+      // Fall through to registry below
     }
 
     // Resolve symbol to name
@@ -115,7 +109,7 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
       return val;
     } catch (e) {
       // Fallback: wrap as a dynamic type validator
-      IValidator val = isType<dynamic>().copyWith(name: name, arguments: []);
+      IValidator val = isType<dynamic>().copyWith(name: name, args: []);
 
       if (nullable) val = val.nullable();
 
@@ -184,7 +178,7 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
       }
     }
 
-    return _DecodedMapValidator(fields);
+    return _DecodedMapValidator(fields, name: 'eskema');
   }
 
   bool _isModifierPrefix(String str) {
@@ -217,14 +211,12 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
     if (first.startsWith('@')) {
       final name = first.substring(1);
 
-      if (!customFactories.containsKey(name)) {
-        throw DecodeException.unknownCustomValidator(name, list, null);
+      if (customFactories.containsKey(name)) {
+        final args =
+            list.sublist(1).map((a) => _resolveValue(a, customFactories, registry)).toList();
+        return customFactories[name]!(args) as IValidator;
       }
-
-      final args =
-          list.sublist(1).map((a) => _resolveValue(a, customFactories, registry)).toList();
-
-      return customFactories[name]!(args) as IValidator;
+      // Fall through to registry below
     }
 
     final String name = _getName(first) ?? first;
@@ -234,7 +226,7 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
     try {
       return registry.createValidator(name, args);
     } catch (e) {
-      return isType<dynamic>().copyWith(name: name, arguments: args);
+      return isType<dynamic>().copyWith(name: name, args: args);
     }
   }
 
@@ -320,7 +312,11 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
     }
 
     if (value is Map<String, dynamic>) {
-      return _decodeNode(value, customFactories, registry);
+      try {
+        return _decodeNode(value, customFactories, registry);
+      } catch (e) {
+        return value.map((k, v) => MapEntry(k, _resolveValue(v, customFactories, registry)));
+      }
     }
 
     // primitives: int, double, bool, null
@@ -331,7 +327,7 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
 class _DecodedMapValidator extends MapValidator {
   final List<IdValidator> _fields;
 
-  _DecodedMapValidator(this._fields) : super(id: '');
+  _DecodedMapValidator(this._fields, {super.name = 'eskema'}) : super(id: '');
 
   @override
   List<IdValidator> get fields => _fields;

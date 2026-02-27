@@ -9,7 +9,7 @@ import 'base_validator.dart';
 
 /// Abstract class for schema-like map validators composed of Field/IdValidator instances.
 abstract class MapValidator<T extends Map> extends IdValidator {
-  MapValidator({super.id = '', super.nullable})
+  MapValidator({super.id = '', super.nullable, super.name})
       : super(validator: isMap().validate);
 
   List<IdValidator> get fields;
@@ -56,7 +56,7 @@ abstract class MapValidator<T extends Map> extends IdValidator {
     bool? nullable,
     bool? optional,
     String? name,
-    List<dynamic>? arguments,
+    List<dynamic>? args,
   }) =>
       throw Exception(
           'copyWith not implemented for $runtimeType. Create a new instance or override copyWith.');

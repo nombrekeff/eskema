@@ -47,7 +47,7 @@ IValidator isDateBefore(DateTime dt,
       'inclusive': inclusive,
     },
     message: message,
-  ).copyWith(name: 'isDateBefore', arguments: [dt, inclusive]);
+  ).copyWith(name: 'isDateBefore', args: [dt, inclusive]);
 }
 
 /// DateTime must be after (or equal if inclusive) given bound.
@@ -63,7 +63,7 @@ IValidator isDateAfter(DateTime dt, {bool inclusive = false, String? message}) {
       'inclusive': inclusive,
     },
     message: message,
-  ).copyWith(name: 'isDateAfter', arguments: [dt, inclusive]);
+  ).copyWith(name: 'isDateAfter', args: [dt, inclusive]);
 }
 
 /// DateTime must fall within the interval.
@@ -88,7 +88,7 @@ IValidator isDateBetween(
       'inclusiveEnd': inclusiveEnd,
     },
     message: message,
-  ).copyWith(name: 'isDateBetween', arguments: [start, end, inclusiveStart, inclusiveEnd]);
+  ).copyWith(name: 'isDateBetween', args: [start, end, inclusiveStart, inclusiveEnd]);
 }
 
 /// DateTime must be same calendar day.
@@ -100,7 +100,7 @@ IValidator isDateSameDay(DateTime dt, {String? message}) {
     code: ExpectationCodes.valueDateMismatch,
     dataBuilder: () => {'targetDay': dt.toIso8601String().substring(0, 10)},
     message: message,
-  ).copyWith(name: 'isDateSameDay', arguments: [dt]);
+  ).copyWith(name: 'isDateSameDay', args: [dt]);
 }
 
 /// DateTime must be in the past.
@@ -113,7 +113,7 @@ IValidator isDateInPast({bool allowNow = true, String? message}) {
     code: ExpectationCodes.valueDateNotPast,
     dataBuilder: () => {'now': now.toIso8601String(), 'allowNow': allowNow},
     message: message,
-  ).copyWith(name: 'isDateInPast', arguments: [allowNow]);
+  ).copyWith(name: 'isDateInPast', args: [allowNow]);
 }
 
 /// DateTime must be in the future.
@@ -126,5 +126,5 @@ IValidator isDateInFuture({bool allowNow = true, String? message}) {
     code: ExpectationCodes.valueDateNotFuture,
     dataBuilder: () => {'now': now.toIso8601String(), 'allowNow': allowNow},
     message: message,
-  ).copyWith(name: 'isDateInFuture', arguments: [allowNow]);
+  ).copyWith(name: 'isDateInFuture', args: [allowNow]);
 }

@@ -83,7 +83,7 @@ IValidator switchBy(String key, Map<String, IValidator> by) {
         }
 
         return r.isValid ? Result.valid(value) : r;
-      }).copyWith(name: 'switchBy', arguments: [key, by]);
+      }).copyWith(name: 'switchBy', args: [key, by]);
 }
 
 /// Creates a provider validator that depends on the parent object.

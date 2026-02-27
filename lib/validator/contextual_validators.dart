@@ -16,6 +16,8 @@ class ResolveValidator extends IWhenValidator {
     required this.resolver,
     super.nullable,
     super.optional,
+    super.name = 'resolve',
+    super.args = const [],
   });
 
   @override
@@ -55,13 +57,15 @@ class ResolveValidator extends IWhenValidator {
     bool? nullable,
     bool? optional,
     String? name,
-    List<dynamic>? arguments,
+    List<dynamic>? args,
     IValidator Function(Map parentObject)? resolver,
   }) =>
       ResolveValidator(
         resolver: resolver ?? this.resolver,
         nullable: nullable ?? isNullable,
         optional: optional ?? isOptional,
+        name: name ?? this.name,
+        args: args ?? this.args,
       );
 
   @override
@@ -79,6 +83,8 @@ class WhenValidator extends IWhenValidator {
     required this.otherwise,
     super.nullable,
     super.optional,
+    super.name = 'when',
+    super.args = const [],
   });
 
   @override
@@ -116,7 +122,7 @@ class WhenValidator extends IWhenValidator {
     bool? nullable,
     bool? optional,
     String? name,
-    List<dynamic>? arguments,
+    List<dynamic>? args,
     IValidator? condition,
     IValidator? then,
     IValidator? otherwise,
@@ -127,6 +133,8 @@ class WhenValidator extends IWhenValidator {
         otherwise: otherwise ?? this.otherwise,
         nullable: nullable ?? isNullable,
         optional: optional ?? isOptional,
+        name: name ?? this.name,
+        args: args ?? this.args,
       );
 
   @override
@@ -136,7 +144,13 @@ class WhenValidator extends IWhenValidator {
 class WhenWithMessage extends IWhenValidator {
   final WhenValidator inner;
   final String message;
-  WhenWithMessage(this.inner, this.message);
+  WhenWithMessage(this.inner, this.message)
+      : super(
+          nullable: inner.isNullable,
+          optional: inner.isOptional,
+          name: inner.name,
+          args: inner.args,
+        );
 
   @override
   FutureOr<Result> validateWithParent(
@@ -160,9 +174,14 @@ class WhenWithMessage extends IWhenValidator {
           {bool? nullable,
           bool? optional,
           String? name,
-          List<dynamic>? arguments}) =>
+          List<dynamic>? args}) =>
       WhenWithMessage(
-        inner.copyWith(nullable: nullable, optional: optional) as WhenValidator,
+        inner.copyWith(
+          nullable: nullable,
+          optional: optional,
+          name: name,
+          args: args,
+        ) as WhenValidator,
         message,
       );
 

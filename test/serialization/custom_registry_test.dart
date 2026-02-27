@@ -13,7 +13,7 @@ void main() {
     if (value != reversed) return Result.invalid(value, expectation: const Expectation(message: 'must be a palindrome'));
 
     return Result.valid(value);
-  }).copyWith(name: 'isPalindrome', arguments: []);
+  }).copyWith(name: 'isPalindrome', args: []);
 
   // 2. We can create a custom registry seamlessly merging the default!
   final customRegistry = ValidatorRegistry()

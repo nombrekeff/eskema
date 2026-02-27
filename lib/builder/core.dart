@@ -334,7 +334,7 @@ class BaseBuilder<B extends BaseBuilder<B, T>, T> extends IValidator {
     bool? nullable,
     bool? optional,
     String? name,
-    List<dynamic>? arguments,
+    List<dynamic>? args,
   }) {
     return BaseBuilder<B, T>(
       negated: negated,

@@ -31,7 +31,7 @@ IValidator isJsonObject({String? message}) =>
           data: {'expected': 'Map<String,dynamic>'},
         ),
       );
-    }).copyWith(name: 'isJsonObject', arguments: []);
+    }).copyWith(name: 'isJsonObject', args: []);
 
 /// Validates that value is a JSON array (List).
 IValidator isJsonArray({String? message}) => Validator((value) {
@@ -47,7 +47,7 @@ IValidator isJsonArray({String? message}) => Validator((value) {
           data: {'expected': 'List'},
         ),
       );
-    }).copyWith(name: 'isJsonArray', arguments: []);
+    }).copyWith(name: 'isJsonArray', args: []);
 
 /// Ensures object has all specified keys (string).
 IValidator jsonHasKeys(Iterable<String> keys, {String? message}) =>
@@ -65,7 +65,7 @@ IValidator jsonHasKeys(Iterable<String> keys, {String? message}) =>
           data: {'keys': keys.toList()},
         ),
       );
-    }).copyWith(name: 'jsonHasKeys', arguments: [keys]);
+    }).copyWith(name: 'jsonHasKeys', args: [keys]);
 
 /// Ensures array length within bounds.
 IValidator jsonArrayLength({int? min, int? max, String? message}) =>
@@ -89,7 +89,7 @@ IValidator jsonArrayLength({int? min, int? max, String? message}) =>
           },
         ),
       );
-    }).copyWith(name: 'jsonArrayLength', arguments: [min, max]);
+    }).copyWith(name: 'jsonArrayLength', args: [min, max]);
 
 /// Ensures every element of array satisfies inner validator.
 IValidator jsonArrayEvery(IValidator elementValidator, {String? message}) =>
@@ -108,4 +108,4 @@ IValidator jsonArrayEvery(IValidator elementValidator, {String? message}) =>
       }
 
       return Result.valid(value);
-    }).copyWith(name: 'jsonArrayEvery', arguments: [elementValidator]);
+    }).copyWith(name: 'jsonArrayEvery', args: [elementValidator]);

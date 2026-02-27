@@ -1,8 +1,4 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/serialization/core/decode_exception.dart';
-
-
-final _defaultSymbolToName = defaultNameToSymbol.map((k, v) => MapEntry(v, k));
 
 /// Decodes an eskema string into a validator.
 ///
@@ -64,7 +60,7 @@ class _DecoderParser {
       return customSymbols![symbol]!;
     }
 
-    return _defaultSymbolToName[symbol];
+    return defaultSymbolToName[symbol];
   }
 
   void skipWhitespace() {
@@ -184,7 +180,10 @@ class _DecoderParser {
 
     if (match('(')) {
       final v = parseValidator();
-      match(')');
+
+      if (!match(')')) {
+        throw DecodeException.missingClosingParenthesis(input, pos);
+      }
 
       return v;
     } else if (match('{')) {
@@ -221,7 +220,7 @@ class _DecoderParser {
       final parsedStr = input.substring(valStart, pos).trim();
 
       if (val.name == 'all' && !parsedStr.startsWith('(')) {
-        fieldValidators = val.arguments.cast<IValidator>().toList();
+        fieldValidators = val.args.cast<IValidator>().toList();
       }
 
       final field = Field(
@@ -234,7 +233,7 @@ class _DecoderParser {
 
       match(','); // optional trailing comma
     }
-    return _DecodedMapValidator(fields);
+    return _DecodedMapValidator(fields, name: 'eskema');
   }
 
   String parseIdentifier() {
@@ -261,11 +260,48 @@ class _DecoderParser {
     final isCustom = match('@');
     final nameStart = pos;
 
-    while (pos < input.length && RegExp(r'[a-zA-Z0-9_!=\<\>~&\|\[\]]').hasMatch(input[pos])) {
-      pos++;
+    String sym = '';
+    int longestSymbolMatch = -1;
+
+    // Scan Ahead to find the longest known symbol match
+    // This handles cases like >= vs > and correctly stops before values (e.g. >0)
+    int scanPos = pos;
+    while (scanPos < input.length &&
+        RegExp(r'[a-zA-Z0-9_!=\<\>~&\|\[\]\/\-]').hasMatch(input[scanPos])) {
+      
+      // Stop scanning if we hit something that looks like the start of arguments
+      // or other structures, but ONLY if we haven't already formed a symbol that
+      // specifically includes these characters (unlikely for built-ins).
+      if (input[scanPos] == '(' || input[scanPos] == '{' || input[scanPos] == ' ') {
+        break;
+      }
+      
+      scanPos++;
+      final current = input.substring(nameStart, scanPos);
+      if (_isKnownValidator(current)) {
+        longestSymbolMatch = scanPos;
+      }
     }
 
-    final sym = input.substring(nameStart, pos);
+    if (longestSymbolMatch != -1) {
+      pos = longestSymbolMatch;
+      sym = input.substring(nameStart, pos);
+    } else {
+      // No known symbol, fallback to standard identifier rules
+      final startPosBeforeId = pos;
+      while (pos < input.length && RegExp(r'[a-zA-Z0-9_]').hasMatch(input[pos])) {
+        pos++;
+      }
+      sym = input.substring(nameStart, pos);
+      
+      if (pos == startPosBeforeId && !isCustom && sym.isEmpty) {
+        // We failed to advance with both symbol scan and identifier scan.
+        // To prevent infinite loop, we must throw if we're not at EOF
+        if (pos < input.length) {
+          throw DecodeException.missingIdentifier(input, pos);
+        }
+      }
+    }
 
     final args = <dynamic>[];
 
@@ -278,14 +314,23 @@ class _DecoderParser {
         args.add(parseValue());
         match(',');
       }
+    } else if (!isCustom && sym.isNotEmpty) {
+      // Check if we should try to parse a single value argument if no ( ) are present.
+      // We allow this for known symbols that are NOT no-arg markers (like T, F, etc.)
+      // and are followed by something that looks like a value.
+      if (!_isNoArgSymbol(sym)) {
+        skipWhitespace();
+        if (pos < input.length && _isPossibleValueStart(input[pos])) {
+          args.add(parseValue());
+        }
+      }
     }
 
     if (isCustom) {
-      if (!customFactories.containsKey(sym)) {
-        throw DecodeException.unknownCustomValidator(sym, input, start);
+      if (customFactories.containsKey(sym)) {
+        return customFactories[sym]!(args) as IValidator;
       }
-
-      return customFactories[sym]!(args) as IValidator;
+      // If not in customFactories, try registry
     }
 
     final String name = _getName(sym) ?? sym;
@@ -294,7 +339,7 @@ class _DecoderParser {
       return registry.createValidator(name, args);
     } catch (e) {
       // By default, if it's not registered, assume a dynamic validator wrapper
-      return isType<dynamic>().copyWith(name: name, arguments: args);
+      return isType<dynamic>().copyWith(name: name, args: args);
     }
   }
 
@@ -407,12 +452,57 @@ class _DecoderParser {
     
     return str.replaceAll("\\'", "'").replaceAll('\\"', '"');
   }
+
+  bool _isKnownValidator(String sym) {
+    if (customSymbols?.containsKey(sym) ?? false) return true;
+    if (defaultSymbolToName.containsKey(sym)) return true;
+    if (registry.factories.containsKey(sym)) return true;
+    return false;
+  }
+
+  bool _isNoArgSymbol(String sym) {
+    final name = _getName(sym) ?? sym;
+    // These validators are known to take no arguments.
+    const noArgValidators = {
+      'isTrue',
+      'isFalse',
+      'isLowerCase',
+      'isUpperCase',
+      'isEmail',
+      'isStringEmpty',
+      'isStrictUrl',
+      'isUuidV4',
+      'isIntString',
+      'isDoubleString',
+      'isNumString',
+      'isBoolString',
+      'isDate',
+      'isDateInPast',
+      'isDateInFuture',
+      'isJsonContainer',
+      'isJsonObject',
+      'isJsonArray',
+      'String',
+      'int',
+      'double',
+      'num',
+      'bool',
+      'List',
+      'Map',
+    };
+    return noArgValidators.contains(name);
+  }
+
+  bool _isPossibleValueStart(String char) {
+    // Digits, signs, quotes, brackets, braces, or letters (for true/false/null/nested validators)
+    return RegExp(r'''[0-9\-\.\'"\[\{\(a-zA-Z]''').hasMatch(char);
+  }
 }
 
 class _DecodedMapValidator extends MapValidator {
   final List<IdValidator> _fields;
   
-  _DecodedMapValidator(this._fields) : super(id: '');
+  _DecodedMapValidator(this._fields, {super.name = 'eskema'}) : super(id: '');
 
   @override
   List<IdValidator> get fields => _fields;

@@ -15,14 +15,14 @@ abstract class IValidator {
     bool nullable = false,
     bool optional = false,
     this.name = 'custom',
-    this.arguments = const [],
+    this.args = const [],
   })  : isNullable = nullable,
         isOptional = optional;
 
   final bool isNullable;
   final bool isOptional;
   final String name;
-  final List<dynamic> arguments;
+  final List<dynamic> args;
 
   FutureOr<Result> validator(dynamic value);
 
@@ -67,7 +67,7 @@ abstract class IValidator {
       !(await isValidAsync(value));
 
   IValidator copyWith(
-      {bool? nullable, bool? optional, String? name, List? arguments});
+      {bool? nullable, bool? optional, String? name, List? args});
 
   IValidator nullable<T>() => copyWith(nullable: true);
   IValidator optional<T>() => copyWith(optional: true);
@@ -79,7 +79,7 @@ abstract class IWhenValidator extends IValidator {
     super.nullable,
     super.optional,
     super.name,
-    super.arguments,
+    super.args,
   });
 
   FutureOr<Result> validateWithParent(
@@ -99,7 +99,7 @@ class Validator<T extends Result> extends IValidator {
     super.nullable,
     super.optional,
     super.name,
-    super.arguments,
+    super.args,
   });
 
   @override
@@ -110,18 +110,18 @@ class Validator<T extends Result> extends IValidator {
     bool? nullable,
     bool? optional,
     String? name,
-    List<dynamic>? arguments,
+    List<dynamic>? args,
   }) =>
       Validator(
         _validator,
         nullable: nullable ?? isNullable,
         optional: optional ?? isOptional,
         name: name ?? this.name,
-        arguments: arguments ?? this.arguments,
+        args: args ?? this.args,
       );
 
   @override
-  String toString() => 'Validator';
+  String toString() => 'Validator(name: $name, args: $args)';
 }
 
 /// Base class that adds an identifier to a validator (used by map/field validators).
@@ -134,12 +134,12 @@ class IdValidator<T extends Result> extends Validator<T> {
     bool? nullable,
     bool? optional,
     String? name,
-    List<dynamic>? arguments,
+    List<dynamic>? args,
   }) : super(
           validator,
           nullable: nullable ?? false,
           optional: optional ?? false,
           name: name ?? 'custom',
-          arguments: arguments ?? const [],
+          args: args ?? const [],
         );
 }

@@ -23,7 +23,8 @@ import 'package:eskema/src/util.dart';
 /// usernameLength.validate("user");           // Invalid
 /// ```
 IValidator stringLength(List<IValidator> validators, {String? message}) {
-  return ($isString & length(validators, message: message));
+  return ($isString & length(validators, message: message))
+      .copyWith(name: 'stringLength', args: validators);
 }
 
 /// Validates that the String's length is the same as the provided [size]
@@ -31,8 +32,8 @@ IValidator stringLength(List<IValidator> validators, {String? message}) {
 /// This validator also validates that the value is a String first
 /// So there's no need to add the [isString] validator when using this validator
 IValidator stringIsOfLength(int size, {String? message}) {
-  return stringLength([isEq(size)],
-      message: message ?? 'String length [to be $size]');
+  return stringLength([isEq(size)], message: message ?? 'String length [to be $size]')
+      .copyWith(name: 'stringIsOfLength', args: [size]);
 }
 
 /// Validates that the String contains [str]
@@ -53,11 +54,12 @@ IValidator stringIsOfLength(int size, {String? message}) {
 /// isImage.validate("document.pdf");          // Invalid
 /// ```
 IValidator stringContains(String str, {String? message}) {
-  return $isString &
-      contains(
-        str,
-        message: message ?? 'String to contain ${prettifyValue(str)}',
-      );
+  return ($isString &
+          contains(
+            str,
+            message: message ?? 'String to contain ${prettifyValue(str)}',
+          ))
+      .copyWith(name: 'stringContains', args: [str]);
 }
 
 /// Validates that the String matches the provided pattern
@@ -82,41 +84,42 @@ IValidator stringContains(String str, {String? message}) {
 ///   message: 'Date must be in YYYY-MM-DD format');
 /// ```
 IValidator stringMatchesPattern(Pattern pattern, {String? message}) {
-  return isType<String>() &
-      validator(
-        (value) => pattern.allMatches(value).isNotEmpty,
-        (value) => Expectation(
-          message: message ?? 'String to match "$pattern"',
-          value: value,
-          code: ExpectationCodes.valuePatternMismatch,
-          data: {'pattern': pattern.toString()},
-        ),
-      ).copyWith(name: 'stringMatchesPattern', arguments: [pattern]);
+  return (isType<String>() &
+          validator(
+            (value) => pattern.allMatches(value).isNotEmpty,
+            (value) => Expectation(
+              message: message ?? 'String to match "$pattern"',
+              value: value,
+              code: ExpectationCodes.valuePatternMismatch,
+              data: {'pattern': pattern.toString()},
+            ),
+          ))
+      .copyWith(name: 'stringMatchesPattern', args: [pattern]);
 }
 
 /// Validates that it's a String and it's lowecase
-IValidator isLowerCase({String? message}) =>
-    isString() &
-    validator(
-      (value) => value.toLowerCase() == value,
-      (value) => Expectation(
-        message: message ?? 'lowercase string',
-        code: ExpectationCodes.valueCaseMismatch,
-        data: {'expected_case': 'lower'},
-      ),
-    ).copyWith(name: 'isLowerCase', arguments: []);
+IValidator isLowerCase({String? message}) => (isString() &
+        validator(
+          (value) => value.toLowerCase() == value,
+          (value) => Expectation(
+            message: message ?? 'lowercase string',
+            code: ExpectationCodes.valueCaseMismatch,
+            data: {'expected_case': 'lower'},
+          ),
+        ))
+    .copyWith(name: 'isLowerCase', args: []);
 
 /// Validates that it's a String and it's uppercase
-IValidator isUpperCase({String? message}) =>
-    isString() &
-    validator(
-      (value) => value.toUpperCase() == value,
-      (value) => Expectation(
-        message: message ?? 'uppercase string',
-        code: ExpectationCodes.valueCaseMismatch,
-        data: {'expected_case': 'upper'},
-      ),
-    ).copyWith(name: 'isUpperCase', arguments: []);
+IValidator isUpperCase({String? message}) => (isString() &
+        validator(
+          (value) => value.toUpperCase() == value,
+          (value) => Expectation(
+            message: message ?? 'uppercase string',
+            code: ExpectationCodes.valueCaseMismatch,
+            data: {'expected_case': 'upper'},
+          ),
+        ))
+    .copyWith(name: 'isUpperCase', args: []);
 
 final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
@@ -133,9 +136,9 @@ final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 /// final strictEmail = all([$isString, isEmail()]);
 /// ```
 IValidator isEmail({String? message}) {
-  return isString() &
-      stringMatchesPattern(emailRegex,
-          message: message ?? 'a valid email address');
+  return (isString() &
+          stringMatchesPattern(emailRegex, message: message ?? 'a valid email address'))
+      .copyWith(name: 'isEmail', args: []);
 }
 
 /// Checks whether the given string is empty
@@ -168,24 +171,24 @@ IValidator isStringEmpty({String? message}) {
 /// final strictUrl2 = isStrictUrl();
 /// ```
 IValidator isUrl({bool strict = false, String? message}) {
-  return isString() &
-      validator(
-        (value) {
-          return strict
-              ? Uri.tryParse(value)?.isAbsolute ?? false
-              : Uri.tryParse(value) != null;
-        },
-        (value) => Expectation(
-          message: message ?? 'a valid URL',
-          value: value,
-          code: ExpectationCodes.valueFormatInvalid,
-          data: {'format': 'url'},
-        ),
-      ).copyWith(name: 'isUrl', arguments: [strict]);
+  return (isString() &
+          validator(
+            (value) {
+              return strict
+                  ? Uri.tryParse(value)?.isAbsolute ?? false
+                  : Uri.tryParse(value) != null;
+            },
+            (value) => Expectation(
+              message: message ?? 'a valid URL',
+              value: value,
+              code: ExpectationCodes.valueFormatInvalid,
+              data: {'format': 'url'},
+            ),
+          ))
+      .copyWith(name: 'isUrl', args: [strict]);
 }
 
-IValidator isStrictUrl({String? message}) =>
-    isUrl(strict: true, message: message);
+IValidator isStrictUrl({String? message}) => isUrl(strict: true, message: message);
 
 final uuidRegex = RegExp(
     r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
@@ -206,8 +209,8 @@ final uuidRegex = RegExp(
 /// });
 /// ```
 IValidator isUuidV4({String? message}) {
-  return isString() &
-      stringMatchesPattern(uuidRegex, message: message ?? 'a valid UUID v4');
+  return (isString() & stringMatchesPattern(uuidRegex, message: message ?? 'a valid UUID v4'))
+      .copyWith(name: 'isUuidV4', args: []);
 }
 
 /// Validates that the String can be parsed as an `int` (e.g. '123', '-42')
@@ -223,17 +226,17 @@ IValidator isUuidV4({String? message}) {
 /// // Combined with length validation
 /// final idValidator = all([$isString, isIntString(), stringLength([isEq(9)])]);
 /// ```
-IValidator isIntString({String? message}) =>
-    isType<String>() &
-    validator(
-      (value) => int.tryParse(value.trim()) != null,
-      (value) => Expectation(
-        message: message ?? 'a valid formatted int String',
-        value: value,
-        code: ExpectationCodes.valueFormatInvalid,
-        data: {'format': 'int'},
-      ),
-    );
+IValidator isIntString({String? message}) => (isType<String>() &
+        validator(
+          (value) => int.tryParse(value.trim()) != null,
+          (value) => Expectation(
+            message: message ?? 'a valid formatted int String',
+            value: value,
+            code: ExpectationCodes.valueFormatInvalid,
+            data: {'format': 'int'},
+          ),
+        ))
+    .copyWith(name: 'isIntString', args: []);
 
 /// Validates that the String can be parsed as a `double` (e.g. '123.45', '-1e3')
 ///
@@ -248,30 +251,30 @@ IValidator isIntString({String? message}) =>
 /// // For strict double-only validation
 /// final strictDouble = all([$isString, isDoubleString(), not(isIntString())]);
 /// ```
-IValidator isDoubleString({String? message}) =>
-    isType<String>() &
-    validator(
-      (value) => double.tryParse(value.trim()) != null,
-      (value) => Expectation(
-        message: message ?? 'a valid formatted double String',
-        value: value,
-        code: ExpectationCodes.valueFormatInvalid,
-        data: {'format': 'double'},
-      ),
-    );
+IValidator isDoubleString({String? message}) => (isType<String>() &
+        validator(
+          (value) => double.tryParse(value.trim()) != null,
+          (value) => Expectation(
+            message: message ?? 'a valid formatted double String',
+            value: value,
+            code: ExpectationCodes.valueFormatInvalid,
+            data: {'format': 'double'},
+          ),
+        ))
+    .copyWith(name: 'isDoubleString', args: []);
 
 /// Validates that the String can be parsed as a `num` (int or double)
-IValidator isNumString({String? message}) =>
-    isType<String>() &
-    validator(
-      (value) => num.tryParse(value.trim()) != null,
-      (value) => Expectation(
-        message: message ?? 'a valid formatted number String',
-        value: value,
-        code: ExpectationCodes.valueFormatInvalid,
-        data: {'format': 'num'},
-      ),
-    );
+IValidator isNumString({String? message}) => (isType<String>() &
+        validator(
+          (value) => num.tryParse(value.trim()) != null,
+          (value) => Expectation(
+            message: message ?? 'a valid formatted number String',
+            value: value,
+            code: ExpectationCodes.valueFormatInvalid,
+            data: {'format': 'num'},
+          ),
+        ))
+    .copyWith(name: 'isNumString', args: []);
 
 /// Validates that the String can be parsed as a `bool` ('true' or 'false', case insensitive)
 ///
@@ -290,21 +293,21 @@ IValidator isNumString({String? message}) =>
 ///   'debug': all([$isString, isBoolString()]),
 /// });
 /// ```
-IValidator isBoolString({String? message}) =>
-    isType<String>() &
-    validator(
-      (value) {
-        final lower = value.toLowerCase().trim();
+IValidator isBoolString({String? message}) => (isType<String>() &
+        validator(
+          (value) {
+            final lower = value.toLowerCase().trim();
 
-        return lower == 'true' || lower == 'false';
-      },
-      (value) => Expectation(
-        message: message ?? 'a valid formatted boolean String',
-        value: value,
-        code: ExpectationCodes.valueFormatInvalid,
-        data: {'format': 'bool'},
-      ),
-    );
+            return lower == 'true' || lower == 'false';
+          },
+          (value) => Expectation(
+            message: message ?? 'a valid formatted boolean String',
+            value: value,
+            code: ExpectationCodes.valueFormatInvalid,
+            data: {'format': 'bool'},
+          ),
+        ))
+    .copyWith(name: 'isBoolString', args: []);
 
 /// Checks whether the given value is a valid DateTime formatted String
 ///
@@ -331,4 +334,4 @@ IValidator isDate({String? message}) => validator(
         code: ExpectationCodes.valueFormatInvalid,
         data: {'format': 'date_time'},
       ),
-    ).copyWith(name: 'isDate', arguments: []);
+    ).copyWith(name: 'isDate', args: []);

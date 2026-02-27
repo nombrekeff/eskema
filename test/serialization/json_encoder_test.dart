@@ -54,7 +54,7 @@ void main() {
     });
 
     test.test('encodes custom validators', () {
-      final custom = Validator((v) => Result.valid(v), name: 'myCustom', arguments: [1, 'val']);
+      final custom = Validator((v) => Result.valid(v), name: 'myCustom', args: [1, 'val']);
       test.expect(
         const JsonEncoder().encode(custom),
         test.equals('["@myCustom",1,"\'val\'"]'),

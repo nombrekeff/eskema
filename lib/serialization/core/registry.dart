@@ -3,8 +3,6 @@ import 'package:eskema/validator.dart';
 /// A factory function that instantiates an `IValidator` from deserialized arguments.
 typedef ValidatorFactory = IValidator Function(List<dynamic> args);
 
-/// A factory function that encodes arguments for a given `IValidator`.
-typedef ArgumentEncoder = List<dynamic> Function(IValidator validator);
 
 /// A registry mapping validator names to factories.
 /// It enables dynamic injection of standard and custom validation rules, separating parsing logic

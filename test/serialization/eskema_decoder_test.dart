@@ -5,13 +5,13 @@ import 'package:test/test.dart' as test;
 void main() {
   test.group('EskemaDecoder', () {
     test.test('deserializes primitive built-ins', () {
-      final valStr = '=(5)';
+      final valStr = '=5';
       final val = const EskemaDecoder().decode(valStr);
       test.expect(const EskemaEncoder().encode(val), valStr);
       test.expect(val.validate(5).isValid, test.isTrue);
       test.expect(val.validate(4).isValid, test.isFalse);
       
-      final gtStr = '>(10)';
+      final gtStr = '>10';
       final gtVal = const EskemaDecoder().decode(gtStr);
       test.expect(const EskemaEncoder().encode(gtVal), gtStr);
       test.expect(gtVal.validate(11).isValid, test.isTrue);
@@ -31,14 +31,14 @@ void main() {
     });
 
     test.test('deserializes combinators', () {
-      final allStr = '(>(0) & <(10))';
+      final allStr = '(>0 & <10)';
       final val = const EskemaDecoder().decode(allStr);
       test.expect(const EskemaEncoder().encode(val), allStr);
       test.expect(val.validate(5).isValid, test.isTrue);
       test.expect(val.validate(0).isValid, test.isFalse);
       test.expect(val.validate(10).isValid, test.isFalse);
 
-      final anyStr = '(=(\'A\') | =(\'B\'))';
+      final anyStr = '(=\'A\' | =\'B\')';
       final anyVal = const EskemaDecoder().decode(anyStr);
       test.expect(const EskemaEncoder().encode(anyVal), anyStr);
       test.expect(anyVal.validate('A').isValid, test.isTrue);
@@ -47,7 +47,7 @@ void main() {
     });
 
     test.test('deserializes maps and fields', () {
-      final str = '{age: >(0), name: String & ~(\'B\')}';
+      final str = '{age: >0, name: String & ~\'B\'}';
       final val = const EskemaDecoder().decode(str);
       test.expect(const EskemaEncoder().encode(val), str);
       test.expect(val.validate({'age': 10, 'name': 'Bob'}).isValid, test.isTrue);
@@ -57,7 +57,7 @@ void main() {
     });
 
     test.test('deserializes optional/nullable fields', () {
-      final str = '{age: ?>(0), name: *String}';
+      final str = '{age: ?>0, name: *String}';
       final val = const EskemaDecoder().decode(str);
       test.expect(const EskemaEncoder().encode(val), str);
       // Optional/nullable logic testing
@@ -116,5 +116,5 @@ void main() {
 
 class CustomValidator extends Validator {
   CustomValidator(List<dynamic> args)
-      : super((v) => Result.valid(v), name: 'myCustom', arguments: args);
+      : super((v) => Result.valid(v), name: 'myCustom', args: args);
 }

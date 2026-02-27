@@ -31,14 +31,14 @@ IValidator isEq<T>(T otherValue, {String? message}) => validator(
         },
       ),
       name: 'isEq',
-      arguments: [otherValue],
+      args: [otherValue],
     );
 
 /// Checks whether the given value is true
-IValidator isTrue() => isEq(true, message: 'equal to true').copyWith(name: 'isTrue', arguments: []);
+IValidator isTrue() => isEq(true, message: 'equal to true').copyWith(name: 'isTrue', args: []);
 
 /// Checks whether the given value is false
-IValidator isFalse() => isEq(false, message: 'equal to false').copyWith(name: 'isFalse', arguments: []);
+IValidator isFalse() => isEq(false, message: 'equal to false').copyWith(name: 'isFalse', args: []);
 
 /// Checks whether the given value is equal to the [otherValue] value of type [T]
 IValidator isDeepEq<T>(T otherValue, {String? message}) => (isType<T>() &
@@ -54,7 +54,7 @@ IValidator isDeepEq<T>(T otherValue, {String? message}) => (isType<T>() &
               'mode': 'deep'
             },
           ),
-        )).copyWith(name: 'isDeepEq', arguments: [otherValue]);
+        )).copyWith(name: 'isDeepEq', args: [otherValue]);
 
 /// Checks whether the given value has a length property and the length matches the validators
 IValidator length(List<IValidator> validators, {String? message}) {
@@ -108,7 +108,7 @@ IValidator contains<T>(T item, {String? message}) {
       value: value,
       code: ExpectationCodes.valueContainsMissing,
     ).toInvalidResult();
-  }).copyWith(name: 'contains', arguments: [item]);
+  }).copyWith(name: 'contains', args: [item]);
 }
 
 /// Checks whether the given value is one of the [options] values of type [T]
@@ -124,5 +124,5 @@ IValidator isOneOf<T>(Iterable<T> options, {String? message}) {
       ),
       value: value,
     ),
-  ).copyWith(name: 'isOneOf', arguments: [options]);
+  ).copyWith(name: 'isOneOf', args: [options]);
 }

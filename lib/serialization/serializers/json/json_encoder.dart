@@ -34,8 +34,8 @@ class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
     }
 
     // isType validators encode as bare type name strings (e.g. 'int', 'String')
-    if (validator.name == 'isType' && validator.arguments.isNotEmpty) {
-      return validator.arguments[0].toString();
+    if (validator.name == 'isType' && validator.args.isNotEmpty) {
+      return validator.args[0].toString();
     }
 
     if (_hasSymbolMap(validator.name)) {
@@ -88,12 +88,12 @@ class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
 
   @override
   dynamic encodeBuiltIn(String symbol, IValidator validator, ValidatorRegistry? registry) {
-    if (validator.arguments.isEmpty) {
+    if (validator.args.isEmpty) {
       return [symbol];
     }
 
     if (symbol == '&' || symbol == '|') {
-      final subs = validator.arguments.cast<IValidator>();
+      final subs = validator.args.cast<IValidator>();
 
       if (subs.isEmpty) return symbol;
       if (subs.length == 1) return encodeInternal(subs.first, registry);
@@ -111,7 +111,7 @@ class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
     }
 
     final customEncoder = customEncoders?[validator.name];
-    final argsToEncode = customEncoder != null ? customEncoder(validator) : validator.arguments;
+    final argsToEncode = customEncoder != null ? customEncoder(validator) : validator.args;
 
     final list = <dynamic>[symbol];
     for (final v in argsToEncode) {
@@ -124,7 +124,7 @@ class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
   @override
   dynamic encodeCustom(IValidator validator, ValidatorRegistry? registry) {
     final list = <dynamic>['@${validator.name}'];
-    for (final v in validator.arguments) {
+    for (final v in validator.args) {
       list.add(encodeValue(v, registry));
     }
 

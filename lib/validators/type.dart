@@ -20,7 +20,7 @@ IValidator isType<T>({String? message}) {
       },
     ),
     name: 'isType',
-    arguments: [T.toString()],
+    args: [T.toString()],
   );
 }
 

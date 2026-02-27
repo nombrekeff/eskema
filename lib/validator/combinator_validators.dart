@@ -14,17 +14,13 @@ import 'base_validator.dart';
 Result _failWithMsg(dynamic value, String message) => Result.invalid(value,
     expectation: Expectation(message: message, value: value));
 
-/// An abstract base for validators that operate on a list of child validators.
-///
-/// This class provides a unified approach to handling multi-validator logic with
-/// configurable behavior for value chaining, short-circuiting, and expectation collection.
 abstract class MultiValidatorBase extends IValidator {
   MultiValidatorBase(this.validators,
       {super.nullable,
       super.optional,
       this.message,
       this.name = 'custom',
-      this.arguments = const []});
+      this.args = const []});
 
   final Iterable<IValidator> validators;
   final String? message;
@@ -33,7 +29,7 @@ abstract class MultiValidatorBase extends IValidator {
   final String name;
 
   @override
-  final List<dynamic> arguments;
+  final List<dynamic> args;
 
   /// Configuration for how this validator should behave
   _ValidatorConfig get _config;
@@ -114,7 +110,7 @@ abstract class MultiValidatorBase extends IValidator {
     bool? nullable,
     bool? optional,
     String? name,
-    List<dynamic>? arguments,
+    List<dynamic>? args,
     Iterable<IValidator>? validators,
     String? message,
   });
@@ -184,9 +180,9 @@ class AllValidator extends MultiValidatorBase {
     super.optional,
     super.message,
     super.name = 'all',
-    List<dynamic>? arguments,
+    List<dynamic>? args,
     this.collecting = false,
-  }) : super(arguments: arguments ?? List.from(validators));
+  }) : super(args: args ?? List.from(validators));
 
   @override
   _ValidatorConfig get _config =>
@@ -237,7 +233,7 @@ class AllValidator extends MultiValidatorBase {
     bool? nullable,
     bool? optional,
     String? name,
-    List<dynamic>? arguments,
+    List<dynamic>? args,
     Iterable<IValidator>? validators,
     String? message,
   }) =>
@@ -247,7 +243,7 @@ class AllValidator extends MultiValidatorBase {
         optional: optional ?? isOptional,
         message: message ?? this.message,
         name: name ?? this.name,
-        arguments: arguments ?? this.arguments,
+        args: args ?? this.args,
         collecting: collecting,
       );
 }
@@ -259,8 +255,8 @@ class AnyValidator extends MultiValidatorBase {
       super.optional,
       super.message,
       super.name = 'any',
-      List<dynamic>? arguments})
-      : super(arguments: arguments ?? List.from(validators));
+      List<dynamic>? args})
+      : super(args: args ?? List.from(validators));
 
   @override
   _ValidatorConfig get _config => _ValidatorConfig.any;
@@ -292,7 +288,7 @@ class AnyValidator extends MultiValidatorBase {
     bool? nullable,
     bool? optional,
     String? name,
-    List<dynamic>? arguments,
+    List<dynamic>? args,
     Iterable<IValidator>? validators,
     String? message,
   }) =>
@@ -301,6 +297,8 @@ class AnyValidator extends MultiValidatorBase {
         nullable: nullable ?? isNullable,
         optional: optional ?? isOptional,
         message: message ?? this.message,
+        name: name ?? this.name,
+        args: args ?? this.args,
       );
 }
 
@@ -311,8 +309,8 @@ class NoneValidator extends MultiValidatorBase {
       super.optional,
       super.message,
       super.name = 'none',
-      List<dynamic>? arguments})
-      : super(arguments: arguments ?? List.from(validators));
+      List<dynamic>? args})
+      : super(args: args ?? List.from(validators));
 
   @override
   _ValidatorConfig get _config => _ValidatorConfig.none;
@@ -357,7 +355,7 @@ class NoneValidator extends MultiValidatorBase {
     bool? nullable,
     bool? optional,
     String? name,
-    List<dynamic>? arguments,
+    List<dynamic>? args,
     Iterable<IValidator>? validators,
     String? message,
   }) =>
@@ -367,7 +365,7 @@ class NoneValidator extends MultiValidatorBase {
         optional: optional ?? isOptional,
         message: message ?? this.message,
         name: name ?? this.name,
-        arguments: arguments ?? this.arguments,
+        args: args ?? this.args,
       );
 }
 
@@ -376,7 +374,7 @@ class NoneValidator extends MultiValidatorBase {
 /// Base class for validators that operate on a single child validator.
 abstract class _SingleChildValidator extends IValidator {
   _SingleChildValidator(this.child,
-      {super.nullable, super.optional, this.message});
+      {super.nullable, super.optional, super.name, super.args, this.message});
 
   final IValidator child;
   final String? message;
@@ -396,7 +394,7 @@ abstract class _SingleChildValidator extends IValidator {
 }
 
 class NotValidator extends _SingleChildValidator {
-  NotValidator(super.child, {super.nullable, super.optional, super.message});
+  NotValidator(super.child, {super.nullable, super.optional, super.message, super.name = 'not', super.args = const []});
 
   @override
   Result _processResult(Result result, dynamic value) {
@@ -427,17 +425,19 @@ class NotValidator extends _SingleChildValidator {
           {bool? nullable,
           bool? optional,
           String? name,
-          List<dynamic>? arguments}) =>
+          List<dynamic>? args}) =>
       NotValidator(
         child,
         nullable: nullable ?? isNullable,
         optional: optional ?? isOptional,
         message: message ?? this.message,
+        name: name ?? this.name,
+        args: args ?? this.args,
       );
 }
 
 class ThrowInsteadValidator extends _SingleChildValidator {
-  ThrowInsteadValidator(super.child)
+  ThrowInsteadValidator(super.child, {super.name = 'throwInstead', super.args = const []})
       : super(nullable: child.isNullable, optional: child.isOptional);
 
   @override
@@ -452,9 +452,11 @@ class ThrowInsteadValidator extends _SingleChildValidator {
           {bool? nullable,
           bool? optional,
           String? name,
-          List<dynamic>? arguments}) =>
+          List<dynamic>? args}) =>
       ThrowInsteadValidator(
-          child.copyWith(nullable: nullable, optional: optional));
+          child.copyWith(nullable: nullable, optional: optional),
+          name: name ?? this.name,
+          args: args ?? this.args);
 }
 
 class Field extends IdValidator {
@@ -464,7 +466,7 @@ class Field extends IdValidator {
     super.nullable,
     super.optional,
     super.name,
-    super.arguments,
+    super.args,
   }) : super(validator: (value) => all(validators).validator(value));
 
   final List<IValidator> validators;
@@ -474,14 +476,14 @@ class Field extends IdValidator {
     bool? nullable,
     bool? optional,
     String? name,
-    List<dynamic>? arguments,
+    List<dynamic>? args,
   }) =>
       Field(
         validators: validators,
         id: id,
         nullable: nullable ?? isNullable,
         optional: optional ?? isOptional,
-        name: name,
-        arguments: arguments,
+        name: name ?? this.name,
+        args: args ?? this.args,
       );
 }

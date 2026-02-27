@@ -25,6 +25,7 @@ extension _ValidatorRegistryDefaults on ValidatorRegistry {
 
     // Comparison and Math
     register(name: 'isEq', factory: (args) => isEq(args[0]));
+    register(name: 'isDeepEq', factory: (args) => isDeepEq(args[0]));
     register(name: 'isGt', factory: (args) => isGt<num>(args[0] as num));
     register(name: 'isGte', factory: (args) => isGte<num>(args[0] as num));
     register(name: 'isLt', factory: (args) => isLt<num>(args[0] as num));
@@ -56,12 +57,34 @@ extension _ValidatorRegistryDefaults on ValidatorRegistry {
 
     // Date
     register(name: 'isDate', factory: (args) => isDate());
-    register(name: 'isDateBefore', factory: (args) => isDateBefore(args[0] as DateTime, inclusive: args[1] as bool));
-    register(name: 'isDateAfter', factory: (args) => isDateAfter(args[0] as DateTime, inclusive: args[1] as bool));
-    register(name: 'isDateBetween', factory: (args) => isDateBetween(args[0] as DateTime, args[1] as DateTime, inclusiveStart: args[2] as bool, inclusiveEnd: args[3] as bool));
-    register(name: 'isDateSameDay', factory: (args) => isDateSameDay(args[0] as DateTime));
-    register(name: 'isDateInPast', factory: (args) => isDateInPast(allowNow: args[0] as bool));
-    register(name: 'isDateInFuture', factory: (args) => isDateInFuture(allowNow: args[0] as bool));
+    register(name: 'isDateBefore', factory: (args) {
+      final dt = args[0] is String ? DateTime.parse(args[0] as String) : args[0] as DateTime;
+
+      return isDateBefore(dt, inclusive: args.length > 1 ? args[1] as bool : false);
+    });
+    register(name: 'isDateAfter', factory: (args) {
+      final dt = args[0] is String ? DateTime.parse(args[0] as String) : args[0] as DateTime;
+
+      return isDateAfter(dt, inclusive: args.length > 1 ? args[1] as bool : false);
+    });
+    register(name: 'isDateBetween', factory: (args) {
+      final start = args[0] is String ? DateTime.parse(args[0] as String) : args[0] as DateTime;
+      final end = args[1] is String ? DateTime.parse(args[1] as String) : args[1] as DateTime;
+
+      return isDateBetween(
+        start,
+        end,
+        inclusiveStart: args.length > 2 ? args[2] as bool : true,
+        inclusiveEnd: args.length > 3 ? args[3] as bool : true,
+      );
+    });
+    register(name: 'isDateSameDay', factory: (args) {
+      final dt = args[0] is String ? DateTime.parse(args[0] as String) : args[0] as DateTime;
+
+      return isDateSameDay(dt);
+    });
+    register(name: 'isDateInPast', factory: (args) => isDateInPast(allowNow: args.isNotEmpty ? args[0] as bool : true));
+    register(name: 'isDateInFuture', factory: (args) => isDateInFuture(allowNow: args.isNotEmpty ? args[0] as bool : true));
 
     // Json and Collections
     register(name: 'isJsonContainer', factory: (args) => isJsonContainer());
@@ -98,7 +121,7 @@ extension _ValidatorRegistryDefaults on ValidatorRegistry {
 
       if (typeName == 'Map') return isMap();
 
-      return isType<dynamic>().copyWith(name: 'isType', arguments: [typeName]);
+      return isType<dynamic>().copyWith(name: 'isType', args: [typeName]);
     });
 
     // Bare type names for simplified encoding (e.g. `int` instead of `type(int)`)

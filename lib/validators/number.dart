@@ -23,7 +23,7 @@ IValidator isLt<T extends num>(T max, {String? message}) {
               data: {'operator': '<', 'limit': max},
             ),
           ))
-      .copyWith(name: 'isLt', arguments: [max]);
+      .copyWith(name: 'isLt', args: [max]);
 }
 
 /// Checks whether the given value is less than or equal [max]
@@ -36,7 +36,7 @@ IValidator isLte<T extends num>(T max, {String? message}) {
             code: ExpectationCodes.valueRangeOutOfBounds,
             data: {'operator': '<=', 'limit': max},
           ))
-      .copyWith(name: 'isLte', arguments: [max]);
+      .copyWith(name: 'isLte', args: [max]);
 }
 
 /// Checks whether the given value is greater than [min]
@@ -53,7 +53,7 @@ IValidator isGt<T extends num>(T min, {String? message}) {
               data: {'operator': '>', 'limit': min},
             ),
           ))
-      .copyWith(name: 'isGt', arguments: [min]);
+      .copyWith(name: 'isGt', args: [min]);
 }
 
 /// Checks whether the given value is greater or equal to [min]
@@ -66,7 +66,7 @@ IValidator isGte<T extends num>(T min, {String? message}) {
             code: ExpectationCodes.valueRangeOutOfBounds,
             data: {'operator': '>=', 'limit': min},
           ))
-      .copyWith(name: 'isGte', arguments: [min]);
+      .copyWith(name: 'isGte', args: [min]);
 }
 
 /// Checks whether the given numeric value is within the range `min`, `max` (inclusive).
@@ -80,5 +80,5 @@ IValidator isInRange<T extends num>(T min, T max, {String? message}) {
             code: ExpectationCodes.valueRangeOutOfBounds,
             data: {'operator': 'between_inclusive', 'min': min, 'max': max},
           ))
-      .copyWith(name: 'isInRange', arguments: [min, max]);
+      .copyWith(name: 'isInRange', args: [min, max]);
 }

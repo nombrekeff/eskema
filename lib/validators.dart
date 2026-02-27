@@ -62,7 +62,7 @@ Validator validator(
   bool Function(dynamic value) comparisonFn,
   Expectation Function(dynamic value) errorFn, {
   String name = 'custom',
-  List<dynamic> arguments = const [],
+  List<dynamic> args = const [],
 }) {
   return Validator(
     (value) => Result(
@@ -71,6 +71,6 @@ Validator validator(
       value: value,
     ),
     name: name,
-    arguments: arguments,
+    args: args,
   );
 }

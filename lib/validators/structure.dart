@@ -34,7 +34,7 @@ IValidator eskema(Map<String, IValidator> mapEskema, {String? message}) {
         entries: entries, errors: [], value: value, index: 0, message: message);
   }
 
-  return isMap() & Validator(eskemaPredicate).copyWith(name: 'eskema', arguments: [mapEskema]);
+  return isMap() & Validator(eskemaPredicate).copyWith(name: 'eskema', args: [mapEskema]);
 }
 
 // We intentionally implement `loop` returning `FutureOr<Result>`:
@@ -163,7 +163,7 @@ IValidator eskemaStrict(Map<String, IValidator> schema, {String? message}) {
     );
   }
 
-  return eskema(schema) & Validator(strictEskemaPredicate).copyWith(name: 'eskemaStrict', arguments: [schema]);
+  return eskema(schema) & Validator(strictEskemaPredicate).copyWith(name: 'eskemaStrict', args: [schema]);
 }
 
 /// Returns a Validator that checks a value against the eskema provided,
@@ -222,7 +222,7 @@ IValidator eskemaList<T>(List<IValidator> eskema) {
 
   return isType<List>() &
       listIsOfLength(eskema.length) &
-      Validator(listPredicate).copyWith(name: 'eskemaList', arguments: [eskema]);
+      Validator(listPredicate).copyWith(name: 'eskemaList', args: [eskema]);
 }
 
 /// Returns a Validator that runs [itemValidator] for each item in the list
@@ -263,7 +263,7 @@ IValidator listEach(IValidator itemValidator, {String? message}) {
     return loop(0);
   }
 
-  return $isList & Validator(listEachPredicate).copyWith(name: 'listEach', arguments: [itemValidator]);
+  return $isList & Validator(listEachPredicate).copyWith(name: 'listEach', args: [itemValidator]);
 }
 
 void _collectListIndex(Result result, List<Expectation> errors, int index,
