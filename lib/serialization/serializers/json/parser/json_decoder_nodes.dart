@@ -5,19 +5,13 @@ IValidator _jsonDecodeNode(
   dynamic node,
   DecoderResolutionContext context,
 ) {
-  if (node is String) {
-    return _jsonDecodeString(decoder, node, context);
-  }
-
-  if (node is Map<String, dynamic>) {
-    return _jsonDecodeMap(decoder, node, context);
-  }
-
-  if (node is List) {
-    return _jsonDecodeList(decoder, node, context);
-  }
-
-  throw DecodeException.invalidType('String, List, or Map', node, null);
+  return dispatchDecodedNode<IValidator>(
+    node: node,
+    onString: (value) => _jsonDecodeString(decoder, value, context),
+    onList: (value) => _jsonDecodeList(decoder, value, context),
+    onMap: (value) => _jsonDecodeMap(decoder, value, context),
+    source: node,
+  );
 }
 
 IValidator _jsonDecodeString(

@@ -130,15 +130,12 @@ class _DecoderParser {
   }
 
   IValidator _parseComposedValidator() {
-    if (match('(')) {
-      return _parseParenthesizedValidator();
-    }
-
-    if (match('{')) {
-      return parseMap();
-    }
-
-    return parseCall();
+    return dispatchStructuredCall<IValidator>(
+      match: match,
+      onGrouped: _parseParenthesizedValidator,
+      onMap: parseMap,
+      onCall: parseCall,
+    );
   }
 
   IValidator _parseParenthesizedValidator() {
@@ -229,19 +226,20 @@ class _DecoderParser {
   IValidator parseValidatorCore() {
     skipWhitespace();
 
-    if (match('(')) {
-      final v = parseValidator();
+    return dispatchStructuredCall<IValidator>(
+      match: match,
+      onGrouped: () {
+        final v = parseValidator();
 
-      if (!match(')')) {
-        throw DecodeException.missingClosingParenthesis(input, pos);
-      }
+        if (!match(')')) {
+          throw DecodeException.missingClosingParenthesis(input, pos);
+        }
 
-      return v;
-    } else if (match('{')) {
-      return parseMap();
-    } else {
-      return parseCall();
-    }
+        return v;
+      },
+      onMap: parseMap,
+      onCall: parseCall,
+    );
   }
 
   IValidator parseMap() {

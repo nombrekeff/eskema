@@ -15,21 +15,17 @@ Result _failWithMsg(dynamic value, String message) =>
     Result.invalid(value, expectation: Expectation(message: message, value: value));
 
 abstract class MultiValidatorBase extends IValidator {
-  MultiValidatorBase(this.validators,
-      {super.nullable,
-      super.optional,
-      this.message,
-      this.name = 'custom',
-      this.args = const []});
+  MultiValidatorBase(
+    this.validators, {
+    super.nullable,
+    super.optional,
+    this.message,
+    super.name = 'custom',
+    super.args = const [],
+  });
 
   final Iterable<IValidator> validators;
   final String? message;
-
-  @override
-  final String name;
-
-  @override
-  final List<dynamic> args;
 
   /// Configuration for how this validator should behave
   _ValidatorConfig get _config;

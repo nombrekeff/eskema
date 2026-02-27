@@ -12,6 +12,7 @@ export 'core/codec_utils.dart';
 export 'core/eskema_scanner.dart';
 export 'core/value_resolution.dart';
 export 'core/combinator_resolution.dart';
+export 'core/decode_dispatch.dart';
 export 'default_registry.dart';
 
 export 'serializers/eskema/eskema_encoder.dart';
