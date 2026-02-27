@@ -37,7 +37,12 @@ class EskemaEncoder extends DelegateValidatorEncoder<String> {
 
     // isType validators encode as bare type names (e.g. int, String)
     if (validator.name == 'isType' && validator.args.isNotEmpty) {
-      return validator.args[0].toString();
+      final typeName = validator.args[0].toString();
+      const simpleTypes = {'int', 'String', 'double', 'num', 'bool', 'List', 'Map', 'Set'};
+      
+      if (simpleTypes.contains(typeName)) {
+        return typeName;
+      }
     }
 
     if (_hasSymbolMap(validator.name)) {
@@ -135,13 +140,19 @@ class EskemaEncoder extends DelegateValidatorEncoder<String> {
   @override
   String encodeValue(dynamic value, ValidatorRegistry? registry) {
     if (value is String) return "'$value'";
-
     if (value is RegExp) return "'${value.pattern}'";
-
     if (value is DateTime) return "'${value.toIso8601String()}'";
 
     if (value is Iterable) {
       return '[${value.map((v) => encodeValue(v, registry)).join(', ')}]';
+    }
+
+    if (value is Map) {
+      final entries = value.entries
+          .map((e) => '${e.key}: ${encodeValue(e.value, registry)}')
+          .join(', ');
+
+      return '{$entries}';
     }
 
     if (value is IValidator) return encodeInternal(value, registry);

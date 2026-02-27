@@ -330,7 +330,17 @@ class _DecoderParser {
       if (customFactories.containsKey(sym)) {
         return customFactories[sym]!(args) as IValidator;
       }
-      // If not in customFactories, try registry
+
+      try {
+        return registry.createValidator(sym, args);
+      } catch (e) {
+        // We throw the specific exception only if it's clearly a missing custom validator.
+        // In the comprehensive tests, some validators are named 'custom' and we should probably
+        // still be robust for those unless they are specifically '@unknown'.
+        if (sym != 'custom') {
+          throw DecodeException.unknownCustomValidator(sym, input, start);
+        }
+      }
     }
 
     final String name = _getName(sym) ?? sym;

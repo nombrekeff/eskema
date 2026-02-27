@@ -35,7 +35,7 @@ class DecodeException extends FormatException {
       DecodeException(message: 'Expected identifier', source: source, offset: offset, type: DecodeExceptionType.missingIdentifier);
 
   factory DecodeException.unknownCustomValidator(String sym, dynamic source, int? offset) =>
-      DecodeException(message: 'Unknown custom validator: @\$sym', source: source, offset: offset, type: DecodeExceptionType.unknownCustomValidator);
+      DecodeException(message: 'Unknown custom validator: @$sym', source: source, offset: offset, type: DecodeExceptionType.unknownCustomValidator);
 
   factory DecodeException.unclosedString(dynamic source, int? offset) =>
       DecodeException(message: 'Unclosed string', source: source, offset: offset, type: DecodeExceptionType.unclosedString);

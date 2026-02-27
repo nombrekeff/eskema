@@ -108,18 +108,12 @@ extension _ValidatorRegistryDefaults on ValidatorRegistry {
       final typeName = args.isNotEmpty ? args[0].toString() : '';
 
       if (typeName == 'String') return isString();
-
       if (typeName == 'int') return isInt();
-
       if (typeName == 'double') return isDouble();
-
       if (typeName == 'num') return isNumber();
-
       if (typeName == 'bool') return isBool();
-
-      if (typeName == 'List') return isList();
-
-      if (typeName == 'Map') return isMap();
+      if (typeName == 'List' || typeName.startsWith('List<')) return isList();
+      if (typeName == 'Map' || typeName.startsWith('Map<')) return isMap();
 
       return isType<dynamic>().copyWith(name: 'isType', args: [typeName]);
     });
