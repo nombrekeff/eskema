@@ -12,6 +12,7 @@ import 'package:eskema/validators.dart';
 /// Checks whether the given value is less than [max]
 IValidator isLt<T extends num>(T max, {String? message}) {
   assert(!(max.isNaN), 'max must be a valid number');
+
   return (isType<T>() &
           validator(
             (value) => value < max,
@@ -28,6 +29,7 @@ IValidator isLt<T extends num>(T max, {String? message}) {
 /// Checks whether the given value is less than or equal [max]
 IValidator isLte<T extends num>(T max, {String? message}) {
   assert(!(max.isNaN), 'max must be a valid number');
+
   return ((isType<T>() & (isLt(max) | isEq(max))) >
           Expectation(
             message: message ?? 'less than or equal to $max',
@@ -40,6 +42,7 @@ IValidator isLte<T extends num>(T max, {String? message}) {
 /// Checks whether the given value is greater than [min]
 IValidator isGt<T extends num>(T min, {String? message}) {
   assert(!(min.isNaN), 'min must be a valid number');
+
   return (isType<T>() &
           validator(
             (value) => value > min,
@@ -56,6 +59,7 @@ IValidator isGt<T extends num>(T min, {String? message}) {
 /// Checks whether the given value is greater or equal to [min]
 IValidator isGte<T extends num>(T min, {String? message}) {
   assert(!(min.isNaN), 'min must be a valid number');
+
   return ((isType<T>() & (isGt(min) | isEq(min))) >
           Expectation(
             message: message ?? 'greater than or equal to $min',
@@ -69,6 +73,7 @@ IValidator isGte<T extends num>(T min, {String? message}) {
 IValidator isInRange<T extends num>(T min, T max, {String? message}) {
   assert(!(min.isNaN) && !(max.isNaN), 'min/max must be valid numbers');
   assert(min <= max, 'min must be <= max');
+
   return ((isNumber() & isGte(min) & isLte(max)) >
           Expectation(
             message: message ?? 'between $min and $max inclusive',

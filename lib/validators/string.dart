@@ -295,6 +295,7 @@ IValidator isBoolString({String? message}) =>
     validator(
       (value) {
         final lower = value.toLowerCase().trim();
+
         return lower == 'true' || lower == 'false';
       },
       (value) => Expectation(

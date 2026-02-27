@@ -44,6 +44,7 @@ class RegisterFormState extends State<RegisterForm> {
             ),
             validator: (value) {
               final res = nameValidator.validate(value);
+
               return res.description;
             },
           ),

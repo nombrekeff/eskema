@@ -17,20 +17,25 @@ abstract class MapValidator<T extends Map> extends IdValidator {
   @override
   FutureOr<Result> validator(dynamic value) {
     final base = super.validator(value);
+
     if (base is Future<Result>) return base.then((r) => _mapContinue(r, value));
+
     return _mapContinue(base, value);
   }
 
   Result _mapContinue(Result base, dynamic value) {
     if (base.isNotValid) return base;
+
     for (final field in fields) {
       final exists = value.containsKey(field.id);
       final mapValue = value[field.id];
       
       if (!exists && field.isOptional) continue;
+
       if (exists && mapValue == null && field.isNullable) continue;
 
       final result = field.validate(mapValue, exists: exists);
+
       if (result.isValid) continue;
 
       final error = field is MapValidator

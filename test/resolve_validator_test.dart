@@ -75,6 +75,7 @@ void main() {
         'val': resolve((parent) {
           return Validator((v) async {
             await Future.delayed(const Duration(milliseconds: 10));
+
             return v == 'ok' ? Result.valid(v) : Result.invalid(v);
           });
         }),

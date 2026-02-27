@@ -476,6 +476,7 @@ void main() {
         (child) => Validator((value) {
           if (value is String) {
             final parsed = int.tryParse(value);
+
             return child.validate(parsed ?? value);
           }
           return child.validate(value);
@@ -502,6 +503,7 @@ void main() {
         (child) => Validator((value) {
           if (value is String) {
             final parsed = int.tryParse(value);
+
             return child.validate(parsed ?? value);
           }
           return child.validate(value);
@@ -523,6 +525,7 @@ void main() {
         (child) => Validator((value) {
           if (value is String) {
             final parsed = double.tryParse(value);
+
             return child.validate(parsed ?? value);
           }
           return child.validate(value);

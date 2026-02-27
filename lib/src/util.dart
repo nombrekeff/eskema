@@ -3,7 +3,9 @@ import 'dart:convert';
 String prettifyValue(dynamic value) {
   try {
     if (value is Map) return json.encode(value);
+
     if (value is List) return json.encode(value);
+
     if (value is String) return '"$value"';
   } catch (_) {}
 
@@ -12,6 +14,7 @@ String prettifyValue(dynamic value) {
 
 String capitalize(String value) {
   if (value.isEmpty) return value;
+
   return value[0].toUpperCase() + value.substring(1);
 }
 

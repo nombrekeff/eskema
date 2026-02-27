@@ -66,6 +66,7 @@ void main() {
   // The `expectations` list now contains detailed error messages for each
   // field that failed validation.
   print('Expectations:');
+
   for (final expectation in invalidResult.expectations) {
     print('  - ${expectation.path}: ${expectation.message}');
   }

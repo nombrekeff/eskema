@@ -47,6 +47,7 @@ IValidator pivotValue(
     }
 
     final childResult = child.validate(transformed);
+
     if (childResult.isValid) return Result.valid(transformed);
 
     return childResult;
@@ -58,6 +59,7 @@ IValidator pivotValue(
 IValidator expectPreserveValue(IValidator validator, Expectation expectation) {
   return Validator((value) {
     final innerResult = validator.validate(value);
+
     if (innerResult.isValid) return Result.valid(innerResult.value);
 
     return Result.invalid(innerResult.value, expectations: [

@@ -30,6 +30,7 @@ IValidator toJsonDecoded(IValidator child, {String? message}) {
 dynamic _tryJsonDecode(String s) {
   try {
     final decoded = convert.jsonDecode(s);
+
     return (decoded is Map || decoded is List) ? decoded : null;
   } catch (_) {
     return null;

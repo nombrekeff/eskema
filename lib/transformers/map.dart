@@ -35,6 +35,7 @@ IValidator pluckKey(String key, IValidator child, {String? message}) {
   return core.pivotValue(
     (value) {
       if (value is! Map || !value.containsKey(key)) return null;
+
       return value[key];
     },
     child: child,
@@ -51,6 +52,7 @@ IValidator flattenMapKeys(String delimiter, IValidator child,
     if (node is Map) {
       node.forEach((k, val) {
         final newPrefix = prefix.isEmpty ? '$k' : '$prefix$delimiter$k';
+
         if (val is Map) {
           walk(flat, val, newPrefix);
         } else {
@@ -66,6 +68,7 @@ IValidator flattenMapKeys(String delimiter, IValidator child,
 
   Map<String, dynamic>? transform(value) {
     if (value is! Map) return null;
+
     return walk({}, value, '');
   }
 
@@ -86,6 +89,7 @@ IValidator flattenMapKeys(String delimiter, IValidator child,
 IValidator getField(String key, IValidator inner) {
   FutureOr<Result> fieldPredicate(value) {
     final result = inner.validate(value[key]);
+
     if (result.isValid) return result;
 
     return Result.invalid(

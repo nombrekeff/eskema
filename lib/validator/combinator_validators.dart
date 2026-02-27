@@ -54,6 +54,7 @@ abstract class MultiValidatorBase extends IValidator {
 
       final (shouldStop, stopResult) =
           _processResult(result, inputValue, aggregatedExpectations);
+
       if (shouldStop) return stopResult!;
 
       if (_config.chainsValues && result.isValid) currentValue = result.value;
@@ -75,6 +76,7 @@ abstract class MultiValidatorBase extends IValidator {
 
     final (shouldStop, stopResult) =
         _processResult(firstResult, inputValue, aggregatedExpectations);
+
     if (shouldStop) return stopResult!;
 
     if (_config.chainsValues && firstResult.isValid)
@@ -87,6 +89,7 @@ abstract class MultiValidatorBase extends IValidator {
 
       final (shouldStop2, stopResult2) =
           _processResult(result, nextInputValue, aggregatedExpectations);
+
       if (shouldStop2) return stopResult2!;
 
       if (_config.chainsValues && result.isValid) currentValue = result.value;
@@ -203,6 +206,7 @@ class AllValidator extends MultiValidatorBase {
       if (result.isNotValid) {
         final failResult =
             message != null ? _failWithMsg(result.value, message!) : result;
+
         return (true, failResult);
       }
       return (false, null);
@@ -270,6 +274,7 @@ class AnyValidator extends MultiValidatorBase {
     }
     // Collect failures and continue
     aggregatedExpectations.addAll(result.expectations);
+
     return (false, null);
   }
 
@@ -379,6 +384,7 @@ abstract class _SingleChildValidator extends IValidator {
   @override
   FutureOr<Result> validator(dynamic value) {
     final result = child.validator(value);
+
     if (result is Future<Result>) {
       return result.then((r) => _processResult(r, value));
     }
@@ -408,6 +414,7 @@ class NotValidator extends _SingleChildValidator {
 
         final notExpectations = source.map((exp) => exp.copyWith(
             message: Util.capitalize('not ${exp.message}'), value: value));
+
         return Result.invalid(value, expectations: notExpectations);
       }
     }
@@ -436,6 +443,7 @@ class ThrowInsteadValidator extends _SingleChildValidator {
   @override
   Result _processResult(Result result, dynamic value) {
     if (result.isNotValid) throw ValidatorFailedException(result);
+
     return Result.valid(result.value);
   }
 

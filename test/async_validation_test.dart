@@ -6,6 +6,7 @@ import 'package:test/test.dart' hide isNotEmpty;
 IValidator asyncPass([Duration delay = const Duration(milliseconds: 5)]) {
   return Validator((value) async {
     await Future.delayed(delay);
+
     return Result.valid(value);
   });
 }
@@ -14,6 +15,7 @@ IValidator asyncFail(String message,
     {Duration delay = const Duration(milliseconds: 5)}) {
   return Validator((value) async {
     await Future.delayed(delay);
+
     return Result.invalid(value,
         expectations: [Expectation(message: message, value: value)]);
   });

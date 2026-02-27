@@ -47,11 +47,13 @@ extension EskemaEskValidatorOperations on IValidator {
   IValidator operator &(IValidator other) {
     if (this is AllValidator && other is AllValidator) {
       final mv1 = this as AllValidator;
+
       return mv1.copyWith(validators: {...mv1.validators, ...other.validators});
     }
 
     if (this is AllValidator) {
       final mv = this as AllValidator;
+
       return mv.copyWith(validators: {...mv.validators, other});
     }
 
@@ -68,11 +70,13 @@ extension EskemaEskValidatorOperations on IValidator {
   IValidator operator |(IValidator other) {
     if (this is AnyValidator && other is AnyValidator) {
       final mv1 = this as AnyValidator;
+
       return mv1.copyWith(validators: {...mv1.validators, ...other.validators});
     }
 
     if (this is AnyValidator) {
       final mv = this as AnyValidator;
+
       return mv.copyWith(validators: {...mv.validators, other});
     }
 

@@ -4,11 +4,13 @@ import 'package:test/test.dart';
 
 IValidator asyncPass() => Validator((v) async {
       await Future.delayed(const Duration(milliseconds: 5));
+
       return Result.valid(v);
     });
 
 IValidator asyncFail(String msg) => Validator((v) async {
       await Future.delayed(const Duration(milliseconds: 5));
+
       return Result.invalid(v,
           expectations: [Expectation(message: msg, value: v)]);
     });

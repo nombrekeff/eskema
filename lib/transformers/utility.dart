@@ -15,5 +15,6 @@ import 'core.dart' as core;
 IValidator defaultTo(dynamic defaultValue, IValidator child,
     {String? message}) {
   final base = core.transform((v) => v ?? defaultValue, child);
+
   return core.handleReturnPreserveValue(base, message);
 }

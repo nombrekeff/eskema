@@ -4,6 +4,7 @@ import 'package:test/test.dart';
 
 IValidator asyncBool(bool ok, String msg) => Validator((v) async {
       await Future.delayed(const Duration(milliseconds: 5));
+
       return Result(
         isValid: ok,
         expectations: [Expectation(message: msg, value: v)],
@@ -18,6 +19,7 @@ void main() {
       var ranLate = false;
       final late = Validator((v) async {
         ranLate = true;
+
         return Result.valid(v);
       });
       final v = any([
@@ -34,6 +36,7 @@ void main() {
       var ran = false;
       final late = Validator((v) async {
         ran = true;
+
         return Result.valid(v);
       });
       final v = all([

@@ -29,6 +29,7 @@ import 'package:eskema/expectation_codes.dart';
 IValidator eskema(Map<String, IValidator> mapEskema, {String? message}) {
   FutureOr<Result> eskemaPredicate(value) {
     final entries = mapEskema.entries.toList();
+
     return _loop(
         entries: entries, errors: [], value: value, index: 0, message: message);
   }
@@ -74,6 +75,7 @@ FutureOr<Result> _loop({
       message: message);
 
   FutureOr<Result> res;
+
   if (validator is IWhenValidator) {
     res = validator.validateWithParent(fieldValue, value, exists: exists);
   } else {
@@ -85,6 +87,7 @@ FutureOr<Result> _loop({
       // For required field missing: validate with exists: false so nullable validators fail.
       final missingRes = validator.validate(null, exists: false);
       _collectEskema(missingRes, errors, key, message);
+
       return next();
     }
 
@@ -102,6 +105,7 @@ FutureOr<Result> _loop({
   if (res is Future<Result>) {
     return res.then((r) {
       _collectEskema(r, errors, key, message);
+
       return next();
     });
   }
@@ -203,6 +207,7 @@ IValidator eskemaList<T>(List<IValidator> eskema) {
       if (res is Future<Result>) {
         return res.then((r) {
           _collectListIndex(r, errors, index, null);
+
           return loop(index + 1);
         });
       }
@@ -245,6 +250,7 @@ IValidator listEach(IValidator itemValidator, {String? message}) {
       if (res is Future<Result>) {
         return res.then((r) {
           _collectListIndex(r, errors, index, message);
+
           return loop(index + 1);
         });
       }

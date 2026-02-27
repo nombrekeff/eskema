@@ -6,6 +6,7 @@ import 'package:eskema/eskema.dart' hide contains;
 // Helper creating an async passing validator
 IValidator asyncPass([String msg = 'ok']) => Validator((v) async {
       await Future.microtask(() {});
+
       return Result(
         isValid: true,
         value: v,
@@ -16,6 +17,7 @@ IValidator asyncPass([String msg = 'ok']) => Validator((v) async {
 // Helper creating an async failing validator
 IValidator asyncFail(String message) => Validator((v) async {
       await Future.microtask(() {});
+
       return Result.invalid(v,
           expectation: Expectation(message: message, value: v));
     });
@@ -146,6 +148,7 @@ void main() {
     test('inside eskema async condition selects then', () async {
       final cond = Validator((map) async {
         await Future<void>.delayed(const Duration(milliseconds: 1));
+
         return Result.valid(map);
       });
       final v = eskema({
@@ -158,6 +161,7 @@ void main() {
     test('inside eskema async condition selects otherwise', () async {
       final cond = Validator((map) async {
         await Future<void>.delayed(const Duration(milliseconds: 1));
+
         return Result.invalid(map,
             expectation: Expectation(message: 'cond', value: map));
       });

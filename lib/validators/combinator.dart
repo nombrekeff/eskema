@@ -180,6 +180,8 @@ IValidator withExpectation(IValidator child, Expectation error,
 Expectation _applyOverride(Expectation base, String? message, dynamic value,
     {String? code}) {
   if (message == null)
+
     return base.copyWith(value: value, code: code ?? base.code);
+
   return base.copyWith(message: message, value: value, code: code ?? base.code);
 }

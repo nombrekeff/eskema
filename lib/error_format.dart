@@ -29,6 +29,7 @@ String buildValidationFailureMessage(
 
   final value = result.value;
   var valueRepr = _safeValueString(value);
+
   if (valueRepr.length > maxValueLength) {
     valueRepr = '${valueRepr.substring(0, maxValueLength)}…';
   }
@@ -47,11 +48,13 @@ String buildValidationFailureMessage(
     buffer.write(e.description);
 
     if (e.code != null) buffer.write(' [code=${e.code}]');
+
     if (e.data != null && e.data!.isNotEmpty) buffer.write(' {data=${e.data}}');
     buffer.writeln();
   }
 
   final remaining = result.expectationCount - toShow.length;
+
   if (remaining > 0) {
     buffer.writeln('  … ($remaining more not shown)');
   }
@@ -77,6 +80,7 @@ String buildValidationMessage(
 }) {
   if (result.isValid) {
     var valueRepr = _safeValueString(result.value);
+
     if (valueRepr.length > maxValueLength) {
       valueRepr = '${valueRepr.substring(0, maxValueLength)}…';
     }

@@ -110,8 +110,11 @@ IValidator toBoolLenient(IValidator child, {String? message}) {
         final int i => i == 1,
         final String s => () {
             final lower = s.toLowerCase().trim();
+
             if (trueSet.contains(lower)) return true;
+
             if (falseSet.contains(lower)) return false;
+
             return null;
           }(),
         _ => null,

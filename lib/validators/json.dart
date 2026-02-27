@@ -36,6 +36,7 @@ IValidator isJsonObject({String? message}) =>
 /// Validates that value is a JSON array (List).
 IValidator isJsonArray({String? message}) => Validator((value) {
       final ok = value is List;
+
       return Result(
         isValid: ok,
         value: value,
@@ -53,6 +54,7 @@ IValidator jsonHasKeys(Iterable<String> keys, {String? message}) =>
     $isMap &
     Validator((value) {
       final ok = keys.every((k) => value.containsKey(k));
+
       return Result(
         isValid: ok,
         value: value,
@@ -71,6 +73,7 @@ IValidator jsonArrayLength({int? min, int? max, String? message}) =>
     Validator((value) {
       final ok = (min == null || value.length >= min) &&
           (max == null || value.length <= max);
+
       return Result(
         isValid: ok,
         value: value,

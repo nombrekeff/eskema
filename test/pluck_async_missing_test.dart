@@ -4,7 +4,9 @@ import 'package:eskema/eskema.dart';
 // Simulate async validator on plucked value
 IValidator asyncGte(int min) => Validator((value) async {
       await Future<void>.delayed(const Duration(milliseconds: 1));
+
       if (value is num && value >= min) return Result.valid(value);
+
       return Result.invalid(value,
           expectation: Expectation(message: '>= $min', value: value));
     });

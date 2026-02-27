@@ -14,6 +14,7 @@ void main() {
   // to the validity status, the original value, and a list of expectations (errors).
   print('--- Handling Failures with `Result` Object ---');
   final result = validator.validate('');
+
   if (!result.isValid) {
     print('Validation failed!');
     print('Errors: ${result.expectations}');
@@ -24,6 +25,7 @@ void main() {
   // If you only need to know whether the validation passed or failed,
   // `.isValid()` is a convenient shortcut.
   print('--- Handling Failures with `isValid` ---');
+
   if (!validator.isValid('')) {
     print('The value is invalid (checked with isValid).');
   }

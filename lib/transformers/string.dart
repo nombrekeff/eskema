@@ -12,12 +12,14 @@ final RegExp _reWhitespaceRuns = RegExp(r'\s+');
 /// Coerces a value to a `String`.
 IValidator toString(IValidator child, {String? message}) {
   final base = core.transform((v) => v.toString(), child);
+
   return core.handleReturnPreserveValue(base, message);
 }
 
 /// String normalizer (no type pivot): trim leading/trailing whitespace.
 IValidator trimString(IValidator child, {String? message}) {
   final base = core.transform((v) => v is String ? v.trim() : v, child);
+
   return core.handleReturnPreserveValue(base, message);
 }
 
@@ -34,12 +36,14 @@ IValidator collapseWhitespace(IValidator child, {String? message}) {
 /// Lowercase string (ASCII-focused; leaves non-letters unchanged).
 IValidator toLowerCaseString(IValidator child, {String? message}) {
   final base = core.transform((v) => v is String ? v.toLowerCase() : v, child);
+
   return core.handleReturnPreserveValue(base, message);
 }
 
 /// Uppercase string.
 IValidator toUpperCaseString(IValidator child, {String? message}) {
   final base = core.transform((v) => v is String ? v.toUpperCase() : v, child);
+
   return core.handleReturnPreserveValue(base, message);
 }
 
@@ -49,6 +53,7 @@ IValidator toUpperCaseString(IValidator child, {String? message}) {
 /// Passes the trimmed string to the [child] validator.
 IValidator trim(IValidator child, {String? message}) {
   final base = isString() & core.transform((v) => v.trim(), child);
+
   return core.handleReturnPreserveValue(base, message);
 }
 
@@ -58,6 +63,7 @@ IValidator trim(IValidator child, {String? message}) {
 /// Passes the lowercase string to the [child] validator.
 IValidator toLowerCase(IValidator child, {String? message}) {
   final base = isString() & core.transform((v) => v.toLowerCase(), child);
+
   return core.handleReturnPreserveValue(base, message);
 }
 
@@ -67,6 +73,7 @@ IValidator toLowerCase(IValidator child, {String? message}) {
 /// Passes the uppercase string to the [child] validator.
 IValidator toUpperCase(IValidator child, {String? message}) {
   final base = isString() & core.transform((v) => v.toUpperCase(), child);
+
   return core.handleReturnPreserveValue(base, message);
 }
 
@@ -79,5 +86,6 @@ IValidator toUpperCase(IValidator child, {String? message}) {
 /// Example: `split(',', listEach(toInt(isGte(0))))`
 IValidator split(String separator, IValidator child, {String? message}) {
   final base = isString() & core.transform((v) => v.split(separator), child);
+
   return core.handleReturnPreserveValue(base, message);
 }

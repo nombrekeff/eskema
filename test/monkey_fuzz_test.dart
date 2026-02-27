@@ -39,6 +39,7 @@ void main() {
           // ThrowInstead validator scenario: ensure expectations exist.
           expect(e.result.expectations.isNotEmpty, true,
               reason: 'Thrown result must have expectations');
+
           return; // Accept thrown path.
         } catch (e, st) {
           fail(
@@ -51,6 +52,7 @@ void main() {
         } on ValidatorFailedException catch (e) {
           // ThrowInstead path via async chain.
           expect(e.result.expectations.isNotEmpty, true);
+
           return;
         } catch (e, st) {
           fail(
@@ -104,11 +106,17 @@ _ValidatorSpec _randomValidatorSpec(Random rnd, {required int depth}) {
   // Increase probability of simple leaves to limit combinatorial explosion.
   if (depth > 2) return _leaf(rnd);
   final roll = rnd.nextInt(100);
+
   if (roll < 55) return _leaf(rnd);
+
   if (roll < 70) return _allSpec(rnd, depth);
+
   if (roll < 80) return _anySpec(rnd, depth);
+
   if (roll < 90) return _noneSpec(rnd, depth);
+
   if (roll < 95) return _notSpec(rnd, depth);
+
   return _builderSpec(rnd, depth);
 }
 
@@ -125,6 +133,7 @@ _ValidatorSpec _leaf(Random rnd) {
   ];
   final v = choices[rnd.nextInt(choices.length)]();
   final nullable = rnd.nextBool();
+
   return _ValidatorSpec(nullable ? v.nullable() : v, _Kind.base, nullable);
 }
 
@@ -135,6 +144,7 @@ _ValidatorSpec _allSpec(Random rnd, int depth) {
   final v = all(children.map((c) => c.validator).toList(),
       collecting: rnd.nextBool());
   final nullable = rnd.nextBool();
+
   return _ValidatorSpec(nullable ? v.nullable() : v, _Kind.all, nullable);
 }
 
@@ -144,6 +154,7 @@ _ValidatorSpec _anySpec(Random rnd, int depth) {
       List.generate(count, (_) => _randomValidatorSpec(rnd, depth: depth + 1));
   final v = any(children.map((c) => c.validator).toList());
   final nullable = rnd.nextBool();
+
   return _ValidatorSpec(nullable ? v.nullable() : v, _Kind.any, nullable);
 }
 
@@ -153,6 +164,7 @@ _ValidatorSpec _noneSpec(Random rnd, int depth) {
       List.generate(count, (_) => _randomValidatorSpec(rnd, depth: depth + 1));
   final v = none(children.map((c) => c.validator).toList());
   final nullable = rnd.nextBool();
+
   return _ValidatorSpec(nullable ? v.nullable() : v, _Kind.none, nullable);
 }
 
@@ -160,6 +172,7 @@ _ValidatorSpec _notSpec(Random rnd, int depth) {
   final inner = _randomValidatorSpec(rnd, depth: depth + 1);
   final v = not(inner.validator);
   final nullable = rnd.nextBool();
+
   return _ValidatorSpec(nullable ? v.nullable() : v, _Kind.not, nullable);
 }
 
@@ -167,6 +180,7 @@ _ValidatorSpec _builderSpec(Random rnd, int depth) {
   // Use dynamic so we can reassign across specialized builder subtypes.
   dynamic b = builder();
   final steps = 1 + rnd.nextInt(4);
+
   for (var i = 0; i < steps; i++) {
     final choice = rnd.nextInt(6);
     try {
@@ -196,9 +210,11 @@ _ValidatorSpec _builderSpec(Random rnd, int depth) {
     }
   }
   final nullable = rnd.nextBool();
+
   if (nullable && b is BaseBuilder) b = b.nullable();
   // Cast to IValidator (builders implement it). If cast fails, fall back to trivial validator.
   final IValidator validator = (b is IValidator) ? b : isString();
+
   return _ValidatorSpec(validator, _Kind.builder, nullable);
 }
 
@@ -208,15 +224,19 @@ dynamic _randomValue(Random rnd, {required int maxDepth, int depth = 0}) {
     return _randomLeafValue(rnd);
   }
   final roll = rnd.nextInt(100);
+
   if (roll < 60) return _randomLeafValue(rnd); // primitive bias
+
   if (roll < 80) {
     final len = rnd.nextInt(4);
+
     return List.generate(
         len, (_) => _randomValue(rnd, maxDepth: maxDepth, depth: depth + 1));
   }
   // map
   final len = rnd.nextInt(4);
   final map = <String, dynamic>{};
+
   for (var i = 0; i < len; i++) {
     map['k$i'] = _randomValue(rnd, maxDepth: maxDepth, depth: depth + 1);
   }

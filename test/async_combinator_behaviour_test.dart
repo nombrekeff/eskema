@@ -15,6 +15,7 @@ IValidator asyncPass([String msg = 'ok']) => Validator((v) async {
 
 IValidator asyncFail(String msg, {String? code}) => Validator((v) async {
       await Future.delayed(const Duration(milliseconds: 5));
+
       return Result.invalid(
         v,
         expectations: [Expectation(message: msg, value: v, code: code)],
@@ -23,6 +24,7 @@ IValidator asyncFail(String msg, {String? code}) => Validator((v) async {
 
 IValidator asyncTransform(dynamic Function(dynamic) fn) => Validator((v) async {
       await Future.delayed(const Duration(milliseconds: 5));
+
       return Result.valid(fn(v));
     });
 
@@ -56,6 +58,7 @@ void main() {
       var ranLate = false;
       final late = Validator((v) async {
         ranLate = true;
+
         return Result.valid(v);
       });
       final v = any([
@@ -104,6 +107,7 @@ void main() {
       var ranLate = false;
       final late = Validator((v) async {
         ranLate = true;
+
         return Result.valid(v);
       });
       final v = asyncPass('one') & asyncFail('two') & late;

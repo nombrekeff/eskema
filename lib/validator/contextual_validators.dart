@@ -98,8 +98,11 @@ class WhenValidator extends IWhenValidator {
     bool exists = true,
   }) {
     final cond = condition.validator(map);
+
     if (cond is Future<Result>)
+
       return cond.then((cr) => _evalBranch(cr, value));
+
     return _evalBranch(cond, value);
   }
 
@@ -142,7 +145,9 @@ class WhenWithMessage extends IWhenValidator {
     bool exists = true,
   }) async {
     final res = await inner.validateWithParent(value, map, exists: exists);
+
     if (res.isValid) return res;
+
     return _failWithMsg(value, message);
   }
 

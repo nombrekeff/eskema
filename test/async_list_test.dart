@@ -4,6 +4,7 @@ import 'package:test/test.dart';
 
 IValidator delayedInt = Validator((v) async {
   await Future.delayed(const Duration(milliseconds: 5));
+
   return Result(
     isValid: v is int,
     expectations: [Expectation(message: 'int', value: v)],

@@ -4,6 +4,7 @@ import 'package:test/test.dart';
 
 IValidator asyncPassBool(bool pass) => Validator((v) async {
       await Future.delayed(const Duration(milliseconds: 5));
+
       return pass
           ? Result.valid(v)
           : Result.invalid(v,

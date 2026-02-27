@@ -1,5 +1,5 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/serialization/eskema_encoder.dart';
+import 'package:eskema/serialization/serializers/eskema/eskema_encoder.dart';
 import 'package:test/test.dart' as test;
 
 void main() {
