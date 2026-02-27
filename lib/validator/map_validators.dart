@@ -9,9 +9,11 @@ import 'base_validator.dart';
 
 /// Abstract class for schema-like map validators composed of Field/IdValidator instances.
 abstract class MapValidator<T extends Map> extends IdValidator {
+  /// Executes the [MapValidator] operation.
   MapValidator({super.id = '', super.nullable, super.name})
       : super(validator: isMap().validate);
 
+  /// The [List] property.
   List<IdValidator> get fields;
 
   @override
@@ -29,7 +31,7 @@ abstract class MapValidator<T extends Map> extends IdValidator {
     for (final field in fields) {
       final exists = value.containsKey(field.id);
       final mapValue = value[field.id];
-      
+
       if (!exists && field.isOptional) continue;
 
       if (exists && mapValue == null && field.isNullable) continue;

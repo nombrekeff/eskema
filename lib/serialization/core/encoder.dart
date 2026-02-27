@@ -9,12 +9,18 @@ abstract interface class ValidatorEncoder<T> {
 
 /// Abstract base class that provides common dispatch logic for encoding validators.
 abstract class DelegateValidatorEncoder<T> implements ValidatorEncoder<T> {
+  /// The [Map] property.
   final Map<String, String>? customSymbols;
+
+  /// The [Map] property.
   final Map<String, ArgumentEncoder>? customEncoders;
 
+  /// Executes the [DelegateValidatorEncoder] operation.
   const DelegateValidatorEncoder({this.customSymbols, this.customEncoders});
 
-  SymbolResolver get resolver => SymbolResolver(customNameToSymbol: customSymbols);
+  /// The [resolver] property.
+  SymbolResolver get resolver =>
+      SymbolResolver(customNameToSymbol: customSymbols);
 
   @override
   T encode(IValidator validator, {ValidatorRegistry? registry}) {
@@ -48,11 +54,12 @@ abstract class DelegateValidatorEncoder<T> implements ValidatorEncoder<T> {
   /// Designed to be overridden if the target format represents these differently.
   T encodeFieldModifiers(IValidator validator, T encoded);
 
-  /// Helper to encode Maps/Fields. 
+  /// Helper to encode Maps/Fields.
   T encodeMap(IdValidator field, ValidatorRegistry? registry);
 
   /// Helper to encode built-in validators, optionally utilizing the registry.
-  T encodeBuiltIn(String symbol, IValidator validator, ValidatorRegistry? registry);
+  T encodeBuiltIn(
+      String symbol, IValidator validator, ValidatorRegistry? registry);
 
   /// Helper to encode custom validators.
   T encodeCustom(IValidator validator, ValidatorRegistry? registry);

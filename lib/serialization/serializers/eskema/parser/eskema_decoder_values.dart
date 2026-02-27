@@ -85,7 +85,8 @@ extension _DecoderParserValueMethods on _DecoderParser {
       isNum = true;
     }
 
-    while (pos < input.length && isAsciiNumericOrDotCodeUnit(input.codeUnitAt(pos))) {
+    while (pos < input.length &&
+        isAsciiNumericOrDotCodeUnit(input.codeUnitAt(pos))) {
       pos++;
       isNum = true;
     }
@@ -106,7 +107,8 @@ extension _DecoderParserValueMethods on _DecoderParser {
   dynamic _tryReadLiteralIdentifier() {
     final startId = pos;
 
-    while (pos < input.length && isAsciiIdentifierCodeUnit(input.codeUnitAt(pos))) {
+    while (pos < input.length &&
+        isAsciiIdentifierCodeUnit(input.codeUnitAt(pos))) {
       pos++;
     }
 

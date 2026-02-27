@@ -4,7 +4,11 @@ import 'package:eskema/eskema.dart';
 class Expectation {
   /// The path to the value being validated. i.e. 'user.name'
   final String? path;
+
+  /// The [message] property.
   final String message;
+
+  /// The [value] property.
   final dynamic value;
 
   /// Optional machine‑readable code (e.g. 'type_mismatch', 'required_missing')
@@ -18,6 +22,7 @@ class Expectation {
   /// Optional structured metadata (e.g. {'expectedType': 'String', 'foundType': 'int'})
   final Map<String, Object?>? data;
 
+  /// Executes the [Expectation] operation.
   const Expectation({
     this.path,
     required this.message,
@@ -35,6 +40,7 @@ class Expectation {
     return message;
   }
 
+  /// Executes the [copyWith] operation.
   Expectation copyWith({
     String? path,
     String? message,
@@ -63,6 +69,7 @@ class Expectation {
     return description;
   }
 
+  /// Executes the [Map] operation.
   Map<String, Object?> toJson() => {
         'message': message,
         if (code != null) 'code': code,

@@ -1,5 +1,6 @@
 import 'package:eskema/eskema.dart';
 
+/// Executes the [resolveUniformInfixCombinatorOperator] operation.
 String resolveUniformInfixCombinatorOperator(
   List list, {
   dynamic source,
@@ -10,7 +11,8 @@ String resolveUniformInfixCombinatorOperator(
   for (var i = 1; i < list.length; i += 2) {
     final token = list[i];
     if (token is! String || !combinatorSymbols.contains(token)) {
-      throw DecodeException.invalidType('"&" or "|" operator', source ?? list, offset);
+      throw DecodeException.invalidType(
+          '"&" or "|" operator', source ?? list, offset);
     }
 
     if (operator == null) {
@@ -29,12 +31,14 @@ String resolveUniformInfixCombinatorOperator(
   }
 
   if (operator == null) {
-    throw DecodeException.invalidType('"&" or "|" operator', source ?? list, offset);
+    throw DecodeException.invalidType(
+        '"&" or "|" operator', source ?? list, offset);
   }
 
   return operator;
 }
 
+/// Executes the [composeCombinatorValidator] operation.
 IValidator composeCombinatorValidator({
   required String operator,
   required List<IValidator> operands,
@@ -49,5 +53,6 @@ IValidator composeCombinatorValidator({
     return any(operands);
   }
 
-  throw DecodeException.invalidType('"&" or "|" operator', source ?? operator, offset);
+  throw DecodeException.invalidType(
+      '"&" or "|" operator', source ?? operator, offset);
 }

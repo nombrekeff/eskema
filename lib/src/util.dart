@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+/// Executes the [prettifyValue] operation.
 String prettifyValue(dynamic value) {
   try {
     if (value is Map) return json.encode(value);
@@ -12,6 +13,7 @@ String prettifyValue(dynamic value) {
   return value.toString();
 }
 
+/// Executes the [capitalize] operation.
 String capitalize(String value) {
   if (value.isEmpty) return value;
 

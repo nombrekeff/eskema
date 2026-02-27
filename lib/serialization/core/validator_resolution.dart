@@ -1,15 +1,29 @@
 import 'package:eskema/eskema.dart';
 
+/// The [CustomFactoryMap] typedef.
 typedef CustomFactoryMap = Map<String, Function>;
+
+/// The [UnknownCustomFallbackPolicy] typedef.
 typedef UnknownCustomFallbackPolicy = bool Function(String customName);
 
+/// The [DecoderResolutionContext] class.
 class DecoderResolutionContext {
+  /// The [registry] property.
   final ValidatorRegistry registry;
+
+  /// The [symbolResolver] property.
   final SymbolResolver symbolResolver;
+
+  /// The [customFactories] property.
   final CustomFactoryMap customFactories;
+
+  /// The [strictUnknownValidators] property.
   final bool strictUnknownValidators;
+
+  /// The [allowUnknownCustomFallback] property.
   final UnknownCustomFallbackPolicy allowUnknownCustomFallback;
 
+  /// Executes the [DecoderResolutionContext] operation.
   const DecoderResolutionContext({
     required this.registry,
     required this.symbolResolver,
@@ -21,6 +35,7 @@ class DecoderResolutionContext {
 
 bool _defaultUnknownCustomFallback(String _) => true;
 
+/// Executes the [resolveDecodedValidator] operation.
 IValidator resolveDecodedValidator({
   required DecoderResolutionContext context,
   required String token,
@@ -38,7 +53,8 @@ IValidator resolveDecodedValidator({
     try {
       return context.registry.createValidator(token, args);
     } catch (_) {
-      if (!context.strictUnknownValidators && context.allowUnknownCustomFallback(token)) {
+      if (!context.strictUnknownValidators &&
+          context.allowUnknownCustomFallback(token)) {
         return isType<dynamic>().copyWith(name: token, args: args);
       }
 

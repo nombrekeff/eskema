@@ -13,6 +13,7 @@ const Set<String> simpleTypeNames = {
   'Set',
 };
 
+/// The [Set] property.
 const Set<String> noArgValidators = {
   'isTrue',
   'isFalse',
@@ -41,9 +42,22 @@ const Set<String> noArgValidators = {
   'Map',
 };
 
+/// The [Set] property.
 const Set<String> combinatorSymbols = {'&', '|'};
-const Set<String> comparisonSymbols = {'=', '>', '>=', '<', '<=', '<>', '~', 'in'};
 
+/// The [Set] property.
+const Set<String> comparisonSymbols = {
+  '=',
+  '>',
+  '>=',
+  '<',
+  '<=',
+  '<>',
+  '~',
+  'in'
+};
+
+/// The [Set] property.
 const Set<String> eskemaSymbolExtraChars = {
   '!',
   '=',
@@ -58,6 +72,7 @@ const Set<String> eskemaSymbolExtraChars = {
   '-',
 };
 
+/// The [defaultNameToSymbol] property.
 const defaultNameToSymbol = <String, String>{
   'all': '&',
   'any': '|',

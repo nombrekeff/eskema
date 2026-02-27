@@ -126,10 +126,14 @@ IValidator _jsonDecodeList(
 
   final first = list.first;
   if (first is! String) {
-    throw DecodeException.invalidType('String as first element of validator list', list, null);
+    throw DecodeException.invalidType(
+        'String as first element of validator list', list, null);
   }
 
-  final args = list.sublist(1).map((a) => _jsonResolveValue(decoder, a, context)).toList();
+  final args = list
+      .sublist(1)
+      .map((a) => _jsonResolveValue(decoder, a, context))
+      .toList();
 
   if (first.startsWith('@')) {
     return resolveDecodedValidator(

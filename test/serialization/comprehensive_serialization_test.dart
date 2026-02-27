@@ -15,14 +15,16 @@ void main() {
           final encoded = eskemaEncoder.encode(validator, registry: registry);
           final decoded = eskemaDecoder.decode(encoded, registry: registry);
           expect(decoded.name, validator.name, reason: 'Name mismatch');
-          expect(decoded.args.length, validator.args.length, reason: 'Args length mismatch');
+          expect(decoded.args.length, validator.args.length,
+              reason: 'Args length mismatch');
         });
 
         test('JSON serialization - $desc', () {
           final encoded = jsonEncoder.encode(validator, registry: registry);
           final decoded = jsonDecoder.decode(encoded, registry: registry);
           expect(decoded.name, validator.name, reason: 'Name mismatch in JSON');
-          expect(decoded.args.length, validator.args.length, reason: 'Args length mismatch in JSON');
+          expect(decoded.args.length, validator.args.length,
+              reason: 'Args length mismatch in JSON');
         });
       });
     }
@@ -50,7 +52,8 @@ void main() {
     testValidator('stringLength([isGt(5)])', stringLength([isGt(5)]));
     testValidator('stringIsOfLength(10)', stringIsOfLength(10));
     testValidator('stringContains("test")', stringContains('test'));
-    testValidator('stringMatchesPattern(RegExp("a"))', stringMatchesPattern(RegExp('a')));
+    testValidator(
+        'stringMatchesPattern(RegExp("a"))', stringMatchesPattern(RegExp('a')));
     testValidator('isLowerCase()', isLowerCase());
     testValidator('isUpperCase()', isUpperCase());
     testValidator('isEmail()', isEmail());
@@ -75,7 +78,8 @@ void main() {
     testValidator('isJsonObject()', isJsonObject());
     testValidator('isJsonArray()', isJsonArray());
     testValidator('jsonHasKeys(["a", "b"])', jsonHasKeys(['a', 'b']));
-    testValidator('jsonArrayLength(min: 1, max: 5)', jsonArrayLength(min: 1, max: 5));
+    testValidator(
+        'jsonArrayLength(min: 1, max: 5)', jsonArrayLength(min: 1, max: 5));
     testValidator('jsonArrayEvery(isString())', jsonArrayEvery(isString()));
 
     // Combinators
@@ -83,14 +87,17 @@ void main() {
     testValidator('any([isEq("A"), isEq("B")])', any([isEq('A'), isEq('B')]));
     testValidator('none([isEmail()])', none([isEmail()]));
     testValidator('not(isEmail())', not(isEmail()));
-    
+
     // Structure
     testValidator('eskema({"name": isString()})', eskema({'name': isString()}));
-    testValidator('eskemaStrict({"name": isString()})', eskemaStrict({'name': isString()}));
-    testValidator('eskemaList([isString(), isInt()])', eskemaList([isString(), isInt()]));
+    testValidator('eskemaStrict({"name": isString()})',
+        eskemaStrict({'name': isString()}));
+    testValidator(
+        'eskemaList([isString(), isInt()])', eskemaList([isString(), isInt()]));
     testValidator('listEach(isString())', listEach(isString()));
 
     // Contextual
-    testValidator('switchBy("type", {"A": isString()})', switchBy('type', {'A': isString()}));
+    testValidator('switchBy("type", {"A": isString()})',
+        switchBy('type', {'A': isString()}));
   });
 }

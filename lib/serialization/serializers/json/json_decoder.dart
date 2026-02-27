@@ -18,6 +18,7 @@ part 'parser/json_decoder_values.dart';
 /// final validator = const JsonDecoder().decode('{"name": "String", "age": [">", 0]}');
 /// ```
 class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
+  /// Executes the [JsonDecoder] operation.
   const JsonDecoder({
     super.customSymbols,
     super.strictUnknownValidators = false,

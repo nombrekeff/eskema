@@ -76,7 +76,7 @@ mixin TransformerMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
     if (chain.coercedToDouble || chain.coercedToInt) {
       return NumberBuilder(chain: chain);
     }
-    
+
     chain.setTransform(CoercionKind.double_, (child) => tr.toNum(child));
     return NumberBuilder(chain: chain);
   }

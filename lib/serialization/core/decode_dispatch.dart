@@ -1,9 +1,15 @@
 import 'package:eskema/serialization/core/decode_exception.dart';
 
+/// The [DecodeStringBranch] typedef.
 typedef DecodeStringBranch<T> = T Function(String value);
+
+/// The [DecodeListBranch] typedef.
 typedef DecodeListBranch<T> = T Function(List<dynamic> value);
+
+/// The [DecodeMapBranch] typedef.
 typedef DecodeMapBranch<T> = T Function(Map<String, dynamic> value);
 
+/// Executes the [dispatchDecodedNode] operation.
 T dispatchDecodedNode<T>({
   required dynamic node,
   required DecodeStringBranch<T> onString,
@@ -31,8 +37,10 @@ T dispatchDecodedNode<T>({
   throw DecodeException.invalidType('String, List, or Map', source, offset);
 }
 
+/// The [MatchToken] typedef.
 typedef MatchToken = bool Function(String token);
 
+/// Executes the [dispatchStructuredCall] operation.
 T dispatchStructuredCall<T>({
   required MatchToken match,
   required T Function() onGrouped,

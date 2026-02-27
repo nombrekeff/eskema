@@ -223,7 +223,9 @@ class _DecoderParser {
     final fields = <Field>[];
 
     while (!match('}')) {
-      if (pos >= input.length) throw DecodeException.missingClosingBrace(input, pos);
+      if (pos >= input.length) {
+        throw DecodeException.missingClosingBrace(input, pos);
+      }
 
       final key = parseIdentifier();
 

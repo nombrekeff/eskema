@@ -6,6 +6,7 @@ library transformers.core;
 
 import 'package:eskema/eskema.dart';
 
+/// Executes the [handleReturnPreserveValue] operation.
 IValidator handleReturnPreserveValue(IValidator validator, String? message) {
   return message != null
       ? expectPreserveValue(validator, Expectation(message: message))

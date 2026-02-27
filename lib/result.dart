@@ -12,6 +12,7 @@ const _defaultExpectation = Expectation(message: 'Validation failed');
 
 /// Represents the result of a validation.
 class Result {
+  /// Executes the [Result] operation.
   Result({
     required this.isValid,
     required this.value,
@@ -20,31 +21,44 @@ class Result {
   }) : expectations = expectations ??
             (expectation == null ? _emptyExpectations : [expectation]);
 
+  /// Executes the [valid] operation.
   Result.valid(this.value)
       : isValid = true,
         expectations = _emptyExpectations;
 
+  /// Executes the [invalid] operation.
   Result.invalid(this.value,
       {Iterable<Expectation>? expectations, Expectation? expectation})
       : isValid = false,
         expectations = expectations ??
             (expectation == null ? [_defaultExpectation] : [expectation]);
 
+  /// The [isValid] property.
   final bool isValid;
 
   /// The list of expectations for the validation result.
   /// It will contain expectations independent of the validation result.
   final Iterable<Expectation> expectations;
+
+  /// The [value] property.
   final dynamic value;
 
+  /// The [hasExpectations] property.
   bool get hasExpectations => expectations.isNotEmpty;
+
+  /// The [isNotValid] property.
   bool get isNotValid => !isValid;
 
+  /// The [firstExpectation] property.
   Expectation get firstExpectation => expectations.first;
+
+  /// The [lastExpectation] property.
   Expectation get lastExpectation => expectations.last;
 
+  /// The [expectationCount] property.
   int get expectationCount => expectations.length;
 
+  /// The [description] property.
   String? get description {
     return isValid ? null : expectations.map((e) => e.description).join(', ');
   }
@@ -69,6 +83,7 @@ class Result {
     return description ?? '';
   }
 
+  /// Executes the [Map] operation.
   Map<String, Object?> toJson() => {
         'isValid': isValid,
         if (value != null) 'value': value,

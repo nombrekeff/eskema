@@ -1,5 +1,6 @@
 import 'package:eskema/eskema.dart';
 
+/// The [EskemaMapExtension] extension.
 extension EskemaMapExtension on Map {
   /// Validates the map against the provided [validator].
   Result validate(IValidator validator) {
@@ -17,6 +18,7 @@ extension EskemaMapExtension on Map {
   }
 }
 
+/// The [EskemaListExtension] extension.
 extension EskemaListExtension on List {
   /// Returns a Validator that checks a value against the eskema provided,
   /// the eskema defines a validator for each item in the list
@@ -40,6 +42,7 @@ extension EskemaListExtension on List {
   }
 }
 
+/// The [EskemaEskValidatorOperations] extension.
 extension EskemaEskValidatorOperations on IValidator {
   /// Combines two validators with a logical AND, same as using [all]
   ///

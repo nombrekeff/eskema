@@ -32,7 +32,8 @@ IValidator stringLength(List<IValidator> validators, {String? message}) {
 /// This validator also validates that the value is a String first
 /// So there's no need to add the [isString] validator when using this validator
 IValidator stringIsOfLength(int size, {String? message}) {
-  return stringLength([isEq(size)], message: message ?? 'String length [to be $size]')
+  return stringLength([isEq(size)],
+          message: message ?? 'String length [to be $size]')
       .copyWith(name: 'stringIsOfLength', args: [size]);
 }
 
@@ -121,6 +122,7 @@ IValidator isUpperCase({String? message}) => (isString() &
         ))
     .copyWith(name: 'isUpperCase', args: []);
 
+/// Executes the [emailRegex] operation.
 final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
 /// Validates that the String is a valid email address.
@@ -137,7 +139,8 @@ final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 /// ```
 IValidator isEmail({String? message}) {
   return (isString() &
-          stringMatchesPattern(emailRegex, message: message ?? 'a valid email address'))
+          stringMatchesPattern(emailRegex,
+              message: message ?? 'a valid email address'))
       .copyWith(name: 'isEmail', args: []);
 }
 
@@ -188,8 +191,11 @@ IValidator isUrl({bool strict = false, String? message}) {
       .copyWith(name: 'isUrl', args: [strict]);
 }
 
-IValidator isStrictUrl({String? message}) => isUrl(strict: true, message: message);
+/// Executes the [isStrictUrl] operation.
+IValidator isStrictUrl({String? message}) =>
+    isUrl(strict: true, message: message);
 
+/// Executes the [uuidRegex] operation.
 final uuidRegex = RegExp(
     r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
 
@@ -209,7 +215,9 @@ final uuidRegex = RegExp(
 /// });
 /// ```
 IValidator isUuidV4({String? message}) {
-  return (isString() & stringMatchesPattern(uuidRegex, message: message ?? 'a valid UUID v4'))
+  return (isString() &
+          stringMatchesPattern(uuidRegex,
+              message: message ?? 'a valid UUID v4'))
       .copyWith(name: 'isUuidV4', args: []);
 }
 

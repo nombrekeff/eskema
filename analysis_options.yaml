@@ -14,6 +14,7 @@ analyzer:
 
 linter:
   rules:
+    public_member_api_docs: true
     prefer_single_quotes: true
     prefer_const_constructors: true
     prefer_final_locals: true

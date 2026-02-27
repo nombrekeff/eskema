@@ -2,8 +2,8 @@ import 'package:eskema/eskema.dart';
 
 /// Encodes an Eskema IValidator into its compact string representation.
 class EskemaEncoder extends DelegateValidatorEncoder<String> {
+  /// Executes the [EskemaEncoder] operation.
   const EskemaEncoder({super.customSymbols, super.customEncoders});
-
 
   @override
   String encodeMap(IdValidator field, ValidatorRegistry? registry) {
@@ -12,7 +12,8 @@ class EskemaEncoder extends DelegateValidatorEncoder<String> {
 
       for (var i = 0; i < field.fields.length; i++) {
         final f = field.fields[i];
-        buffer.write('${f.id}: ${encodeFieldModifiers(f, encodeMap(f, registry))}');
+        buffer.write(
+            '${f.id}: ${encodeFieldModifiers(f, encodeMap(f, registry))}');
 
         if (i < field.fields.length - 1) buffer.write(', ');
       }
@@ -23,7 +24,9 @@ class EskemaEncoder extends DelegateValidatorEncoder<String> {
     }
 
     if (field is Field) {
-      return field.validators.map((v) => encodeInternal(v, registry)).join(' & ');
+      return field.validators
+          .map((v) => encodeInternal(v, registry))
+          .join(' & ');
     }
 
     return encodeInternal(field, registry);
@@ -39,7 +42,8 @@ class EskemaEncoder extends DelegateValidatorEncoder<String> {
   }
 
   @override
-  String encodeBuiltIn(String symbol, IValidator validator, ValidatorRegistry? registry) {
+  String encodeBuiltIn(
+      String symbol, IValidator validator, ValidatorRegistry? registry) {
     if (validator.args.isEmpty) {
       return symbol;
     }
@@ -48,13 +52,15 @@ class EskemaEncoder extends DelegateValidatorEncoder<String> {
       final subs = validator.args.cast<IValidator>();
 
       if (subs.isEmpty) return symbol;
-      final joined = subs.map((v) => encodeInternal(v, registry)).join(' $symbol ');
+      final joined =
+          subs.map((v) => encodeInternal(v, registry)).join(' $symbol ');
 
       return '($joined)';
     }
 
     final customEncoder = customEncoders?[validator.name];
-    final argsToEncode = customEncoder != null ? customEncoder(validator) : validator.args;
+    final argsToEncode =
+        customEncoder != null ? customEncoder(validator) : validator.args;
 
     final argsStr = argsToEncode.map((v) {
       return encodeValue(v, registry);
@@ -71,7 +77,8 @@ class EskemaEncoder extends DelegateValidatorEncoder<String> {
 
   @override
   String encodeCustom(IValidator validator, ValidatorRegistry? registry) {
-    final argsStr = validator.args.map((v) => encodeValue(v, registry)).join(', ');
+    final argsStr =
+        validator.args.map((v) => encodeValue(v, registry)).join(', ');
 
     if (argsStr.isEmpty) return '@${validator.name}';
 
@@ -89,8 +96,9 @@ class EskemaEncoder extends DelegateValidatorEncoder<String> {
     }
 
     if (value is Map) {
-      final entries =
-          value.entries.map((e) => '${e.key}: ${encodeValue(e.value, registry)}').join(', ');
+      final entries = value.entries
+          .map((e) => '${e.key}: ${encodeValue(e.value, registry)}')
+          .join(', ');
 
       return '{$entries}';
     }

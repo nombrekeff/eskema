@@ -6,7 +6,8 @@ const _jsonNestedValueOptions = NestedValueResolutionOptions(
   shouldDecodeListAsValidator: _shouldDecodeJsonListAsValidator,
 );
 
-bool _shouldDecodeJsonListAsValidator(List value, DecoderResolutionContext context) {
+bool _shouldDecodeJsonListAsValidator(
+    List value, DecoderResolutionContext context) {
   if (value.isEmpty || value.first is! String) {
     return false;
   }

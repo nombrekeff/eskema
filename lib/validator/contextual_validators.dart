@@ -6,12 +6,15 @@ import 'package:eskema/validator/base_validator.dart';
 
 // Internal micro-helper to reduce duplication.
 @pragma('vm:prefer-inline')
-Result _failWithMsg(dynamic value, String message) =>
-    Result.invalid(value, expectation: Expectation(message: message, value: value));
+Result _failWithMsg(dynamic value, String message) => Result.invalid(value,
+    expectation: Expectation(message: message, value: value));
 
+/// The [ResolveValidator] class.
 class ResolveValidator extends IWhenValidator {
+  /// Executes the [Function] operation.
   final IValidator? Function(Map parentObject) resolver;
 
+  /// Executes the [ResolveValidator] operation.
   ResolveValidator({
     required this.resolver,
     super.nullable,
@@ -24,7 +27,8 @@ class ResolveValidator extends IWhenValidator {
   Result validate(dynamic value, {bool exists = true}) => Result.invalid(
         value,
         expectation: Expectation(
-          message: '`resolve` validator can only be used inside an `eskema` map validator',
+          message:
+              '`resolve` validator can only be used inside an `eskema` map validator',
           value: value,
         ),
       );
@@ -71,11 +75,18 @@ class ResolveValidator extends IWhenValidator {
   FutureOr<Result> validator(value) => throw UnimplementedError();
 }
 
+/// The [WhenValidator] class.
 class WhenValidator extends IWhenValidator {
+  /// The [condition] property.
   final IValidator condition;
+
+  /// The [then] property.
   final IValidator then;
+
+  /// The [otherwise] property.
   final IValidator otherwise;
 
+  /// Executes the [WhenValidator] operation.
   WhenValidator({
     required this.condition,
     required this.then,
@@ -90,7 +101,8 @@ class WhenValidator extends IWhenValidator {
   Result validate(dynamic value, {bool exists = true}) => Result.invalid(
         value,
         expectation: Expectation(
-          message: '`when` validator can only be used inside an `eskema` map validator',
+          message:
+              '`when` validator can only be used inside an `eskema` map validator',
           value: value,
         ),
       );
@@ -111,7 +123,9 @@ class WhenValidator extends IWhenValidator {
   }
 
   FutureOr<Result> _evalBranch(Result conditionResult, dynamic value) =>
-      conditionResult.isValid ? then.validator(value) : otherwise.validator(value);
+      conditionResult.isValid
+          ? then.validator(value)
+          : otherwise.validator(value);
 
   @override
   IValidator copyWith({
@@ -137,9 +151,15 @@ class WhenValidator extends IWhenValidator {
   FutureOr<Result> validator(value) => throw UnimplementedError();
 }
 
+/// The [WhenWithMessage] class.
 class WhenWithMessage extends IWhenValidator {
+  /// The [inner] property.
   final WhenValidator inner;
+
+  /// The [message] property.
   final String message;
+
+  /// Executes the [WhenWithMessage] operation.
   WhenWithMessage(this.inner, this.message)
       : super(
           nullable: inner.isNullable,
@@ -162,10 +182,15 @@ class WhenWithMessage extends IWhenValidator {
   }
 
   @override
-  Result validate(dynamic value, {bool exists = true}) => _failWithMsg(value, message);
+  Result validate(dynamic value, {bool exists = true}) =>
+      _failWithMsg(value, message);
 
   @override
-  IValidator copyWith({bool? nullable, bool? optional, String? name, List<dynamic>? args}) =>
+  IValidator copyWith(
+          {bool? nullable,
+          bool? optional,
+          String? name,
+          List<dynamic>? args}) =>
       WhenWithMessage(
         inner.copyWith(
           nullable: nullable,

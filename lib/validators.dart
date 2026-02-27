@@ -58,6 +58,7 @@ export 'package:eskema/validators/contextual.dart';
 export 'package:eskema/validators/json.dart';
 export 'package:eskema/validators/decode.dart';
 
+/// Executes the [validator] operation.
 Validator validator(
   bool Function(dynamic value) comparisonFn,
   Expectation Function(dynamic value) errorFn, {

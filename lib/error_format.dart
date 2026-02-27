@@ -92,6 +92,7 @@ String buildValidationMessage(
 
 /// Extension to access detailed formatting directly on [Result].
 extension ResultFormatting on Result {
+  /// Executes the [detailed] operation.
   String detailed({int maxValueLength = 120, int maxErrorsToList = 20}) =>
       buildValidationMessage(
         this,

@@ -9,7 +9,8 @@ DateTime _asDateTime(dynamic value) {
     return DateTime.parse(value);
   }
 
-  throw ArgumentError('Expected DateTime or ISO string, got: ${value.runtimeType}');
+  throw ArgumentError(
+      'Expected DateTime or ISO string, got: ${value.runtimeType}');
 }
 
 bool _boolArg(List<dynamic> args, int index, bool fallback) {
@@ -47,7 +48,8 @@ IValidator _resolveTypeValidator(String typeName) {
   return isType<dynamic>().copyWith(name: 'isType', args: [typeName]);
 }
 
-void _registerMany(ValidatorRegistry registry, Map<String, ValidatorFactory> factories) {
+void _registerMany(
+    ValidatorRegistry registry, Map<String, ValidatorFactory> factories) {
   for (final entry in factories.entries) {
     registry.register(name: entry.key, factory: entry.value);
   }
@@ -57,7 +59,8 @@ void _registerMany(ValidatorRegistry registry, Map<String, ValidatorFactory> fac
 ///
 /// Custom registries can be built by instantiating new `ValidatorRegistry`
 /// objects, or this standard default can be expanded via `defaultRegistry.merge(...)`.
-final ValidatorRegistry defaultRegistry = ValidatorRegistry()..registerDefaults();
+final ValidatorRegistry defaultRegistry = ValidatorRegistry()
+  ..registerDefaults();
 
 extension _ValidatorRegistryDefaults on ValidatorRegistry {
   /// Defines all standard symbols, names, and instantiation rules.
@@ -68,14 +71,15 @@ extension _ValidatorRegistryDefaults on ValidatorRegistry {
       'none': (args) => none(args.cast<IValidator>()),
       'not': (args) => not(args[0] as IValidator),
       'throwInstead': (args) => throwInstead(args[0] as IValidator),
-      'withExpectation':
-          (args) => withExpectation(args[0] as IValidator, args[1] as Expectation),
+      'withExpectation': (args) =>
+          withExpectation(args[0] as IValidator, args[1] as Expectation),
       'when': (args) => when(
             args[0] as IValidator,
             then: args[1] as IValidator,
             otherwise: args[2] as IValidator,
           ),
-      'switchBy': (args) => switchBy(args[0] as String, args[1] as Map<String, IValidator>),
+      'switchBy': (args) =>
+          switchBy(args[0] as String, args[1] as Map<String, IValidator>),
       'isEq': (args) => isEq(args[0]),
       'isDeepEq': (args) => isDeepEq(args[0]),
       'isGt': (args) => isGt<num>(args[0] as num),
@@ -88,7 +92,8 @@ extension _ValidatorRegistryDefaults on ValidatorRegistry {
       'stringLength': (args) => stringLength(args.cast<IValidator>()),
       'stringIsOfLength': (args) => stringIsOfLength(args[0] as int),
       'stringContains': (args) => stringContains(args[0] as String),
-      'stringMatchesPattern': (args) => stringMatchesPattern(RegExp(args[0] as String)),
+      'stringMatchesPattern': (args) =>
+          stringMatchesPattern(RegExp(args[0] as String)),
       'isUrl': (args) => isUrl(strict: _boolArg(args, 0, false)),
       'isDateBefore': (args) => isDateBefore(
             _asDateTime(args[0]),
@@ -106,19 +111,22 @@ extension _ValidatorRegistryDefaults on ValidatorRegistry {
           ),
       'isDateSameDay': (args) => isDateSameDay(_asDateTime(args[0])),
       'isDateInPast': (args) => isDateInPast(allowNow: _boolArg(args, 0, true)),
-      'isDateInFuture': (args) => isDateInFuture(allowNow: _boolArg(args, 0, true)),
+      'isDateInFuture': (args) =>
+          isDateInFuture(allowNow: _boolArg(args, 0, true)),
       'jsonHasKeys': (args) => jsonHasKeys(args.cast<String>()),
-      'jsonArrayLength':
-          (args) => jsonArrayLength(min: args[0] as int?, max: args[1] as int?),
+      'jsonArrayLength': (args) =>
+          jsonArrayLength(min: args[0] as int?, max: args[1] as int?),
       'jsonArrayEvery': (args) => jsonArrayEvery(args[0] as IValidator),
       'containsKey': (args) => containsKey(args[0] as String),
       'containsKeys': (args) => containsKeys(args.cast<String>()),
       'containsValues': containsValues,
       'eskema': (args) => eskema(args[0] as Map<String, IValidator>),
-      'eskemaStrict': (args) => eskemaStrict(args[0] as Map<String, IValidator>),
+      'eskemaStrict': (args) =>
+          eskemaStrict(args[0] as Map<String, IValidator>),
       'eskemaList': (args) => eskemaList(args[0] as List<IValidator>),
       'listEach': (args) => listEach(args[0] as IValidator),
-      'isType': (args) => _resolveTypeValidator(args.isNotEmpty ? args[0].toString() : ''),
+      'isType': (args) =>
+          _resolveTypeValidator(args.isNotEmpty ? args[0].toString() : ''),
     });
 
     _registerMany(this, {

@@ -1,13 +1,24 @@
 import 'package:eskema/serialization/core/validator_resolution.dart';
 
+/// The [DecodeNodeCallback] typedef.
 typedef DecodeNodeCallback = dynamic Function(dynamic node);
-typedef ShouldDecodeListCallback = bool Function(List value, DecoderResolutionContext context);
 
+/// The [ShouldDecodeListCallback] typedef.
+typedef ShouldDecodeListCallback = bool Function(
+    List value, DecoderResolutionContext context);
+
+/// The [NestedValueResolutionOptions] class.
 class NestedValueResolutionOptions {
+  /// The [unwrapSingleQuotedStrings] property.
   final bool unwrapSingleQuotedStrings;
+
+  /// The [tryDecodeMapsAsValidators] property.
   final bool tryDecodeMapsAsValidators;
+
+  /// The [shouldDecodeListAsValidator] property.
   final ShouldDecodeListCallback? shouldDecodeListAsValidator;
 
+  /// Executes the [NestedValueResolutionOptions] operation.
   const NestedValueResolutionOptions({
     this.unwrapSingleQuotedStrings = false,
     this.tryDecodeMapsAsValidators = true,
@@ -15,6 +26,7 @@ class NestedValueResolutionOptions {
   });
 }
 
+/// Executes the [resolveNestedDecodedValue] operation.
 dynamic resolveNestedDecodedValue({
   required dynamic value,
   required DecoderResolutionContext context,
@@ -33,7 +45,8 @@ dynamic resolveNestedDecodedValue({
   }
 
   if (value is List) {
-    final shouldDecode = options.shouldDecodeListAsValidator?.call(value, context) ?? false;
+    final shouldDecode =
+        options.shouldDecodeListAsValidator?.call(value, context) ?? false;
     if (shouldDecode) {
       return decodeNode(value);
     }

@@ -85,14 +85,29 @@ RootBuilder $builder = $b;
 
 /// Type specific builders
 StringBuilder $string({String? message}) => $b.string(message: message);
+
+/// Executes the [int] operation.
 IntBuilder $int({String? message}) => $b.int_(message: message);
+
+/// Executes the [double] operation.
 DoubleBuilder $double({String? message}) => $b.double_(message: message);
+
+/// Executes the [number] operation.
 NumberBuilder $number({String? message}) => $b.number(message: message);
+
+/// Executes the [bool] operation.
 BoolBuilder $bool({String? message}) => $b.bool(message: message);
 
+/// Executes the [MapBuilder] operation.
 MapBuilder<K, V> $map<K, V>({String? message}) =>
     $b.map<K, V>(message: message);
+
+/// Executes the [IterableBuilder] operation.
 IterableBuilder<T> $iterable<T>({String? message}) =>
     $b.iterable<T>(message: message);
+
+/// Executes the [ListBuilder] operation.
 ListBuilder<T> $list<T>({String? message}) => $b.list<T>(message: message);
+
+/// Executes the [SetBuilder] operation.
 SetBuilder<T> $set<T>({String? message}) => $b.set<T>(message: message);

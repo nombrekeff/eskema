@@ -1,5 +1,6 @@
 import 'symbols.dart';
 
+/// Executes the [isAsciiIdentifierCodeUnit] operation.
 bool isAsciiIdentifierCodeUnit(int codeUnit) {
   return (codeUnit >= 48 && codeUnit <= 57) ||
       (codeUnit >= 65 && codeUnit <= 90) ||
@@ -7,10 +8,12 @@ bool isAsciiIdentifierCodeUnit(int codeUnit) {
       codeUnit == 95;
 }
 
+/// Executes the [isAsciiNumericOrDotCodeUnit] operation.
 bool isAsciiNumericOrDotCodeUnit(int codeUnit) {
   return (codeUnit >= 48 && codeUnit <= 57) || codeUnit == 46;
 }
 
+/// Executes the [isEskemaValueStartCodeUnit] operation.
 bool isEskemaValueStartCodeUnit(int codeUnit) {
   return (codeUnit >= 48 && codeUnit <= 57) ||
       codeUnit == 45 ||
@@ -24,6 +27,7 @@ bool isEskemaValueStartCodeUnit(int codeUnit) {
       (codeUnit >= 97 && codeUnit <= 122);
 }
 
+/// Executes the [readEskemaSymbolToken] operation.
 ({String token, int nextPos}) readEskemaSymbolToken({
   required String input,
   required int startPos,

@@ -44,11 +44,16 @@ void main() {
   );
 
   print('\n--- Decoded schema validator ---');
-  final validUser = {'username': 'john_doe', 'email': 'john@example.com', 'age': 25};
+  final validUser = {
+    'username': 'john_doe',
+    'email': 'john@example.com',
+    'age': 25
+  };
   final invalidUser = {'username': 'john', 'email': 'not-email', 'age': 12};
 
   print('Valid user: ${decodedSchema.validate(validUser).isValid}'); // true
-  print('Invalid user: ${decodedSchema.validate(invalidUser).isValid}'); // false
+  print(
+      'Invalid user: ${decodedSchema.validate(invalidUser).isValid}'); // false
 
   // ── Roundtrip ─────────────────────────────────────────────
   print('\n--- Roundtrip demo ---');

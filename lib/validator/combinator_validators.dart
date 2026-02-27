@@ -11,10 +11,12 @@ import 'base_validator.dart';
 
 // Internal micro-helper to reduce duplication.
 @pragma('vm:prefer-inline')
-Result _failWithMsg(dynamic value, String message) =>
-    Result.invalid(value, expectation: Expectation(message: message, value: value));
+Result _failWithMsg(dynamic value, String message) => Result.invalid(value,
+    expectation: Expectation(message: message, value: value));
 
+/// The [MultiValidatorBase] class.
 abstract class MultiValidatorBase extends IValidator {
+  /// Executes the [MultiValidatorBase] operation.
   MultiValidatorBase(
     this.validators, {
     super.nullable,
@@ -24,7 +26,10 @@ abstract class MultiValidatorBase extends IValidator {
     super.args = const [],
   });
 
+  /// The [Iterable] property.
   final Iterable<IValidator> validators;
+
+  /// The [message] property.
   final String? message;
 
   /// Configuration for how this validator should behave
@@ -40,7 +45,8 @@ abstract class MultiValidatorBase extends IValidator {
       final result = validators.elementAt(i).validator(inputValue);
 
       if (result is Future<Result>) {
-        return _continueAsync(result, i + 1, currentValue, value, aggregatedExpectations);
+        return _continueAsync(
+            result, i + 1, currentValue, value, aggregatedExpectations);
       }
 
       final (shouldStop, stopResult) =
@@ -75,7 +81,8 @@ abstract class MultiValidatorBase extends IValidator {
     }
 
     for (var i = nextIndex; i < validators.length; i++) {
-      final nextInputValue = _config.chainsValues ? currentValue : originalValue;
+      final nextInputValue =
+          _config.chainsValues ? currentValue : originalValue;
       final result = await validators.elementAt(i).validator(nextInputValue);
 
       final (shouldStop2, stopResult2) =
@@ -87,16 +94,18 @@ abstract class MultiValidatorBase extends IValidator {
     }
 
     return _buildFinalResult(
-        _config.chainsValues ? currentValue : originalValue, aggregatedExpectations);
+        _config.chainsValues ? currentValue : originalValue,
+        aggregatedExpectations);
   }
 
   /// Processes a validation result and determines if validation should continue.
   /// Returns (shouldStop, result) tuple.
-  (bool, Result?) _processResult(
-      Result result, dynamic inputValue, List<Expectation> aggregatedExpectations);
+  (bool, Result?) _processResult(Result result, dynamic inputValue,
+      List<Expectation> aggregatedExpectations);
 
   /// Builds the final result when all validators have been processed.
-  Result _buildFinalResult(dynamic finalValue, List<Expectation> aggregatedExpectations);
+  Result _buildFinalResult(
+      dynamic finalValue, List<Expectation> aggregatedExpectations);
 
   @override
   MultiValidatorBase copyWith({
@@ -158,13 +167,17 @@ class _ValidatorConfig {
   );
 
   static List<Expectation> _transformToNot(List<Expectation> expectations) =>
-      expectations.map((exp) => exp.copyWith(message: 'not ${exp.message}')).toList();
+      expectations
+          .map((exp) => exp.copyWith(message: 'not ${exp.message}'))
+          .toList();
 }
 
 /// Succeeds if all child validators succeed. Fails on the first failure or collects all failures.
 class AllValidator extends MultiValidatorBase {
+  /// The [collecting] property.
   final bool collecting;
 
+  /// Executes the [AllValidator] operation.
   AllValidator(
     super.validators, {
     super.nullable,
@@ -180,8 +193,8 @@ class AllValidator extends MultiValidatorBase {
       collecting ? _ValidatorConfig.allCollecting : _ValidatorConfig.all;
 
   @override
-  (bool, Result?) _processResult(
-      Result result, dynamic inputValue, List<Expectation> aggregatedExpectations) {
+  (bool, Result?) _processResult(Result result, dynamic inputValue,
+      List<Expectation> aggregatedExpectations) {
     if (collecting) {
       // Collecting mode: collect all failures, never short-circuit
       if (result.isNotValid) {
@@ -191,7 +204,8 @@ class AllValidator extends MultiValidatorBase {
     } else {
       // Standard mode: short-circuit on first failure
       if (result.isNotValid) {
-        final failResult = message != null ? _failWithMsg(result.value, message!) : result;
+        final failResult =
+            message != null ? _failWithMsg(result.value, message!) : result;
 
         return (true, failResult);
       }
@@ -200,7 +214,8 @@ class AllValidator extends MultiValidatorBase {
   }
 
   @override
-  Result _buildFinalResult(dynamic finalValue, List<Expectation> aggregatedExpectations) {
+  Result _buildFinalResult(
+      dynamic finalValue, List<Expectation> aggregatedExpectations) {
     if (collecting) {
       // Collecting mode: return failures if any, success otherwise
       if (aggregatedExpectations.isNotEmpty) {
@@ -211,7 +226,9 @@ class AllValidator extends MultiValidatorBase {
       return Result.valid(finalValue);
     } else {
       // Standard mode: message forces failure even if all children pass
-      return message != null ? _failWithMsg(finalValue, message!) : Result.valid(finalValue);
+      return message != null
+          ? _failWithMsg(finalValue, message!)
+          : Result.valid(finalValue);
     }
   }
 
@@ -237,16 +254,21 @@ class AllValidator extends MultiValidatorBase {
 
 /// Succeeds if at least one child validator succeeds. Fails if all fail.
 class AnyValidator extends MultiValidatorBase {
+  /// Executes the [AnyValidator] operation.
   AnyValidator(super.validators,
-      {super.nullable, super.optional, super.message, super.name = 'any', List<dynamic>? args})
+      {super.nullable,
+      super.optional,
+      super.message,
+      super.name = 'any',
+      List<dynamic>? args})
       : super(args: args ?? List.from(validators));
 
   @override
   _ValidatorConfig get _config => _ValidatorConfig.any;
 
   @override
-  (bool, Result?) _processResult(
-      Result result, dynamic inputValue, List<Expectation> aggregatedExpectations) {
+  (bool, Result?) _processResult(Result result, dynamic inputValue,
+      List<Expectation> aggregatedExpectations) {
     if (result.isValid) {
       // Short-circuit on first success
       return (true, result);
@@ -258,7 +280,8 @@ class AnyValidator extends MultiValidatorBase {
   }
 
   @override
-  Result _buildFinalResult(dynamic finalValue, List<Expectation> aggregatedExpectations) {
+  Result _buildFinalResult(
+      dynamic finalValue, List<Expectation> aggregatedExpectations) {
     // If we get here, all validators failed
     return message != null
         ? _failWithMsg(finalValue, message!)
@@ -286,16 +309,21 @@ class AnyValidator extends MultiValidatorBase {
 
 /// Succeeds if all child validators fail. Fails if any succeed.
 class NoneValidator extends MultiValidatorBase {
+  /// Executes the [NoneValidator] operation.
   NoneValidator(super.validators,
-      {super.nullable, super.optional, super.message, super.name = 'none', List<dynamic>? args})
+      {super.nullable,
+      super.optional,
+      super.message,
+      super.name = 'none',
+      List<dynamic>? args})
       : super(args: args ?? List.from(validators));
 
   @override
   _ValidatorConfig get _config => _ValidatorConfig.none;
 
   @override
-  (bool, Result?) _processResult(
-      Result result, dynamic inputValue, List<Expectation> aggregatedExpectations) {
+  (bool, Result?) _processResult(Result result, dynamic inputValue,
+      List<Expectation> aggregatedExpectations) {
     // For `none`, collect expectations from VALID results (passing validators)
     // and transform them to "not X" messages
     if (result.isValid) {
@@ -305,8 +333,8 @@ class NoneValidator extends MultiValidatorBase {
           ? [Expectation(message: 'passed', value: inputValue)]
           : result.expectations;
 
-      final notExpectations =
-          source.map((exp) => exp.copyWith(message: 'not ${exp.message}', value: inputValue));
+      final notExpectations = source.map((exp) =>
+          exp.copyWith(message: 'not ${exp.message}', value: inputValue));
       aggregatedExpectations.addAll(notExpectations);
     }
 
@@ -315,7 +343,8 @@ class NoneValidator extends MultiValidatorBase {
   }
 
   @override
-  Result _buildFinalResult(dynamic finalValue, List<Expectation> aggregatedExpectations) {
+  Result _buildFinalResult(
+      dynamic finalValue, List<Expectation> aggregatedExpectations) {
     // If we have any passing validators (which add their expectations to the aggregated list)
     // then `none` should fail and return those expectations
     if (aggregatedExpectations.isNotEmpty) {
@@ -370,7 +399,9 @@ abstract class _SingleChildValidator extends IValidator {
   Result _processResult(Result result, dynamic value);
 }
 
+/// The [NotValidator] class.
 class NotValidator extends _SingleChildValidator {
+  /// Executes the [NotValidator] operation.
   NotValidator(super.child,
       {super.nullable,
       super.optional,
@@ -392,8 +423,8 @@ class NotValidator extends _SingleChildValidator {
             ? [Expectation(message: 'passed', value: value)]
             : result.expectations;
 
-        final notExpectations = source.map((exp) =>
-            exp.copyWith(message: util.capitalize('not ${exp.message}'), value: value));
+        final notExpectations = source.map((exp) => exp.copyWith(
+            message: util.capitalize('not ${exp.message}'), value: value));
 
         return Result.invalid(value, expectations: notExpectations);
       }
@@ -420,8 +451,11 @@ class NotValidator extends _SingleChildValidator {
       );
 }
 
+/// The [ThrowInsteadValidator] class.
 class ThrowInsteadValidator extends _SingleChildValidator {
-  ThrowInsteadValidator(super.child, {super.name = 'throwInstead', super.args = const []})
+  /// Executes the [ThrowInsteadValidator] operation.
+  ThrowInsteadValidator(super.child,
+      {super.name = 'throwInstead', super.args = const []})
       : super(nullable: child.isNullable, optional: child.isOptional);
 
   @override
@@ -432,12 +466,20 @@ class ThrowInsteadValidator extends _SingleChildValidator {
   }
 
   @override
-  IValidator copyWith({bool? nullable, bool? optional, String? name, List<dynamic>? args}) =>
-      ThrowInsteadValidator(child.copyWith(nullable: nullable, optional: optional),
-          name: name ?? this.name, args: args ?? this.args);
+  IValidator copyWith(
+          {bool? nullable,
+          bool? optional,
+          String? name,
+          List<dynamic>? args}) =>
+      ThrowInsteadValidator(
+          child.copyWith(nullable: nullable, optional: optional),
+          name: name ?? this.name,
+          args: args ?? this.args);
 }
 
+/// The [Field] class.
 class Field extends IdValidator {
+  /// Executes the [Field] operation.
   Field({
     required this.validators,
     super.id,
@@ -447,6 +489,7 @@ class Field extends IdValidator {
     super.args,
   }) : super(validator: (value) => all(validators).validator(value));
 
+  /// The [List] property.
   final List<IValidator> validators;
 
   @override

@@ -51,24 +51,30 @@ void main() {
   print('\n--- Decoded schema ---');
   print(
     "{'age': 10, 'name': 'Bob'} valid: ${decodedSchema.validate({
-      'age': 10,
-      'name': 'Bob',
-    }).isValid}",
+          'age': 10,
+          'name': 'Bob',
+        }).isValid}",
   ); // true
   print(
     "{'age': 0, 'name': 'Bob'}  valid: ${decodedSchema.validate({
-      'age': 0,
-      'name': 'Bob',
-    }).isValid}",
+          'age': 0,
+          'name': 'Bob',
+        }).isValid}",
   ); // false
 
   // Decode with nullable modifier
   final nullableSchema = decoder.decode('{"age": ["?", [">", 0]]}');
 
   print('\n--- Nullable field ---');
-  print("{'age': 5}     valid: ${nullableSchema.validate({'age': 5}).isValid}"); // true
-  print("{'age': null}  valid: ${nullableSchema.validate({'age': null}).isValid}"); // true
-  print("{'age': 0}     valid: ${nullableSchema.validate({'age': 0}).isValid}"); // false
+  print("{'age': 5}     valid: ${nullableSchema.validate({
+        'age': 5
+      }).isValid}"); // true
+  print("{'age': null}  valid: ${nullableSchema.validate({
+        'age': null
+      }).isValid}"); // true
+  print("{'age': 0}     valid: ${nullableSchema.validate({
+        'age': 0
+      }).isValid}"); // false
 
   // ── Roundtrip ─────────────────────────────────────────────
   print('\n--- Roundtrip demo ---');

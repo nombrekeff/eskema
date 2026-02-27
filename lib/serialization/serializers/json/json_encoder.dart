@@ -4,6 +4,7 @@ import 'package:eskema/eskema.dart';
 
 /// Encodes an Eskema IValidator into a JSON string representation.
 class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
+  /// Executes the [JsonEncoder] operation.
   const JsonEncoder({super.customSymbols, super.customEncoders});
 
   @override
@@ -11,6 +12,7 @@ class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
     final activeRegistry = registry ?? defaultRegistry;
     return convert.jsonEncode(super.encodeInternal(validator, activeRegistry));
   }
+
   @override
   dynamic encodeMap(IdValidator field, ValidatorRegistry? registry) {
     if (field is MapValidator) {
@@ -46,7 +48,8 @@ class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
   }
 
   @override
-  dynamic encodeBuiltIn(String symbol, IValidator validator, ValidatorRegistry? registry) {
+  dynamic encodeBuiltIn(
+      String symbol, IValidator validator, ValidatorRegistry? registry) {
     if (validator.args.isEmpty) {
       return [symbol];
     }
@@ -70,7 +73,8 @@ class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
     }
 
     final customEncoder = customEncoders?[validator.name];
-    final argsToEncode = customEncoder != null ? customEncoder(validator) : validator.args;
+    final argsToEncode =
+        customEncoder != null ? customEncoder(validator) : validator.args;
 
     final list = <dynamic>[symbol];
     for (final v in argsToEncode) {

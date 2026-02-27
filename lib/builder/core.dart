@@ -142,6 +142,7 @@ class Chain {
     return core;
   }
 
+  /// Executes the [copyWith] operation.
   Chain copyWith() {
     final c = Chain();
     c._preValidators = _preValidators?.copyWith();
@@ -154,15 +155,28 @@ class Chain {
   }
 
   // Readable getters for coercion state (used by transformer mixin).
+  /// Executes the [coercedToInt] operation.
   bool get coercedToInt => _isKind(CoercionKind.int_);
+
+  /// Executes the [coercedToDouble] operation.
   bool get coercedToDouble => _isKind(CoercionKind.double_);
+
+  /// Executes the [coercedToBool] operation.
   bool get coercedToBool => _isKind(CoercionKind.bool_);
+
+  /// Executes the [coercedToString] operation.
   bool get coercedToString => _isKind(CoercionKind.string_);
+
+  /// Executes the [coercedToDateTime] operation.
   bool get coercedToDateTime => _isKind(CoercionKind.datetime_);
+
+  /// Executes the [coercedToJson] operation.
   bool get coercedToJson => _isKind(CoercionKind.json_);
 }
 
 /// Kind of coercion applied to the chain (single pivot allowed).
+/// The [CoercionKind] enum.
+// ignore: public_member_api_docs
 enum CoercionKind { int_, double_, bool_, string_, datetime_, json_, custom }
 
 /// Represents a custom pivot for extensibility.
@@ -182,10 +196,16 @@ enum CoercionKind { int_, double_, bool_, string_, datetime_, json_, custom }
 /// final validator = v().use(MyPivot()).lengthMin(1).build();
 /// ```
 class CustomPivot {
+  /// Executes the [Function] operation.
   final IValidator Function(IValidator child) transformer;
+
+  /// The [dropPre] property.
   final bool dropPre;
+
+  /// The [kind] property.
   final String? kind; // optional, for documentation
 
+  /// Executes the [CustomPivot] operation.
   CustomPivot(this.transformer, {this.dropPre = true, this.kind});
 }
 
@@ -213,6 +233,7 @@ class CustomPivot {
 /// final optionalField = v().string().optional().lengthMin(2).build();
 /// ```
 class BaseBuilder<B extends BaseBuilder<B, T>, T> extends IValidator {
+  /// Executes the [BaseBuilder] operation.
   BaseBuilder(
       {bool negated = false, Chain? chain, bool? optional, bool? nullable})
       : chain = chain ?? Chain(),
@@ -220,16 +241,21 @@ class BaseBuilder<B extends BaseBuilder<B, T>, T> extends IValidator {
         _optional = optional ?? false,
         _nullable = nullable ?? false;
 
+  /// The [chain] property.
   final Chain chain;
   bool _negated;
   bool _optional;
   bool _nullable;
 
+  /// The [negated] property.
   bool get negated => _negated;
+
+  /// Executes the [negated] operation.
   set negated(val) {
     _negated = val;
   }
 
+  /// The [self] property.
   B get self => this as B;
 
   /// Return a negated version of the builder

@@ -31,18 +31,22 @@ void main() {
     });
 
     test.test('decodes infix | operator', () {
-      final val = const JsonDecoder().decode('[["=", "\'A\'"], "|", ["=", "\'B\'"]]');
+      final val =
+          const JsonDecoder().decode('[["=", "\'A\'"], "|", ["=", "\'B\'"]]');
       test.expect(val.validate('A').isValid, test.isTrue);
       test.expect(val.validate('B').isValid, test.isTrue);
       test.expect(val.validate('C').isValid, test.isFalse);
     });
 
     test.test('decodes map validators', () {
-      final val = const JsonDecoder()
-          .decode('{"age": [">", 0], "name": [["String"], "&", ["~", "\'B\'"]]}');
-      test.expect(val.validate({'age': 10, 'name': 'Bob'}).isValid, test.isTrue);
-      test.expect(val.validate({'age': 0, 'name': 'Bob'}).isValid, test.isFalse);
-      test.expect(val.validate({'age': 10, 'name': 'Alice'}).isValid, test.isFalse);
+      final val = const JsonDecoder().decode(
+          '{"age": [">", 0], "name": [["String"], "&", ["~", "\'B\'"]]}');
+      test.expect(
+          val.validate({'age': 10, 'name': 'Bob'}).isValid, test.isTrue);
+      test.expect(
+          val.validate({'age': 0, 'name': 'Bob'}).isValid, test.isFalse);
+      test.expect(
+          val.validate({'age': 10, 'name': 'Alice'}).isValid, test.isFalse);
     });
 
     test.test('decodes map with modifier wrappers', () {
@@ -53,7 +57,8 @@ void main() {
     });
 
     test.test('decodes custom validators', () {
-      final val = const JsonDecoder().decode('["@myCustom", 1, 2]', customFactories: {
+      final val =
+          const JsonDecoder().decode('["@myCustom", 1, 2]', customFactories: {
         'myCustom': (args) => CustomValidator(args),
       });
       test.expect(val.validate('anything').isValid, test.isTrue);

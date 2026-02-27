@@ -4,7 +4,8 @@ extension _DecoderParserTokenMethods on _DecoderParser {
   String parseIdentifier() {
     skipWhitespace();
     final start = pos;
-    while (pos < input.length && isAsciiIdentifierCodeUnit(input.codeUnitAt(pos))) {
+    while (pos < input.length &&
+        isAsciiIdentifierCodeUnit(input.codeUnitAt(pos))) {
       pos++;
     }
     if (start == pos) {
@@ -26,14 +27,18 @@ extension _DecoderParserTokenMethods on _DecoderParser {
     pos = tokenResult.nextPos;
     final sym = tokenResult.token;
 
-    if (pos == startPosBeforeId && !isCustom && sym.isEmpty && pos < input.length) {
+    if (pos == startPosBeforeId &&
+        !isCustom &&
+        sym.isEmpty &&
+        pos < input.length) {
       throw DecodeException.missingIdentifier(input, pos);
     }
 
     return sym;
   }
 
-  List<dynamic> _readCallArgs({required bool isCustom, required String symbol}) {
+  List<dynamic> _readCallArgs(
+      {required bool isCustom, required String symbol}) {
     final args = <dynamic>[];
 
     if (match('(')) {
@@ -51,7 +56,8 @@ extension _DecoderParserTokenMethods on _DecoderParser {
 
     if (!isCustom && symbol.isNotEmpty && !_isNoArgSymbol(symbol)) {
       skipWhitespace();
-      if (pos < input.length && isEskemaValueStartCodeUnit(input.codeUnitAt(pos))) {
+      if (pos < input.length &&
+          isEskemaValueStartCodeUnit(input.codeUnitAt(pos))) {
         args.add(parseValue());
       }
     }
@@ -60,8 +66,12 @@ extension _DecoderParserTokenMethods on _DecoderParser {
   }
 
   bool _isKnownValidator(String sym) {
-    if (_resolutionContext.symbolResolver.nameOfSymbol(sym) != null) return true;
+    if (_resolutionContext.symbolResolver.nameOfSymbol(sym) != null) {
+      return true;
+    }
+
     if (_resolutionContext.registry.factories.containsKey(sym)) return true;
+    
     return false;
   }
 

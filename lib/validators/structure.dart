@@ -34,7 +34,8 @@ IValidator eskema(Map<String, IValidator> mapEskema, {String? message}) {
         entries: entries, errors: [], value: value, index: 0, message: message);
   }
 
-  return isMap() & Validator(eskemaPredicate).copyWith(name: 'eskema', args: [mapEskema]);
+  return isMap() &
+      Validator(eskemaPredicate).copyWith(name: 'eskema', args: [mapEskema]);
 }
 
 // We intentionally implement `loop` returning `FutureOr<Result>`:
@@ -163,7 +164,9 @@ IValidator eskemaStrict(Map<String, IValidator> schema, {String? message}) {
     );
   }
 
-  return eskema(schema) & Validator(strictEskemaPredicate).copyWith(name: 'eskemaStrict', args: [schema]);
+  return eskema(schema) &
+      Validator(strictEskemaPredicate)
+          .copyWith(name: 'eskemaStrict', args: [schema]);
 }
 
 /// Returns a Validator that checks a value against the eskema provided,
@@ -263,7 +266,9 @@ IValidator listEach(IValidator itemValidator, {String? message}) {
     return loop(0);
   }
 
-  return $isList & Validator(listEachPredicate).copyWith(name: 'listEach', args: [itemValidator]);
+  return $isList &
+      Validator(listEachPredicate)
+          .copyWith(name: 'listEach', args: [itemValidator]);
 }
 
 void _collectListIndex(Result result, List<Expectation> errors, int index,

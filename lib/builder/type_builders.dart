@@ -34,6 +34,7 @@ class StringBuilder extends BaseBuilder<StringBuilder, String>
         TransformerMixin<StringBuilder, String>,
         StringMixin<StringBuilder, String>,
         ContainsMixin<StringBuilder, String> {
+  /// Executes the [StringBuilder] operation.
   StringBuilder({super.negated, super.chain});
 }
 
@@ -55,6 +56,7 @@ class NumberBuilder extends BaseBuilder<NumberBuilder, num>
         TransformerMixin<NumberBuilder, num>,
         NumberMixin<NumberBuilder, num>,
         ComparisonMixin<NumberBuilder, num> {
+  /// Executes the [NumberBuilder] operation.
   NumberBuilder({super.chain});
 }
 
@@ -72,6 +74,7 @@ class NumberBuilder extends BaseBuilder<NumberBuilder, num>
 /// final countValidator = v().int_().gte(1).lte(100).build();
 /// ```
 class IntBuilder extends NumberBuilder {
+  /// Executes the [IntBuilder] operation.
   IntBuilder({super.chain});
 }
 
@@ -89,6 +92,7 @@ class IntBuilder extends NumberBuilder {
 /// final percentageValidator = v().double_().gte(0).lte(100).build();
 /// ```
 class DoubleBuilder extends NumberBuilder {
+  /// Executes the [DoubleBuilder] operation.
   DoubleBuilder({super.chain});
 }
 
@@ -107,6 +111,7 @@ class DoubleBuilder extends NumberBuilder {
 /// ```
 class BoolBuilder extends BaseBuilder<BoolBuilder, bool>
     with TransformerMixin<BoolBuilder, bool>, BoolMixin<BoolBuilder, bool> {
+  /// Executes the [BoolBuilder] operation.
   BoolBuilder({super.chain});
 }
 
@@ -134,6 +139,7 @@ class DateTimeBuilder extends BaseBuilder<DateTimeBuilder, DateTime>
         TransformerMixin<DateTimeBuilder, DateTime>,
         DateTimeMixin<DateTimeBuilder, DateTime>,
         ComparisonMixin<DateTimeBuilder, DateTime> {
+  /// Executes the [DateTimeBuilder] operation.
   DateTimeBuilder({super.chain});
 }
 
@@ -162,6 +168,7 @@ class IterableBuilder<T> extends BaseBuilder<IterableBuilder<T>, Iterable<T>>
         ComparisonMixin<IterableBuilder<T>, Iterable<T>>,
         IterableMixin<IterableBuilder<T>, Iterable<T>>,
         ContainsMixin<IterableBuilder<T>, Iterable<T>> {
+  /// Executes the [IterableBuilder] operation.
   IterableBuilder({super.chain});
 }
 
@@ -185,6 +192,7 @@ class IterableBuilder<T> extends BaseBuilder<IterableBuilder<T>, Iterable<T>>
 ///   .build();
 /// ```
 class ListBuilder<T> extends IterableBuilder<T> {
+  /// Executes the [ListBuilder] operation.
   ListBuilder({super.chain});
 }
 
@@ -207,6 +215,7 @@ class ListBuilder<T> extends IterableBuilder<T> {
 ///   .build();
 /// ```
 class SetBuilder<T> extends IterableBuilder<T> {
+  /// Executes the [SetBuilder] operation.
   SetBuilder({super.chain});
 }
 
@@ -239,6 +248,7 @@ class MapBuilder<T, K> extends BaseBuilder<MapBuilder<T, K>, Map<T, K>>
         MapMixin<MapBuilder<T, K>, Map<T, K>>,
         EmptyMixin<MapBuilder<T, K>, Map<T, K>>,
         ComparisonMixin<MapBuilder<T, K>, Map<T, K>> {
+  /// Executes the [MapBuilder] operation.
   MapBuilder({super.chain});
 }
 
@@ -269,6 +279,7 @@ class JsonDecodedBuilder extends BaseBuilder<JsonDecodedBuilder, dynamic>
         ComparisonMixin<JsonDecodedBuilder, dynamic>,
         MapMixin<JsonDecodedBuilder, dynamic>,
         IterableMixin<JsonDecodedBuilder, dynamic> {
+  /// Executes the [JsonDecodedBuilder] operation.
   JsonDecodedBuilder({super.chain});
 }
 
@@ -308,6 +319,7 @@ class GenericBuilder<T> extends BaseBuilder<GenericBuilder<T>, T>
         MapMixin<GenericBuilder<T>, T>,
         DateTimeMixin<GenericBuilder<T>, T>,
         JsonMixin<GenericBuilder<T>, T> {
+  /// Executes the [GenericBuilder] operation.
   GenericBuilder({super.chain});
 }
 

@@ -10,8 +10,10 @@ void main() {
 
     test.test('encodes parameterized built-ins as lists', () {
       test.expect(const JsonEncoder().encode(isEq(5)), test.equals('["=",5]'));
-      test.expect(const JsonEncoder().encode(isGt(10)), test.equals('[">",10]'));
-      test.expect(const JsonEncoder().encode(isType<String>()), test.equals('"String"'));
+      test.expect(
+          const JsonEncoder().encode(isGt(10)), test.equals('[">",10]'));
+      test.expect(const JsonEncoder().encode(isType<String>()),
+          test.equals('"String"'));
     });
 
     test.test('encodes logical operators with infix style', () {
@@ -42,7 +44,8 @@ void main() {
       final encoded = const JsonEncoder().encode(map);
       test.expect(
         encoded,
-        test.equals('{"name":["*","String"],"age":["?","int"],"complex":["?*",["int","&",[">",0]]]}'),
+        test.equals(
+            '{"name":["*","String"],"age":["?","int"],"complex":["?*",["int","&",[">",0]]]}'),
       );
     });
 
@@ -54,7 +57,8 @@ void main() {
     });
 
     test.test('encodes custom validators', () {
-      final custom = Validator((v) => Result.valid(v), name: 'myCustom', args: [1, 'val']);
+      final custom =
+          Validator((v) => Result.valid(v), name: 'myCustom', args: [1, 'val']);
       test.expect(
         const JsonEncoder().encode(custom),
         test.equals('["@myCustom",1,"\'val\'"]'),
@@ -84,7 +88,9 @@ void main() {
 }
 
 class JsonMapValidator extends MapValidator {
-  final Field age = Field(id: 'age', validators: [all([isInt(), isGt(18)])]);
+  final Field age = Field(id: 'age', validators: [
+    all([isInt(), isGt(18)])
+  ]);
   final Field status = Field(id: 'status', validators: [isType<String>()]);
 
   JsonMapValidator() : super(id: '');
@@ -94,9 +100,16 @@ class JsonMapValidator extends MapValidator {
 }
 
 class JsonOptionalMapValidator extends MapValidator {
-  final Field nameField = Field(id: 'name', validators: [isString()], optional: true);
+  final Field nameField =
+      Field(id: 'name', validators: [isString()], optional: true);
   final Field age = Field(id: 'age', validators: [isInt()], nullable: true);
-  final Field complex = Field(id: 'complex', validators: [all([isInt(), isGt(0)])], nullable: true, optional: true);
+  final Field complex = Field(
+      id: 'complex',
+      validators: [
+        all([isInt(), isGt(0)])
+      ],
+      nullable: true,
+      optional: true);
 
   JsonOptionalMapValidator() : super(id: '');
 
