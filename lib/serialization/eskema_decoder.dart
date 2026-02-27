@@ -1,27 +1,29 @@
 import 'package:eskema/eskema.dart';
 import 'package:eskema/serialization/default_registry.dart';
-import 'package:eskema/serialization/registry.dart';
+import 'package:eskema/serialization/core/registry.dart';
+import 'core/decoder.dart';
 
-class EskemaDeserializer {
-  /// Deserializes a string back into an `IValidator`.
-  /// Uses [defaultRegistry] if [registry] is not provided.
-  static IValidator deserialize(String input, {
+class EskemaDecoder extends DelegateValidatorDecoder<String> {
+  const EskemaDecoder();
+
+  @override
+  IValidator decode(String input, {
     Map<String, Function>? customFactories,
     ValidatorRegistry? registry,
   }) {
     final activeRegistry = registry ?? defaultRegistry;
-    final parser = _DeserializerParser(input, customFactories ?? {}, activeRegistry);
+    final parser = _DecoderParser(input, customFactories ?? {}, activeRegistry);
     return parser.parseTopLevel();
   }
 }
 
-class _DeserializerParser {
+class _DecoderParser {
   final String input;
   final Map<String, Function> customFactories;
   final ValidatorRegistry registry;
   int pos = 0;
 
-  _DeserializerParser(this.input, this.customFactories, this.registry);
+  _DecoderParser(this.input, this.customFactories, this.registry);
 
   void skipWhitespace() {
     while (pos < input.length && input.codeUnitAt(pos) <= 32) {
@@ -160,7 +162,7 @@ class _DeserializerParser {
 
       match(','); // optional trailing comma
     }
-    return _DeserializedMapValidator(fields);
+    return _DecodedMapValidator(fields);
   }
 
   String parseIdentifier() {
@@ -293,9 +295,9 @@ class _DeserializerParser {
   }
 }
 
-class _DeserializedMapValidator extends MapValidator {
+class _DecodedMapValidator extends MapValidator {
   final List<IdValidator> _fields;
-  _DeserializedMapValidator(this._fields) : super(id: '');
+  _DecodedMapValidator(this._fields) : super(id: '');
 
   @override
   List<IdValidator> get fields => _fields;

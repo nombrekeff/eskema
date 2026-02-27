@@ -1,8 +1,8 @@
 import 'package:eskema/eskema.dart';
 import 'package:eskema/serialization/default_registry.dart';
-import 'package:eskema/serialization/registry.dart';
-import 'package:eskema/serialization/serializer.dart';
-import 'package:eskema/serialization/deserializer.dart';
+import 'package:eskema/serialization/core/registry.dart';
+import 'package:eskema/serialization/eskema_encoder.dart';
+import 'package:eskema/serialization/eskema_decoder.dart';
 
 void main() {
   // 1. Define a brand new custom validator
@@ -23,11 +23,11 @@ void main() {
     );
 
   // 3. Serializing our strange custom logic works!
-  final serialized = EskemaSerializer.serialize(myPalindromeValidator, registry: customRegistry);
+  final serialized = const EskemaEncoder().encode(myPalindromeValidator, registry: customRegistry);
   print('Serialized: $serialized'); // Outputs: palin
 
   // 4. Deserializing brings it right back as our proper logic!
-  final deserialized = EskemaDeserializer.deserialize(serialized, registry: customRegistry);
+  final deserialized = const EskemaDecoder().decode(serialized, registry: customRegistry);
   
   print('Validating "racecar" -> ${deserialized.validate("racecar").isValid}'); // Outputs true
   print('Validating "hello" -> ${deserialized.validate("hello").isValid}');   // Outputs false

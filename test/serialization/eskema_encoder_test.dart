@@ -1,39 +1,39 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/serialization/serializer.dart';
+import 'package:eskema/serialization/eskema_encoder.dart';
 import 'package:test/test.dart' as test;
 
 void main() {
-  test.group('EskemaSerializer', () {
+  test.group('EskemaEncoder', () {
     test.test('serializes primitive built-ins', () {
-      test.expect(EskemaSerializer.serialize(isEq(5)), '=(5)');
-      test.expect(EskemaSerializer.serialize(isGt(10)), '>(10)');
-      test.expect(EskemaSerializer.serialize(isTrue()), 'T');
-      test.expect(EskemaSerializer.serialize(isType<String>()), 'type(String)');
+      test.expect(const EskemaEncoder().encode(isEq(5)), '=(5)');
+      test.expect(const EskemaEncoder().encode(isGt(10)), '>(10)');
+      test.expect(const EskemaEncoder().encode(isTrue()), 'T');
+      test.expect(const EskemaEncoder().encode(isType<String>()), 'type(String)');
     });
 
     test.test('serializes combinators', () {
       final val = all([isGt(0), isLt(10)]);
-      test.expect(EskemaSerializer.serialize(val), '(>(0) & <(10))');
+      test.expect(const EskemaEncoder().encode(val), '(>(0) & <(10))');
 
       final anyVal = any([isEq('A'), isEq('B')]);
-      test.expect(EskemaSerializer.serialize(anyVal), '(=(\'A\') | =(\'B\'))');
+      test.expect(const EskemaEncoder().encode(anyVal), '(=(\'A\') | =(\'B\'))');
     });
 
     test.test('serializes maps and fields', () {
       final map = EskemaMapValidator();
-      final str = EskemaSerializer.serialize(map);
+      final str = const EskemaEncoder().encode(map);
       test.expect(str, '{age: >(0), name: type(String) & ~(\'B\')}');
     });
 
     test.test('serializes optional/nullable fields', () {
       final map = EskemaOptionalMapValidator();
-      final str = EskemaSerializer.serialize(map);
+      final str = const EskemaEncoder().encode(map);
       test.expect(str, '{age: ?>(0), name: *type(String)}');
     });
 
     test.test('serializes custom validators', () {
       final custom = CustomValidator();
-      test.expect(EskemaSerializer.serialize(custom), '@myCustom(1, 2)');
+      test.expect(const EskemaEncoder().encode(custom), '@myCustom(1, 2)');
     });
   });
 }

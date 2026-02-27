@@ -1,5 +1,5 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/serialization/registry.dart';
+import 'package:eskema/serialization/core/registry.dart';
 
 /// The global registry containing all built-in eskema validators.
 /// 
@@ -10,8 +10,8 @@ final ValidatorRegistry defaultRegistry = ValidatorRegistry()..registerDefaults(
 extension _ValidatorRegistryDefaults on ValidatorRegistry {
   /// Defines all standard symbols, names, and instantiation rules.
   void registerDefaults() {
-    // Basic Combinators (Note: serializer has hardcoded handling for & and | syntax,
-    // but they can still be mapped here for deserialization lookup)
+    // Basic Combinators (Note: encoder has hardcoded handling for & and | syntax,
+    // but they can still be mapped here for decoder lookup)
     register(name: 'all', symbol: '&', factory: (args) => all(args.cast<IValidator>()));
     register(name: 'any', symbol: '|', factory: (args) => any(args.cast<IValidator>()));
     register(name: 'none', symbol: '!|', factory: (args) => none(args.cast<IValidator>()));
