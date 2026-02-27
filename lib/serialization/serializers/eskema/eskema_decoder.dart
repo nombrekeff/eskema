@@ -1,4 +1,6 @@
 import 'package:eskema/eskema.dart';
+import 'package:eskema/serialization/core/codec_utils.dart';
+import 'package:eskema/serialization/core/validator_resolution.dart';
 
 /// Decodes an eskema string into a validator.
 ///
@@ -20,8 +22,12 @@ class EskemaDecoder extends DelegateValidatorDecoder<String> {
   /// final validator = all([isInt, isEq(5)]);
   /// ```
   final Map<String, String>? customSymbols;
+  final bool strictUnknownValidators;
 
-  const EskemaDecoder({this.customSymbols});
+  const EskemaDecoder({
+    this.customSymbols,
+    this.strictUnknownValidators = false,
+  });
 
   /// Decodes an eskema string into a validator.
   ///
@@ -40,7 +46,13 @@ class EskemaDecoder extends DelegateValidatorDecoder<String> {
     ValidatorRegistry? registry,
   }) {
     final activeRegistry = registry ?? defaultRegistry;
-    final parser = _DecoderParser(input, customFactories ?? {}, activeRegistry, customSymbols);
+    final parser = _DecoderParser(
+      input,
+      customFactories ?? {},
+      activeRegistry,
+      customSymbols,
+      strictUnknownValidators,
+    );
 
     return parser.parseTopLevel();
   }
@@ -51,17 +63,25 @@ class _DecoderParser {
   final Map<String, Function> customFactories;
   final ValidatorRegistry registry;
   final Map<String, String>? customSymbols;
+  final bool strictUnknownValidators;
+  
+  SymbolResolver get _resolver => SymbolResolver(customSymbolToName: customSymbols);
+  DecoderResolutionContext get _resolutionContext => DecoderResolutionContext(
+        registry: registry,
+        symbolResolver: _resolver,
+        customFactories: customFactories,
+        strictUnknownValidators: strictUnknownValidators,
+        allowUnknownCustomFallback: (name) => name == 'custom',
+      );
   int pos = 0;
 
-  _DecoderParser(this.input, this.customFactories, this.registry, this.customSymbols);
-
-  String? _getName(String symbol) {
-    if (customSymbols != null && customSymbols!.containsKey(symbol)) {
-      return customSymbols![symbol]!;
-    }
-
-    return defaultSymbolToName[symbol];
-  }
+  _DecoderParser(
+    this.input,
+    this.customFactories,
+    this.registry,
+    this.customSymbols,
+    this.strictUnknownValidators,
+  );
 
   void skipWhitespace() {
     while (pos < input.length && input.codeUnitAt(pos) <= 32) {
@@ -268,14 +288,13 @@ class _DecoderParser {
     int scanPos = pos;
     while (scanPos < input.length &&
         RegExp(r'[a-zA-Z0-9_!=\<\>~&\|\[\]\/\-]').hasMatch(input[scanPos])) {
-      
       // Stop scanning if we hit something that looks like the start of arguments
       // or other structures, but ONLY if we haven't already formed a symbol that
       // specifically includes these characters (unlikely for built-ins).
       if (input[scanPos] == '(' || input[scanPos] == '{' || input[scanPos] == ' ') {
         break;
       }
-      
+
       scanPos++;
       final current = input.substring(nameStart, scanPos);
       if (_isKnownValidator(current)) {
@@ -293,7 +312,7 @@ class _DecoderParser {
         pos++;
       }
       sym = input.substring(nameStart, pos);
-      
+
       if (pos == startPosBeforeId && !isCustom && sym.isEmpty) {
         // We failed to advance with both symbol scan and identifier scan.
         // To prevent infinite loop, we must throw if we're not at EOF
@@ -327,30 +346,24 @@ class _DecoderParser {
     }
 
     if (isCustom) {
-      if (customFactories.containsKey(sym)) {
-        return customFactories[sym]!(args) as IValidator;
-      }
-
-      try {
-        return registry.createValidator(sym, args);
-      } catch (e) {
-        // We throw the specific exception only if it's clearly a missing custom validator.
-        // In the comprehensive tests, some validators are named 'custom' and we should probably
-        // still be robust for those unless they are specifically '@unknown'.
-        if (sym != 'custom') {
-          throw DecodeException.unknownCustomValidator(sym, input, start);
-        }
-      }
+      return resolveDecodedValidator(
+        context: _resolutionContext,
+        token: sym,
+        args: args,
+        isCustom: true,
+        source: input,
+        offset: start,
+      );
     }
 
-    final String name = _getName(sym) ?? sym;
-
-    try {
-      return registry.createValidator(name, args);
-    } catch (e) {
-      // By default, if it's not registered, assume a dynamic validator wrapper
-      return isType<dynamic>().copyWith(name: name, args: args);
-    }
+    return resolveDecodedValidator(
+      context: _resolutionContext,
+      token: sym,
+      args: args,
+      isCustom: false,
+      source: input,
+      offset: start,
+    );
   }
 
   dynamic parseValue() {
@@ -369,7 +382,7 @@ class _DecoderParser {
         list.add(parseValue());
         match(',');
       }
-      
+
       return list;
     }
 
@@ -390,7 +403,7 @@ class _DecoderParser {
     // Wait, if it didn't match any digits
     if (isNum && pos > start && start != pos - (input[start] == '-' ? 1 : 0)) {
       final strNode = input.substring(start, pos);
-      
+
       if (strNode.contains('.')) return double.parse(strNode);
 
       return int.parse(strNode);
@@ -414,7 +427,7 @@ class _DecoderParser {
 
       if (id == 'null') return null;
 
-      final mapped = _getName(id);
+      final mapped = _resolver.nameOfSymbol(id);
 
       if (mapped == null) {
         // It's not a known validator symbol, treat as bare string argument
@@ -446,7 +459,7 @@ class _DecoderParser {
     while (pos < input.length && input[pos] != quote) {
       if (input[pos] == '\\') {
         pos++; // skip escaped
-        
+
         if (pos >= input.length) break;
       }
 
@@ -456,10 +469,10 @@ class _DecoderParser {
     if (pos >= input.length) {
       throw DecodeException.unclosedString(input, start);
     }
-    
+
     final str = input.substring(start, pos);
     pos++; // skip closing quote
-    
+
     return str.replaceAll("\\'", "'").replaceAll('\\"', '"');
   }
 
@@ -471,7 +484,7 @@ class _DecoderParser {
   }
 
   bool _isNoArgSymbol(String sym) {
-    final name = _getName(sym) ?? sym;
+    final name = _resolver.nameOfSymbol(sym) ?? sym;
     // These validators are known to take no arguments.
     const noArgValidators = {
       'isTrue',
@@ -511,7 +524,7 @@ class _DecoderParser {
 
 class _DecodedMapValidator extends MapValidator {
   final List<IdValidator> _fields;
-  
+
   _DecodedMapValidator(this._fields, {super.name = 'eskema'}) : super(id: '');
 
   @override

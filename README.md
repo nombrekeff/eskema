@@ -3,9 +3,11 @@
 [![codecov](https://codecov.io/gh/nombrekeff/eskema/branch/main/graph/badge.svg?token=ZF22N0G09J)](https://codecov.io/gh/nombrekeff/eskema) [![build](https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml/badge.svg?branch=main)](https://github.com/nombrekeff/eskema/actions/workflows/test_main.yml) [![Pub Version](https://img.shields.io/pub/v/eskema?style=flat-square)](https://pub.dev/packages/eskema)
 
 # Eskema
+
 Composable runtime validation for Dart. Build readable schemas from tiny validator functions & operators and get precise, structured errors (message, code, path, data) for untyped JSON, configs, and user input. Fast sync path, seamless async, no boilerplate.
 
 ## Why
+
 * Validate untyped JSON & config fast
 * Concise composition (`&`, `|`, `not()`, `nullable()`, `optional()`)
 * Sync fast path, auto async when needed
@@ -13,6 +15,7 @@ Composable runtime validation for Dart. Build readable schemas from tiny validat
 * Extensively tested
 
 ## Install
+
 ```bash
 dart pub add eskema
 ```
@@ -82,6 +85,7 @@ void main() {
 ```
 
 ### 🌟 Key Features
+
 * **Transformers**: Coerce and clean up data (`toInt`, `trim`, `defaultTo`, `toLowerCase`) on the fly.
 * **Contextual Validation**: Use `when` to conditionally validate fields based on siblings' values.
 * **Polymorphic Schemas**: Clean up `if`/`else` structures with `switchBy`, seamlessly routing validation based on a discriminator field.
@@ -91,16 +95,19 @@ void main() {
 * **Sync & Async**: Blazingly fast sync execution with seamless async support when needed.
 
 ## Docs & help
+
 * [Docs & guides](https://nombrekeff.github.io/eskema/)
 * [API reference](https://pub.dev/documentation/eskema/latest/)
 * [Wiki](https://github.com/nombrekeff/eskema/wiki)
 * [Example Directory](https://github.com/nombrekeff/eskema/tree/main/example) - Check out transformers, conditional validation, and more.
-* Issues / questions: https://github.com/nombrekeff/eskema/issues
+* Issues / questions: <https://github.com/nombrekeff/eskema/issues>
 
 ## Contributing
+
 Open an issue for discussion, then PR with tests. Keep additions composable. (Detailed guidelines live in the wiki / future CONTRIBUTING doc.)
 
 ## License
+
 MIT – see `LICENSE`.
 
 ---

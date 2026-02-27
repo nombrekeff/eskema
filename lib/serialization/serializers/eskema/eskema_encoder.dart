@@ -1,24 +1,15 @@
 import 'package:eskema/eskema.dart';
+import 'package:eskema/serialization/core/codec_utils.dart';
 
 /// Encodes an Eskema IValidator into its compact string representation.
 class EskemaEncoder extends DelegateValidatorEncoder<String> {
   final Map<String, String>? customSymbols;
   final Map<String, ArgumentEncoder>? customEncoders;
 
+  // TODO: Allow passing a custom SymbolResolver directly for more flexibility?
+  SymbolResolver get _resolver => SymbolResolver(customNameToSymbol: customSymbols);
+
   const EskemaEncoder({this.customSymbols, this.customEncoders});
-
-  String _getSymbol(String name) {
-    if (customSymbols != null && customSymbols!.containsKey(name)) {
-      return customSymbols![name]!;
-    }
-
-    return defaultNameToSymbol[name] ?? name;
-  }
-
-  bool _hasSymbolMap(String name) {
-    return (customSymbols != null && customSymbols!.containsKey(name)) ||
-        defaultNameToSymbol.containsKey(name);
-  }
 
   @override
   String encode(IValidator validator, {ValidatorRegistry? registry}) {
@@ -29,29 +20,21 @@ class EskemaEncoder extends DelegateValidatorEncoder<String> {
 
   @override
   String encodeInternal(IValidator validator, ValidatorRegistry? registry) {
-    // We pass registry around in case nested calls need standard encode logic,
-    // but the symbols are handled internally here now.
     if (validator is Field || validator is MapValidator) {
       return encodeMap(validator as IdValidator, registry);
     }
 
-    // isType validators encode as bare type names (e.g. int, String)
-    if (validator.name == 'isType' && validator.args.isNotEmpty) {
-      final typeName = validator.args[0].toString();
-      const simpleTypes = {'int', 'String', 'double', 'num', 'bool', 'List', 'Map', 'Set'};
-      
-      if (simpleTypes.contains(typeName)) {
-        return typeName;
-      }
+    final simpleTypeName = extractSimpleTypeName(validator);
+    if (simpleTypeName != null) {
+      return simpleTypeName;
     }
 
-    if (_hasSymbolMap(validator.name)) {
-      final symbol = _getSymbol(validator.name);
+    if (_resolver.hasSymbolForName(validator.name)) {
+      final symbol = _resolver.symbolOfName(validator.name);
 
       return encodeBuiltIn(symbol, validator, registry);
     }
 
-    // fallback if no explicitly configured short symbol
     return encodeCustom(validator, registry);
   }
 
@@ -81,12 +64,11 @@ class EskemaEncoder extends DelegateValidatorEncoder<String> {
 
   @override
   String encodeFieldModifiers(IValidator validator, String encoded) {
-    String mod = encoded;
-
-    if (validator.isNullable) mod = '?$mod';
-    if (validator.isOptional) mod = '*$mod';
-
-    return mod;
+    return applyEskemaFieldModifiers(
+      isNullable: validator.isNullable,
+      isOptional: validator.isOptional,
+      encoded: encoded,
+    );
   }
 
   @override
@@ -112,20 +94,12 @@ class EskemaEncoder extends DelegateValidatorEncoder<String> {
     }).join(', ');
 
     if (argsToEncode.length == 1 &&
-        _isComparisonSymbol(symbol) &&
-        _isSimpleValue(argsToEncode[0])) {
+        isComparisonSymbol(symbol) &&
+        isSimpleValue(argsToEncode[0])) {
       return '$symbol$argsStr';
     }
 
     return '$symbol($argsStr)';
-  }
-
-  bool _isComparisonSymbol(String symbol) {
-    return const {'=', '>', '>=', '<', '<=', '<>', '~', 'in'}.contains(symbol);
-  }
-
-  bool _isSimpleValue(dynamic value) {
-    return value == null || value is num || value is bool || value is String;
   }
 
   @override
@@ -148,9 +122,8 @@ class EskemaEncoder extends DelegateValidatorEncoder<String> {
     }
 
     if (value is Map) {
-      final entries = value.entries
-          .map((e) => '${e.key}: ${encodeValue(e.value, registry)}')
-          .join(', ');
+      final entries =
+          value.entries.map((e) => '${e.key}: ${encodeValue(e.value, registry)}').join(', ');
 
       return '{$entries}';
     }

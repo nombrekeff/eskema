@@ -1,6 +1,7 @@
 import 'dart:convert' as convert;
 
 import 'package:eskema/eskema.dart';
+import 'package:eskema/serialization/core/codec_utils.dart';
 
 /// Decodes a JSON string into an IValidator.
 ///
@@ -16,16 +17,13 @@ import 'package:eskema/eskema.dart';
 /// ```
 class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
   final Map<String, String>? customSymbols;
+  final bool strictUnknownValidators;
+  SymbolResolver get _resolver => SymbolResolver(customSymbolToName: customSymbols);
 
-  const JsonDecoder({this.customSymbols});
-
-  String? _getName(String symbol) {
-    if (customSymbols != null && customSymbols!.containsKey(symbol)) {
-      return customSymbols![symbol]!;
-    }
-
-    return defaultSymbolToName[symbol];
-  }
+  const JsonDecoder({
+    this.customSymbols,
+    this.strictUnknownValidators = false,
+  });
 
   @override
   IValidator decode(
@@ -44,16 +42,23 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
     Map<String, Function> customFactories,
     ValidatorRegistry registry,
   ) {
+    final context = DecoderResolutionContext(
+      registry: registry,
+      symbolResolver: _resolver,
+      customFactories: customFactories,
+      strictUnknownValidators: strictUnknownValidators,
+    );
+
     if (node is String) {
-      return _decodeString(node, customFactories, registry);
+      return _decodeString(node, context);
     }
 
     if (node is Map<String, dynamic>) {
-      return _decodeMap(node, customFactories, registry);
+      return _decodeMap(node, context);
     }
 
     if (node is List) {
-      return _decodeList(node, customFactories, registry);
+      return _decodeList(node, context);
     }
 
     throw DecodeException.invalidType('String, List, or Map', node, null);
@@ -61,8 +66,7 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
 
   IValidator _decodeString(
     String str,
-    Map<String, Function> customFactories,
-    ValidatorRegistry registry,
+    DecoderResolutionContext context,
   ) {
     // Handle modifier prefixes
     bool nullable = false;
@@ -85,44 +89,49 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
 
     // Handle custom validators
     if (symbol.startsWith('@')) {
-      final name = symbol.substring(1);
+      var val = resolveDecodedValidator(
+        context: context,
+        token: symbol.substring(1),
+        args: const [],
+        isCustom: true,
+        source: str,
+        offset: null,
+      );
 
-      if (customFactories.containsKey(name)) {
-        IValidator val = customFactories[name]!(<dynamic>[]) as IValidator;
-        if (nullable) val = val.nullable();
-        if (optional) val = val.optional();
-        return val;
+      if (nullable) {
+        val = val.nullable();
       }
-      // Fall through to registry below
-    }
 
-    // Resolve symbol to name
-    final String name = _getName(symbol) ?? symbol;
-
-    try {
-      IValidator val = registry.createValidator(name, []);
-
-      if (nullable) val = val.nullable();
-
-      if (optional) val = val.optional();
-
-      return val;
-    } catch (e) {
-      // Fallback: wrap as a dynamic type validator
-      IValidator val = isType<dynamic>().copyWith(name: name, args: []);
-
-      if (nullable) val = val.nullable();
-
-      if (optional) val = val.optional();
+      if (optional) {
+        val = val.optional();
+      }
 
       return val;
     }
+
+    var val = resolveDecodedValidator(
+      context: context,
+      token: symbol,
+      args: const [],
+      isCustom: false,
+      source: str,
+      offset: null,
+    );
+
+    if (nullable) {
+      val = val.nullable();
+    }
+
+    if (optional) {
+      val = val.optional();
+    }
+
+    return val;
   }
 
   IValidator _decodeMap(
     Map<String, dynamic> map,
-    Map<String, Function> customFactories,
-    ValidatorRegistry registry,
+    DecoderResolutionContext context,
   ) {
     final fields = <Field>[];
 
@@ -150,7 +159,7 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
         }
 
         final cleanStr = value.substring(offset);
-        final validator = _decodeString(cleanStr, customFactories, registry);
+        final validator = _decodeString(cleanStr, context);
         fields.add(
             Field(id: key, validators: [validator], nullable: nullable, optional: optional));
       } else if (value is List) {
@@ -165,15 +174,23 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
           if (prefix.contains('*')) optional = true;
 
           final innerNode = value.length == 2 ? value[1] : value.sublist(1);
-          final validator = _decodeNode(innerNode, customFactories, registry);
+          final validator = _decodeNode(
+            innerNode,
+            context.customFactories,
+            context.registry,
+          );
           fields.add(
               Field(id: key, validators: [validator], nullable: nullable, optional: optional));
         } else {
-          final validator = _decodeList(value, customFactories, registry);
+          final validator = _decodeList(value, context);
           fields.add(Field(id: key, validators: [validator]));
         }
       } else {
-        final validator = _decodeNode(value, customFactories, registry);
+        final validator = _decodeNode(
+          value,
+          context.customFactories,
+          context.registry,
+        );
         fields.add(Field(id: key, validators: [validator]));
       }
     }
@@ -187,8 +204,7 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
 
   IValidator _decodeList(
     List list,
-    Map<String, Function> customFactories,
-    ValidatorRegistry registry,
+    DecoderResolutionContext context,
   ) {
     if (list.isEmpty) {
       throw DecodeException.unexpectedEndOfInput(list, null);
@@ -196,7 +212,7 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
 
     // Check infix operators: scan for "&" or "|" at odd indices
     if (list.length >= 3 && _hasInfixOperator(list)) {
-      return _decodeInfix(list, customFactories, registry);
+      return _decodeInfix(list, context);
     }
 
     // Standard parameterized validator: [symbol, arg1, arg2, ...]
@@ -209,25 +225,28 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
 
     // Handle custom validators
     if (first.startsWith('@')) {
-      final name = first.substring(1);
+      final args = list.sublist(1).map((a) => _resolveValue(a, context)).toList();
 
-      if (customFactories.containsKey(name)) {
-        final args =
-            list.sublist(1).map((a) => _resolveValue(a, customFactories, registry)).toList();
-        return customFactories[name]!(args) as IValidator;
-      }
-      // Fall through to registry below
+      return resolveDecodedValidator(
+        context: context,
+        token: first.substring(1),
+        args: args,
+        isCustom: true,
+        source: list,
+        offset: null,
+      );
     }
 
-    final String name = _getName(first) ?? first;
-    final args =
-        list.sublist(1).map((a) => _resolveValue(a, customFactories, registry)).toList();
+    final args = list.sublist(1).map((a) => _resolveValue(a, context)).toList();
 
-    try {
-      return registry.createValidator(name, args);
-    } catch (e) {
-      return isType<dynamic>().copyWith(name: name, args: args);
-    }
+    return resolveDecodedValidator(
+      context: context,
+      token: first,
+      args: args,
+      isCustom: false,
+      source: list,
+      offset: null,
+    );
   }
 
   bool _hasInfixOperator(List list) {
@@ -242,8 +261,7 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
 
   IValidator _decodeInfix(
     List list,
-    Map<String, Function> customFactories,
-    ValidatorRegistry registry,
+    DecoderResolutionContext context,
   ) {
     // Collect operands (even indices) and verify operators (odd indices)
     final operands = <IValidator>[];
@@ -251,7 +269,11 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
 
     for (var i = 0; i < list.length; i++) {
       if (i.isEven) {
-        operands.add(_decodeNode(list[i], customFactories, registry));
+        operands.add(_decodeNode(
+          list[i],
+          context.customFactories,
+          context.registry,
+        ));
       } else {
         final op = list[i];
 
@@ -282,8 +304,7 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
   /// otherwise they may be validator symbols.
   dynamic _resolveValue(
     dynamic value,
-    Map<String, Function> customFactories,
-    ValidatorRegistry registry,
+    DecoderResolutionContext context,
   ) {
     if (value is String) {
       // If wrapped in single quotes, it's a literal string value
@@ -300,22 +321,30 @@ class JsonDecoder extends DelegateValidatorDecoder<dynamic> {
       // If first element is a string that looks like a validator symbol, decode as validator
       if (value.isNotEmpty && value.first is String) {
         final first = value.first as String;
-        final name = _getName(first) ?? first;
+        final name = context.symbolResolver.nameOfSymbol(first) ?? first;
 
-        if (registry.factories.containsKey(name) || first.startsWith('@')) {
-          return _decodeNode(value, customFactories, registry);
+        if (context.registry.factories.containsKey(name) || first.startsWith('@')) {
+          return _decodeNode(
+            value,
+            context.customFactories,
+            context.registry,
+          );
         }
       }
 
       // Otherwise treat as a plain list of values
-      return value.map((v) => _resolveValue(v, customFactories, registry)).toList();
+      return value.map((v) => _resolveValue(v, context)).toList();
     }
 
     if (value is Map<String, dynamic>) {
       try {
-        return _decodeNode(value, customFactories, registry);
+        return _decodeNode(
+          value,
+          context.customFactories,
+          context.registry,
+        );
       } catch (e) {
-        return value.map((k, v) => MapEntry(k, _resolveValue(v, customFactories, registry)));
+        return value.map((k, v) => MapEntry(k, _resolveValue(v, context)));
       }
     }
 

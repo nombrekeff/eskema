@@ -11,6 +11,7 @@ const defaultNameToSymbol = <String, String>{
   'withExpectation': '->',
   'when': 'when',
   'switchBy': 'switch',
+  'isType': 'type',
   'isEq': '=',
   'isDeepEq': '==',
   'isGt': '>',

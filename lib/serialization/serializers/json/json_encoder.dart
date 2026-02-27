@@ -1,25 +1,15 @@
 import 'dart:convert' as convert;
 
 import 'package:eskema/eskema.dart';
+import 'package:eskema/serialization/core/codec_utils.dart';
 
 /// Encodes an Eskema IValidator into a JSON string representation.
 class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
   final Map<String, String>? customSymbols;
   final Map<String, ArgumentEncoder>? customEncoders;
+  SymbolResolver get _resolver => SymbolResolver(customNameToSymbol: customSymbols);
 
   const JsonEncoder({this.customSymbols, this.customEncoders});
-
-  String _getSymbol(String name) {
-    if (customSymbols != null && customSymbols!.containsKey(name)) {
-      return customSymbols![name]!;
-    }
-    return defaultNameToSymbol[name] ?? name;
-  }
-
-  bool _hasSymbolMap(String name) {
-    return (customSymbols != null && customSymbols!.containsKey(name)) ||
-        defaultNameToSymbol.containsKey(name);
-  }
 
   @override
   String encode(IValidator validator, {ValidatorRegistry? registry}) {
@@ -33,17 +23,16 @@ class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
       return encodeMap(validator as IdValidator, registry);
     }
 
-    // isType validators encode as bare type name strings (e.g. 'int', 'String')
-    if (validator.name == 'isType' && validator.args.isNotEmpty) {
-      return validator.args[0].toString();
+    final simpleTypeName = extractSimpleTypeName(validator);
+    if (simpleTypeName != null) {
+      return simpleTypeName;
     }
 
-    if (_hasSymbolMap(validator.name)) {
-      final symbol = _getSymbol(validator.name);
+    if (_resolver.hasSymbolForName(validator.name)) {
+      final symbol = _resolver.symbolOfName(validator.name);
       return encodeBuiltIn(symbol, validator, registry);
     }
 
-    // fallback if no explicitly configured short symbol
     return encodeCustom(validator, registry);
   }
 
@@ -65,8 +54,7 @@ class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
       if (field.validators.length == 1) {
         return encodeInternal(field.validators.first, registry);
       }
-      // Wrap in 'all' operator for JSON parity
-      final symbol = _getSymbol('all');
+      final symbol = _resolver.symbolOfName('all');
       return encodeBuiltIn(symbol, all(field.validators), registry);
     }
 
@@ -75,15 +63,11 @@ class JsonEncoder extends DelegateValidatorEncoder<dynamic> {
 
   @override
   dynamic encodeFieldModifiers(IValidator validator, dynamic encoded) {
-    String prefix = '';
-
-    if (validator.isNullable) prefix += '?';
-    if (validator.isOptional) prefix += '*';
-
-    if (prefix.isEmpty) return encoded;
-
-    // Wrap: ["?", ["T"]] or ["?*", [">", 0]]
-    return [prefix, encoded];
+    return applyJsonFieldModifiers(
+      isNullable: validator.isNullable,
+      isOptional: validator.isOptional,
+      encoded: encoded,
+    );
   }
 
   @override

@@ -38,7 +38,8 @@ void main() {
     });
 
     test.test('decodes map validators', () {
-      final val = const JsonDecoder().decode('{"age": [">", 0], "name": [["type", "String"], "&", ["~", "\'B\'"]]}');
+      final val = const JsonDecoder()
+          .decode('{"age": [">", 0], "name": [["String"], "&", ["~", "\'B\'"]]}');
       test.expect(val.validate({'age': 10, 'name': 'Bob'}).isValid, test.isTrue);
       test.expect(val.validate({'age': 0, 'name': 'Bob'}).isValid, test.isFalse);
       test.expect(val.validate({'age': 10, 'name': 'Alice'}).isValid, test.isFalse);

@@ -4,6 +4,7 @@ enum DecodeExceptionType {
   missingClosingBrace,
   missingColon,
   missingIdentifier,
+    unknownValidator,
   unknownCustomValidator,
   unclosedString,
   invalidType,
@@ -36,6 +37,9 @@ class DecodeException extends FormatException {
 
   factory DecodeException.unknownCustomValidator(String sym, dynamic source, int? offset) =>
       DecodeException(message: 'Unknown custom validator: @$sym', source: source, offset: offset, type: DecodeExceptionType.unknownCustomValidator);
+
+  factory DecodeException.unknownValidator(String sym, dynamic source, int? offset) =>
+      DecodeException(message: 'Unknown validator symbol or name: $sym', source: source, offset: offset, type: DecodeExceptionType.unknownValidator);
 
   factory DecodeException.unclosedString(dynamic source, int? offset) =>
       DecodeException(message: 'Unclosed string', source: source, offset: offset, type: DecodeExceptionType.unclosedString);
