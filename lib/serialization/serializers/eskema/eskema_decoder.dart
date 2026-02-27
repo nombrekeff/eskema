@@ -1,9 +1,6 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/serialization/default_registry.dart';
-import 'package:eskema/serialization/core/registry.dart';
-import 'package:eskema/serialization/serializers/eskema/eskema_decode_exception.dart';
-import '../../core/decoder.dart';
-import 'eskema_encoder.dart' show defaultNameToSymbol;
+import 'package:eskema/serialization/core/decode_exception.dart';
+
 
 final _defaultSymbolToName = defaultNameToSymbol.map((k, v) => MapEntry(v, k));
 
@@ -102,7 +99,7 @@ class _DecoderParser {
     skipWhitespace();
 
     if (pos >= input.length) {
-      throw EskemaDecodeException.unexpectedEndOfInput(input, pos);
+      throw DecodeException.unexpectedEndOfInput(input, pos);
     }
 
     bool optional = false;
@@ -137,7 +134,7 @@ class _DecoderParser {
       }
 
       if (!match(')')) {
-        throw EskemaDecodeException.missingClosingParenthesis(input, pos);
+        throw DecodeException.missingClosingParenthesis(input, pos);
       }
 
       if (combinator == '&') {
@@ -201,12 +198,12 @@ class _DecoderParser {
     final fields = <Field>[];
 
     while (!match('}')) {
-      if (pos >= input.length) throw EskemaDecodeException.missingClosingBrace(input, pos);
+      if (pos >= input.length) throw DecodeException.missingClosingBrace(input, pos);
 
       final key = parseIdentifier();
 
       if (!match(':')) {
-        throw EskemaDecodeException.missingColon(key, input, pos);
+        throw DecodeException.missingColon(key, input, pos);
       }
 
       bool optional = false;
@@ -252,7 +249,7 @@ class _DecoderParser {
       if (peek("'") || peek('"')) {
         return parseString();
       }
-      throw EskemaDecodeException.missingIdentifier(input, pos);
+      throw DecodeException.missingIdentifier(input, pos);
     }
     return input.substring(start, pos);
   }
@@ -275,7 +272,7 @@ class _DecoderParser {
     if (match('(')) {
       while (!match(')')) {
         if (pos >= input.length) {
-          throw EskemaDecodeException.missingClosingParenthesis(input, pos);
+          throw DecodeException.missingClosingParenthesis(input, pos);
         }
 
         args.add(parseValue());
@@ -285,7 +282,7 @@ class _DecoderParser {
 
     if (isCustom) {
       if (!customFactories.containsKey(sym)) {
-        throw EskemaDecodeException.unknownCustomValidator(sym, input, start);
+        throw DecodeException.unknownCustomValidator(sym, input, start);
       }
 
       return customFactories[sym]!(args) as IValidator;
@@ -402,7 +399,7 @@ class _DecoderParser {
     }
 
     if (pos >= input.length) {
-      throw EskemaDecodeException.unclosedString(input, start);
+      throw DecodeException.unclosedString(input, start);
     }
     
     final str = input.substring(start, pos);

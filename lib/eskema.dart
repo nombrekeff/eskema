@@ -19,3 +19,4 @@ export 'extensions.dart';
 export 'transformers.dart';
 export 'expectation.dart';
 export 'error_format.dart';
+export 'serialization/serialization.dart';

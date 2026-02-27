@@ -1,7 +1,5 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/serialization/serializers/eskema/eskema_decode_exception.dart';
-import 'package:eskema/serialization/serializers/eskema/eskema_encoder.dart';
-import 'package:eskema/serialization/serializers/eskema/eskema_decoder.dart';
+import 'package:eskema/serialization/core/decode_exception.dart';
 import 'package:test/test.dart' as test;
 
 void main() {
@@ -86,14 +84,14 @@ void main() {
 
     test.test('throws EskemaParseException on malformed eskema strings', () {
       final badStrings = {
-        '': EskemaDecodeExceptionType.unexpectedEndOfInput,
-        '>(5': EskemaDecodeExceptionType.missingClosingParenthesis,
-        '(>(5)': EskemaDecodeExceptionType.missingClosingParenthesis, // missing combinator or parenthesis
-        '{name type(String)}': EskemaDecodeExceptionType.missingColon, // missing colon
-        '{name: type(String)': EskemaDecodeExceptionType.missingClosingBrace, // missing closing brace
-        '{: type(String)}': EskemaDecodeExceptionType.missingIdentifier, // missing identifier
-        '@unknown(1)': EskemaDecodeExceptionType.unknownCustomValidator, // unknown custom validator
-        '>("unclosed string)': EskemaDecodeExceptionType.unclosedString, // unclosed string
+        '': DecodeExceptionType.unexpectedEndOfInput,
+        '>(5': DecodeExceptionType.missingClosingParenthesis,
+        '(>(5)': DecodeExceptionType.missingClosingParenthesis, // missing combinator or parenthesis
+        '{name type(String)}': DecodeExceptionType.missingColon, // missing colon
+        '{name: type(String)': DecodeExceptionType.missingClosingBrace, // missing closing brace
+        '{: type(String)}': DecodeExceptionType.missingIdentifier, // missing identifier
+        '@unknown(1)': DecodeExceptionType.unknownCustomValidator, // unknown custom validator
+        '>("unclosed string)': DecodeExceptionType.unclosedString, // unclosed string
       };
       
       for (final entry in badStrings.entries) {
@@ -104,12 +102,12 @@ void main() {
           () => const EskemaDecoder().decode(badStr),
           test.throwsA(
             test.predicate((dynamic e) {
-              if (e is! EskemaDecodeException) return false;
+              if (e is! DecodeException) return false;
 
               return e.type == expectedType;
             }),
           ),
-          reason: 'Should throw accurate EskemaDecodeException with type \$expectedType for "\$badStr"',
+          reason: 'Should throw accurate DecodeException with type \$expectedType for "\$badStr"',
         );
       }
     });
