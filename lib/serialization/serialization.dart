@@ -10,6 +10,7 @@ export 'core/validator_resolution.dart';
 export 'core/decoder_models.dart';
 export 'core/codec_utils.dart';
 export 'core/eskema_scanner.dart';
+export 'core/value_resolution.dart';
 export 'default_registry.dart';
 
 export 'serializers/eskema/eskema_encoder.dart';

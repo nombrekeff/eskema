@@ -1,5 +1,10 @@
 part of '../eskema_decoder.dart';
 
+const _eskemaNestedValueOptions = NestedValueResolutionOptions(
+  unwrapSingleQuotedStrings: false,
+  tryDecodeMapsAsValidators: false,
+);
+
 extension _DecoderParserValueMethods on _DecoderParser {
   dynamic parseValue() {
     skipWhitespace();
@@ -18,7 +23,12 @@ extension _DecoderParserValueMethods on _DecoderParser {
         match(',');
       }
 
-      return list;
+      return resolveNestedDecodedValue(
+        value: list,
+        context: _resolutionContext,
+        decodeNode: (node) => parseValidatorCore(),
+        options: _eskemaNestedValueOptions,
+      );
     }
 
     final numeric = _tryReadNumericValue();
