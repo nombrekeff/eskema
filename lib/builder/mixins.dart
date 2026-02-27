@@ -8,7 +8,6 @@ import '../validators.dart';
 import '../validator.dart';
 import '../transformers.dart' as tr;
 import '../validators.dart' as esk;
-import '../validators/json.dart';
 import 'core.dart';
 import 'type_builders.dart';
 
@@ -74,8 +73,10 @@ mixin TransformerMixin<B extends BaseBuilder<B, T>, T> on BaseBuilder<B, T> {
 
   /// Transform the value to a number (int or double).
   NumberBuilder toNum() {
-    if (chain.coercedToDouble || chain.coercedToInt)
+    if (chain.coercedToDouble || chain.coercedToInt) {
       return NumberBuilder(chain: chain);
+    }
+    
     chain.setTransform(CoercionKind.double_, (child) => tr.toNum(child));
     return NumberBuilder(chain: chain);
   }

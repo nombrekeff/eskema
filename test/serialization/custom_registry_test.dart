@@ -1,8 +1,4 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/serialization/default_registry.dart';
-import 'package:eskema/serialization/core/registry.dart';
-import 'package:eskema/serialization/serializers/eskema/eskema_encoder.dart';
-import 'package:eskema/serialization/serializers/eskema/eskema_decoder.dart';
 import 'package:test/test.dart';
 
 void main() {

@@ -1,5 +1,4 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/serialization/core/registry.dart';
 
 DateTime _asDateTime(dynamic value) {
   if (value is DateTime) {

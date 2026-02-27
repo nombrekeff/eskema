@@ -1,5 +1,4 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/serialization/core/codec_utils.dart';
 
 typedef CustomFactoryMap = Map<String, Function>;
 typedef UnknownCustomFallbackPolicy = bool Function(String customName);

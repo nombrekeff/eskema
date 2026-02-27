@@ -53,8 +53,7 @@ IValidator any(List<IValidator> validators, {String? message}) {
 /// final result = formValidator.validate(123);
 /// // result.expectations will contain errors for type, length, uppercase, and number
 /// ```
-AllValidator all(List<IValidator> validators,
-    {String? message, bool collecting = false}) {
+AllValidator all(List<IValidator> validators, {String? message, bool collecting = false}) {
   return AllValidator(validators, message: message, collecting: collecting);
 }
 
@@ -153,8 +152,7 @@ IValidator throwInstead(IValidator validator) {
 ///   Expectation(message: "Please enter a valid email address", code: "email.invalid")
 /// );
 /// ```
-IValidator withExpectation(IValidator child, Expectation error,
-        {String? message}) =>
+IValidator withExpectation(IValidator child, Expectation error, {String? message}) =>
     Validator<Result>((value) {
       final result = child.validator(value);
 
@@ -167,21 +165,18 @@ IValidator withExpectation(IValidator child, Expectation error,
 
       if (result is Future<Result>) {
         return result.then(
-          (r) =>
-              Result(isValid: r.isValid, expectation: build(r), value: value),
+          (r) => Result(isValid: r.isValid, expectation: build(r), value: value),
         );
       }
 
-      return Result(
-          isValid: result.isValid, expectation: build(result), value: value);
+      return Result(isValid: result.isValid, expectation: build(result), value: value);
     });
 
 @pragma('vm:prefer-inline')
-Expectation _applyOverride(Expectation base, String? message, dynamic value,
-    {String? code}) {
-  if (message == null)
-
+Expectation _applyOverride(Expectation base, String? message, dynamic value, {String? code}) {
+  if (message == null) {
     return base.copyWith(value: value, code: code ?? base.code);
+  }
 
   return base.copyWith(message: message, value: value, code: code ?? base.code);
 }

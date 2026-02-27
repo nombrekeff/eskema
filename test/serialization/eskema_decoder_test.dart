@@ -1,5 +1,4 @@
 import 'package:eskema/eskema.dart';
-import 'package:eskema/serialization/core/decode_exception.dart';
 import 'package:test/test.dart' as test;
 
 void main() {

@@ -174,29 +174,17 @@ IValidator _jsonDecodeInfix(
   DecoderResolutionContext context,
 ) {
   final operands = <IValidator>[];
-  String? operator;
 
   for (var i = 0; i < list.length; i++) {
     if (i.isEven) {
       operands.add(_jsonDecodeNode(decoder, list[i], context));
-      continue;
-    }
-
-    final op = list[i];
-    if (op is! String || (op != '&' && op != '|')) {
-      throw DecodeException.invalidType('"&" or "|" operator', list, null);
-    }
-
-    if (operator == null) {
-      operator = op;
-    } else if (operator != op) {
-      throw DecodeException(
-        message: 'Cannot mix "&" and "|" operators in the same list',
-        source: list,
-        type: DecodeExceptionType.invalidType,
-      );
     }
   }
 
-  return operator == '&' ? all(operands) : any(operands);
+  final operator = resolveUniformInfixCombinatorOperator(list, source: list);
+  return composeCombinatorValidator(
+    operator: operator,
+    operands: operands,
+    source: list,
+  );
 }

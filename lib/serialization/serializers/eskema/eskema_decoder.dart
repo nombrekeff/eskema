@@ -156,12 +156,13 @@ class _DecoderParser {
       throw DecodeException.missingClosingParenthesis(input, pos);
     }
 
-    if (combinator == '&') {
-      return all(terms);
-    }
-
-    if (combinator == '|') {
-      return any(terms);
+    if (combinator != null) {
+      return composeCombinatorValidator(
+        operator: combinator,
+        operands: terms,
+        source: input,
+        offset: pos,
+      );
     }
 
     return terms.first;
@@ -200,7 +201,12 @@ class _DecoderParser {
       terms.add(parseValidatorCore());
     }
 
-    return op == '&' ? all(terms) : any(terms);
+    return composeCombinatorValidator(
+      operator: op,
+      operands: terms,
+      source: input,
+      offset: pos,
+    );
   }
 
   IValidator _applyStreamModifiers(
