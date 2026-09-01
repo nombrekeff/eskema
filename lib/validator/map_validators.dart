@@ -6,6 +6,7 @@ import 'package:eskema/expectation.dart';
 import 'package:eskema/result.dart';
 import 'package:eskema/validators.dart';
 import 'base_validator.dart';
+import 'validator_visitor.dart';
 
 /// Abstract class for schema-like map validators composed of Field/IdValidator instances.
 abstract class MapValidator<T extends Map> extends IdValidator {
@@ -15,6 +16,10 @@ abstract class MapValidator<T extends Map> extends IdValidator {
 
   /// The [List] property.
   List<IdValidator> get fields;
+
+  @override
+  R accept<R, C>(IValidatorVisitor<R, C> visitor, C context) =>
+      visitor.visitMapValidator(this, context);
 
   @override
   FutureOr<Result> validator(dynamic value) {

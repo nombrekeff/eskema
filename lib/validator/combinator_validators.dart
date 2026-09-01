@@ -8,6 +8,7 @@ import 'package:eskema/src/util.dart' as util;
 import 'package:eskema/validator/exception.dart';
 import 'package:eskema/validators/combinator.dart';
 import 'base_validator.dart';
+import 'validator_visitor.dart';
 
 // Internal micro-helper to reduce duplication.
 @pragma('vm:prefer-inline')
@@ -106,6 +107,10 @@ abstract class MultiValidatorBase extends IValidator {
   /// Builds the final result when all validators have been processed.
   Result _buildFinalResult(
       dynamic finalValue, List<Expectation> aggregatedExpectations);
+
+  @override
+  R accept<R, C>(IValidatorVisitor<R, C> visitor, C context) =>
+      visitor.visitMultiValidator(this, context);
 
   @override
   MultiValidatorBase copyWith({
@@ -491,6 +496,10 @@ class Field extends IdValidator {
 
   /// The [List] property.
   final List<IValidator> validators;
+
+  @override
+  R accept<R, C>(IValidatorVisitor<R, C> visitor, C context) =>
+      visitor.visitField(this, context);
 
   @override
   IValidator copyWith({

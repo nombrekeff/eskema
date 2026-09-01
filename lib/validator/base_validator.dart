@@ -4,6 +4,8 @@ library validator.base;
 import 'dart:async';
 import 'package:eskema/result.dart';
 import 'package:eskema/validator/exception.dart';
+import 'package:eskema/validator/schema_coercion_visitor.dart';
+import 'package:eskema/validator/validator_visitor.dart';
 
 /// Type representing a validator function (may be sync or async).
 typedef ValidatorFunction<T extends Result> = FutureOr<T> Function(
@@ -84,6 +86,15 @@ abstract class IValidator {
   /// Executes the [FutureOr] operation.
   FutureOr<bool> isNotValidAsync(dynamic value) async =>
       !(await isValidAsync(value));
+
+  /// Accepts an [IValidatorVisitor] to perform operations or traversals on this validator.
+  R accept<R, C>(IValidatorVisitor<R, C> visitor, C context) =>
+      visitor.visitValidator(this, context);
+
+  /// Validates [data] against this validator, applying schema field transformations and optional key stripping.
+  Result coerce(dynamic data, {bool stripUnknownKeys = false}) =>
+      SchemaCoercionVisitor(stripUnknownKeys: stripUnknownKeys)
+          .validateAndCoerce(this, data);
 
   /// Executes the [copyWith] operation.
   IValidator copyWith(
